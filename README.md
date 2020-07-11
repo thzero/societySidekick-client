@@ -1,3 +1,7 @@
+![GitHub package.json version](https://img.shields.io/github/package-json/v/thzero/societySidekick-client)
+![David](https://img.shields.io/david/thzero/societySidekick-client)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # SocietySidekick
 
 A web application to manage society play characters.  The following features are available currently
