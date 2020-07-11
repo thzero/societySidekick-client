@@ -1,0 +1,55 @@
+<script>
+import Constants from '@/constants';
+import SharedConstants from '@/common/constants';
+
+import Utility from '@thzero/library/utility';
+
+import baseAdminFormDialog from '@/library_vue/components/admin/VAdminFormDialog';
+
+export default {
+	name: 'BaseAdminFormDialog',
+	extends: baseAdminFormDialog,
+	data: () => ({
+		gameSystemId: null,
+		serviceGameSystems: null
+	}),
+	computed: {
+		gameSystems() {
+			return Utility.selectBlank(this.$store.state.gameSystems);
+		},
+		// GameSystems Update
+		isGameSystemDungeonsAndDragons5e() {
+			return this.gameSystemId === SharedConstants.GameSystems.DungeonsAndDragons5e.id;
+		},
+		isGameSystemPathfinder2e() {
+			return this.gameSystemId === SharedConstants.GameSystems.Pathfinder2e.id;
+		},
+		isGameSystemStarfinder1e() {
+			return this.gameSystemId === SharedConstants.GameSystems.Starfinder1e.id;
+		},
+		serviceGameSystem() {
+			return this.getServiceByGameSystemId(this.gameSystemId);
+		}
+	},
+	methods: {
+		getServiceByGameSystemId(gameSystemId) {
+			if (!gameSystemId)
+				return null;
+
+			const response = this.serviceGameSystems.getServiceByGameSystemId(gameSystemId);
+			if (!response || !response.success)
+				return null;
+
+			return response.results;
+		},
+		initLookupsByGameSystemId(gameSystemId) {
+			const service = this.getServiceByGameSystemId(gameSystemId);
+			const lookups = service ? service.initializeLookups(this.$injector) : null;
+			return lookups;
+		},
+		initializeServices() {
+			this.serviceGameSystems = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
+		}
+	}
+};
+</script>

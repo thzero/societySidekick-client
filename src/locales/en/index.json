@@ -1,0 +1,586 @@
+{
+	"admin": {
+	   "boons": "Boons",
+	   "classes": "Classes",
+	   "equipment": "Equipment",
+	   "factions": "Factions",
+	   "news": "News",
+	   "scenarios": "Scenarios",
+	   "users": "Users"
+	},
+	"auth": {
+	   "google": "Google",
+	   "rememberMe": "Rembmer Me"
+	},
+	"boons": {
+	   "actions": "Actions",
+	   "description": "Description",
+	   "faction": "Faction",
+	   "gameSystem": "Game System",
+	   "name": "Boon",
+	   "namePlural": "Boons",
+	   "scenario": "Scenario",
+	   "noData": "No boons available...",
+	   "type": "Type"
+	},
+	"buttons": {
+	   "cancel": "Cancel",
+	   "clear": "Clear",
+	   "collapseAll": "Collapse",
+	   "delete": "Delete",
+	   "edit": "Edit",
+	   "expandAll": "Expand",
+	   "ok": "Ok",
+	   "select": "Select"
+	},
+	"cards": {
+	   "name": "Card",
+	   "namePlural": "Cards"
+	},
+	"characters": {
+	   "name": "Character",
+	   "namePlural": "Characters",
+	   "basic": "Basic",
+	   "boons": {
+		  "name": "Boon",
+		  "namePlural": "Boons",
+		  "date": "Date"
+	   },
+	   "class": "Class",
+	   "current": "Current",
+	   "dashboard": "Dashboard",
+	   "details": "Details",
+	   "earned": "Earned",
+	   "gameSystems": {
+		  "pathfinder2e": {
+			 "additional": "Additional",
+			 "achievement": "Achievement",
+			 "achievementPoints": "Achievement Points",
+			 "archetype": "Archetype",
+			 "boons": {
+				"name": "Boons",
+				"slots": "Slots",
+				"types": {
+				   "ally": "Ally",
+				   "advanced": "Advanced",
+				   "downtime": "Downtime",
+				   "faction": "Faction",
+				   "general": "General",
+				   "generic": "Generic",
+				   "heroic": "Heroic",
+				   "item": "Item",
+				   "mentor": "Mentor",
+				   "none": "-",
+				   "promotional": "Promotional",
+				   "property": "Property",
+				   "service": "Service",
+				   "slotless": "Slotless",
+				   "social": "Social",
+				   "trigger": "Trigger"
+				},
+				"uses": "Uses"
+			 },
+			 "bought": "Bought",
+			 "classes": {
+				"name": "Class",
+				"namePlural": "Classes",
+				"types": {
+				   "class": "Class",
+				   "archetype": "Archetype"
+				}
+			 },
+			 "currency": "Gold",
+			 "currencyIncome": "Income",
+			 "currencyIncomeAbbr": "Inc",
+			 "downtime": "Downtime",
+			 "equipmentCategories": {
+				"name": "Category",
+				"namePlural": "Categories",
+				"types": {
+				   "adventuring_gear": "Adventuring Gear",
+				   "ammunition": "Ammunition",
+				   "armor": "Armor",
+				   "drug": "Drug",
+				   "rune": "Rune",
+				   "shield": "Shield",
+				   "snare": "Snare",
+				   "stave": "Stave",
+				   "structure": "Structure",
+				   "tattoo": "Tattoo",
+				   "weapon": "Weapon"
+				}
+			 },
+			 "equipmentSecondaryCategories": {
+				"name": "Secondary Category",
+				"namePlural": "Secondary Categories",
+				"types": {
+				   "armor": "Armor",
+				   "heavy": "Heavy",
+				   "held_item": "Held Item",
+				   "light": "Light",
+				   "medium": "Medium",
+				   "melee": "Melee",
+				   "ranged": "Ranged",
+				   "unarmored": "Unarmored",
+				   "weapon": "Weapon"
+				}
+			 },
+			 "equipmentTertiaryCategories": {
+				"name": "Tertiary Category",
+				"namePlural": "Tertiary Categories",
+				"types": {
+				   "advanced": "Advanced",
+				   "martial": "Martial",
+				   "simple": "Simple",
+				   "unarmed": "Unarmed"
+				}
+			 },
+			 "event": "Event",
+			 "experience": "Experience",
+			 "experiencePoints": "Experience Points",
+			 "experiencePointsAbbr": "XP",
+			 "experiencePoints2GoAbbr": "Next",
+			 "faction": "Faction",
+			 "fame": {
+				"name": "Fame",
+				"total": "Total"
+			 },
+			 "number": "Number",
+			 "reputation": "Reputation",
+			 "reputationAbbr": "Rep.",
+			 "scenarios": {
+				"advancementSpeed": "Advancement Speed",
+				"advancementSpeedAbbr": "Adv. Speed",
+				"advancementSpeeds": {
+				   "standard": "Standard",
+				   "slow": "Slow"
+				},
+				"adventure": "Adventure",
+				"adventures": {
+				   "quest": "Quest",
+				   "scenario": "Scenario",
+				   "adventurePath": "Adventure Path",
+				   "achievementPoints": "Achievement Points",
+				   "initial": "Initial"
+				},
+				"events": {
+				   "standard": "Standard",
+				   "premier": "Premier",
+				   "premierPlus": "Premier Plus"
+				},
+				"participant": "Participant",
+				"participants": {
+				   "player": "Player",
+				   "gamemaster": "Gamemaster",
+				   "gamemasterAbbr": "GM"
+				},
+				"statuses": {
+				   "ignore": "Ignore",
+				   "initial": "Initial",
+				   "repeated": "Repeated",
+				   "replay": "Replay"
+				}
+			 },
+			 "slot": "Slot",
+			 "status": {
+				"name": "Status",
+				"active": "Active",
+				"dead": "Dead",
+				"retired": "Retired"
+			 }
+		  },
+		  "starfinder1e": {
+			 "additional": "Additional",
+			 "archetype": "Archetype",
+			 "boons": {
+				"name": "Boons",
+				"slots": "Slots",
+				"types": {
+				   "ally": "Ally",
+				   "faction": "Faction",
+				   "general": "General",
+				   "personal": "Personal",
+				   "promo": "Promo",
+				   "social": "Social",
+				   "slotless": "Slotless",
+				   "starship": "Starship",
+				   "trigger": "Trigger"
+				},
+				"uses": "Uses"
+			 },
+			 "bought": "Bought",
+			 "classes": {
+				"name": "Class",
+				"namePlural": "Classes",
+				"types": {
+				   "class": "Class",
+				   "theme": "Theme"
+				}
+			 },
+			 "currency": "Credits",
+			 "currencyGarnered": "Garnered",
+			 "currencyIncome": "Day Job",
+			 "experience": "Experience",
+			 "experiencePoints": "Experience Points",
+			 "experiencePointsAbbr": "XP",
+			 "experiencePoints2GoAbbr": "Next",
+			 "faction": "Faction",
+			 "fame": {
+				"name": "Fame",
+				"total": "Total"
+			 },
+			 "number": "Number",
+			 "reputation": "Reputation",
+			 "scenarios": {
+				"advancementSpeed": "Advancement Speed",
+				"advancementSpeedAbbr": "Adv. Speed",
+				"advancementSpeeds": {
+				   "standard": "Standard",
+				   "slow": "Slow"
+				},
+				"adventure": "Adventure",
+				"adventures": {
+				   "quest": "Quest",
+				   "scenario": "Scenario",
+				   "adventure": "Adventure",
+				   "adventurePath": "Adventure Path",
+				   "initial": "Initial"
+				},
+				"participant": "Participant",
+				"participants": {
+				   "player": "Player",
+				   "gamemaster": "Gamemaster",
+				   "gamemasterAbbr": "GM"
+				},
+				"statuses": {
+				   "ignore": "Ignore",
+				   "initial": "Initial",
+				   "repeated": "Repeated",
+				   "replay": "Replay"
+				}
+			 },
+			 "slot": "Slot",
+			 "status": {
+				"name": "Status",
+				"active": "Active",
+				"dead": "Dead",
+				"retired": "Retired"
+			 },
+			 "theme": "Theme"
+		  }
+	   },
+	   "gear": "Gear",
+	   "gained": "Gained",
+	   "inventory": "Inventory",
+	   "inventories": {
+		  "name": "Inventory",
+		  "namePlural": "Inventories",
+		  "bought": "Bought",
+		  "gearSets": {
+			 "name": "Gear Set",
+			 "namePlural": "Gear Sets"
+		  },
+		  "inUse": "In Use",
+		  "item": "Item",
+		  "maxUses": "Max Uses",
+		  "quantity": "Quantity",
+		  "sold": "Sold",
+		  "used": "Used",
+		  "value": "Value"
+	   },
+	   "level": "Level",
+	   "playedOn": "Played On",
+	   "remain": "Remain",
+	   "scenarios": {
+		  "name": "Scenario",
+		  "namePlural": "Scenarios",
+		  "date": "Date",
+		  "details": "Details",
+		  "event": "Event",
+		  "order": "Order",
+		  "repeatable": "Repeatable",
+		  "season": "Season",
+		  "type": "Type"
+	   },
+	   "share": "Share",
+	   "spent": "Spent",
+	   "starting": "Starting",
+	   "status": {
+		  "name": "Status",
+		  "active": "Active",
+		  "dead": "Dead",
+		  "retired": "Retired"
+	   },
+	   "total": "Total"
+	},
+	"classes": {
+	   "actions": "Actions",
+	   "description": "Description",
+	   "gameSystem": "Game System",
+	   "name": "Class",
+	   "namePlural": "Classes",
+	   "noData": "No classes available...",
+	   "type": "Type"
+	},
+	"equipment": {
+	   "actions": "Actions",
+	   "category": "Category",
+	   "description": "Description",
+	   "gameSystem": "Game System",
+	   "name": "Equipment",
+	   "namePlural": "Equipment",
+	   "noData": "No equipment available...",
+	   "type": "Type"
+	},
+	"errors": {
+	   "adminNews": {
+		  "article": {
+			 "string": {
+				"empty": "Article content is required."
+			 }
+		  }
+	   },
+	   "characters": {
+		  "invalidStatus": "Invalid status of \\'{status}\\'."
+	   },
+	   "copyToClipboard": "Failed to copy to the clipboard.",
+	   "description": "Invalid value, must be of the following ! @ # $ % ^ & * ( ) _ - + = [ ] { } | : ; \" \\' < > , . ? a-z A-Z 0-9",
+	   "duplicateName": "There is already a {objectType} with the name of \\'{name}\\'.",
+	   "duplicateNumber": "There is already a {objectType} with the number of \\'{number}\\'.",
+	   "duplicateOrder": "There is already a {objectType} with order \\'{order}\\'.",
+	   "error": "An error occured, plesae try again.",
+	   "invalidPermissions": "You do not have permission to perform the requested action.",
+	   "invalidRequest": "Invalid request.",
+	   "inventories": {
+		  "eitherGearSetOrName": "Select either a gear set or provide a name.",
+		  "eitherItemOrName": "Select either select an item, or a custom item name.",
+		  "renameInvalid": "Requires both a selected gear set and name, try again.",
+		  "renameInvalidGearSet": "Unable to find the gear set, try again."
+	   },
+	   "missingGamerTag": "You must set a gamerTag, under settings, in order to use this feature.",
+	   "notFound": "You have been led astray.",
+	   "objectChanged": "The \\'{objectType}\\' has changed, please refresh and try again.",
+	   "params": {
+		  "character": "character",
+		  "characters": "characters",
+		  "news": "news"
+	   },
+	   "quotaExceeded": "You have reached your quota of {quota} \\'{quotaType}\\'.",
+	   "type": "Type is required."
+	},
+	"factions": {
+	   "actions": "Actions",
+	   "description": "Description",
+	   "gameSystem": "Game System",
+	   "name": "Faction",
+	   "namePlural": "Factions",
+	   "noData": "No factions available..."
+	},
+	"favorites": {
+	   "name": "Favorite",
+	   "namePlural": "Favorites"
+	},
+	"forms": {
+	   "boons": {
+		  "description": "Description",
+		  "gameSystem": "Game System",
+		  "name": "Boon",
+		  "namePlural": "Boons",
+		  "scenario": "Scenario",
+		  "type": "Type",
+		  "uses": "Uses"
+	   },
+	   "characters": {
+		  "name": "Character",
+		  "namePlural": "Characters",
+		  "status": "Status"
+	   },
+	   "classes": {
+		  "description": "Description",
+		  "gameSystem": "Game System",
+		  "name": "Class",
+		  "namePlural": "Classes",
+		  "type": "Type"
+	   },
+	   "equipment": {
+		  "bulk": "Bulk",
+		  "category": "Category",
+		  "cost": "Cost",
+		  "description": "Description",
+		  "gameSystem": "Game System",
+		  "level": "Level",
+		  "name": "Equipment",
+		  "namePlural": "Equipment",
+		  "secondaryCategory": "Secondary Category",
+		  "tertiaryCategory": "Tertiary Category"
+	   },
+	   "externalId": "External Id",
+	   "factions": {
+		  "description": "Description",
+		  "gameSystem": "Game System",
+		  "name": "Faction",
+		  "namePlural": "Factions"
+	   },
+	   "gamerTag": "Gamer Tag",
+	   "gameSystem": "Game System",
+	   "gameSystems": {
+		  "dungeonsAndDragons5e": {
+			 "number": "DCI Number"
+		  },
+		  "pathfinder2e": {
+			 "number": "PFS Number"
+		  }
+	   },
+	   "id": "Id",
+	   "level": "Level",
+	   "link": "Link",
+	   "name": "Name",
+	   "news": {
+		  "article": "Article",
+		  "gameSystem": "Game System",
+		  "publishDate": "Publish Date",
+		  "requiresAuth": "Requires Authentication",
+		  "sticky": "Sticky"
+	   },
+	   "number": "Number",
+	   "role": "Role",
+	   "roles": "Roles",
+	   "scenarios": {
+		  "datePlayed": "Date Played",
+		  "description": "Description",
+		  "gameSystem": "Game System",
+		  "identifier": "Identifier",
+		  "name": "Scenario",
+		  "namePlural": "Scenarios",
+		  "repeatable": "Repeatable",
+		  "season": "Season",
+		  "type": "Type"
+	   },
+	   "season": "Season",
+	   "sorting": {
+		  "ascending": "Ascending",
+		  "ascendingAbbr": "Asc",
+		  "descending": "Descending",
+		  "descendingAbbr": "Desc",
+		  "name": "Sorting",
+		  "nameShort": "Sort"
+	   },
+	   "tagLine": "Tag Line",
+	   "title": "Title"
+	},
+	"home": {
+	   "welcome": "Hello {msg}!"
+	},
+	"locations": {
+	   "name": "Location",
+	   "namePlural": "Locations"
+	},
+	"messages": {
+	   "clickOrHover": {
+		  "description": "Click or hover to see description..."
+	   },
+	   "failed": "Action failed",
+	   "loading": "Loading...",
+	   "saved": "Saved successfully.",
+	   "success": "Action was successful",
+	   "inventories": {
+		  "renameGearSet": "Selecting a gear set and supplying a name will rename the selected gear set.",
+		  "successGearSetDelete": "Successfully deleted a gear set.",
+		  "successGearSetLoad": "Successfully loaded a gear set.",
+		  "successGearSetSave": "Successfully saved a gear set.",
+		  "successInventory": "Successfully added gear."
+	   }
+	},
+	"news": {
+	   "actions": "Actions",
+	   "article": "Article",
+	   "gameSystem": "Game System",
+	   "name": "Name",
+	   "new": "News",
+	   "noData": "No news available...",
+	   "publishDate": "Publish Date",
+	   "requiresAuth": "Authenticated",
+	   "status": {
+		  "active": "Active"
+	   },
+	   "statusName": "Status",
+	   "sticky": "Sticky"
+	},
+	"players": {
+	   "name": "Player",
+	   "namePlural": "Players"
+	},
+	"scenarios": {
+	   "actions": "Actions",
+	   "description": "Description",
+	   "gameSystem": "Game System",
+	   "identifier": "Identifier",
+	   "name": "Scenario",
+	   "namePlural": "Scenarios",
+	   "noData": "No scenarios available...",
+	   "repeatable": "Repeatable",
+	   "season": "Season",
+	   "type": "Type"
+	},
+	"openSource": {
+	   "client": "Client",
+	   "name": "Name",
+	   "license": "License",
+	   "resource": "Resource",
+	   "server": "Server"
+	},
+	"questions": {
+	   "areYouSure": "Are you sure?",
+	   "areYouSureNonRecoverable": "This will permanently delete the item, are you sure?",
+	   "areYouSureNonRecoverableGearSetLoad": "This will overwrite the existing inventory for the character, are you sure?",
+	   "areYouSureNonRecoverableGearSetSave": "This will overwrite the existing inventory for the gear set, are you sure?"
+	},
+	"strings": {
+	   "add": "Add",
+	   "copyright": "Copyright",
+	   "copyToClipboard": "Copied to the clipboard!",
+	   "delete": "Delete",
+	   "edit": "Edit",
+	   "load": "Load",
+	   "new": "New",
+	   "no": "No",
+	   "save": "Save",
+	   "yes": "Yes"
+	},
+	"tagLine": {
+	   "max": "Maximum of {max} tags."
+	},
+	"titles": {
+	   "about": "About",
+	   "boons": "Boons",
+	   "application": "Society Sidekick",
+	   "characters": "Characters",
+	   "edit": "Edit",
+	   "editType": "Edit {type}",
+	   "home": "Home",
+	   "new": "New",
+	   "newType": "New {type}",
+	   "news": "News",
+	   "newsLatest": "Latest News",
+	   "openSource": "Open Source",
+	   "profile": "Profile",
+	   "scenarios": "Scenarios",
+	   "settings": "Settings",
+	   "signIn": "Sign In",
+	   "signOut": "Sign Out",
+	   "statistics": "Stats",
+	   "support": "Support"
+	},
+	"users": {
+	   "actions": "Actions",
+	   "externalId": "External Id",
+	   "id": "Id",
+	   "name": "Name",
+	   "role": "Role",
+	   "roles": "Roles"
+	},
+	"version": {
+	   "majorMinorDate": "{major}.{minor}.{patch} {date}",
+	   "label": "Version"
+	}
+ }

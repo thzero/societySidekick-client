@@ -1,0 +1,47 @@
+<script>
+import VAdminFormDialog from '@/library_vue/components/admin/VAdminFormDialog';
+import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+
+export default {
+	name: 'VUsersAdminFormDialog',
+	components: {
+		VAdminFormDialog,
+		VSelectWithValidation,
+		VTextFieldWithValidation
+	},
+	extends: VAdminFormDialog,
+	computed: {
+		id() {
+			return this.innerValue ? this.innerValue.id : '';
+		},
+		externalId() {
+			return this.innerValue && this.innerValue.external ? this.innerValue.external.id : '';
+		},
+		name() {
+			return this.innerValue && this.innerValue.external ? this.innerValue.external.name : '';
+		},
+		roles() {
+			const roles = [];
+			for (const prop of this.getRoles())
+				roles.push(prop);
+			return roles;
+		}
+	},
+	methods: {
+		getRoles() {
+			return {};
+		},
+		async preComplete() {
+			const item = {
+				id: this.innerValue.id,
+				roles: this.innerValue.roles,
+				updatedTimestamp: this.innerValue.updatedTimestamp
+			};
+			const response = await this.$store.dispatcher.adminUsers.updateAdminUser(item);
+			this.logger.debug(response);
+			return response;
+		}
+	}
+};
+</script>

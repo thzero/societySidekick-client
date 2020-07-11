@@ -1,0 +1,181 @@
+<template>
+	<VFormDialog
+		:label="(innerValue.item ? $t('strings.edit') : $t('strings.add')) + ' ' + $t('characters.gear')"
+		:signal="signal"
+		:pre-complete-delete="preCompleteResponseDelete"
+		:pre-complete-ok="preCompleteResponseOk"
+		:fullscreen="fullscreenInternal"
+		:button-delete="!isNew"
+		max-width="700px"
+		@close="close"
+		@cancel="cancel"
+		@ok="ok"
+	>
+		<v-card
+			tile
+			outlined
+		>
+			<v-card-text
+				class="scenarioCard"
+			>
+				<v-layout
+					wrap
+				>
+					<v-flex
+						xs12
+					>
+						{{ transCurrency() }}
+					</v-flex>
+					<v-flex
+						xs6
+						pr-3
+					>
+						<VNumberField
+							ref="characterCurrencyTotal"
+							:value="characterCurrencyTotal"
+							:label="$t('characters.name') + ' ' + $t('characters.total')"
+							:readonly="true"
+						/>
+					</v-flex>
+					<v-flex
+						xs6
+					>
+						<VNumberField
+							ref="characterScenarioCurrencyTotal"
+							v-model="characterScenarioCurrencyTotal"
+							:negative-color="true"
+							:label="$t('characters.scenarios.name') + ' ' + $t('characters.total')"
+							:readonly="true"
+						/>
+					</v-flex>
+					<v-flex
+						xs6
+						pr-3
+					>
+						<VNumberFieldWithValidation
+							ref="characterCurrencyCurrent"
+							v-model="characterCurrencyCurrent"
+							vid="characterCurrencyCurrent"
+							:negative-color="true"
+							:label="$t('characters.name') + ' ' + $t('characters.current')"
+							:readonly="true"
+						/>
+					</v-flex>
+					<v-flex
+						xs6
+					>
+						<VNumberFieldWithValidation
+							ref="characterScenarioCurrencyCurrent"
+							v-model="characterScenarioCurrencyCurrent"
+							vid="characterScenarioCurrencyCurrent"
+							:negative-color="true"
+							:label="$t('characters.scenarios.name') + ' ' + $t('characters.current')"
+							:readonly="true"
+						/>
+					</v-flex>
+				</v-layout>
+				<VSelectWithValidation
+					ref="boughtScenarioId"
+					v-model="innerValue.boughtScenarioId"
+					rules="required"
+					vid="boughtScenarioId"
+					:items="characterScenarios"
+					:label="$t('characters.inventories.bought')"
+				/>
+				<VAutoCompleteWithValidation
+					v-if="isItemOrItemId === 0 || isItemOrItemId === 1"
+					ref="itemId"
+					v-model="itemId"
+					vid="itemId"
+					:label="$t('characters.inventories.item')"
+					:query-selection="querySelection"
+				/>
+				<VTextFieldWithValidation
+					v-if="isItemOrItemId === 0 || isItemOrItemId === 2"
+					ref="item"
+					v-model="innerValue.item"
+					vid="item"
+					:label="$t('characters.inventories.item')"
+				/>
+				<v-layout
+					wrap
+				>
+					<v-flex
+						:xs2="item ? item.quantity > 0 : false"
+						:xs4="!item || (item ? item.quantity > 0 : false)"
+						pr-3
+					>
+						<VNumberFieldWithValidation
+							ref="quantity"
+							v-model="innerValue.quantity"
+							rules="required|decimal:0|min_value:0|max_value:99|"
+							vid="quantity"
+							:label="$t('characters.inventories.quantity')"
+							step="1"
+						/>
+					</v-flex>
+					<v-flex
+						v-if="item ? item.quantity > 0 : false"
+						xs2
+						pr-3
+					>
+						<VNumberFieldWithValidation
+							ref="quantity"
+							v-model="quantity"
+							vid="quantity"
+							:label="$t('characters.inventories.quantity')"
+							:readonly="true"
+						/>
+					</v-flex>
+					<v-flex
+						xs4
+						pr-3
+					>
+						<VNumberFieldWithValidation
+							ref="value"
+							v-model="innerValue.value"
+							rules="required|decimal:2|min_value:0|max_value:1000000|"
+							vid="value"
+							:label="$t('characters.inventories.value')"
+							step="0.01"
+						/>
+					</v-flex>
+					<v-flex
+						xs4
+					>
+						<VNumberField
+							ref="total"
+							:value="total"
+							:label="$t('characters.total')"
+							:readonly="true"
+						/>
+					</v-flex>
+				</v-layout>
+				<VSelectWithValidation
+					ref="soldScenarioId"
+					v-model="innerValue.soldScenarioId"
+					vid="soldScenarioId"
+					:items="characterScenariosBlank"
+					:label="$t('characters.inventories.sold')"
+				/>
+				<VNumberFieldWithValidation
+					ref="used"
+					v-model="innerValue.used"
+					:rules="usedRules"
+					vid="used"
+					:label="$t('characters.inventories.used')"
+					step="1"
+				/>
+			</v-card-text>
+		</v-card>
+	</VFormDialog>
+</template>
+
+<script>
+import baseInventoryDialog from '@/components/gameSystems/baseInventoryDialog';
+
+export default {
+	name: 'InventoryDialog',
+	extends: baseInventoryDialog
+};
+</script>

@@ -1,0 +1,133 @@
+<template>
+	<v-container pa-0>
+		<v-row>
+			<v-col>
+				<v-data-table
+					:headers="headers"
+					:items="scenarios"
+					multi-sort
+					:sort-by="[ 'gameSystemId', 'season', 'scenario', 'name' ]"
+					:sort-desc="[ true, false, false, false ]"
+					class="elevation-1"
+				>
+					<template v-slot:top>
+						<v-toolbar
+							flat
+							color="white"
+						>
+							<v-toolbar-title>{{ $t('admin.scenarios') }}</v-toolbar-title>
+							<v-divider
+								class="mx-4"
+								inset
+								vertical
+							/>
+							<v-spacer />
+							<v-btn
+								color="primary"
+								dark
+								class="mb-2"
+								@click="dialogEditOpen(null, true)"
+							>
+								{{ $t('titles.new') }}
+							</v-btn>
+						</v-toolbar>
+					</template>
+					<template v-slot:item.gameSystemId="{ item }">
+						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
+					</template>
+					<template v-slot:item.repeatable="{ item }">
+						<span>{{ item.repeatable ? $t('strings.yes') : $t('strings.no') }}</span>
+					</template>
+					<template v-slot:item.type="{ item }">
+						<span>{{ getTypeName(item.gameSystemId, item.type) }}</span>
+					</template>
+					<template v-slot:item.action="{ item }">
+						<v-icon
+							small
+							class="mr-2"
+							@click="dialogEditOpen(item, false)"
+						>
+							edit
+						</v-icon>
+						<v-icon
+							small
+							@click="dialogDeleteOpen(item)"
+						>
+							delete
+						</v-icon>
+					</template>
+					<template v-slot:no-data>
+						{{ $t('scenarios.noData') }}
+					</template>
+				</v-data-table>
+				<EditDialog
+					ref="editDialog"
+					:label="dialogEditItemTitle"
+					:signal="dialogEditSignal.signal"
+					@cancel="dialogEditCancel"
+					@ok="dialogEditOk"
+				/>
+				<VConfirmationDialog
+					:non-recoverable="true"
+					:signal="dialogDeleteSignal.signal"
+					:pre-complete-ok="dialogDeletePreCompleteOk"
+					@cancel="dialogDeleteCancel"
+					@ok="dialogDeleteOk"
+				/>
+			</v-col>
+		</v-row>
+	</v-container>
+</template>
+
+<script>
+import baseList from '@/components/admin/baseList';
+import EditDialog from '@/components/admin/scenarios/EditDialog';
+
+import ScenarioData from '@/common/data/scenario';
+
+export default {
+	name: 'BaseAdminScenariosListing',
+	components: {
+		EditDialog
+	},
+	extends: baseList,
+	computed: {
+		scenarios() {
+			const scenarios = this.$store.state.adminScenarios.scenarios;
+			return scenarios ? scenarios.slice(0) : [];
+		}
+	},
+	async mounted() {
+		await this.$store.dispatcher.adminScenarios.searchAdminScenarios({});
+	},
+	methods: {
+		defaultItem() {
+			return new ScenarioData();
+		},
+		dialogDeletePreCompleteDispatcher(dispatcher) {
+			return dispatcher.adminScenarios;
+		},
+		async dialogDeletePreCompleteOkDelete(dispatcher, id) {
+			return await dispatcher.adminScenarios.deleteAdminScenario(id);
+		},
+		getTypeName(gameSystemId, type) {
+			const lookups = this.getLookupsByGameSystemId(gameSystemId);
+			return lookups ? this.getLookupName(lookups.scenarioAdventures, type) : '';
+		},
+		initializeHeaders() {
+			return [
+				{ text: this.$trans.t('scenarios.name'), align: 'left', value: 'name', },
+				{ text: this.$trans.t('scenarios.season'), align: 'left', value: 'season' },
+				{ text: this.$trans.t('scenarios.identifier'), align: 'left', value: 'scenario' },
+				{ text: this.$trans.t('scenarios.type'), align: 'left', value: 'type' },
+				{ text: this.$trans.t('scenarios.repeatable'), align: 'left', value: 'repeatable' },
+				{ text: this.$trans.t('scenarios.gameSystem'), align: 'left', value: 'gameSystemId' },
+				{ text: this.$trans.t('scenarios.actions'), align: 'right', value: 'action', sortable: false }
+			];
+		}
+	}
+};
+</script>
+
+<style scoped>
+</style>
