@@ -142,7 +142,13 @@ export default {
 		onChange(newValue) {
 			if (!newValue)
 				return;
-			this.rulesGameSystem.calculateCharacter(this.character, newValue.id);
+
+			const self = this;
+			(async () => {
+				self.rulesGameSystem.calculateCharacter(self.character, null, newValue.id);
+			})().catch(err => {
+				self.logger.error(err);
+			});
 		},
 		async preCompleteResponseDelete() {
 			return await this.$store.dispatcher.characters.deleteCharacterInventory(this.character.id, this.innerValue.id);

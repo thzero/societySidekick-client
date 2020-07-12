@@ -147,8 +147,7 @@ class Settings extends BaseSettings {
 		const settings = this.mergeUser(user.settings);
 		let gameSystem = settings.gameSystems.find(l => l.id === gameSystemFilter);
 		if (!gameSystem) {
-			gameSystem = new SettingsGameSystem();
-			gameSystem.id = gameSystemFilter;
+			gameSystem = new SettingsGameSystem(gameSystemFilter);
 			settings.gameSystems.push(gameSystem);
 		}
 		func(gameSystem, newVal);

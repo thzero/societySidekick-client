@@ -6,7 +6,7 @@ import BaseRulesGamesSystemService from '../../services/baseRules';
 class Starfinder1eRulesGamesSystemService extends BaseRulesGamesSystemService {
 	static CurrencyFixed = 2;
 
-	calculateCharacterAdditional(character) {
+	async calculateCharacterAdditional(character) {
 		let fameTotalEarned = this._initDecimal(0);
 		let fameTotalSpent = this._initDecimal(0);
 		character.fame.forEach((item) => {
@@ -29,7 +29,7 @@ class Starfinder1eRulesGamesSystemService extends BaseRulesGamesSystemService {
 		});
 	}
 
-	calculateCharacterCleanup(character) {
+	async calculateCharacterCleanup(character) {
 		delete character.class;
 		delete character.factionF;
 		character.reputationEarned = this._toFixed(character.reputationEarned, 1);
