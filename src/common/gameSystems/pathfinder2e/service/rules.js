@@ -1,14 +1,14 @@
 import SharedConstants from '../../../constants';
 import Pathfinder2eSharedConstants from '../constants';
 
+import SettingsGameSystem from '../../../data/settingsGameSystem';
+
 import BaseRulesGamesSystemService from '../../services/baseRules';
 
 class Pathfinder2eRulesGamesSystemService extends BaseRulesGamesSystemService {
 	static GoldFixed = 2;
 
-	calculateCharacterAdditional(character) {
-		character.achievementPoints = this._toFixed(character.achievementPoints, 0);
-
+	async calculateCharacterAdditional(character, user) {
 		let fameTotalEarned = this._initDecimal(0);
 		let fameTotalSpent = this._initDecimal(0);
 		character.fame.forEach((item) => {
@@ -28,14 +28,38 @@ class Pathfinder2eRulesGamesSystemService extends BaseRulesGamesSystemService {
 		character.reputation.forEach((item) => {
 			item.earned = this._toFixed(item.earned, 1);
 		});
+
+		if (user) {
+			const gameSystemId = SharedConstants.GameSystems.Pathfinder2e.id;
+			let settingsGameSystem = user.settings.gameSystems.find(l => l.id === gameSystemId);
+			if (!settingsGameSystem)
+				settingsGameSystem = new SettingsGameSystem(gameSystemId);
+
+			let achievementPoints = this._initDecimal(character.achievementPoints);
+			const response = await this._serviceCharacters.listing(null, user, gameSystemId);
+			if (response.success) {
+				for(const temp of response.results.data) {
+					if (temp.id === character.id)
+						continue;
+					if (!temp.achievementPoints)
+						continue;
+					achievementPoints = achievementPoints.plus(temp.achievementPoints);
+				}
+				settingsGameSystem.achievementPoints = this._toFixed(achievementPoints, 0);
+			}
+		}
+
+		character.achievementPoints = this._toFixed(character.achievementPoints, 0);
 	}
 
-	calculateCharacterCleanup(character) {
+	// eslint-disable-next-line
+	async calculateCharacterCleanup(character, user) {
 		delete character.factionF;
 		delete character.factionR;
 	}
 
 	calculateCharacterInit(character) {
+		character.achievementPoints = this._initDecimal(0);
 		character.factionF = null;
 		character.factionR = null;
 		character.fame = [];
@@ -43,7 +67,7 @@ class Pathfinder2eRulesGamesSystemService extends BaseRulesGamesSystemService {
 	}
 
 	calculateCharacterScenarioAdditional(character, item) {
-		if (item.achievementPoints)
+		if (item.achievementPointsEarned)
 			character.achievementPoints = character.achievementPoints.plus(item.achievementPointsEarned);
 
 		if (item.fameFactionId && (item.fameEarned || item.fameSpent)) {
