@@ -35,7 +35,7 @@ export default {
 	},
 	extends: base,
 	data: () => ({
-		version: ''
+		version: {}
 	}),
 	computed: {
 		breakpointName() {
