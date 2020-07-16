@@ -48,7 +48,7 @@ class AppStore extends BaseStore {
 					commit('setPlans', response.success && response.results ? response.results.data : []);
 				},
 				async getVersion({ commit }) {
-					const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_VERSION);
+					const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_VERSION);
 					const version = await service.version();
 					this.$logger.debug('getVersion', version);
 					commit('setVersion', version);

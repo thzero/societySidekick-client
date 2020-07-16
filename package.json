@@ -30,7 +30,7 @@
     "cli-update": "node -r esm ./node_modules/@thzero/library/cli.js --updateversion --pi --package \"../../../package.json\""
   },
   "dependencies": {
-    "@thzero/library": "npm:@thzero/library_client@^0.6.8",
+    "@thzero/library": "npm:@thzero/library_client@^0.6.9",
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "crc": "^3.8.0",

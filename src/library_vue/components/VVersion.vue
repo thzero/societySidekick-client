@@ -21,9 +21,7 @@ export default {
 	},
 	computed: {
 		innerVersion() {
-			const version = this.value;
-			this.logger.debug('computed.version', version);
-			return version;
+			return this.value;
 		}
 	}
 };
