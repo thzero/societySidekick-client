@@ -34,18 +34,20 @@ export default {
 		VVersion
 	},
 	extends: base,
+	data: () => ({
+		version: {}
+	}),
 	computed: {
 		breakpointName() {
 			return Utility.isDev ? this.$vuetify.breakpoint.name : '';
 		},
 		isDev() {
 			return Utility.isDev;
-		},
-		version() {
-			const version = this.$store.state.version;
-			this.logger.debug('computed.version', version);
-			return version;
 		}
+	},
+	async created() {
+		await this.$store.dispatcher.root.getVersion();
+		this.version = this.$store.state.version;
 	}
 };
 </script>

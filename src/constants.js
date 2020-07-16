@@ -43,12 +43,6 @@ const Constants = {
 		Favorites: true,
 		RememberMe: false,
 		Statistics: false
-	},
-	Version: {
-		major: 0,
-		minor: 9,
-		patch: 3,
-		date: '7/12/2020'
 	}
 };
 

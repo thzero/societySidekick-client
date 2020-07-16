@@ -1,11 +1,10 @@
-import Constants from '@/constants';
+const { version_major, version_minor, version_patch, version_date } = require('../../package.json');
 
 import VersionService from '@thzero/library/service/version';
 
 class AppVersionService extends VersionService {
-
 	async _version() {
-		return Constants.Version;
+		return this._generate(version_major, version_minor, version_patch, version_date);
 	}
 }
 
