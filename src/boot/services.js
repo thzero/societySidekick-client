@@ -15,6 +15,7 @@ import equipmentService from '@/service/equipment';
 import factionsService from '@/service/factions';
 import gameSystemsService from '@/service/gameSystems';
 import scenariosService from '@/service/scenarios';
+import settingsService from '@/service/settings';
 import userService from '@/service/user';
 import versionService from '@/service/version';
 
@@ -49,6 +50,10 @@ class Services extends BaseServices {
 		this._inject(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E, new gameSystemsStarfinder1eService());
 		this._inject(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E, new gameSystemsRulesPathfinder2eService());
 		this._inject(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E, new gameSystemsRulesStarfinder1eService());
+	}
+
+	_initializeSettings() {
+		return new settingsService();
 	}
 
 	_initializeUser() {
