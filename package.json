@@ -31,6 +31,8 @@
   },
   "dependencies": {
     "@thzero/library": "npm:@thzero/library_client@^0.6.11",
+    "@thzero/library_firebase": "npm:@thzero/library_client_firebase@^0.6.11",
+    "@thzero/library_service_rest_axios": "npm:@thzero/library_client_service_rest_axios@^0.6.12",
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "crc": "^3.8.0",
