@@ -1,9 +1,9 @@
 {
   "name": "skick",
-  "version": "0.9.8",
+  "version": "0.9.10",
   "version_major": 0,
   "version_minor": 9,
-  "version_patch": 8,
+  "version_patch": 10,
   "version_date": "07/18/2020",
   "description": "A web application to manage society play characters.",
   "author": "thZero",
@@ -22,13 +22,13 @@
     "deploy": "firebase deploy",
     "gcloud-build": "cross-env gcloud builds submit --config ./cloudbuild.yaml ./ --substitutions=_CONFIG=\"${CONFIG}\",_FIREBASE_TOKEN=\"${FIREBASETOKEN}\"",
     "lint": "vue-cli-service lint",
-    "cli-id": "node -r esm ./node_modules/@thzero/library/cli.js --generate",
-    "cli-update": "node -r esm ./node_modules/@thzero/library/cli.js --updateversion --pi --package \"../../../package.json\""
+    "cli-id": "./node_modules/.bin/library-cli --generate",
+    "cli-update": "./node_modules/.bin/library-cli --updateversion --pi"
   },
   "dependencies": {
-    "@thzero/library": "npm:@thzero/library_client@^0.6.14",
-    "@thzero/library_firebase": "npm:@thzero/library_client_firebase@^0.6.14",
-    "@thzero/library_service_rest_axios": "npm:@thzero/library_client_service_rest_axios@^0.6.14",
+    "@thzero/library": "npm:@thzero/library_client@^0.6.16",
+    "@thzero/library_firebase": "npm:@thzero/library_client_firebase@^0.6.16",
+    "@thzero/library_service_rest_axios": "npm:@thzero/library_client_service_rest_axios@^0.6.16",
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
     "crc": "^3.8.0",
@@ -60,6 +60,7 @@
   "devDependencies": {
     "@alienfast/i18next-loader": "^1.1.4",
     "@mdi/font": "^5.3.45",
+    "@thzero/library_cli": "^0.6.16",
     "@vue/cli-plugin-babel": "~4.4.6",
     "@vue/cli-plugin-eslint": "~4.4.6",
     "@vue/cli-plugin-router": "~4.4.6",
@@ -75,9 +76,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.2",
-    "esm": "^3.2.25",
     "material-design-icons-iconfont": "^5.0.1",
-    "minimist": "^1.2.5",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.2",
     "vue-cli-plugin-vuetify": "^2.0.6",
