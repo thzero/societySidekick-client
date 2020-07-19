@@ -9,10 +9,24 @@ export default {
 			return [
 				{
 					category: 'client',
-					name: '@hscmap/vue-window',
-					url: 'https://github.com/michitaro/vue-window',
+					name: '@thzero/library_client',
+					url: 'https://github.com/thzero/library_client',
 					licenseName: 'MIT',
-					licenseUrl: 'https://github.com/michitaro/vue-window/blob/master/LICENSE'
+					licenseUrl: 'https://github.com/thzero/library_client/blob/master/license.md'
+				},
+				{
+					category: 'client',
+					name: '@thzero/library_client_firebase',
+					url: 'https://github.com/thzero/library_client_firebase',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/thzero/library_client_firebase/blob/master/license.md'
+				},
+				{
+					category: 'client',
+					name: '@thzero/library_client_service_rest_axios',
+					url: 'https://github.com/thzero/library_client_service_rest_axios',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/thzero/library_client_service_rest_axios/blob/master/license.md'
 				},
 				{
 					category: 'client',
@@ -213,6 +227,41 @@ export default {
 					url: 'https://github.com/ZijianHe/koa-router',
 					licenseName: 'MIT',
 					licenseUrl: 'https://github.com/ZijianHe/koa-router/blob/master/LICENSE'
+				},
+				{
+					category: 'server',
+					name: '@thzero/library_server',
+					url: 'https://github.com/thzero/library_server',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/thzero/library_server/blob/master/license.md'
+				},
+				{
+					category: 'server',
+					name: 'async-mutex',
+					url: 'https://github.com/DirtyHairy/async-mutex',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/DirtyHairy/async-mutex/blob/master/LICENSE'
+				},
+				{
+					category: 'server',
+					name: '@thzero/library_server_logger_pino',
+					url: 'https://github.com/thzero/library_server_logger_pino',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/thzero/library_server_logger_pino/blob/master/license.md'
+				},
+				{
+					category: 'server',
+					name: '@thzero/library_server_repository_mongo',
+					url: 'https://github.com/thzero/library_server_repository_mongo',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/thzero/library_server_repository_mongo/blob/master/license.md'
+				},
+				{
+					category: 'server',
+					name: '@thzero/library_server_validation_joi',
+					url: 'https://github.com/thzero/library_server_validation_joi',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/thzero/library_server_validation_joi/blob/master/license.md'
 				},
 				{
 					category: 'server',
