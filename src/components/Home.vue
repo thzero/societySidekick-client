@@ -57,6 +57,7 @@
 					<v-card-text>
 						<v-layout>
 							<v-flex
+								lg4
 								xs6
 							>
 								<v-chip
@@ -68,6 +69,17 @@
 								</v-chip>
 							</v-flex>
 							<v-flex
+								v-if="$vuetify.breakpoint.lgAndUp"
+								lg4
+								style="text-align: center"
+							>
+								<!-- GameSystems Update -->
+								<Pathfinder2eSnippet
+									v-if="isGameSystemPathfinder2e"
+								/>
+							</v-flex>
+							<v-flex
+								lg4
 								xs6
 								style="text-align: right"
 							>
@@ -78,6 +90,19 @@
 								>
 									#{{ gameSystemNumber }}
 								</v-chip>
+							</v-flex>
+						</v-layout>
+						<v-layout>
+							<v-flex
+								v-if="$vuetify.breakpoint.mdAndDown"
+								xs12
+								pt-2
+								style="text-align: center"
+							>
+								<!-- GameSystems Update -->
+								<Pathfinder2eSnippet
+									v-if="isGameSystemPathfinder2e"
+								/>
 							</v-flex>
 						</v-layout>
 					</v-card-text>
@@ -173,6 +198,7 @@
 import Vue from 'vue';
 
 import Constants from '@/constants';
+import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
 import GameSystemsUtility from '@/utility/gameSystems';
@@ -186,6 +212,9 @@ import ScenarioList from '@/components/gameSystems/ScenarioList';
 import Statistics from '@/components/gameSystems/Statistics';
 import VLoadingOverlay from '@/library_vue/components/VLoadingOverlay';
 
+// GameSystems Update
+import Pathfinder2eSnippet from '@/components/gameSystems/pathfinder2e/MainSnippet';
+
 const DelayMs = 0; // 250
 
 export default {
@@ -196,7 +225,10 @@ export default {
 		News,
 		ScenarioList,
 		Statistics,
-		VLoadingOverlay
+		VLoadingOverlay,
+
+		// GameSystems Update
+		Pathfinder2eSnippet
 	},
 	extends: base,
 	data: () => ({
@@ -210,8 +242,24 @@ export default {
 		allowStatistics() {
 			return Constants.Features.Statistics;
 		},
+		gameSystemFilter() {
+			return AppUtility.settings().getSettingsUserGameSystemFilter(this.$store.state.user.user, (settings) => settings.gameSystemFilter);
+		},
+		gameSystemNumber() {
+			return GameSystemsUtility.gameSystemNumber(this.$store.state.user.user, this.gameSystemFilter);
+		},
 		isLoggedIn() {
 			return this.$store.state.user && this.$store.state.user.isLoggedIn;
+		},
+		// GameSystems Update
+		isGameSystemDungeonsAndDragons5e() {
+			return this.gameSystemFilter === SharedConstants.GameSystems.DungeonsAndDragons5e.id;
+		},
+		isGameSystemPathfinder2e() {
+			return this.gameSystemFilter === SharedConstants.GameSystems.Pathfinder2e.id;
+		},
+		isGameSystemStarfinder1e() {
+			return this.gameSystemFilter === SharedConstants.GameSystems.Starfinder1e.id;
 		},
 		newsCount() {
 			if (!this.$store.state.news.latest)
@@ -219,12 +267,6 @@ export default {
 
 			const news = this.$store.state.news.latest.slice(0);
 			return news.length;
-		},
-		gameSystemFilter() {
-			return AppUtility.settings().getSettingsUserGameSystemFilter(this.$store.state.user.user, (settings) => settings.gameSystemFilter);
-		},
-		gameSystemNumber() {
-			return GameSystemsUtility.gameSystemNumber(this.$store.state.user.user, this.gameSystemFilter);
 		},
 		tab: {
 			get: function () {

@@ -37,13 +37,6 @@ export default {
 				},
 				{
 					category: 'client',
-					name: 'crc',
-					url: 'https://github.com/alexgorbatchev/node-crc',
-					licenseName: 'MIT',
-					licenseUrl: 'https://github.com/alexgorbatchev/node-crc/blob/master/LICENSE'
-				},
-				{
-					category: 'client',
 					name: 'dayjs',
 					url: 'https://github.com/iamkun/dayjs',
 					licenseName: 'MIT',
@@ -276,13 +269,6 @@ export default {
 					url: 'https://github.com/lorenwest/node-config',
 					licenseName: 'MIT',
 					licenseUrl: 'https://github.com/lorenwest/node-config/blob/master/LICENSE'
-				},
-				{
-					category: 'server',
-					name: 'crc',
-					url: 'https://github.com/alexgorbatchev/node-crc',
-					licenseName: 'MIT',
-					licenseUrl: 'https://github.com/alexgorbatchev/node-crc/blob/master/LICENSE'
 				},
 				{
 					category: 'server',
