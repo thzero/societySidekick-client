@@ -112,7 +112,7 @@ import Boon from '@/components/gameSystems/pathfinder2e/Boon';
 import BoonDialog from '@/components/gameSystems/pathfinder2e/BoonDialog';
 
 export default {
-	name: 'Psthfinder2eBoonDashboard',
+	name: 'Pathfinder2eBoonDashboard',
 	components: {
 		CharacterDetails,
 		Boon,
