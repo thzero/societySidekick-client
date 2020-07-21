@@ -440,7 +440,7 @@ export default {
 				return;
 			}
 
-			AppUtility.settings().clearSettingsUser(this.$store, this.user, (settings) => {
+			AppUtility.settings().clearUser(this.$store, this.user, (settings) => {
 				this.scenarioNameValue = null;
 				settings.scenarios.seasonFilter = null;
 				settings.scenarios.sortBy = SharedConstants.SortBy.Scenarios.ScenarioName;

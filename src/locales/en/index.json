@@ -435,6 +435,8 @@
 	   "id": "Id",
 	   "level": "Level",
 	   "link": "Link",
+	   "minAbbr": "Min.",
+	   "maxAbbr": "Max.",
 	   "name": "Name",
 	   "news": {
 		  "article": "Article",
