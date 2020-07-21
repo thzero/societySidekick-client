@@ -321,7 +321,7 @@ export default {
 			this.$navRouter.push(Utility.formatUrl({ url: '/character', params: [ id ]}));
 		},
 		clickClear() {
-			AppUtility.settings().clearSettingsUser(this.$store, this.$store.state.user.user, (settings) => {
+			AppUtility.settings().clearUser(this.$store, this.$store.state.user.user, (settings) => {
 				this.characterNameValue = null;
 				this.characterLevelMaxFilter = null;
 				this.characterLevelMinFilter = null;
