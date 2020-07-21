@@ -342,7 +342,7 @@ export default {
 	},
 	methods: {
 		clickClear() {
-			AppUtility.settings().clearSettingsUser(this.$store, this.user, (settings) => {
+			AppUtility.settings().clearUser(this.$store, this.user, (settings) => {
 				this.boonNameValue = null;
 				this.scenarioNameValue = null;
 				settings.scenarios.seasonFilter = null;
