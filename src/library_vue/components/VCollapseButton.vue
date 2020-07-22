@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 
 import baseControlEdit from './baseControlEdit';
 

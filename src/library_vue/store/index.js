@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import NotImplementedError from '@thzero/library/errors/notImplemented';
+import NotImplementedError from '@thzero/library_common/errors/notImplemented';
 
 import adminNews from './admin/news';
 import adminUsers from './admin/users';

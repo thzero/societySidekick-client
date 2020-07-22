@@ -1,8 +1,8 @@
 <script>
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
-import NotImplementedError from '@thzero/library/errors/notImplemented';
+import NotImplementedError from '@thzero/library_common/errors/notImplemented';
 
 import VFormDialog from '../form/VFormDialog';
 

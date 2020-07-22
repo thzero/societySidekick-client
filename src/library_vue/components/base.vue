@@ -1,11 +1,11 @@
 <script>
 import LibraryConstants from '@thzero/library/constants';
 
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 
-import Response from '@thzero/library/response';
+import Response from '@thzero/library_common/response';
 
-import NotImplementedError from '@thzero/library/errors/notImplemented';
+import NotImplementedError from '@thzero/library_common/errors/notImplemented';
 
 export default {
 	data: () => ({

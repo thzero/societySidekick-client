@@ -3,7 +3,7 @@ import SharedConstants from '@/common/constants';
 
 import Service from '@thzero/library/service/index';
 
-import Response from '@thzero/library/response';
+import Response from '@thzero/library_common/response';
 
 class GameSystemsService extends Service {
 	getServiceByGameSystemId(gameSystemId) {

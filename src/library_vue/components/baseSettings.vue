@@ -1,7 +1,7 @@
 <script>
 import LibraryConstants from '@thzero/library/constants';
 
-import Response from '@thzero/library/response';
+import Response from '@thzero/library_common/response';
 
 import VConfirmationDialog from './VConfirmationDialog';
 import VFormControl from './form/VFormControl';
