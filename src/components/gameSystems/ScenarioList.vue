@@ -263,6 +263,7 @@ import SharedConstants from '@/common/constants';
 
 import Utility from '@thzero/library/utility';
 import AppUtility from '@/utility/app';
+import VueUtility from '@/library_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue/components/VDirectionButton';
@@ -396,7 +397,7 @@ export default {
 
 				let output = scenarios.filter(l => l.season != null).flatMap(l => l.season).filter(l => l !== null && l !== '');
 				output = [...new Set(output)];
-				return Utility.selectBlank(output, this.$trans.t('forms.scenarios.season'));
+				return VueUtility.selectBlank(output, this.$trans.t('forms.scenarios.season'));
 			},
 			cache: false
 		},
@@ -410,7 +411,7 @@ export default {
 			}
 		},
 		userList() {
-			return Utility.selectBlank(this.users, this.$trans.t('players.name'));
+			return VueUtility.selectBlank(this.users, this.$trans.t('players.name'));
 		}
 	},
 	created() {

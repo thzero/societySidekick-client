@@ -208,7 +208,7 @@
 import Constants from '@/constants';
 import Starfinder1eSharedConstants from '@/common/gameSystems/starfinder1e/constants';
 
-import Utility from '@thzero/library/utility';
+import VueUtility from '@/library_vue/utility';
 
 import baseCharacterDetailsDialog from '@/components/gameSystems/baseCharacterDetailsDialog';
 
@@ -218,27 +218,27 @@ export default {
 	computed: {
 		boonsAlly() {
 			const boons = this.boons.filter(l => l.type == Starfinder1eSharedConstants.BoonTypes.ALLY);
-			return Utility.selectBlank(boons);
+			return VueUtility.selectBlank(boons);
 		},
 		boonsFaction() {
 			const boons = this.boons.filter(l => l.type == Starfinder1eSharedConstants.BoonTypes.FACTION);
-			return Utility.selectBlank(boons);
+			return VueUtility.selectBlank(boons);
 		},
 		boonsPersonal() {
 			const boons = this.boons.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.PERSONAL);
-			return Utility.selectBlank(boons);
+			return VueUtility.selectBlank(boons);
 		},
 		boonsPromo() {
 			const boons = this.boons.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.PROMO);
-			return Utility.selectBlank(boons);
+			return VueUtility.selectBlank(boons);
 		},
 		boonsSocial() {
 			const boons = this.boons.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.SOCIAL);
-			return Utility.selectBlank(boons);
+			return VueUtility.selectBlank(boons);
 		},
 		boonsStarship() {
 			const boons = this.boons.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.STARSHIP);
-			return Utility.selectBlank(boons);
+			return VueUtility.selectBlank(boons);
 		},
 		classes() {
 			return this.serviceGameSystem.classes(this.$store, true);

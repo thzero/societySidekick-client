@@ -1,6 +1,7 @@
 import Vue from 'vue';
 
 import Constants from '@/constants';
+import LibraryConstants from '@thzero/library/constants';
 
 import Utility from '@thzero/library/utility';
 import VueUtility from '@/library_vue/utility/index';
@@ -11,14 +12,15 @@ const store = {
 	},
 	actions: {
 		async equipmentSearch({ commit }, params) {
-			if (await Utility.checksumUpdateCheck(this.state, commit, 'equipment', params))
+			const crypto = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
+			if (await Utility.checksumUpdateCheck(crypto, this.state, commit, 'equipment', params))
 				return;
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_EQUIPMENT);
 			const response = await service.search(params.gameSystemId, params.params);
 			this.$logger.debug('equipmentSearch', response);
 			if (response.success && response.results && response.results.data) {
 				commit('setEquipmentListing', response.results.data);
-				Utility.checksumUpdateComplete(this.state, commit, 'equipment', params);
+				Utility.checksumUpdateComplete(crypto, this.state, commit, 'equipment', params);
 				return response.results.data;
 			}
 			return [];

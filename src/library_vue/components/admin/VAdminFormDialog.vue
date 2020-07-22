@@ -1,5 +1,6 @@
 <script>
 import Utility from '@thzero/library/utility';
+import VueUtility from '@/library_vue/utility';
 
 import NotImplementedError from '@thzero/library/errors/notImplemented';
 
@@ -93,7 +94,7 @@ export default {
 		},
 		async resetDialog(value) {
 			// forces random key gen so that the editor gets reset for each new item
-			this.randomKey = Utility.randomKeyGen();
+			this.randomKey = VueUtility.randomKeyGen();
 			if (value) {
 				const temp = this.clone(value);
 				temp.timestamp = temp.timestamp ? Utility.convertTimestampToLocal(temp.timestamp).valueOf() : Utility.getTimestampLocal().valueOf();
