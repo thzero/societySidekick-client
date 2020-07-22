@@ -1,5 +1,6 @@
 <script>
 import Utility from '@thzero/library/utility';
+import VueUtility from '@/library_vue/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
 import VAutoCompleteWithValidation from '@/library_vue/components/form/VAutoCompleteWithValidation';
@@ -66,7 +67,7 @@ export default {
 			return Utility.sortByOrder(scenarios, true);
 		},
 		characterScenariosBlank() {
-			return Utility.selectBlank(this.characterScenarios.slice(0));
+			return VueUtility.selectBlank(this.characterScenarios.slice(0));
 		},
 		isItemOrItemId() {
 			const hasItem = this.innerValue.item && this.innerValue.item !== '';
@@ -182,7 +183,7 @@ export default {
 			newVal = newVal ? String.trim(newVal) : newVal;
 			if (newVal &&newVal.length >= 3)
 				results = await this.$store.dispatcher.equipment.equipmentSearch(this.gameSystemId(), { name: newVal });
-			return Utility.selectBlank(results);
+			return VueUtility.selectBlank(results);
 		},
 		async resetDialog(value) {
 			this.itemId = null;

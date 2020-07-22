@@ -4,6 +4,7 @@ import Vue from 'vue';
 import LibraryConstants from '@thzero/library/constants';
 
 import Utility from '@thzero/library/utility';
+import VueUtility from '@/library_vue/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
 import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
@@ -50,7 +51,7 @@ export default {
 		scenariosSeasons() {
 			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.$store).filter(l => l.season && !String.isNullOrEmpty(l.season));
 			results = [...new Set(results.map(item => item.season))].map(item => { return { id: item, name: item }; });
-			return Utility.selectBlank(results);
+			return VueUtility.selectBlank(results);
 		}
 	},
 	created() {

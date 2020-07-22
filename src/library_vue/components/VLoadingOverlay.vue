@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library/utility';
+import VueUtility from '@/library_vue/utility';
 
 export default {
 	name: 'LoadingOverlay',
@@ -40,10 +40,10 @@ export default {
 	},
 	computed: {
 		imageWidth() {
-			return Utility.overlayImageWidth();
+			return VueUtility.overlayImageWidth();
 		},
 		progressSize() {
-			return Utility.overlayProgressSize();
+			return VueUtility.overlayProgressSize();
 		}
 	}
 };

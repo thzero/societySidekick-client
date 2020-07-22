@@ -1,6 +1,7 @@
 <script>
 import Utility from '@thzero/library/utility';
 import AppUtility from '@/utility/app';
+import VueUtility from '@/library_vue/utility';
 
 import VDateTimeFieldWithValidation from '@/library_vue/components/form/VDateTimeFieldWithValidation';
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
@@ -49,7 +50,7 @@ export default {
 				const results = this.serviceGameSystem.boons(this.$store, true);
 				const scenarioId = this.innerValue ? this.innerValue.scenarioId : null;
 				const results2 = results ? results.filter(l => l.scenarioId == scenarioId) : [];
-				return Utility.selectBlank(results2);
+				return VueUtility.selectBlank(results2);
 			},
 			cache: false
 		},
@@ -57,7 +58,7 @@ export default {
 			return this.serviceGameSystem.factions(this.$store, true);
 		},
 		locations() {
-			return Utility.selectBlank(Utility.sortByName(AppUtility.settings().getSettingsUserLocations(this.$store.state.user.user), true));
+			return VueUtility.selectBlank(Utility.sortByName(AppUtility.settings().getSettingsUserLocations(this.$store.state.user.user), true));
 		},
 		outputType() {
 			return 'timestamp';

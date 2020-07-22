@@ -2,7 +2,7 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library/utility';
+import VueUtility from '@/library_vue/utility';
 
 import baseAdminFormDialog from '@/library_vue/components/admin/VAdminFormDialog';
 
@@ -15,7 +15,7 @@ export default {
 	}),
 	computed: {
 		gameSystems() {
-			return Utility.selectBlank(this.$store.state.gameSystems);
+			return VueUtility.selectBlank(this.$store.state.gameSystems);
 		},
 		// GameSystems Update
 		isGameSystemDungeonsAndDragons5e() {

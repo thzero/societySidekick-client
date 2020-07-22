@@ -37,6 +37,7 @@
 								:hide-details="true"
 								:solo-inverted="true"
 								:label="$t('forms.characters.name') + ' ' + $t('forms.name')"
+								class="pb-1"
 							/>
 						</v-flex>
 						<v-flex
@@ -44,6 +45,37 @@
 							lg6
 							mb-1
 						>
+							<table
+								border="0"
+								cellspacing="0"
+								cellpadding="0"
+								style="width: 100%;"
+							>
+								<tr>
+									<td>
+										<VNumberField
+											ref="characterLevelMinFilter"
+											v-model="characterLevelMinFilter"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.minAbbr')"
+											class="pb-1 pr-2"
+										/>
+									</td>
+									<td>
+										<VNumberField
+											ref="characterLevelMaxFilter"
+											v-model="characterLevelMaxFilter"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.maxAbbr')"
+											class="pb-1"
+										/>
+									</td>
+								</tr>
+							</table>
 							<table
 								border="0"
 								cellspacing="0"
@@ -150,6 +182,7 @@ import AppUtility from '@/utility/app';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue/components/VDirectionButton';
+import VNumberField from '@/library_vue/components/form/VNumberField';
 import VSelect2 from '@/library_vue/components/form/VSelect';
 import VText2 from '@/library_vue/components/form/VTextField';
 
@@ -162,6 +195,7 @@ export default {
 		CharacterNameSnippet,
 		CharacterSnippet,
 		VDirectionButton,
+		VNumberField,
 		VSelect2,
 		VText2
 	},
@@ -169,6 +203,8 @@ export default {
 	data: () => ({
 		classCache: {},
 		characterNameValue: null,
+		characterLevelMaxFilter: null,
+		characterLevelMinFilter: null,
 		factionsCache: {},
 		forceRecomputeCounter: 0
 	}),
@@ -181,6 +217,13 @@ export default {
 
 			let results = this.$store.state.characters.characters.slice(0);
 			results = results.filter(l => l.gameSystemId === this.gameSystemFilter);
+
+			if (this.characterLevelMaxFilter && this.characterLevelMinFilter)
+				results = results.filter(l => ((this.characterLevel(l.level) >= Number(this.characterLevelMinFilter)) && (this.characterLevel(l.level) <= Number(this.characterLevelMaxFilter))));
+			else if (this.characterLevelMaxFilter && !this.characterLevelMinFilter)
+				results = results.filter(l => (this.characterLevel(l.level) <= Number(this.characterLevelMaxFilter)));
+			else if (!this.characterLevelMaxFilter && this.characterLevelMinFilter)
+				results = results.filter(l => (this.characterLevel(l.level) >= Number(this.characterLevelMinFilter)));
 
 			if (this.characterNameValue)
 				results = results.filter(l => l.name.toLowerCase().indexOf(this.characterNameValue.toLowerCase()) > -1);
@@ -214,6 +257,7 @@ export default {
 				temp = factions.find(l => l.id == character.factionId);
 				if (!temp)
 					continue;
+
 				character.factionName = temp.name;
 				character.factionDescription = temp.description;
 			}
@@ -223,7 +267,13 @@ export default {
 			if (this.sortBy === SharedConstants.SortBy.Characters.CharacterName)
 				results = Utility.sortByName(results, this.sortDirection);
 			else if (this.sortBy === SharedConstants.SortBy.Characters.Level)
-				results = Utility.sortByNumber(results, this.sortDirection, (v) => { return v ? v.level : null;});
+				// results.sort((a, b) => Utility.sortByNumber(a, b, (obj) => {
+				// 	return (obj ? ( obj.level ? obj.level : 0): 0);
+				// }));
+				results = Utility.sortByNumberEx(results, (obj) => {
+						return (obj ? ( obj.level ? obj.level : 0): 0);
+					},
+					this.sortDirection);
 
 			return results;
 		},
@@ -259,17 +309,22 @@ export default {
 	created() {
 		this.sortKeys = [
 			{ id: SharedConstants.SortBy.Characters.CharacterName, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.name') },
-			// { id: SharedConstants.SortBy.Characters.Level, name: this.$trans.t('forms.level') },
+			{ id: SharedConstants.SortBy.Characters.Level, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.level') }
 			// { id: 'faction', name: this.$trans.t('forms.factions.name') },
 		];
 	},
 	methods: {
+		characterLevel(level) {
+			return level ? level : 0;
+		},
 		clickCharacter(id) {
 			this.$navRouter.push(Utility.formatUrl({ url: '/character', params: [ id ]}));
 		},
 		clickClear() {
-			AppUtility.settings().clearSettingsUser(this.$store, this.$store.state.user.user, (settings) => {
+			AppUtility.settings().clearUser(this.$store, this.$store.state.user.user, (settings) => {
 				this.characterNameValue = null;
+				this.characterLevelMaxFilter = null;
+				this.characterLevelMinFilter = null;
 				settings.characters.sortBy = SharedConstants.SortBy.Characters.CharacterName;
 				settings.characters.sortDirection = true;
 			});

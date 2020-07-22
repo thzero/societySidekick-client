@@ -111,6 +111,35 @@ class Utility {
 		Vue.prototype.$navRouter.push('/');
 	}
 
+	static overlayImageWidth() {
+		let width = (window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth);
+		if (width > 512)
+			return '512px';
+
+		return width *.75 + 'px';
+	}
+
+	static overlayProgressSize() {
+		return (window.innerWidth > window.innerHeight ? window.innerHeight : window.innerWidth) * .25;
+	}
+
+	static randomKeyGen() {
+		const high = 100000000000;
+		const low = 0;
+		return Math.floor(Math.random() * (high - low) + low);
+	}
+
+	static selectBlank(array, prompt) {
+		if (!array)
+			return array;
+
+		prompt = prompt ? '<' + prompt + '>' : '';
+
+		const temp = array.slice(0);
+		temp.unshift({ id: null, name: prompt });
+		return temp;
+	}
+
 	static settings() {
 		return Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_SETTINGS);
 	}
