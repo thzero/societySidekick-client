@@ -26,7 +26,7 @@
     "cli-update": "./node_modules/.bin/library-cli --updateversion --pi"
   },
   "dependencies": {
-    "@thzero/library": "npm:@thzero/library_client@^0.7.2",
+    "@thzero/library": "npm:@thzero/library_client@^0.7.4",
     "@thzero/library_firebase": "npm:@thzero/library_client_firebase@^0.7.1",
     "@thzero/library_service_rest_axios": "npm:@thzero/library_client_service_rest_axios@^0.7.1",
     "axios": "^0.19.2",

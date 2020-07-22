@@ -17,8 +17,8 @@ import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 import Starfinder1eSharedConstants from '@/common/gameSystems/starfinder1e/constants';
 
-import Utility from '@thzero/library/utility';
 import AppUtility from '@/utility/app';
+import VueUtility from '@/library_vue/utility';
 
 import baseFilter from '@/components/baseFilter';
 
@@ -59,7 +59,7 @@ export default {
 		},
 		scenarioAdventures() {
 			const adventures = this.lookups.scenarioAdventures.filter(l => l.id !== Starfinder1eSharedConstants.ScenarioAdventures.INITIAL);
-			return Utility.selectBlank(adventures, this.$trans.t('characters.gameSystems.starfinder1e.scenarios.adventure'));
+			return VueUtility.selectBlank(adventures, this.$trans.t('characters.gameSystems.starfinder1e.scenarios.adventure'));
 		}
 	},
 	methods: {

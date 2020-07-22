@@ -107,6 +107,7 @@
 
 <script>
 import Utility from '@thzero/library/utility';
+import VueUtility from '@/library_vue/utility';
 
 import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
 import VMarkdownEditor from '@/library_vue/components/markup/VMarkdownEditor';
@@ -143,7 +144,7 @@ export default {
 				return null;
 			let factions = this.$store.state.adminFactions.factions.filter(l => l.gameSystemId === this.gameSystemId);
 			factions = factions ? factions.slice(0) : [];
-			return Utility.selectBlank(factions.sort((a, b) => Utility.sortByString(a, b, (v) => { return v && v.name; })));
+			return VueUtility.selectBlank(factions.sort((a, b) => Utility.sortByString(a, b, (v) => { return v && v.name; })));
 		},
 		scenarios() {
 			if (!this.$store.state.adminScenarios.scenarios)

@@ -1,6 +1,7 @@
 import Vue from 'vue';
 
 import Constants from '@/constants';
+import LibraryConstants from '@thzero/library/constants';
 
 import Utility from '@thzero/library/utility';
 import VueUtility from '@/library_vue/utility/index';
@@ -11,14 +12,15 @@ const store = {
 	},
 	actions: {
 		async getBoonListing({ commit }, gameSystemId) {
-			if (await Utility.checksumUpdateCheck(this.state, commit, 'boons', gameSystemId))
+			const crypto = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
+			if (await Utility.checksumUpdateCheck(crypto, this.state, commit, 'boons', gameSystemId))
 				return;
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_BOONS);
 			const response = await service.listing(gameSystemId);
 			this.$logger.debug('setBoonListing', response);
 			if (response.success) {
 				commit('setBoonListing', response.success && response.results ? response.results.data : null);
-				Utility.checksumUpdateComplete(this.state, commit, 'boons', gameSystemId);
+				Utility.checksumUpdateComplete(crypto, this.state, commit, 'boons', gameSystemId);
 			}
 		}
 	},

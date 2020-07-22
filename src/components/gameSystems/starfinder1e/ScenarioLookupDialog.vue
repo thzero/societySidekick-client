@@ -2,7 +2,7 @@
 import Constants from '@/constants';
 import Starfinder1eSharedConstants from '@/common/gameSystems/starfinder1e/constants';
 
-import Utility from '@thzero/library/utility';
+import VueUtility from '@/library_vue/utility';
 
 import ScenarioLookupDialog from '@/components/gameSystems/ScenarioLookupDialog';
 
@@ -11,7 +11,7 @@ export default {
 	extends: ScenarioLookupDialog,
 	computed: {
 		scenarioAdventures() {
-			return Utility.selectBlank(this.lookups.scenarioAdventures);
+			return VueUtility.selectBlank(this.lookups.scenarioAdventures);
 		}
 	},
 	methods: {
