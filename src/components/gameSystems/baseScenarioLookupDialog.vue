@@ -3,7 +3,7 @@ import Vue from 'vue';
 
 import LibraryConstants from '@thzero/library/constants';
 
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';

@@ -2,10 +2,10 @@ import Vue from 'vue';
 
 import Constants from '@/constants';
 
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
-import Response from '@thzero/library/response';
+import Response from '@thzero/library_common/response';
 
 const store = {
 	state: {

@@ -2,7 +2,7 @@ import Vue from 'vue';
 
 import Constants from '@/constants';
 
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
 const store = {

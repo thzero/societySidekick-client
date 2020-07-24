@@ -41,7 +41,7 @@ import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
 import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
 
-import Response from '@thzero/library/response';
+import Response from '@thzero/library_common/response';
 
 import baseInventoryGearSetDialog from '@/components/gameSystems/baseInventoryGearSetDialog';
 

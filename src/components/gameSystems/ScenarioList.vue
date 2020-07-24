@@ -261,7 +261,7 @@ import { firstBy } from 'thenby';
 
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 import VueUtility from '@/library_vue/utility';
 

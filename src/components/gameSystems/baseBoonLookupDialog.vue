@@ -1,5 +1,5 @@
 <script>
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
 import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';

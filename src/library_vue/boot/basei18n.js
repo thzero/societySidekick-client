@@ -2,7 +2,7 @@ import VueI18n from 'vue-i18n';
 
 import Basei18n from '@thzero/library/boot/basei18n';
 
-import NotImplementedError from '@thzero/library/errors/notImplemented';
+import NotImplementedError from '@thzero/library_common/errors/notImplemented';
 
 class VueBasei18n extends Basei18n {
 	// eslint-disable-next-line

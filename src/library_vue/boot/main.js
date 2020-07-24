@@ -1,8 +1,8 @@
 import Vue from 'vue';
 
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 
-import {} from '@thzero/library/utility/string';
+import {} from '@thzero/library_common/utility/string';
 
 Vue.config.devtools = Utility.isDev;
 Vue.config.productionTip = false;

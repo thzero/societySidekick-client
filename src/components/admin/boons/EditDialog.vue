@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
