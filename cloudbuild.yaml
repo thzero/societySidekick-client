@@ -8,8 +8,13 @@ steps:
       git config -f .gitmodules submodule."src/common".url https://source.developers.google.com/p/societysidekick/r/github_thzero_societysidekick-common
       git submodule init
       git submodule update
+      echo "one up..."
+      ls -a ../
+      echo "current..."
       ls -a
+      echo "src..."
       ls -a ./src
+      echo "src/common..."
       ls -a ./src/common
   # Firebase
   - name: 'docker:stable'
@@ -25,6 +30,19 @@ steps:
   # entrypoint: 'npm'
   #  args: ['run', 'test:unit']
   # Build
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      echo "one up..."
+      ls -a ../
+      echo "current..."
+      ls -a
+      echo "src..."
+      ls -a ./src
+      echo "src/common..."
+      ls -a ./src/common
   #- name: 'gcr.io/cloud-builders/npm:current'
   - name: 'node:lts'
     entrypoint: 'npm'
