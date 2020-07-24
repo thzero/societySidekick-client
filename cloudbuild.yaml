@@ -9,7 +9,8 @@ steps:
       git submodule init
       git submodule update
       ls -a
-      ls -a ./common
+      ls -a ./src
+      ls -a ./src/common
   # Firebase
   - name: 'docker:stable'
     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase', '.' ]
