@@ -2,8 +2,7 @@ import Constants from '../../../../constants';
 import SharedConstants from '../../../constants';
 import Pathfinder2eSharedConstants from '../constants';
 
-import Utility from '@thzero/library/utility';
-import VueUtility from '@/library_vue/utility';
+import Utility from '@thzero/library_common/utility';
 
 import BaseGamesSystemService from '../../services/index';
 
@@ -37,7 +36,7 @@ class Pathfinder2eGamesSystemService extends BaseGamesSystemService {
 		let results = store.state.classes.listing.filter(l => l.gameSystemId === SharedConstants.GameSystems.Pathfinder2e.id);
 		results = Utility.sortByName(results.filter(l => l.type === Pathfinder2eSharedConstants.ClassTypes.ARCHETYPE), true);
 		if (hasBlank)
-			return VueUtility.selectBlank(results);
+			return Utility.selectBlank(results);
 
 		return results;
 	}
@@ -89,7 +88,7 @@ class Pathfinder2eGamesSystemService extends BaseGamesSystemService {
 		let results = store.state.classes.listing.filter(l => l.gameSystemId === SharedConstants.GameSystems.Pathfinder2e.id);
 		results = Utility.sortByName(results.filter(l => l.type === Pathfinder2eSharedConstants.ClassTypes.CLASS), true);
 		if (hasBlank)
-			return VueUtility.selectBlank(results);
+			return Utility.selectBlank(results);
 
 		return results;
 	}

@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
 import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
@@ -64,7 +64,7 @@ import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWi
 import baseInventoryGearSetDialog from '@/components/gameSystems/baseInventoryGearSetDialog';
 
 import DialogSupport from '@/library_vue/components/support/dialog';
-import Response from '@thzero/library/response';
+import Response from '@thzero/library_common/response';
 
 export default {
 	name: 'InventoryGearSetSaveDialog',

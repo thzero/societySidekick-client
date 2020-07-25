@@ -1,10 +1,9 @@
 import Constants from '../../../constants';
 import SharedConstants from '../../../common/constants';
 
-import Utility from '@thzero/library/utility';
-import VueUtility from '@/library_vue/utility';
+import Utility from '@thzero/library_common/utility';
 
-import NotImplementedError from '@thzero/library/errors/notImplemented';
+import NotImplementedError from '@thzero/library_common/errors/notImplemented';
 
 import Service from '@thzero/library/service/index';
 
@@ -195,7 +194,7 @@ class BaseGameSystemService extends Service {
 
 		const results = Utility.sortByName(store.state.boons.listing.filter(l => l.gameSystemId === gameSystemId), true);
 		if (hasBlank)
-			return VueUtility.selectBlank(results);
+			return Utility.selectBlank(results);
 
 		return results;
 	}
@@ -206,7 +205,7 @@ class BaseGameSystemService extends Service {
 
 		const results = Utility.sortByName(store.state.factions.listing.filter(l => l.gameSystemId === gameSystemId), true);
 		if (hasBlank)
-			return VueUtility.selectBlank(results);
+			return Utility.selectBlank(results);
 
 		return results;
 	}
@@ -265,7 +264,7 @@ class BaseGameSystemService extends Service {
 
 		const results = store.state.scenarios.listing.filter(l => l.gameSystemId == gameSystemId);
 		if (hasBlank)
-			return VueUtility.selectBlank(results);
+			return Utility.selectBlank(results);
 
 		return results;
 	}

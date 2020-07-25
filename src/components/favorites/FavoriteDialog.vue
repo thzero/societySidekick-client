@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';

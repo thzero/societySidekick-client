@@ -104,7 +104,7 @@
 <script>
 import Constants from '@/constants';
 
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 
 import baseScenarioDashboard from '@/components/gameSystems/baseScenarioDashboard';
 import CharacterDetails from '@/components/gameSystems/starfinder1e/CharacterDetails';

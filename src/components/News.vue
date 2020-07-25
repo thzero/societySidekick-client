@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 
 import base from '@/library_vue/components/base';
 import VMarkdown from '@/library_vue/components/markup/VMarkdown';

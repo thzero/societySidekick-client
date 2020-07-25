@@ -1,5 +1,5 @@
 <script>
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 
 import baseDashboard from '@/components/baseDashboard';
 

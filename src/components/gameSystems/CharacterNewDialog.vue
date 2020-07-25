@@ -39,7 +39,7 @@
 <script>
 import Constants from '@/constants';
 
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
 import VNumberFieldWithValidation from '@/library_vue/components/form/VNumberFieldWithValidation';

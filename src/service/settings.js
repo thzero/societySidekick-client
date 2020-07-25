@@ -1,9 +1,9 @@
-import Utility from '@thzero/library/utility';
+import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
 import BaseSettings from '@thzero/library/service/baseSettings';
 
-import Response from '@thzero/library/response';
+import Response from '@thzero/library_common/response';
 
 import SettingsLocation from '@/common/data/settingsLocation';
 import SettingsFavorite from '@/common/data/settingsFavorite';
