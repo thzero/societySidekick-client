@@ -1,6 +1,6 @@
-import LibraryConstants from '@thzero/library/constants';
+import LibraryConstants from '@thzero/library_client/constants';
 
-import BaseUserService from '@thzero/library/service/baseUser';
+import BaseUserService from '@thzero/library_client/service/baseUser';
 
 class UserService extends BaseUserService {
 	async init(injector) {

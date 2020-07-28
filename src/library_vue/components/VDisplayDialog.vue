@@ -42,7 +42,7 @@ import Vue from 'vue';
 
 import VueUtility from '@/library_vue/utility/index';
 
-import LibraryConstants from '@thzero/library/constants';
+import LibraryConstants from '@thzero/library_client/constants';
 
 import base from './base';
 

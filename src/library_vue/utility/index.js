@@ -1,7 +1,8 @@
 import Vue from 'vue';
 
 import Constants from '../constants';
-import LibraryConstants from '@thzero/library/constants';
+import LibraryConstants from '@thzero/library_client/constants';
+import LibraryCommonConstants from '@thzero/library_common/constants';
 
 class Utility {
 	static applyError(error, messageParams) {
@@ -11,7 +12,7 @@ class Utility {
 		if (!error.code && !String.isNullOrEmpty(error.message)) {
 			return {
 				message: error.message,
-				field: (error.field ? error.field : Constants.ErrorFields.Generic)
+				field: (error.field ? error.field : LibraryCommonConstants.ErrorFields.Generic)
 			};
 		}
 
@@ -39,7 +40,7 @@ class Utility {
 
 		return {
 			message: Vue.prototype.$trans.t(`${Constants.ErrorCodes.Suffix}.${messageCode}`, messageParams),
-			field: (error.field ? error.field : Constants.ErrorFields.Generic)
+			field: (error.field ? error.field : LibraryCommonConstants.ErrorFields.Generic)
 		};
 	}
 
@@ -84,7 +85,7 @@ class Utility {
 		let error;
 		for (const field in response.errors) {
 			error = Utility.applyError(response.errors[field]);
-			if (error.field === Constants.ErrorFields.Generic) {
+			if (error.field === LibraryCommonConstants.ErrorFields.Generic) {
 				serverErrors.push(error.message);
 				continue;
 			}

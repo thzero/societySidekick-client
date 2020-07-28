@@ -1,7 +1,7 @@
 import Constants from '@/constants';
-import LibraryConstants from '@thzero/library/constants';
+import LibraryConstants from '@thzero/library_client/constants';
 
-import RestExternalService from '@thzero/library/service/externalRest';
+import RestExternalService from '@thzero/library_client/service/externalRest';
 
 class ApiService extends RestExternalService {
 	async initialize() {

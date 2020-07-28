@@ -148,7 +148,7 @@
 </template>
 
 <script>
-import LibraryConstants from '@thzero/library/constants';
+import LibraryConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
 import GameSystemsUtility from '@/utility/gameSystems';

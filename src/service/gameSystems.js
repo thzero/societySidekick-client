@@ -1,7 +1,7 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
-import Service from '@thzero/library/service/index';
+import Service from '@thzero/library_client/service/index';
 
 import Response from '@thzero/library_common/response';
 

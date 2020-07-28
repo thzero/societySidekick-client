@@ -1,5 +1,5 @@
 <script>
-import LibraryConstants from '@thzero/library/constants';
+import LibraryConstants from '@thzero/library_client/constants';
 
 import Response from '@thzero/library_common/response';
 

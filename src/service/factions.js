@@ -1,6 +1,6 @@
-import LibraryConstants from '@thzero/library/constants';
+import LibraryConstants from '@thzero/library_client/constants';
 
-import RestExternalService from '@thzero/library/service/externalRest';
+import RestExternalService from '@thzero/library_client/service/externalRest';
 
 class FactionsService extends RestExternalService {
 	async listing(gameSystemId) {

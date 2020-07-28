@@ -1,4 +1,4 @@
-import LibraryConstants from '@thzero/library/constants';
+import LibraryConstants from '@thzero/library_client/constants';
 
 import CharactersRestExternalService from '@/service/charactersExternalRest';
 

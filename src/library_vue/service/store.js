@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import Service from '@thzero/library/service/index';
+import Service from '@thzero/library_client/service/index';
 
 class VuexStoreService extends Service {
 	get dispatcher() {
