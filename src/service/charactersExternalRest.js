@@ -1,4 +1,4 @@
-import RestExternalService from '@thzero/library/service/externalRest';
+import RestExternalService from '@thzero/library_client/service/externalRest';
 
 import security from '@/common/security/user';
 

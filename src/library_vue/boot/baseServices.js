@@ -1,4 +1,4 @@
-import BaseServices from '@thzero/library/boot/baseServices';
+import BaseServices from '@thzero/library_client/boot/baseServices';
 
 import eventService from '../service/event';
 import routerService from '../service/router';

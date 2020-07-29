@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import EventService from '@thzero/library/service/event';
+import EventService from '@thzero/library_client/service/event';
 
 class VueEventService extends EventService {
 	// eslint-disable-next-line

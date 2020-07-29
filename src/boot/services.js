@@ -8,14 +8,14 @@ import adminFactionsService from '@/service/admin/factions';
 import adminScenariosService from '@/service/admin/scenarios';
 
 import apiService from '@/service/api';
-import authService from '@thzero/library_firebase/service';
+import authService from '@thzero/library_client_firebase/service';
 import boonsService from '@/service/boons';
 import classesService from '@/service/classes';
 import charactersService from '@/service/characters';
 import equipmentService from '@/service/equipment';
 import factionsService from '@/service/factions';
 import gameSystemsService from '@/service/gameSystems';
-import restCommunicationService from '@thzero/library_service_rest_axios';
+import restCommunicationService from '@thzero/library_client_service_rest_axios';
 import scenariosService from '@/service/scenarios';
 import settingsService from '@/service/settings';
 import userService from '@/service/user';

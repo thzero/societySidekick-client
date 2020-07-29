@@ -1,6 +1,6 @@
 import VueI18n from 'vue-i18n';
 
-import Basei18n from '@thzero/library/boot/basei18n';
+import Basei18n from '@thzero/library_client/boot/basei18n';
 
 import NotImplementedError from '@thzero/library_common/errors/notImplemented';
 

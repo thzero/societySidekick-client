@@ -1,7 +1,7 @@
 import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
-import BaseSettings from '@thzero/library/service/baseSettings';
+import BaseSettings from '@thzero/library_client/service/baseSettings';
 
 import Response from '@thzero/library_common/response';
 

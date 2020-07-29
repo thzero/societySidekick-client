@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import TranslateService from '@thzero/library/service/translate';
+import TranslateService from '@thzero/library_client/service/translate';
 
 class VueTranslateService extends TranslateService {
 	// eslint-disable-next-line

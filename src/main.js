@@ -3,9 +3,9 @@ import router from '@/router';
 import store from '@/store';
 import vuetify from '@/library_vue/boot/plugins/vuetify';
 
-import bootAuth from '@thzero/library_firebase/boot';
+import bootAuth from '@thzero/library_client_firebase/boot';
 import bootAsyncComputed from '@/library_vue/boot/asyncComputed';
-import bootDaysJs from '@thzero/library/boot/daysJs';
+import bootDaysJs from '@thzero/library_client/boot/daysJs';
 import bootEventBus from '@/library_vue/boot/eventBus';
 import booti18n from '@/boot/i18n';
 import bootServices from '@/boot/services';

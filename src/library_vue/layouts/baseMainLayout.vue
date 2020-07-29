@@ -1,7 +1,7 @@
 <script>
 import Vue from 'vue';
 
-import LibraryConstants from '@thzero/library/constants';
+import LibraryConstants from '@thzero/library_client/constants';
 
 import baseLayout from './baseLayout';
 import VLayoutFooter from '../components/VLayoutFooter';

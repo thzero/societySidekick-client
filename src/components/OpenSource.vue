@@ -30,6 +30,13 @@ export default {
 				},
 				{
 					category: 'client',
+					name: '@thzero/library_common',
+					url: 'https://github.com/thzero/library_common',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/thzero/library_common/blob/master/license.md'
+				},
+				{
+					category: 'client',
 					name: 'axios',
 					url: 'https://github.com/axios/axios',
 					licenseName: 'MIT',
@@ -76,6 +83,13 @@ export default {
 					url: 'https://github.com/sindresorhus/github-markdown-css',
 					licenseName: 'MIT',
 					licenseUrl: 'https://github.com/sindresorhus/github-markdown-css/blob/gh-pages/license'
+				},
+				{
+					category: 'client',
+					name: 'library_client',
+					url: 'https://github.com/thzero/library_client',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/thzero/library_client/blob/master/license.md'
 				},
 				{
 					category: 'client',
@@ -223,17 +237,17 @@ export default {
 				},
 				{
 					category: 'server',
+					name: '@thzero/library_common',
+					url: 'https://github.com/thzero/library_common',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/thzero/library_common/blob/master/license.md'
+				},
+				{
+					category: 'server',
 					name: '@thzero/library_server',
 					url: 'https://github.com/thzero/library_server',
 					licenseName: 'MIT',
 					licenseUrl: 'https://github.com/thzero/library_server/blob/master/license.md'
-				},
-				{
-					category: 'server',
-					name: 'async-mutex',
-					url: 'https://github.com/DirtyHairy/async-mutex',
-					licenseName: 'MIT',
-					licenseUrl: 'https://github.com/DirtyHairy/async-mutex/blob/master/LICENSE'
 				},
 				{
 					category: 'server',
