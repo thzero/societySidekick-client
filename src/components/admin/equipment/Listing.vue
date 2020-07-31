@@ -81,7 +81,7 @@
 import baseList from '@/components/admin/baseList';
 import EditDialog from '@/components/admin/equipment/EditDialog';
 
-import ScenarioData from '@/common/data/scenario';
+import EquipmentData from '@/common/data/equipment';
 
 export default {
 	name: 'BaseAdminEquipmentListing',
@@ -100,7 +100,7 @@ export default {
 	},
 	methods: {
 		defaultItem() {
-			return new ScenarioData();
+			return new EquipmentData();
 		},
 		async dialogDeletePreCompleteOkDelete(dispatcher, id) {
 			return await dispatcher.adminEquipment.deleteAdminEquipment(id);
