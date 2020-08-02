@@ -56,7 +56,6 @@
 						ref="scenario"
 						v-model="innerValue.scenario"
 						vid="scenario"
-						rules="min:1|max:2|"
 						:label="$t('forms.scenarios.identifier')"
 					/>
 				</td>
