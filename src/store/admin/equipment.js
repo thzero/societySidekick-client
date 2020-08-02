@@ -22,10 +22,8 @@ const store = {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
 			const response = await service.delete(id);
 			this.$logger.debug('deleteAdminEquipment', response);
-			if (response && response.success) {
+			if (response && response.success)
 				commit('deleteAdminEquipment', id);
-				Vue.prototype.$store.dispatcher.equipment.delete(id);
-			}
 			return response;
 		},
 		async searchAdminEquipment({ commit }, params) {
