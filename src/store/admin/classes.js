@@ -22,10 +22,8 @@ const store = {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
 			const response = await service.delete(id);
 			this.$logger.debug('deleteAdminClass', response);
-			if (response && response.success) {
+			if (response && response.success)
 				commit('deleteAdminClass', id);
-				Vue.prototype.$store.dispatcher.classes.delete(id);
-			}
 			return response;
 		},
 		async searchAdminClasses({ commit }, params) {

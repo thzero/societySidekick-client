@@ -22,10 +22,8 @@ const store = {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
 			const response = await service.delete(id);
 			this.$logger.debug('deleteAdminScenario', response);
-			if (response && response.success) {
+			if (response && response.success)
 				commit('deleteAdminScenario', id);
-				Vue.prototype.$store.dispatcher.scenarios.delete(id);
-			}
 			return response;
 		},
 		async searchAdminScenarios({ commit }, params) {

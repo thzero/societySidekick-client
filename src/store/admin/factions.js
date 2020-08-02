@@ -22,10 +22,8 @@ const store = {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
 			const response = await service.delete(id);
 			this.$logger.debug('deleteAdminFaction', response);
-			if (response && response.success) {
+			if (response && response.success)
 				commit('deleteAdminFaction', id);
-				Vue.prototype.$store.dispatcher.factions.delete(id);
-			}
 			return response;
 		},
 		async searchAdminFactions({ commit }, params) {

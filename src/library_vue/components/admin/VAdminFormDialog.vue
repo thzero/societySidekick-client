@@ -44,7 +44,6 @@ export default {
 			this.$emit('cancel');
 		},
 		cleanup(value, isCreate) {
-			delete value.scenario;
 			delete value.timestamp;
 			if (isCreate)
 				delete value.updatedTimestamp;

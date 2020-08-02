@@ -22,10 +22,8 @@ const store = {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
 			const response = await service.delete(id);
 			this.$logger.debug('deleteAdminBoon', response);
-			if (response && response.success) {
+			if (response && response.success)
 				commit('deleteAdminBoon', id);
-				Vue.prototype.$store.dispatcher.boons.delete(id);
-			}
 			return response;
 		},
 		async searchAdminBoons({ commit }, params) {
@@ -44,7 +42,7 @@ const store = {
 		}
 	},
 	mutations: {
-		deleteAdminBoons(state, id) {
+		deleteAdminBoon(state, id) {
 			return Utility.deleteArrayById(state.boons, id);
 		},
 		setAdminBoons(state, item) {
