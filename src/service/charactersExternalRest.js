@@ -14,7 +14,7 @@ class CharacterRestExternalService extends RestExternalService {
 	async init(injector) {
 		await super.init(injector);
 
-		this._enforcer = this._security.initSecurity(KeyEnforcer, security.options);
+		this._enforcer = this._serviceSecurity.initSecurity(KeyEnforcer, security.options);
 	}
 
 	async validate(sub, dom, obj, act) {
