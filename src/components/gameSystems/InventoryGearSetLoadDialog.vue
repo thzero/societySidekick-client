@@ -78,7 +78,7 @@ export default {
 		},
 		async preCompleteConfirm() {
 			const response = await this.$store.dispatcher.characters.loadCharacterInventory(this.characterId, this.gearSetId);
-			this.logger.debug(response);
+			this.logger.debug('InventoryGearSetLoadDialog', 'preCompleteConfirm', response);
 			return response;
 		}
 	}

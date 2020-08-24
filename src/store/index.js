@@ -38,25 +38,25 @@ class AppStore extends BaseStore {
 				async getGameSystems({ commit }) {
 					const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_API);
 					const response = await service.gameSystems();
-					this.$logger.debug('getGameSystems', response);
+					this.$logger.debug('store', 'getGameSystems', 'response', response);
 					commit('setGameSystems', response.success && response.results ? response.results.data : []);
 				},
 				async getPlans({ commit }) {
 					const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_PLANS);
 					const response = await service.plans();
-					this.$logger.debug('getPlans', response);
+					this.$logger.debug('store', 'getPlans', 'response', response);
 					commit('setPlans', response.success && response.results ? response.results.data : []);
 				},
 				async getVersion({ commit }) {
 					const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_VERSION);
 					const version = await service.version();
-					this.$logger.debug('getVersion', version);
+					this.$logger.debug('store', 'getVersion', 'version', version);
 					commit('setVersion', version);
 				},
 				async initialize({ commit }) {
 					const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_API);
 					const response = await service.initialize();
-					this.$logger.debug('initialize', response);
+					this.$logger.debug('store', 'initialize', 'response', response);
 					if (response && response.success) {
 						commit('setGameSystems', response.results.gameSystems.data);
 						commit('setPlans', response.results.plans);

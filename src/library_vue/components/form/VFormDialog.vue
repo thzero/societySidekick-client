@@ -173,9 +173,9 @@ export default {
 		// Handles external model changes.
 		signal(value) {
 			this.$emit(value ? 'open' : 'close');
-			this.logger.debug('signal', value);
+			this.logger.debug('FormDialog', 'signal', 'value', value);
 			this.dialogSignal = value;
-			this.logger.debug('signal.dialogSignal', this.dialogSignal);
+			this.logger.debug('FormDialog', 'signal', 'dialogSignal', this.dialogSignal);
 		}
 	},
 	mounted() {
@@ -184,7 +184,7 @@ export default {
 	methods: {
 		clear() {
 			this.serverErrors = [];
-			this.logger.debug('clear');
+			this.logger.debug('FormDialog', 'clear', 'clear');
 			this.$nextTick(() => {
 				this.$refs.obs.reset();
 			});
@@ -194,7 +194,7 @@ export default {
 			this.serverErrors = [];
 			this.dialogSignal = false;
 			this.clear();
-			this.logger.debug('cancel', 'cancel');
+			this.logger.debug('FormDialog', 'cancel', 'cancel');
 			this.$emit('cancel');
 		},
 		handleClear() {
@@ -211,7 +211,7 @@ export default {
 
 			if (this.preCompleteDelete) {
 				const response = await this.preCompleteDelete();
-				this.logger.debug('delete.response', response);
+				this.logger.debug('FormDialog', 'handleDeleteConfirmOk', 'response', response);
 				if (!response || !response.success) {
 					VueUtility.handleError(this.$refs.obs, this.serverErrors, response);
 					return;
@@ -219,7 +219,7 @@ export default {
 			}
 
 			this.dialogSignal = false;
-			this.logger.debug('delete');
+			this.logger.debug('FormDialog', 'handleDeleteConfirmOk', 'delete');
 			this.$emit('ok');
 			this.clear();
 		},
@@ -249,13 +249,13 @@ export default {
 			this.serverErrors = [];
 
 			const result = await this.$refs.obs.validate();
-			this.logger.debug('submit.result', result);
+			this.logger.debug('FormDialog', 'submit', 'result', result);
 			if (!result)
 				return;
 
 			if (this.preCompleteOk) {
 				const response = await this.preCompleteOk();
-				this.logger.debug('submit.response', response);
+				this.logger.debug('FormDialog', 'submit', 'response', response);
 				if (!response || !response.success) {
 					VueUtility.handleError(this.$refs.obs, this.serverErrors, response);
 					return;
@@ -263,7 +263,7 @@ export default {
 			}
 
 			this.dialogSignal = false;
-			this.logger.debug('submit', 'ok');
+			this.logger.debug('FormDialog', 'submit', 'ok');
 			this.$emit('ok');
 			this.clear();
 		}

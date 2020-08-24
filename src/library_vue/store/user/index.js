@@ -17,7 +17,7 @@ const store = {
 		async getUserFavorites() {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
 			const response = await service.fetchFavoritesByGamerId(this.state.user.user);
-			this.$logger.debug('getUserFavorites', response);
+			this.$logger.debug('store.user', 'getUserFavorites', 'response', response);
 			return response;
 		},
 		async resetUser({ commit }) {
@@ -36,7 +36,7 @@ const store = {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
 			settings = VueUtility.settings().mergeUser(settings);
 			const response = await service.updateSettings(this.state.user.user, settings);
-			this.$logger.debug('setUserSettings', response);
+			this.$logger.debug('store.user', 'setUserSettings', 'response', response);
 			if (response && response.success && response.results)
 				commit('setUserSettings', response.results);
 			return response;

@@ -77,7 +77,7 @@ export default {
 			const response = isUpdate ?
 				await this.preCompleteSubmitUpdate(this.$store.dispatcher, value) :
 				await this.preCompleteSubmitCreate(this.$store.dispatcher, value);
-			this.logger.debug(response);
+			this.logger.debug('VAdminFormDialog', 'preComplete', 'response', response);
 			return response;
 		},
 		// eslint-disable-next-line

@@ -13,7 +13,7 @@ const store = {
 		async createAdminNews({ commit }, item) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_NEWS);
 			const response = await service.create(item);
-			this.$logger.debug('createAdminNews', response);
+			this.$logger.debug('store.admin.news', 'createAdminNews', 'response', response);
 			if (response && response.success)
 				commit('setAdminNews', response.success && response.results ? response.results : null);
 			return response;
@@ -21,7 +21,7 @@ const store = {
 		async deleteAdminNews({ commit }, id) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_NEWS);
 			const response = await service.delete(id);
-			this.$logger.debug('deleteAdminNews', response);
+			this.$logger.debug('store.admin.news', 'deleteAdminNews', 'response', response);
 			if (response && response.success) {
 				commit('deleteAdminNews', id);
 				Vue.prototype.$store.dispatcher.news.delete(id);
@@ -31,13 +31,13 @@ const store = {
 		async searchAdminNews({ commit }, params) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_NEWS);
 			const response = await service.search(params);
-			this.$logger.debug('searchAdminNews', response);
+			this.$logger.debug('store.admin.news', 'searchAdminNews', 'response', response);
 			commit('setAdminNewsListing', response.success && response.results ? response.results.data : null);
 		},
 		async updateAdminNews({ commit }, item) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_NEWS);
 			const response = await service.update(item);
-			this.$logger.debug('updateAdminNews', response);
+			this.$logger.debug('store.admin.news', 'updateAdminNews', 'response', response);
 			if (response && response.success)
 				commit('setAdminNews', response.success && response.results ? response.results : null);
 			return response;
@@ -48,16 +48,16 @@ const store = {
 			return Utility.deleteArrayById(state.news, id);
 		},
 		setAdminNews(state, item) {
-			this.$logger.debug('setAdminNews.a', item);
-			this.$logger.debug('setAdminNews.b', state.news);
+			this.$logger.debug('store.admin.news', 'setAdminNews', 'items.a', item);
+			this.$logger.debug('store.admin.news', 'setAdminNews', 'items.b', state.news);
 			state.news = VueUtility.updateArrayById(state.news, item);
-			this.$logger.debug('setAdminNews.c', state.news);
+			this.$logger.debug('store.admin.news', 'setAdminNews', 'items.c', state.news);
 		},
 		setAdminNewsListing(state, list) {
-			this.$logger.debug('setAdminNewsListing.a', list);
-			this.$logger.debug('setAdminNewsListing.b', state.news);
+			this.$logger.debug('store.admin.news', 'setAdminNewsListing', 'list.a', list);
+			this.$logger.debug('store.admin.news', 'setAdminNewsListing', 'list.b', state.news);
 			state.news = list;
-			this.$logger.debug('setAdminNewsListing.c', state.news);
+			this.$logger.debug('store.admin.news', 'setAdminNewsListing', 'list.c', state.news);
 		}
 	},
 	dispatcher: {

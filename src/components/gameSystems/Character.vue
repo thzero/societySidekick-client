@@ -315,7 +315,7 @@ export default {
 	}),
 	computed: {
 		character() {
-			this.logger.debug('id', this.getId());
+			this.logger.debug('Character', 'character', 'id', this.getId());
 			const results = this.$store.getters.getCharacter(this.getId());
 			return results ? results : {};
 		},
@@ -359,7 +359,7 @@ export default {
 			this.drawer = false;
 		},
 		determineActiveTab() {
-			this.logger.debug('determineActiveTab');
+			this.logger.debug('Character', 'determineActiveTab');
 			let tab = this.tabDashboard;
 			const page = this.$route.params.page;
 			if (!String.isNullOrEmpty(page))
@@ -384,7 +384,7 @@ export default {
 			this.$store.dispatcher.characters.getCharacter(this.getId())
 				.then(async (response) => {
 					try {
-						self.logger.debug('response', response);
+						self.logger.debug('Character', 'initializeCharacter', 'response', response);
 						if (!response || !response.success) {
 							VueUtility.invalid();
 							return;
@@ -437,7 +437,7 @@ export default {
 		if (results) {
 			next(async vm => {
 				// access to component instance via `vm`
-				vm.logger.debug('beforeRouteEnter2');
+				vm.logger.debug('Character', 'beforeRouteEnter2');
 				vm.determineActiveTab();
 			});
 		}
@@ -446,7 +446,7 @@ export default {
 		// called when the route that renders this component has changed,
 		// but this component is reused in the new route.
 		// has access to `this` component instance.
-		this.logger.debug('beforeRouteUpdate');
+		this.logger.debug('Character', 'beforeRouteUpdate');
 		const results = VueUtility.checkId(to);
 		this.determineActiveTab();
 		await this.$store.dispatcher.characters.getCharacterListing({ basics: true });

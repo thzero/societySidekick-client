@@ -6,7 +6,7 @@ export default {
 	extends: base,
 	async created() {
 		this.$EventBus.$on('auth-refresh', async (user) => {
-			this.logger.debug('auth-refresh', user);
+			this.logger.debug('BaseApp', 'created', 'auth-refresh', user);
 			let items = await this.initialize();
 			if (!items)
 				return;

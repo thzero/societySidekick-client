@@ -24,7 +24,7 @@ export default {
 				response = await this.$store.dispatcher.adminNews.updateAdminNews(this.innerValue);
 			else
 				response = await this.$store.dispatcher.adminNews.createAdminNews(this.innerValue);
-			this.logger.debug(response);
+			this.logger.debug('VNewsAdminFormDialog', 'preComplete', response);
 			return response;
 		}
 	}
