@@ -6,11 +6,11 @@ class ScenariosService extends RestExternalService {
 	async listing(gameSystemId) {
 		try {
 			const response = await this._serviceCommunicationRest.get(LibraryConstants.ExternalKeys.BACKEND, { url: 'scenarios/listing', params: [ gameSystemId ] });
-			this._logger.debug('response', response);
+			this._logger.debug('ScenariosService', 'listing', 'response', response);
 			return response;
 		}
 		catch(err) {
-			this._logger.exception(err);
+			this._logger.exception('ScenariosService', 'listing', err);
 		}
 
 		return this._error('ScenariosService', 'listing');
