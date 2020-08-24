@@ -148,7 +148,7 @@ export default {
 			(async () => {
 				self.rulesGameSystem.calculateCharacter(self.character, null, newValue.id);
 			})().catch(err => {
-				self.logger.error(err);
+				self.logger.error('BaseInventoryDialog', 'onChange', err);
 			});
 		},
 		async preCompleteResponseDelete() {
@@ -175,7 +175,7 @@ export default {
 				return response;
 			}
 			const response = await this.$store.dispatcher.characters.updateCharacterInventory(this.character.id, inventory);
-			this.logger.debug(response);
+			this.logger.debug('BaseInventoryDialog', 'preCompleteResponseOk', response);
 			return response;
 		},
 		async querySelection(newVal) {

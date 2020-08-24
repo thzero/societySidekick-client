@@ -99,7 +99,7 @@ export default {
 			const name = String.trim(this.name);
 			const number = String.trim(this.number + '');
 			const response = await this.$store.dispatcher.characters.createCharacter(this.gameSystemId, name, number);
-			this.logger.debug(response);
+			this.logger.debug('CharacterNewDialog', 'preComplete', response);
 			if (response && response.success) {
 				this.$navRouter.push(Utility.formatUrl({ url: '/character', params: [ response.results.id ]}));
 				return response;

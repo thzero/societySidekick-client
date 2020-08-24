@@ -15,7 +15,7 @@ const store = {
 		async getLatestNews({ commit }) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_NEWS);
 			const response = await service.latest();
-			this.$logger.debug('getLatestNews', response);
+			this.$logger.debug('store.news', 'getLatestNews', 'response', response);
 			commit('setLatestNews', response.success && response.results ? response.results.data : null);
 		}
 	},
@@ -24,10 +24,10 @@ const store = {
 			Utility.deleteArrayById(state.latest, id);
 		},
 		setLatestNews(state, latest) {
-			this.$logger.debug('setLatest.a', latest);
-			this.$logger.debug('setLatest.b', state.latest);
+			this.$logger.debug('store.news', 'setLatest', 'item.a', latest);
+			this.$logger.debug('store.news', 'setLatest', 'item.b', state.latest);
 			state.latest = latest;
-			this.$logger.debug('setLatest.c', state.latest);
+			this.$logger.debug('store.news', 'setLatest', 'item.c', state.latest);
 		}
 	},
 	dispatcher: {

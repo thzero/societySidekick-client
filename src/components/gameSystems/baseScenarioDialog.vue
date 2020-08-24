@@ -141,7 +141,7 @@ export default {
 			scenario.timestamp = this.innerValue.timestamp;
 			scenario.updatedTimestamp = this.character.updatedTimestamp;
 			const response = await this.$store.dispatcher.characters.updateCharacterScenario(this.character.id, scenario);
-			this.logger.debug(response);
+			this.logger.debug('BaseScenarioDialog', 'preComplete', response);
 			return response;
 		},
 		async preCompleteResponseDelete() {

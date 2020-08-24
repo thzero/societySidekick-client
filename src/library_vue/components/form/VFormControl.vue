@@ -90,12 +90,12 @@ export default {
 		cancel() {
 			this.serverErrors = [];
 			this.clear();
-			this.logger.debug('cancel', 'cancel');
+			this.logger.debug('FormControl', 'cancel', 'cancel', 'cancel');
 			this.$emit('cancel');
 		},
 		async clear() {
 			this.serverErrors = [];
-			this.logger.debug('clear');
+			this.logger.debug('FormControl', 'clear', 'clear');
 			this.$nextTick(async () => {
 				await this.$refs.obs.reset();
 			});
@@ -123,20 +123,20 @@ export default {
 			this.serverErrors = [];
 
 			const result = await this.$refs.obs.validate();
-			this.logger.debug('submit.result', result);
+			this.logger.debug('FormControl', 'submit', 'result', result);
 			if (!result)
 				return;
 
 			if (this.preCompleteOk) {
 				const response = await this.preCompleteOk();
-				this.logger.debug('submit.response', response);
+				this.logger.debug('FormControl', 'submit', 'response', response);
 				if (!response || !response.success) {
 					VueUtility.handleError(this.$refs.obs, this.serverErrors, response);
 					return;
 				}
 			}
 
-			this.logger.debug('submit', 'ok');
+			this.logger.debug('FormControl', 'submit', 'ok');
 			this.$emit('ok');
 			this.clear();
 		}

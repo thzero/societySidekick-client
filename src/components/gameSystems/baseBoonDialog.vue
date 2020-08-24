@@ -118,7 +118,7 @@ export default {
 			boon.timestamp = this.innerValue.timestamp;
 			boon.updatedTimestamp = this.character.updatedTimestamp;
 			const response = await this.$store.dispatcher.characters.updateCharacterBoon(this.character.id, boon);
-			this.logger.debug(response);
+			this.logger.debug('BaseBoonDialog', 'preComplete', response);
 			return response;
 		},
 		async preCompleteResponseDelete() {
