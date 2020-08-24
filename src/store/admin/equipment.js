@@ -13,7 +13,7 @@ const store = {
 		async createAdminEquipment({ commit }, item) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
 			const response = await service.create(item);
-			this.$logger.debug('createAdminEquipment', response);
+			this.$logger.debug('store.admin.equipment', 'createAdminEquipment', 'response', response);
 			if (response && response.success)
 				commit('setAdminEquipment', response.success && response.results ? response.results : null);
 			return response;
@@ -21,7 +21,7 @@ const store = {
 		async deleteAdminEquipment({ commit }, id) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
 			const response = await service.delete(id);
-			this.$logger.debug('deleteAdminEquipment', response);
+			this.$logger.debug('store.admin.equipment', 'deleteAdminEquipment', 'response', response);
 			if (response && response.success)
 				commit('deleteAdminEquipment', id);
 			return response;
@@ -29,13 +29,13 @@ const store = {
 		async searchAdminEquipment({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
 			const response = await service.search(params);
-			this.$logger.debug('searchAdminEquipment', response);
+			this.$logger.debug('store.admin.equipment', 'searchAdminEquipment', 'response', response);
 			commit('setAdminEquipmentListing', response.success && response.results ? response.results.data : null);
 		},
 		async updateAdminEquipment({ commit }, item) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
 			const response = await service.update(item);
-			this.$logger.debug('updateAdminEquipment', response);
+			this.$logger.debug('store.admin.equipment', 'updateAdminEquipment', 'response', response);
 			if (response && response.success)
 				commit('setAdminEquipment', response.success && response.results ? response.results : null);
 			return response;
@@ -46,16 +46,16 @@ const store = {
 			return Utility.deleteArrayById(state.equipment, id);
 		},
 		setAdminEquipment(state, item) {
-			this.$logger.debug('setAdminEquipment.a', item);
-			this.$logger.debug('setAdminEquipment.b', state.equipment);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.a', item);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.b', state.equipment);
 			state.equipment = VueUtility.updateArrayById(state.equipment, item);
-			this.$logger.debug('setAdminEquipment.c', state.equipment);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.c', state.equipment);
 		},
 		setAdminEquipmentListing(state, list) {
-			this.$logger.debug('setAdminEquipmentListing.a', list);
-			this.$logger.debug('setAdminEquipmentListing.b', state.equipment);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.a', list);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.b', state.equipment);
 			state.equipment = list;
-			this.$logger.debug('setAdminEquipmentListing.c', state.equipment);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.c', state.equipment);
 		}
 	},
 	dispatcher: {

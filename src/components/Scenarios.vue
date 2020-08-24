@@ -269,17 +269,17 @@ export default {
 				this.gameSystemId = gameSystem.id;
 
 				const responseUser = await this.serviceUsers.fetchByGamerId(gamerTag);
-				this.logger.debug('response', responseUser);
+				this.logger.debug('Scenarios', 'fetch', 'response', responseUser);
 				if (!responseUser || !responseUser.success) {
 					VueUtility.invalid();
 					return;
 				}
 
 				this.user = responseUser.results;
-				this.logger.debug('user', this.user);
+				this.logger.debug('Scenarios', 'fetch', 'user', this.user);
 
 				const responseCharacter = await this.serviceCharacters.listingByShortId(gamerTag, this.gameSystemId);
-				this.logger.debug('response', responseCharacter);
+				this.logger.debug('Scenarios', 'fetch', 'response', responseCharacter);
 				if (!responseCharacter || !responseCharacter.success) {
 					//VueUtility.invalid()
 					return;
@@ -288,7 +288,7 @@ export default {
 				const characters = responseCharacter.results.data;
 				for (const character of characters)
 					character.user = this.user;
-				this.logger.debug('characters', characters);
+				this.logger.debug('Scenarios', 'fetch', 'characters', characters);
 				this.characters = characters;
 
 				// this.$refs.scenarioList.execute()

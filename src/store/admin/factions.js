@@ -13,7 +13,7 @@ const store = {
 		async createAdminFaction({ commit }, item) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
 			const response = await service.create(item);
-			this.$logger.debug('createAdminFaction', response);
+			this.$logger.debug('store.admin.factions', 'createAdminFaction', 'response', response);
 			if (response && response.success)
 				commit('setAdminFactions', response.success && response.results ? response.results : null);
 			return response;
@@ -21,7 +21,7 @@ const store = {
 		async deleteAdminFaction({ commit }, id) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
 			const response = await service.delete(id);
-			this.$logger.debug('deleteAdminFaction', response);
+			this.$logger.debug('store.admin.factions', 'deleteAdminFaction', 'response', response);
 			if (response && response.success)
 				commit('deleteAdminFaction', id);
 			return response;
@@ -29,13 +29,13 @@ const store = {
 		async searchAdminFactions({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
 			const response = await service.search(params);
-			this.$logger.debug('searchAdminFactions', response);
+			this.$logger.debug('store.admin.factions', 'searchAdminFactions', 'response', response);
 			commit('setAdminFactionsListing', response.success && response.results ? response.results.data : null);
 		},
 		async updateAdminFaction({ commit }, item) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
 			const response = await service.update(item);
-			this.$logger.debug('updateAdminFaction', response);
+			this.$logger.debug('store.admin.factions', 'updateAdminFaction', 'response', response);
 			if (response && response.success)
 				commit('setAdminFactions', response.success && response.results ? response.results : null);
 			return response;
@@ -46,16 +46,16 @@ const store = {
 			return Utility.deleteArrayById(state.factions, id);
 		},
 		setAdminFactions(state, item) {
-			this.$logger.debug('setAdminFactions.a', item);
-			this.$logger.debug('setAdminFactions.b', state.factions);
+			this.$logger.debug('store.admin.factions', 'setAdminFactions', 'item.a', item);
+			this.$logger.debug('store.admin.factions', 'setAdminFactions', 'item.b', state.factions);
 			state.factions = VueUtility.updateArrayById(state.factions, item);
-			this.$logger.debug('setAdminFactions.c', state.factions);
+			this.$logger.debug('store.admin.factions', 'setAdminFactions.c', state.factions);
 		},
 		setAdminFactionsListing(state, list) {
-			this.$logger.debug('setAdminFactionsListing.a', list);
-			this.$logger.debug('setAdminFactionsListing.b', state.factions);
+			this.$logger.debug('store.admin.factions', 'setAdminFactionsListing', 'list..a', list);
+			this.$logger.debug('store.admin.factions', 'setAdminFactionsListing', 'list.b', state.factions);
 			state.factions = list;
-			this.$logger.debug('setAdminFactionsListing.c', state.factions);
+			this.$logger.debug('store.admin.factions', 'setAdminFactionsListing', 'list.c', state.factions);
 		}
 	},
 	dispatcher: {

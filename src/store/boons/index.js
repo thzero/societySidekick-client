@@ -17,7 +17,7 @@ const store = {
 				return;
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_BOONS);
 			const response = await service.listing(gameSystemId);
-			this.$logger.debug('setBoonListing', response);
+			this.$logger.debug('store.boons', 'setBoonListing', 'response', response);
 			if (response.success) {
 				commit('setBoonListing', response.success && response.results ? response.results.data : null);
 				Utility.checksumUpdateComplete(crypto, this.state, commit, 'boons', gameSystemId);
@@ -33,14 +33,14 @@ const store = {
 	},
 	mutations: {
 		setBoonListing(state, listing) {
-			this.$logger.debug('setBoonListing.a', listing);
-			this.$logger.debug('setBoonListing.b', state.listing);
+			this.$logger.debug('store.boons', 'setBoonListing', 'list.a', listing);
+			this.$logger.debug('store.boons', 'setBoonListing', 'list..b', state.listing);
 			if (!listing)
 				return;
 			listing.forEach((item) => {
 				state.listing = VueUtility.updateArrayById(state.listing, item);
 			});
-			this.$logger.debug('setBoonListing.c', state.listing);
+			this.$logger.debug('store.boons', 'setBoonListing', 'list..c', state.listing);
 		}
 	},
 	dispatcher: {

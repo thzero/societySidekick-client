@@ -259,16 +259,16 @@ export default {
 				if (!this.isLoggedIn)
 					VueUtility.invalid();
 				this.user = this.$store.state.user.user;
-				this.logger.debug('user', this.user);
+				this.logger.debug('Cards', 'fetch', 'user', this.user);
 				return;
 			}
 
 			const responseUser = await this.serviceUsers.fetchByGamerId(gamerTag);
-			this.logger.debug('response', responseUser);
+			this.logger.debug('Cards', 'fetch', 'response', responseUser);
 			if (responseUser && responseUser.success) {
 				this.user = responseUser.results;
 				this.external = true;
-				this.logger.debug('user', this.user);
+				this.logger.debug('Cards', 'fetch', 'user', this.user);
 				return;
 			}
 
@@ -298,7 +298,7 @@ export default {
 		// navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
 		// will be reused, and this hook will be called when that happens.
 		// has access to `this` component instance.
-		this.logger.debug('beforeRouteUpdate');
+		this.logger.debug('Cards', 'beforeRouteUpdate');
 		const results = check(to);
 		if (results)
 			next();

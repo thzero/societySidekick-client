@@ -18,7 +18,7 @@ const store = {
 				return Response.error();
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.create(value);
-			this.$logger.debug('createCharacter', response);
+			this.$logger.debug('store.characters', 'createCharacter', 'response', response);
 			if (response && response.success)
 				commit('setCharacter', response.success && response.results ? response.results : null);
 			return response;
@@ -26,7 +26,7 @@ const store = {
 		async deleteCharacter({ commit }, characterId) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.delete(characterId);
-			this.$logger.debug('deleteCharacter', response);
+			this.$logger.debug('store.characters', 'deleteCharacter', 'response', response);
 			if (response && response.success)
 				commit('deleteCharacter', characterId);
 			return response;
@@ -34,7 +34,7 @@ const store = {
 		async deleteCharacterBoon({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.deleteBoon(params.characterId, params.boonId);
-			this.$logger.debug('deleteCharacterBoon', response);
+			this.$logger.debug('store.characters', 'deleteCharacterBoon', 'response', response);
 			if (response && response.success && response.results)
 				commit('setCharacter', response.results);
 			return response;
@@ -42,7 +42,7 @@ const store = {
 		async deleteCharacterInventory({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.deleteInventory(params.characterId, params.inventoryId);
-			this.$logger.debug('deleteCharacterInventory', response);
+			this.$logger.debug('store.characters', 'deleteCharacterInventory', 'response', response);
 			if (response && response.success && response.results)
 				commit('setCharacter', response.results);
 			return response;
@@ -50,7 +50,7 @@ const store = {
 		async deleteCharacterScenario({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.deleteScenario(params.characterId, params.scenarioId);
-			this.$logger.debug('deleteCharacterScenario', response);
+			this.$logger.debug('store.characters', 'deleteCharacterScenario', 'response', response);
 			if (response && response.success && response.results)
 				commit('setCharacter', response.results);
 			return response;
@@ -58,7 +58,7 @@ const store = {
 		async getCharacter({ commit }, id) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.fetch(id);
-			this.$logger.debug('getCharacter', response);
+			this.$logger.debug('store.characters', 'getCharacter', 'response', response);
 			if (response && response.success)
 				commit('setCharacter', response.results ? response.results : null);
 			return response;
@@ -68,7 +68,7 @@ const store = {
 			if (!this.state.user.user)
 				return;
 			const response = await service.listing(sections);
-			this.$logger.debug('getCharacterListing', response);
+			this.$logger.debug('store.characters', 'getCharacterListing', 'response', response);
 			if (response && response.success)
 				commit('setCharacterListing', { results: response.success && response.results ? response.results.data : null, sections: sections });
 		},
@@ -76,13 +76,13 @@ const store = {
 		async initializeCharacters({ commit }) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.initialize();
-			this.$logger.debug('initializeCharacters', response);
+			this.$logger.debug('store.characters', 'initializeCharacters', 'response', response);
 			commit('setCharacterLookups', response.success && response.results ? response.results.lookups : null);
 		},
 		async loadCharacterInventory({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.loadInventory(params.characterId, params.gearSetId);
-			this.$logger.debug('loadCharacterInventory', response);
+			this.$logger.debug('store.characters', 'loadCharacterInventory', 'response', response);
 			if (response && response.success && response.results)
 				commit('setCharacter', response.results);
 			return response;
@@ -90,14 +90,14 @@ const store = {
 		async setCharacter({ commit }, character) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.create(character);
-			this.$logger.debug('setCharacter', response);
+			this.$logger.debug('store.characters', 'setCharacter', 'response', response);
 			commit('setCharacter', response.success && response.results ? response.results : null);
 			return response;
 		},
 		async updateCharacterBoon({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateBoon(params.characterId, params.boon);
-			this.$logger.debug('updateCharacterBoon', response);
+			this.$logger.debug('store.characters', 'updateCharacterBoon', 'response', response);
 			if (response && response.success && response.results)
 				commit('setCharacter', response.results);
 			return response;
@@ -105,7 +105,7 @@ const store = {
 		async updateCharacterDetails({ commit }, details) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateDetails(details);
-			this.$logger.debug('updateCharacterDetails', response);
+			this.$logger.debug('store.characters', 'updateCharacterDetails', 'response', response);
 			if (response && response.success && response.results)
 				commit('setCharacter', response.results);
 			return response;
@@ -113,7 +113,7 @@ const store = {
 		async updateCharacterInventory({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateInventory(params.characterId, params.inventory);
-			this.$logger.debug('updateCharacterInventory', response);
+			this.$logger.debug('store.characters', 'updateCharacterInventory', 'response', response);
 			if (response && response.success && response.results)
 				commit('setCharacter', response.results);
 			return response;
@@ -121,7 +121,7 @@ const store = {
 		async updateCharacterScenario({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateScenario(params.characterId, params.scenario);
-			this.$logger.debug('updateCharacterScenario', response);
+			this.$logger.debug('store.characters', 'updateCharacterScenario', 'response', response);
 			if (response && response.success && response.results)
 				commit('setCharacter', response.results);
 			return response;
@@ -136,22 +136,22 @@ const store = {
 	},
 	mutations: {
 		deleteCharacter(state, characterId) {
-			this.$logger.debug('setCharacter.a', characterId);
-			this.$logger.debug('setCharacter.b', state.characters);
+			this.$logger.debug('store.characters', 'deleteCharacter', 'item.a', characterId);
+			this.$logger.debug('store.characters', 'deleteCharacter', 'item.b', state.characters);
 			Utility.deleteArrayById(state.characters, characterId);
-			this.$logger.debug('setCharacter.c', state.characters);
+			this.$logger.debug('store.characters', 'deleteCharacter', 'item.c', state.characters);
 		},
 		setCharacter(state, character) {
-			this.$logger.debug('setCharacter.a', character);
-			this.$logger.debug('setCharacter.b', state.characters);
+			this.$logger.debug('store.characters', 'setCharacter', 'item.a', character);
+			this.$logger.debug('store.characters', 'setCharacter', 'item.b', state.characters);
 			state.characters = VueUtility.updateArrayById(state.characters, character);
-			this.$logger.debug('setCharacter.c', state.characters);
+			this.$logger.debug('store.characters', 'setCharacter', 'item.c', state.characters);
 		},
 		setCharacterListing(state, params) {
-			this.$logger.debug('setCharacterListing.a', params);
-			this.$logger.debug('setCharacterListing.a', params.results);
-			this.$logger.debug('setCharacterListing.a', params.sections);
-			this.$logger.debug('setCharacterListing.b', state.characters);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'params', params);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'params.results', params.results);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'params.sections', params.sections);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'state.characters', state.characters);
 			if (params.sections) {
 				let character;
 				params.results.forEach((item) => {
@@ -165,13 +165,13 @@ const store = {
 			}
 			else
 				state.characters = params.results ? params.results : [];
-			this.$logger.debug('setCharacterListing.c', state.characters);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'state.characters', state.characters);
 		},
 		setCharacterLookups(state, lookups) {
-			this.$logger.debug('setCharacterLookups.a', lookups);
-			this.$logger.debug('setCharacterLookups.b', state.status);
+			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.a', lookups);
+			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.b', state.status);
 			state.status = lookups ? lookups.status : [];
-			this.$logger.debug('setCharacterLookups.c', state.status);
+			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.c', state.status);
 		}
 	},
 	dispatcher: {

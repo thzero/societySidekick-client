@@ -13,7 +13,7 @@ const store = {
 		async deleteAdminUser({ commit }, id) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_USERS);
 			const response = await service.delete(id);
-			this.$logger.debug('deleteAdminUser', response);
+			this.$logger.debug('store.admin.users', 'deleteAdminUser', 'response', response);
 			if (response && response.success) {
 				commit('deleteAdminUser', id);
 				Vue.prototype.$store.dispatcher.users.delete(id);
@@ -23,13 +23,13 @@ const store = {
 		async searchAdminUsers({ commit }, params) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_USERS);
 			const response = await service.search(params);
-			this.$logger.debug('searchAdminUsers', response);
+			this.$logger.debug('store.admin.users', 'searchAdminUsers', 'response', response);
 			commit('setAdminUsersListing', response.success && response.results ? response.results.data : null);
 		},
 		async updateAdminUser({ commit }, item) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_USERS);
 			const response = await service.update(item);
-			this.$logger.debug('updateAdminUser', response);
+			this.$logger.debug('store.admin.users', 'updateAdminUser', 'response', response);
 			if (response && response.success)
 				commit('setAdminUsers', response.success && response.results ? response.results : null);
 			return response;
@@ -40,16 +40,16 @@ const store = {
 			return Utility.deleteArrayById(state.users, id);
 		},
 		setAdminUsers(state, item) {
-			this.$logger.debug('setAdminUsers.a', item);
-			this.$logger.debug('setAdminUsers.b', state.users);
+			this.$logger.debug('store.admin.users', 'setAdminUsers', 'items.a', item);
+			this.$logger.debug('store.admin.users', 'setAdminUsers', 'items.b', state.users);
 			state.users = VueUtility.updateArrayById(state.users, item);
-			this.$logger.debug('setAdminUsers.c', state.users);
+			this.$logger.debug('store.admin.users', 'setAdminUsers', 'items.c', state.users);
 		},
 		setAdminUsersListing(state, list) {
-			this.$logger.debug('setAdminUsersListing.a', list);
-			this.$logger.debug('setAdminUsersListing.b', state.users);
+			this.$logger.debug('store.admin.users', 'setAdminUsersListing', 'list.a', list);
+			this.$logger.debug('store.admin.users', 'setAdminUsersListing', 'list.b', state.users);
 			state.users = list;
-			this.$logger.debug('setAdminUsersListing.c', state.users);
+			this.$logger.debug('store.admin.users', 'setAdminUsersListing', 'list.c', state.users);
 		}
 	},
 	dispatcher: {
