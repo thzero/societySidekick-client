@@ -22,7 +22,7 @@ class ApiService extends RestExternalService {
 			this._logger.exception(err);
 		}
 
-		return this._error();
+		return this._error('ApiService', 'initialize');
 	}
 
 	async gameSystems() {
@@ -35,7 +35,7 @@ class ApiService extends RestExternalService {
 			this._logger.exception(err);
 		}
 
-		return this._error();
+		return this._error('ApiService', 'gameSystems');
 	}
 }
 
