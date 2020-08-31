@@ -61,7 +61,7 @@ class UserService extends BaseUserService {
 			this._logger.exception('UserService', 'fetchByGamerTag', err);
 		}
 
-		return this._error('UserService', 'fetchByGamerTag', );
+		return this._error('UserService', 'fetchByGamerTag');
 	}
 }
 
