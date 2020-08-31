@@ -17,7 +17,7 @@ const store = {
 				return;
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CLASSES);
 			const response = await service.listing(gameSystemId);
-			this.$logger.debug('setClassListing', response);
+			this.$logger.debug('store.classes', 'setClassListing', 'response', response);
 			if (response.success) {
 				commit('setClassListing', response.success && response.results ? response.results.data : null);
 				Utility.checksumUpdateComplete(crypto, this.state, commit, 'classes', gameSystemId);
@@ -33,14 +33,14 @@ const store = {
 	},
 	mutations: {
 		setClassListing(state, listing) {
-			this.$logger.debug('setClassListing.a', listing);
-			this.$logger.debug('setClassListing.b', state.listing);
+			this.$logger.debug('store.classes', 'setClassListing', 'list.a', listing);
+			this.$logger.debug('store.classes', 'setClassListing', 'list.b', state.listing);
 			if (!listing)
 				return;
 			listing.forEach((item) => {
 				state.listing = VueUtility.updateArrayById(state.listing, item);
 			});
-			this.$logger.debug('setClassListing.c', state.listing);
+			this.$logger.debug('store.classes', 'setClassListing', 'list.c', state.listing);
 		}
 	},
 	dispatcher: {

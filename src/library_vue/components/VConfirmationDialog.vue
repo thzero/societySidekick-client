@@ -93,7 +93,7 @@ export default {
 		async dialogOk() {
 			if (this.preCompleteOk) {
 				const response = await this.preCompleteOk();
-				this.logger.debug('response', response);
+				this.logger.debug('ConfirmationDialog', 'dialogOk', 'response', response);
 				if (!response || !response.success) {
 					VueUtility.handleError(this.$refs.obs, this.serverErrors, response);
 					return;

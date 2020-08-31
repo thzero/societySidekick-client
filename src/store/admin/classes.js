@@ -13,7 +13,7 @@ const store = {
 		async createAdminClass({ commit }, item) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
 			const response = await service.create(item);
-			this.$logger.debug('createAdminClass', response);
+			this.$logger.debug('store.admin.classes', 'createAdminClass', 'response', response);
 			if (response && response.success)
 				commit('setAdminClasses', response.success && response.results ? response.results : null);
 			return response;
@@ -21,7 +21,7 @@ const store = {
 		async deleteAdminClass({ commit }, id) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
 			const response = await service.delete(id);
-			this.$logger.debug('deleteAdminClass', response);
+			this.$logger.debug('store.admin.classes', 'deleteAdminClass', 'response', response);
 			if (response && response.success)
 				commit('deleteAdminClass', id);
 			return response;
@@ -29,13 +29,13 @@ const store = {
 		async searchAdminClasses({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
 			const response = await service.search(params);
-			this.$logger.debug('searchAdminClasses', response);
+			this.$logger.debug('store.admin.classes', 'searchAdminClasses', 'response', response);
 			commit('setAdminClassesListing', response.success && response.results ? response.results.data : null);
 		},
 		async updateAdminClass({ commit }, item) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
 			const response = await service.update(item);
-			this.$logger.debug('updateAdminClass', response);
+			this.$logger.debug('store.admin.classes', 'updateAdminClass', 'response', response);
 			if (response && response.success)
 				commit('setAdminClasses', response.success && response.results ? response.results : null);
 			return response;
@@ -46,16 +46,16 @@ const store = {
 			return Utility.deleteArrayById(state.classes, id);
 		},
 		setAdminClasses(state, item) {
-			this.$logger.debug('setAdminClasses.a', item);
-			this.$logger.debug('setAdminClasses.b', state.classes);
+			this.$logger.debug('store.admin.classes', 'setAdminClasses', 'item.a', item);
+			this.$logger.debug('store.admin.classes', 'setAdminClasses', 'item.b', state.classes);
 			state.classes = VueUtility.updateArrayById(state.classes, item);
-			this.$logger.debug('setAdminClasses.c', state.classes);
+			this.$logger.debug('store.admin.classes', 'setAdminClasses', 'item.c', state.classes);
 		},
 		setAdminClassesListing(state, list) {
-			this.$logger.debug('setAdminClassesListing.a', list);
-			this.$logger.debug('setAdminClassesListing.b', state.classes);
+			this.$logger.debug('store.admin.classes', 'setAdminClassesListing', 'list.a', list);
+			this.$logger.debug('store.admin.classes', 'setAdminClassesListing', 'list.b', state.classes);
 			state.classes = list;
-			this.$logger.debug('setAdminClassesListing.c', state.classes);
+			this.$logger.debug('store.admin.classes', 'setAdminClassesListing', 'list.c', state.classes);
 		}
 	},
 	dispatcher: {

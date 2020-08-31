@@ -17,7 +17,7 @@ const store = {
 				return;
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_EQUIPMENT);
 			const response = await service.search(params.gameSystemId, params.params);
-			this.$logger.debug('equipmentSearch', response);
+			this.$logger.debug('store.equipment', 'equipmentSearch', 'response', response);
 			if (response.success && response.results && response.results.data) {
 				commit('setEquipmentListing', response.results.data);
 				Utility.checksumUpdateComplete(crypto, this.state, commit, 'equipment', params);
@@ -35,14 +35,14 @@ const store = {
 	},
 	mutations: {
 		setEquipmentListing(state, listing) {
-			this.$logger.debug('setEquipmentListing.a', listing);
-			this.$logger.debug('setEquipmentListing.b', state.listing);
+			this.$logger.debug('store.equipment', 'setEquipmentListing', 'list.a', listing);
+			this.$logger.debug('store.equipment', 'setEquipmentListing', 'list.b', state.listing);
 			if (!listing)
 				return;
 			listing.forEach((item) => {
 				state.listing = VueUtility.updateArrayById(state.listing, item);
 			});
-			this.$logger.debug('setEquipmentListing.c', state.listing);
+			this.$logger.debug('store.equipment', 'setEquipmentListing', 'list.c', state.listing);
 		}
 	},
 	dispatcher: {

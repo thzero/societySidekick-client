@@ -12,17 +12,17 @@ class UserService extends BaseUserService {
 
 	async fetchFavoritesByGamerId(user) {
 		if (!user)
-			return this._error();
+			return this._error('UserService', 'fetchFavoritesByGamerId');
 
-		this._logger.debug('userId', user.id);
+		this._logger.debug('UserService', 'fetchFavoritesByGamerId', 'userId', user.id);
 		try {
 			const response = await this._serviceCommunicationRest.getById(LibraryConstants.ExternalKeys.BACKEND, 'user/favorites', user.id);
-			this._logger.debug('response', response);
+			this._logger.debug('UserService', 'fetchFavoritesByGamerId', 'response', response);
 			if (response && response.success)
 				return response;
 		}
 		catch(err) {
-			this._logger.exception(err);
+			this._logger.exception('UserService', 'fetchFavoritesByGamerId', err);
 		}
 
 		return this._error();
@@ -32,36 +32,36 @@ class UserService extends BaseUserService {
 		if (!gamerId)
 			return this._error();
 
-		this._logger.debug('userId', gamerId);
+		this._logger.debug('UserService', 'fetchByGamerId', 'gamerId', gamerId);
 		try {
 			const response = await this._serviceCommunicationRest.getById(LibraryConstants.ExternalKeys.BACKEND, 'user/gamerId', gamerId);
-			this._logger.debug('response', response);
+			this._logger.debug('UserService', 'fetchByGamerId', 'response', response);
 			if (response && response.success)
 				return response;
 		}
 		catch(err) {
-			this._logger.exception(err);
+			this._logger.exception('UserService', 'fetchByGamerId', err);
 		}
 
-		return this._error();
+		return this._error('UserService', 'fetchByGamerId');
 	}
 
 	async fetchByGamerTag(gamerTag) {
 		if (!gamerTag)
 			return this._error();
 
-		this._logger.debug('gamerTag', gamerTag);
+		this._logger.debug('UserService', 'fetchByGamerTag', 'gamerTag', gamerTag);
 		try {
 			const response = await this._serviceCommunicationRest.getById(LibraryConstants.ExternalKeys.BACKEND, 'user/gamerTag', gamerTag);
-			this._logger.debug('response', response);
+			this._logger.debug('UserService', 'fetchByGamerTag', 'response', response);
 			if (response && response.success)
 				return response;
 		}
 		catch(err) {
-			this._logger.exception(err);
+			this._logger.exception('UserService', 'fetchByGamerTag', err);
 		}
 
-		return this._error();
+		return this._error('UserService', 'fetchByGamerTag', );
 	}
 }
 

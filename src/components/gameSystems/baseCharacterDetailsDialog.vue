@@ -112,7 +112,7 @@ export default {
 			details.tagLine = String.trim(this.innerValue.tagLine);
 			details.updatedTimestamp = this.innerValue.updatedTimestamp;
 			const response = await this.$store.dispatcher.characters.updateCharacterDetails(details);
-			this.logger.debug(response);
+			this.logger.debug('Pathfinder2eCharacterDetailsDialog', 'preComplete', response);
 			return response;
 		},
 		async resetDialog(value) {

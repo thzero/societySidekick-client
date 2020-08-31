@@ -31,7 +31,7 @@ import VLoadingOverlay from '@/library_vue/components/VLoadingOverlay';
 const DelayMs = 0; // 250
 
 export default {
-	name: 'Scenarios',
+	name: 'Favorites',
 	components: {
 		ScenarioList,
 		VLoadingOverlay
@@ -82,14 +82,14 @@ export default {
 					return;
 
 				const responseFavorites = await this.serviceCharacters.listingByFavorites();
-				this.logger.debug('response', responseFavorites);
+				this.logger.debug('Favorites', 'fetch', 'response', responseFavorites);
 				if (!responseFavorites || !responseFavorites.success)
 					return;
 
 				const user = this.$store.state.user.user;
 				const characters = responseFavorites.results.data;
 				await this.$store.dispatcher.characters.getCharacterListing({ listing: true });
-				this.logger.debug('characters', characters);
+				this.logger.debug('Favorites', 'fetch', 'characters', characters);
 				for (const char of this.$store.state.characters.characters) {
 					char.user = user;
 					characters.push(char);

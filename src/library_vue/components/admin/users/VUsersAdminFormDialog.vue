@@ -39,7 +39,7 @@ export default {
 				updatedTimestamp: this.innerValue.updatedTimestamp
 			};
 			const response = await this.$store.dispatcher.adminUsers.updateAdminUser(item);
-			this.logger.debug(response);
+			this.logger.debug('VUsersAdminFormDialog', 'preComplete', response);
 			return response;
 		}
 	}

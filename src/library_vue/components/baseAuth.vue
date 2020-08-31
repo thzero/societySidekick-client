@@ -64,7 +64,7 @@ export default {
 	async mounted() {
 		await this.auth.signInCompleted();
 		Vue.prototype.$EventBus.$on('auth', isLoggedIn => {
-			this.logger.debug('isLoggedIn', isLoggedIn);
+			this.logger.debug('BaseAuth', 'mounted', 'isLoggedIn', isLoggedIn);
 			this.isLoggedIn = isLoggedIn;
 			this.disabled = isLoggedIn;
 		});

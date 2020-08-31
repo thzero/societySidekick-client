@@ -13,7 +13,7 @@ const store = {
 		async createAdminBoon({ commit }, item) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
 			const response = await service.create(item);
-			this.$logger.debug('createAdminBoon', response);
+			this.$logger.debug('store.admin.boons', 'createAdminBoon', 'response', response);
 			if (response && response.success)
 				commit('setAdminBoons', response.success && response.results ? response.results : null);
 			return response;
@@ -21,7 +21,7 @@ const store = {
 		async deleteAdminBoon({ commit }, id) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
 			const response = await service.delete(id);
-			this.$logger.debug('deleteAdminBoon', response);
+			this.$logger.debug('store.admin.boons', 'deleteAdminBoon', 'response', response);
 			if (response && response.success)
 				commit('deleteAdminBoon', id);
 			return response;
@@ -29,13 +29,13 @@ const store = {
 		async searchAdminBoons({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
 			const response = await service.search(params);
-			this.$logger.debug('searchAdminBoons', response);
+			this.$logger.debug('store.admin.boons', 'searchAdminBoons', 'response', response);
 			commit('setAdminBoonsListing', response.success && response.results ? response.results.data : null);
 		},
 		async updateAdminBoon({ commit }, item) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
 			const response = await service.update(item);
-			this.$logger.debug('updateAdminBoon', response);
+			this.$logger.debug('store.admin.boons', 'updateAdminBoon', 'response', response);
 			if (response && response.success)
 				commit('setAdminBoons', response.success && response.results ? response.results : null);
 			return response;
@@ -46,16 +46,16 @@ const store = {
 			return Utility.deleteArrayById(state.boons, id);
 		},
 		setAdminBoons(state, item) {
-			this.$logger.debug('setAdminBoons.a', item);
-			this.$logger.debug('setAdminBoons.b', state.boons);
+			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.a', item);
+			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.b', state.boons);
 			state.boons = VueUtility.updateArrayById(state.boons, item);
-			this.$logger.debug('setAdminBoons.c', state.boons);
+			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.c', state.boons);
 		},
 		setAdminBoonsListing(state, list) {
-			this.$logger.debug('setAdminBoonsListing.a', list);
-			this.$logger.debug('setAdminBoonsListing.b', state.boons);
+			this.$logger.debug('store.admin.boons', 'setAdminBoonsListing', 'list.a', list);
+			this.$logger.debug('store.admin.boons', 'setAdminBoonsListing', 'list.b', state.boons);
 			state.boons = list;
-			this.$logger.debug('setAdminBoonsListing.c', state.boons);
+			this.$logger.debug('store.admin.boons', 'setAdminBoonsListing', 'list.c', state.boons);
 		}
 	},
 	dispatcher: {

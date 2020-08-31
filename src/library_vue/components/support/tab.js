@@ -9,8 +9,8 @@ class TabSupport {
 	}
 
 	changeTab(val) {
-		// this.logger.debug('currentTab', this.currentTab)
-		// this.logger.debug('val', val)
+		// this.logger.debug('TabSupport', 'changeTab', 'currentTab', this.currentTab)
+		// this.logger.debug('TabSupport', 'changeTab', 'val', val)
 		this.currentTab = val;
 	}
 

@@ -13,7 +13,7 @@ const store = {
 		async createAdminScenario({ commit }, item) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
 			const response = await service.create(item);
-			this.$logger.debug('createAdminScenario', response);
+			this.$logger.debug('store.admin', 'createAdminScenario', 'response', response);
 			if (response && response.success)
 				commit('setAdminScenarios', response.success && response.results ? response.results : null);
 			return response;
@@ -21,7 +21,7 @@ const store = {
 		async deleteAdminScenario({ commit }, id) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
 			const response = await service.delete(id);
-			this.$logger.debug('deleteAdminScenario', response);
+			this.$logger.debug('store.admin', 'deleteAdminScenario', 'response', response);
 			if (response && response.success)
 				commit('deleteAdminScenario', id);
 			return response;
@@ -29,13 +29,13 @@ const store = {
 		async searchAdminScenarios({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
 			const response = await service.search(params);
-			this.$logger.debug('searchAdminScenarios', response);
+			this.$logger.debug('store.admin', 'searchAdminScenarios', 'response', response);
 			commit('setAdminScenariosListing', response.success && response.results ? response.results.data : null);
 		},
 		async updateAdminScenario({ commit }, item) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
 			const response = await service.update(item);
-			this.$logger.debug('updateAdminScenario', response);
+			this.$logger.debug('store.admin', 'updateAdminScenario', 'response', response);
 			if (response && response.success)
 				commit('setAdminScenarios', response.success && response.results ? response.results : null);
 			return response;
@@ -53,16 +53,16 @@ const store = {
 			return Utility.deleteArrayById(state.scenarios, id);
 		},
 		setAdminScenarios(state, item) {
-			this.$logger.debug('setAdminScenarios.a', item);
-			this.$logger.debug('setAdminScenarios.b', state.scenarios);
+			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.a', item);
+			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.b', state.scenarios);
 			state.scenarios = VueUtility.updateArrayById(state.scenarios, item);
-			this.$logger.debug('setAdminScenarios.c', state.scenarios);
+			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.c', state.scenarios);
 		},
 		setAdminScenariosListing(state, list) {
-			this.$logger.debug('setAdminScenariosListing.a', list);
-			this.$logger.debug('setAdminScenariosListing.b', state.scenarios);
+			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.a', list);
+			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.b', state.scenarios);
 			state.scenarios = list;
-			this.$logger.debug('setAdminScenariosListing.c', state.scenarios);
+			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.c', state.scenarios);
 		}
 	},
 	dispatcher: {
