@@ -8,6 +8,7 @@ import Response from '@thzero/library_common/response';
 import NotImplementedError from '@thzero/library_common/errors/notImplemented';
 
 export default {
+	name: 'Base',
 	data: () => ({
 		logger: null,
 		utility: null,

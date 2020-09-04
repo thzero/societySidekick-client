@@ -160,6 +160,7 @@
 				"adventures": {
 				   "quest": "Quest",
 				   "scenario": "Scenario",
+				   "adventure": "Adventure",
 				   "adventurePath": "Adventure Path",
 				   "achievementPoints": "Achievement Points",
 				   "initial": "Initial"

@@ -64,7 +64,7 @@ export default {
 		},
 		async preComplete() {
 			this.dialogConfirmSignal.open();
-			return this.error();
+			return this.error('InventoryGearSetDeleteDialog', 'preCompleted');
 		},
 		async preCompleteConfirm() {
 			const response = await AppUtility.settings().updateSettingsUserGameSystem(this.$store, this.$store.state.user.user, this.gameSystemId, this.gearSetId, (settings, newVal) => {

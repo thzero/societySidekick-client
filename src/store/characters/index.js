@@ -15,7 +15,8 @@ const store = {
 	actions: {
 		async createCharacter({ commit }, value) {
 			if (!value)
-				return Response.error();
+				return Response.error('Invalid chraacter value.');
+
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.create(value);
 			this.$logger.debug('store.characters', 'createCharacter', 'response', response);

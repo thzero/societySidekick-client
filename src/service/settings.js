@@ -32,6 +32,7 @@ class Settings extends BaseSettings {
 	getSettingsUserBoons(user, funcAttribute) {
 		if (!user || !user.settings)
 			return null;
+
 		return funcAttribute(user.settings.boons);
 	}
 
