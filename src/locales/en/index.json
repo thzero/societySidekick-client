@@ -158,11 +158,13 @@
 				},
 				"adventure": "Adventure",
 				"adventures": {
-				   "quest": "Quest",
-				   "scenario": "Scenario",
-				   "adventurePath": "Adventure Path",
-				   "achievementPoints": "Achievement Points",
-				   "initial": "Initial"
+					"adventure": "Adventure",
+					"adventurePath": "Adventure Path",
+					"module": "Module",
+					"quest": "Quest",
+					"scenario": "Scenario",
+					"achievementPoints": "Achievement Points",
+					"initial": "Initial"
 				},
 				"events": {
 				   "standard": "Standard",
@@ -241,11 +243,12 @@
 				},
 				"adventure": "Adventure",
 				"adventures": {
-				   "quest": "Quest",
-				   "scenario": "Scenario",
-				   "adventure": "Adventure",
-				   "adventurePath": "Adventure Path",
-				   "initial": "Initial"
+					"adventure": "Adventure",
+					"adventurePath": "Adventure Path",
+					"module": "Module",
+					"quest": "Quest",
+					"scenario": "Scenario",
+					"initial": "Initial"
 				},
 				"participant": "Participant",
 				"participants": {

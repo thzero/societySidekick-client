@@ -231,7 +231,7 @@
 								rules="required|decimal:1|min_value:0|max_value:12|"
 								vid="achievementPointsEarned"
 								:label="$t('characters.gameSystems.pathfinder2e.achievementPoints') + ' ' + $t('characters.earned')"
-								:readonly="true"
+								:readonly="isAchievementPointsEarnedReadOnly"
 							/>
 							<VNumberFieldWithValidation
 								ref="achievementPointsSpent"
@@ -256,8 +256,8 @@
 								v-model="downtimePointsEarned"
 								rules="required|decimal:1|min_value:0|max_value:24|"
 								vid="downtimePointsEarned"
-								:label="$t('characters.gameSystems.pathfinder2e.downtime') + ' ' + $t('characters.spent')"
-								:readonly="true"
+								:label="$t('characters.gameSystems.pathfinder2e.downtime') + ' ' + $t('characters.earned')"
+								:readonly="isDowntimePointsReadOnly"
 							/>
 							<VNumberFieldWithValidation
 								ref="downtimePointsSpent"
@@ -436,7 +436,6 @@
 <script>
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
-import Pathfinder2eSharedConstants from '@/common/gameSystems/pathfinder2e/constants';
 
 import baseScenarioDialog from '@/components/gameSystems/baseScenarioDialog';
 
@@ -458,8 +457,14 @@ export default {
 		scenarioAdventureName: null
 	}),
 	computed: {
+		isAchievementPointsEarnedReadOnly() {
+			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.innerValue);
+		},
 		isAdventureScenario() {
-			return this.innerValue.scenarioAdventure === Pathfinder2eSharedConstants.ScenarioAdventures.SCENARIO;
+			return this.rulesGameSystem.isAdventureScenario(this.innerValue);
+		},
+		isDowntimePointsReadOnly() {
+			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.innerValue);
 		}
 	},
 	methods: {

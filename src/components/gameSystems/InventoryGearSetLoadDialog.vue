@@ -70,7 +70,7 @@ export default {
 			if (character) {
 				if (character.inventory && character.inventory.length > 0) {
 					this.dialogConfirmSignal.open();
-					return this.error();
+					return this.error('InventoryGearSetLoadDialog', 'preComplete');
 				}
 			}
 

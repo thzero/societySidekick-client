@@ -12,7 +12,7 @@ class UserService extends BaseUserService {
 
 	async fetchFavoritesByGamerId(user) {
 		if (!user)
-			return this._error('UserService', 'fetchFavoritesByGamerId');
+			return this._error('UserService', 'fetchFavoritesByGamerId', 'Invalid user.');
 
 		this._logger.debug('UserService', 'fetchFavoritesByGamerId', 'userId', user.id);
 		try {
@@ -25,12 +25,12 @@ class UserService extends BaseUserService {
 			this._logger.exception('UserService', 'fetchFavoritesByGamerId', err);
 		}
 
-		return this._error();
+		return this._error('UserService', 'fetchFavoritesByGamerId');
 	}
 
 	async fetchByGamerId(gamerId) {
 		if (!gamerId)
-			return this._error();
+			return this._error('UserService', 'fetchByGamerId', 'Invalid gamerId.');
 
 		this._logger.debug('UserService', 'fetchByGamerId', 'gamerId', gamerId);
 		try {
@@ -48,7 +48,7 @@ class UserService extends BaseUserService {
 
 	async fetchByGamerTag(gamerTag) {
 		if (!gamerTag)
-			return this._error();
+			return this._error('UserService', 'fetchByGamerTag', 'Invalid gamerTag.');
 
 		this._logger.debug('UserService', 'fetchByGamerTag', 'gamerTag', gamerTag);
 		try {
@@ -61,7 +61,7 @@ class UserService extends BaseUserService {
 			this._logger.exception('UserService', 'fetchByGamerTag', err);
 		}
 
-		return this._error('UserService', 'fetchByGamerTag', );
+		return this._error('UserService', 'fetchByGamerTag');
 	}
 }
 
