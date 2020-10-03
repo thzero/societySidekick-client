@@ -1,4 +1,4 @@
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
 import BaseSettings from '@thzero/library_client/service/baseSettings';
@@ -16,7 +16,7 @@ class Settings extends BaseSettings {
 			return Response.error();
 
 		const settings = this.mergeUser(user.settings);
-		settings.favorites = Utility.deleteArrayById(settings.favorites, id);
+		settings.favorites = LibraryUtility.deleteArrayById(settings.favorites, id);
 		return store.dispatcher.user.setUserSettings(settings);
 	}
 
@@ -25,7 +25,7 @@ class Settings extends BaseSettings {
 			return Response.error();
 
 		const settings = this.mergeUser(user.settings);
-		settings.locations = Utility.deleteArrayById(settings.locations, id);
+		settings.locations = LibraryUtility.deleteArrayById(settings.locations, id);
 		return store.dispatcher.user.setUserSettings(settings);
 	}
 
@@ -172,7 +172,7 @@ class Settings extends BaseSettings {
 		let location = settings.locations.find(l => l.id === id);
 		if (!location) {
 			location = new SettingsLocation();
-			location.id = Utility.generateId();
+			location.id = LibraryUtility.generateId();
 			settings.locations.push(location);
 		}
 		func(location, newVal);

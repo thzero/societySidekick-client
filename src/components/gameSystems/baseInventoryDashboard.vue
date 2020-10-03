@@ -1,5 +1,5 @@
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
 import baseDashboard from '@/components/baseDashboard';
@@ -60,7 +60,7 @@ export default {
 				temp.inventory.push(inv);
 			}
 
-			list = Utility.sortByOrder(list, true);
+			list = LibraryUtility.sortByOrder(list, true);
 			for (const item of list)
 				item.inventory = this.groupedLines3(item.inventory);
 
@@ -110,7 +110,7 @@ export default {
 			const character = this.clone(this.value);
 			character.inventory = character.inventory ? character.inventory : [];
 			character.inventory.push(item);
-			const last = Utility.sortByOrder(character.scenarios).slice(-1).pop();
+			const last = LibraryUtility.sortByOrder(character.scenarios).slice(-1).pop();
 			item.boughtScenarioId = last ? last.id : null;
 			await this.$refs.inventoryDialog.reset({ id: item.id, character: character });
 			this.dialogInventory.open();

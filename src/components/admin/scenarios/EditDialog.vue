@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
 import VCheckboxWithValidation from '@/library_vue/components/form/VCheckboxWithValidation';
@@ -124,7 +124,7 @@ export default {
 			return await dispatcher.adminScenarios.updateAdminScenario(value);
 		},
 		resetDialogI(value) {
-			value.updatedTimestamp = value.updatedTimestamp ? value.updatedTimestamp : Utility.getTimestamp();
+			value.updatedTimestamp = value.updatedTimestamp ? value.updatedTimestamp : LibraryUtility.getTimestamp();
 		}
 	}
 };

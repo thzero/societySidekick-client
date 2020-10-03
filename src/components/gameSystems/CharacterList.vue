@@ -177,7 +177,7 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
 import baseList from '@/components/gameSystems/baseList';
@@ -265,12 +265,12 @@ export default {
 			// TODO: Offer different sorts
 			// TODO: need to incorporation direction...
 			if (this.sortBy === SharedConstants.SortBy.Characters.CharacterName)
-				results = Utility.sortByName(results, this.sortDirection);
+				results = LibraryUtility.sortByName(results, this.sortDirection);
 			else if (this.sortBy === SharedConstants.SortBy.Characters.Level)
-				// results.sort((a, b) => Utility.sortByNumber(a, b, (obj) => {
+				// results.sort((a, b) => LibraryUtility.sortByNumber(a, b, (obj) => {
 				// 	return (obj ? ( obj.level ? obj.level : 0): 0);
 				// }));
-				results = Utility.sortByNumberEx(results, (obj) => {
+				results = LibraryUtility.sortByNumberEx(results, (obj) => {
 						return (obj ? ( obj.level ? obj.level : 0): 0);
 					},
 					this.sortDirection);
@@ -318,7 +318,7 @@ export default {
 			return level ? level : 0;
 		},
 		clickCharacter(id) {
-			this.$navRouter.push(Utility.formatUrl({ url: '/character', params: [ id ]}));
+			this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ id ]}));
 		},
 		clickClear() {
 			AppUtility.settings().clearUser(this.$store, this.$store.state.user.user, (settings) => {

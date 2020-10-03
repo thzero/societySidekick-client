@@ -39,7 +39,7 @@
 <script>
 import Constants from '@/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
 import VNumberFieldWithValidation from '@/library_vue/components/form/VNumberFieldWithValidation';
@@ -101,7 +101,7 @@ export default {
 			const response = await this.$store.dispatcher.characters.createCharacter(this.gameSystemId, name, number);
 			this.logger.debug('CharacterNewDialog', 'preComplete', response);
 			if (response && response.success) {
-				this.$navRouter.push(Utility.formatUrl({ url: '/character', params: [ response.results.id ]}));
+				this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ response.results.id ]}));
 				return response;
 			}
 

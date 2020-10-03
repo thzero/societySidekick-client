@@ -104,7 +104,7 @@
 <script>
 import Constants from '@/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseScenarioDashboard from '@/components/gameSystems/baseScenarioDashboard';
 import CharacterDetails from '@/components/gameSystems/starfinder1e/CharacterDetails';
@@ -123,7 +123,7 @@ export default {
 	computed: {
 		scenarios() {
 			const results = this.value && this.value.scenarios ? this.value.scenarios : [];
-			return Utility.sortByOrder(results, true);
+			return LibraryUtility.sortByOrder(results, true);
 		}
 	},
 	methods: {

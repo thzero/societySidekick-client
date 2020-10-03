@@ -1,5 +1,5 @@
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 import VueUtility from '@/library_vue/utility';
 
@@ -43,7 +43,7 @@ export default {
 	}),
 	computed: {
 		locations() {
-			return VueUtility.selectBlank(Utility.sortByName(AppUtility.settings().getSettingsUserLocations(this.$store.state.user.user), true));
+			return VueUtility.selectBlank(LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.$store.state.user.user), true));
 		},
 		outputType() {
 			return 'timestamp';
@@ -126,7 +126,7 @@ export default {
 		},
 		async resetDialog(value) {
 			this.steps = 1;
-			value.timestamp = value.timestamp ? Utility.convertTimestampToLocal(value.timestamp).valueOf() : Utility.getTimestampLocal().valueOf();
+			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
 			await this.resetDialogI(value);
 			this.isNew = value && !value.id;
 			this.innerValue = value;

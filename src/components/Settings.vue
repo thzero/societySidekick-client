@@ -281,7 +281,7 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 import GameSystemsUtility from '@/utility/gameSystems';
 
@@ -320,14 +320,14 @@ export default {
 	}),
 	asyncComputed: {
 		async favorites() {
-			// return Utility.sortByName(AppUtility.settings().getSettingsUserFavorites(this.user), true)
+			// return LibraryUtility.sortByName(AppUtility.settings().getSettingsUserFavorites(this.user), true)
 			const response = await this.$store.dispatcher.user.getUserFavorites();
 			return response && response.success ? response.results : [];
 		}
 	},
 	computed: {
 		locations() {
-			return Utility.sortByName(AppUtility.settings().getSettingsUserLocations(this.user), true);
+			return LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.user), true);
 		},
 		gameSystemIds() {
 			return SharedConstants.GameSystems;

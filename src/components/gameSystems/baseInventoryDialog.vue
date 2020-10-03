@@ -1,5 +1,5 @@
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
@@ -64,7 +64,7 @@ export default {
 				item.name = item.scenario ? item.scenario.name : '';
 			}
 
-			return Utility.sortByOrder(scenarios, true);
+			return LibraryUtility.sortByOrder(scenarios, true);
 		},
 		characterScenariosBlank() {
 			return VueUtility.selectBlank(this.characterScenarios.slice(0));
@@ -189,7 +189,7 @@ export default {
 			this.itemId = null;
 			this.character = value.character;
 			const temp = value.character.inventory.find(l => l.id == value.id);
-			temp.timestamp = temp.timestamp ? Utility.convertTimestampToLocal(temp.timestamp).valueOf() : Utility.getTimestampLocal().valueOf();
+			temp.timestamp = temp.timestamp ? LibraryUtility.convertTimestampToLocal(temp.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
 			this.isNew = value && !value.id;
 			this.innerValue = temp;
 

@@ -4,7 +4,7 @@ import VuexPersist from 'vuex-persist';
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
 // Admin Update
@@ -96,7 +96,7 @@ class AppStore extends BaseStore {
 					this.$logger.debug('setPlans.c', state.plans);
 				},
 				setSettings(state, settings) {
-					state.settings = Utility.merge3({}, state.settings, settings);
+					state.settings = LibraryUtility.merge3({}, state.settings, settings);
 				},
 				setVersion(state, version) {
 					this.$logger.debug('setVersion.version', version);

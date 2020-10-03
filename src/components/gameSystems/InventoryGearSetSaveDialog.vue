@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library_common/utility';
+importLibraryUtility';
 import AppUtility from '@/utility/app';
 
 import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
@@ -144,7 +144,7 @@ export default {
 					const name = String.trim(newVal.name);
 					gearSet = settings.gearSets.find(l => l.name.toLowerCase() === name.toLowerCase());
 					if (!gearSet) {
-						gearSet = { id: Utility.generateId(), name: name, inventory: [] };
+						gearSet = { id: LibraryUtility.generateId(), name: name, inventory: [] };
 						settings.gearSets.push(gearSet);
 					}
 				}

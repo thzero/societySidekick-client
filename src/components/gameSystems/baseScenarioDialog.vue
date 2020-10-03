@@ -1,5 +1,5 @@
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 import VueUtility from '@/library_vue/utility';
 
@@ -149,7 +149,7 @@ export default {
 		},
 		async resetDialog(value) {
 			this.steps = 1;
-			value.timestamp = value.timestamp ? Utility.convertTimestampToLocal(value.timestamp).valueOf() : Utility.getTimestampLocal().valueOf();
+			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
 			this.experiencePointsEarned = value ? value.experiencePointsEarned : 0;
 			this.scenarioName = this.serviceGameSystem.determineScenarioName(value, this.$store);
 			await this.resetDialogI(value);

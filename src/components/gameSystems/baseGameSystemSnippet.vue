@@ -1,7 +1,7 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
 import baseSnippet from '@/components/gameSystems/baseSnippet';
@@ -26,7 +26,7 @@ export default {
 	},
 	methods: {
 		clickCharacter(id) {
-			this.$navRouter.push(Utility.formatUrl({ url: '/character', params: [ id ]}));
+			this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ id ]}));
 		},
 		getGameSystemName(id) {
 			const results = this.$store.getters.getGameSystem(id);

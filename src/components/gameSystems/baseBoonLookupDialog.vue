@@ -1,5 +1,5 @@
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
 import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
@@ -95,7 +95,7 @@ export default {
 			return character ? character.number : null;
 		},
 		playedTimestamp(item) {
-			return Utility.getDateHuman(item ? item.timestamp : 0);
+			return LibraryUtility.getDateHuman(item ? item.timestamp : 0);
 		},
 		async resetDialog() {
 			this.played = this.$store.getters.getScenarioPlayed(this.characterId);

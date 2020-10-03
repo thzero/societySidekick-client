@@ -1,5 +1,5 @@
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseEdit from '../baseEdit';
 import VConfirmationDialog from '../VConfirmationDialog';
@@ -57,7 +57,7 @@ export default {
 		async dialogEditOpen(item, isNew) {
 			const title = isNew ? 'titles.new' : 'titles.edit';
 			this.dialogEditItemTitle = this.$trans.t(title);
-			await this.$refs.editDialog.reset(this.clone(item ? item : Utility.instantiate(this.defaultItem())));
+			await this.$refs.editDialog.reset(this.clone(item ? item : LibraryUtility.instantiate(this.defaultItem())));
 			this.dialogEditSignal.open();
 		},
 		getLookupName(lookups, id) {

@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import base from '@/library_vue/components/base';
 import VMarkdown from '@/library_vue/components/markup/VMarkdown';
@@ -51,8 +51,8 @@ export default {
 		news() {
 			if (!this.$store.state.news.latest)
 				return [];
-			const newsS = Utility.sortByTimestamp(this.$store.state.news.latest.filter(l => l.sticky));
-			let news = Utility.sortByTimestamp(this.$store.state.news.latest.filter(l => !l.sticky));
+			const newsS = LibraryUtility.sortByTimestamp(this.$store.state.news.latest.filter(l => l.sticky));
+			let news = LibraryUtility.sortByTimestamp(this.$store.state.news.latest.filter(l => !l.sticky));
 			return newsS.concat(news);
 		}
 	}

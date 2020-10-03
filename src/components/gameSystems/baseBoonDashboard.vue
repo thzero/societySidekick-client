@@ -1,5 +1,5 @@
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseDashboard from '@/components/baseDashboard';
 
@@ -20,7 +20,7 @@ export default {
 				this.boonsScenario(results, scenario);
 			for (const result of results)
 				result.name = this.boonName(result.boonId);
-			return Utility.sortByName(results, true);
+			return LibraryUtility.sortByName(results, true);
 		}
 	},
 	methods: {
@@ -55,9 +55,9 @@ export default {
 				return values;
 
 			if (ascending)
-				return values.sort((a, b) => Utility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }));
+				return values.sort((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }));
 
-			return values.sort((a, b) => Utility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }));
+			return values.sort((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }));
 		}
 	}
 };

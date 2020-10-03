@@ -3,7 +3,7 @@ import Vue from 'vue';
 
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
@@ -121,7 +121,7 @@ export default {
 			return character ? character.number : null;
 		},
 		playedTimestamp(item) {
-			return Utility.getDateHuman(item ? item.timestamp : 0);
+			return LibraryUtility.getDateHuman(item ? item.timestamp : 0);
 		},
 		async resetDialog() {
 			this.played = this.$store.getters.getScenarioPlayed(this.characterId);

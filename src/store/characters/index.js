@@ -2,7 +2,7 @@ import Vue from 'vue';
 
 import Constants from '@/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
 import Response from '@thzero/library_common/response';
@@ -139,7 +139,7 @@ const store = {
 		deleteCharacter(state, characterId) {
 			this.$logger.debug('store.characters', 'deleteCharacter', 'item.a', characterId);
 			this.$logger.debug('store.characters', 'deleteCharacter', 'item.b', state.characters);
-			Utility.deleteArrayById(state.characters, characterId);
+			LibraryUtility.deleteArrayById(state.characters, characterId);
 			this.$logger.debug('store.characters', 'deleteCharacter', 'item.c', state.characters);
 		},
 		setCharacter(state, character) {
@@ -158,7 +158,7 @@ const store = {
 				params.results.forEach((item) => {
 					character = state.characters.find(l => l.id === item.id);
 					if (character)
-						character = Utility.merge2(character, item);
+						character = LibraryUtility.merge2(character, item);
 					else
 						character = item;
 					state.characters = VueUtility.updateArrayById(state.characters, character);

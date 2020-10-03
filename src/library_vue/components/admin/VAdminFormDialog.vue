@@ -1,5 +1,5 @@
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import NotImplementedError from '@thzero/library_common/errors/notImplemented';
@@ -96,8 +96,8 @@ export default {
 			this.randomKey = VueUtility.randomKeyGen();
 			if (value) {
 				const temp = this.clone(value);
-				temp.timestamp = temp.timestamp ? Utility.convertTimestampToLocal(temp.timestamp).valueOf() : Utility.getTimestampLocal().valueOf();
-				temp.updatedTimestamp = temp.updatedTimestamp ? temp.updatedTimestamp : Utility.getTimestamp();
+				temp.timestamp = temp.timestamp ? LibraryUtilityconvertTimestampToLocal(temp.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
+				temp.updatedTimestamp = temp.updatedTimestamp ? temp.updatedTimestamp : LibraryUtility.getTimestamp();
 				this.gameSystemId = temp.gameSystemId;
 				await this.resetDialogI(temp);
 				this.innerValue = temp;

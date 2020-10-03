@@ -198,7 +198,7 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 import VueUtility from '@/library_vue/utility';
 
@@ -623,9 +623,9 @@ export default {
 				return values;
 
 			if (ascending)
-				return values.sort((a, b) => Utility.sortByString(a, b, (v) => { return v && v.boon ? v.boon.name : null; }));
+				return values.sort((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.boon ? v.boon.name : null; }));
 
-			return values.sort((a, b) => Utility.sortByString(b, a, (v) => { return v && v.boon ? v.boon.name : null; }));
+			return values.sort((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.boon ? v.boon.name : null; }));
 		}
 	}
 };

@@ -2,7 +2,7 @@ import Vue from 'vue';
 
 import Constants from '@/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
 const store = {
@@ -43,7 +43,7 @@ const store = {
 	},
 	mutations: {
 		deleteAdminEquipment(state, id) {
-			return Utility.deleteArrayById(state.equipment, id);
+			return LibraryUtility.deleteArrayById(state.equipment, id);
 		},
 		setAdminEquipment(state, item) {
 			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.a', item);

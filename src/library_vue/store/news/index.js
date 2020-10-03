@@ -2,7 +2,7 @@ import Vue from 'vue';
 
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 const store = {
 	state: {
@@ -21,7 +21,7 @@ const store = {
 	},
 	mutations: {
 		deleteNews(state, id) {
-			Utility.deleteArrayById(state.latest, id);
+			LibraryUtility.deleteArrayById(state.latest, id);
 		},
 		setLatestNews(state, latest) {
 			this.$logger.debug('store.news', 'setLatest', 'item.a', latest);
