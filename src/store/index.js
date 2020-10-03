@@ -4,8 +4,8 @@ import VuexPersist from 'vuex-persist';
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
-import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 
 // Admin Update
 import adminBoons from '@/store/admin/boons';

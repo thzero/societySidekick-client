@@ -177,8 +177,8 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue/components/VDirectionButton';

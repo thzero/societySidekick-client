@@ -1,6 +1,6 @@
 <script>
-import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseDashboard from '@/components/baseDashboard';
 import InventoryGearSetDeleteDialog from '@/components/gameSystems/InventoryGearSetDeleteDialog';
