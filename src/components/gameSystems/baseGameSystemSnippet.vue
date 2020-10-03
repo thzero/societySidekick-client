@@ -1,8 +1,8 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseSnippet from '@/components/gameSystems/baseSnippet';
 

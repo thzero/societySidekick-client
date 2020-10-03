@@ -281,8 +281,8 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 import GameSystemsUtility from '@/utility/gameSystems';
 
 import Favorite from '@/components/favorites/Favorite';

@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
 import VCheckboxWithValidation from '@/library_vue/components/form/VCheckboxWithValidation';
