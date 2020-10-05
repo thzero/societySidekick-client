@@ -134,13 +134,13 @@ export default {
 	extends: baseGameSystemSnippet,
 	computed: {
 		className() {
-			return (this.serviceGameSystem ? this.serviceGameSystem.classNamesAndLevels(this.value, this.$store) : '');
+			return (this.serviceGameSystem ? this.serviceGameSystem.classNamesAndLevels(this.correlationId(), this.value, this.$store) : '');
 		},
 		statusColor() {
 			return 'color: ' + (this.value.status === 'dead' ? 'red' : 'green');
 		},
 		statusName() {
-			return this.serviceGameSystem.characterLookupStatusName(this.value.status, this.lookups);
+			return this.serviceGameSystem.characterLookupStatusName(this.correlationId(), this.value.status, this.lookups);
 		}
 	}
 };

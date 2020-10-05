@@ -455,17 +455,17 @@ export default {
 	},
 	methods: {
 		className(id) {
-			return this.serviceGameSystem.classNameById(id, this.$store);
+			return this.serviceGameSystem.classNameById(this.correlationId(), id, this.$store);
 		},
 		initializeServices() {
 			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		},
 		scenarioAdvancementSpeedName(id) {
-			return this.serviceGameSystem.scenarioLookupAdvancementSpeedName(id, this.lookups);
+			return this.serviceGameSystem.scenarioLookupAdvancementSpeedName(this.correlationId(), id, this.lookups);
 		},
 		scenarioAdventureName(id) {
-			return this.serviceGameSystem.scenarioLookupAdventureName(id, this.lookups);
+			return this.serviceGameSystem.scenarioLookupAdventureName(this.correlationId(), id, this.lookups);
 		}
 	}
 };

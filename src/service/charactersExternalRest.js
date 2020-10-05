@@ -17,16 +17,16 @@ class CharacterRestExternalService extends RestExternalService {
 		this._enforcer = this._serviceSecurity.initSecurity(KeyEnforcer, security.options);
 	}
 
-	async validate(sub, dom, obj, act) {
-		return await this._validate(KeyEnforcer, sub, null, 'character', act);
+	async validate(correlationId, sub, dom, obj, act) {
+		return await this._validate(correlationId, KeyEnforcer, sub, null, 'character', act);
 	}
 
-	async validateEdit(character, user, act) {
+	async validateEdit(correlationId, character, user, act) {
 		const userRole = await this._getUserRole(character, user);
 		if (!userRole)
 			return false;
 
-		const results = await this.validate(userRole, null, 'character', act);
+		const results = await this.validate(correlationId, userRole, null, 'character', act);
 		return results;
 	}
 

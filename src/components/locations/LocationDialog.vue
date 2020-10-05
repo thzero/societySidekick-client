@@ -63,8 +63,8 @@ export default {
 			this.$emit('ok');
 			return true;
 		},
-		async preCompleteResponseOk() {
-			const response = AppUtility.settings().updateSettingsUserLocation(this.$store, this.$store.state.user.user, this.id, { name: this.name, location: this.location }, (settings, newVal) => {
+		async preCompleteResponseOk(correlationId) {
+			const response = AppUtility.settings().updateSettingsUserLocation(correlationId, this.$store, this.$store.state.user.user, this.id, { name: this.name, location: this.location }, (settings, newVal) => {
 				settings.name = newVal.name;
 				settings.location = newVal.location;
 			});

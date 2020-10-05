@@ -15,7 +15,7 @@ export default {
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		},
 		scenarioLookupAdventureName(value) {
-			return this.serviceGameSystem.scenarioLookupAdventureName(value, this.lookups);
+			return this.serviceGameSystem.scenarioLookupAdventureName(this.correlationId(), value, this.lookups);
 		}
 	}
 };

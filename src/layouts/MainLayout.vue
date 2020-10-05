@@ -331,7 +331,7 @@ export default {
 		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 
 		this.$EventBus.$on('displayMarkup', (value) => {
-			this.markup(value);
+			this.markup(this.correlationId(), value);
 			this.dialogDisplayMarkupSignal.open();
 		});
 	},
@@ -350,11 +350,11 @@ export default {
 			this.dialogDisplayMarkupSignal.ok();
 		},
 		async dialogNewCharacterOpen() {
-			await this.$refs.newCharacterDialog.reset({});
+			await this.$refs.newCharacterDialog.reset(this.correlationId(), {});
 			this.dialogNewCharacter.open();
 		},
-		markup(value) {
-			this.displayMarkupValue = value ? this._serviceMarkup.trimResults(this._serviceMarkup.render(value)) : null;
+		markup(correlationId, value) {
+			this.displayMarkupValue = value ? this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, value)) : null;
 		}
 	}
 };

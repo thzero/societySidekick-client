@@ -154,7 +154,7 @@ export default {
 		},
 		types: {
 			get() {
-				const lookups = this.initLookupsByGameSystemId(this.gameSystemId);
+				const lookups = this.initLookupsByGameSystemId(this.correlationId(), this.gameSystemId);
 				return lookups ? lookups.boonTypes : [];
 			},
 			cache: false
@@ -163,40 +163,40 @@ export default {
 	watch: {
 		// eslint-disable-next-line
 		async gameSystemId(newVal) {
-			await this.$store.dispatcher.adminScenarios.searchAdminScenarios({ gameSystemId: this.gameSystemId });
+			await this.$store.dispatcher.adminScenarios.searchAdminScenarios(this.correlationId(), { gameSystemId: this.gameSystemId });
 		}
 	},
 	methods: {
 		dialogScenariosOk(id) {
 			this.$set(this.innerValue, 'scenarioId', id);
 			this.scenarioName = this.getScenarioNameById(id);
-			this.dialogScenariosOkI(id);
+			this.dialogScenariosOkI(this.correlationId(), id);
 			this.dialogScenarios.ok();
 		},
 		// eslint-disable-next-line
-		dialogScenariosOkI(id) {
+		dialogScenariosOkI(correlationId, id) {
 		},
 		async dialogScenariosOpen() {
-			await this.$refs.scenarioLookup.reset();
+			await this.$refs.scenarioLookup.reset(this.correlationId(), null);
 			this.dialogScenarios.open();
 		},
 		getScenarioNameById(id) {
 			const service = this.serviceGameSystem;
 			const results = this.$store.getters.getAdminScenario(id);
-			return service ? results ? service.scenarioName(results) : null : null;
+			return service ? results ? service.scenarioName(this.correlationId(), results) : null : null;
 		},
 		// eslint-disable-next-line
-		preCompleteI(value) {
+		async preCompleteI(correlationId, value) {
 		},
-		async preCompleteSubmitCreate(dispatcher, value) {
-			return await dispatcher.adminBoons.createAdminBoon(value);
+		async preCompleteSubmitCreate(correlationId, dispatcher, value) {
+			return await dispatcher.adminBoons.createAdminBoon(correlationId, value);
 		},
-		async preCompleteSubmitUpdate(dispatcher, value) {
+		async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
 			value.uses = value.uses ? value.uses : null;
-			return await dispatcher.adminBoons.updateAdminBoon(value);
+			return await dispatcher.adminBoons.updateAdminBoon(correlationId, value);
 		},
 		// eslint-disable-next-line
-		async resetDialogI(value) {
+		async resetDialogI(correlationId, value) {
 			this.innerValue = value;
 			await this.$store.dispatcher.adminScenarios.searchAdminScenarios({ gameSystemId: value.gameSystemId });
 			this.scenarioName = this.getScenarioNameById(value.scenarioId);

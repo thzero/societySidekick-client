@@ -46,7 +46,7 @@ export default {
 		}
 	},
 	async created() {
-		await this.$store.dispatcher.root.getVersion();
+		await this.$store.dispatcher.root.getVersion(this.correlationId());
 		this.version = this.$store.state.version;
 	}
 };

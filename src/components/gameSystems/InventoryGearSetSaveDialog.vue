@@ -53,7 +53,7 @@
 </template>
 
 <script>
-importLibraryUtility';
+import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
 import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
@@ -96,48 +96,48 @@ export default {
 		async dialogConfirmOk() {
 			this.$emit('ok');
 		},
-		async preComplete() {
+		async preComplete(correlationId) {
 			if (!this.gearSetId && !this.name)
-				return Response.error().addGeneric(this.$trans.t('errors.inventories.eitherGearSetOrName'));
+				return this.error('InventoryGearSetSaveDialog', 'preComplete', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.eitherGearSetOrName'));
 
 			if (!String.isNullOrEmpty(this.name) && this.gearSetId)
-				return await this.rename();
+				return await this.rename(correlationId);
 
 			if (this.gearSetId) {
-				this.dialogConfirmSignal.open();
-				return this.error();
+				this.dialogConfirmSignal.open(correlationId);
+				return this.error('InventoryGearSetSaveDialog', 'preComplete', null, null, null, null, correlationId);
 			}
 
-			return await this.save();
+			return await this.save(correlationId);
 		},
-		async preCompleteConfirm() {
-			await this.save();
-			return this.success();
+		async preCompleteConfirm(correlationId) {
+			await this.save(correlationId);
+			return this.success(correlationId);
 		},
-		async rename() {
+		async rename(correlationId) {
 			const response = await AppUtility.settings().updateSettingsUserGameSystem(this.$store, this.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name }, (settings, newVal) => {
 				if (!newVal && !this.gameSystemId)
-					return Response.error().addGeneric(this.$trans.t('errors.invalidRequest'));
+					return Response.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.invalidRequest'));
 
 				const name = String.trim(newVal.name);
 				const gearSet = settings.gearSets.find(l => l.id === newVal.gearSetId);
 				if (!gearSet)
-					return Response.error().addGeneric(this.$trans.t('errors.inventories.renameInvalidGearSet'));
+					return Response.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.renameInvalidGearSet'));
 
 				gearSet.name = name;
 
-				return Response.success();
+				return Response.success(correlationId);
 			});
 
 			return response;
 		},
-		async save() {
-			const response = await AppUtility.settings().updateSettingsUserGameSystem(this.$store, this.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name, inventory: this.inventory }, (settings, newVal) => {
+		async save(correlationId) {
+			const response = await AppUtility.settings().updateSettingsUserGameSystem(correlationId, this.$store, this.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name, inventory: this.inventory }, (settings, newVal) => {
 				if (!newVal && !this.gameSystemId)
-					return Response.error().addGeneric(this.$trans.t('errors.invalidRequest'));
+					return Response.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.invalidRequest'));
 
 				if (newVal.name && newVal.gearSetId)
-					return Response.error().addGeneric(this.$trans.t('errors.inventories.eitherGearSetOrName'));
+					return Response.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.eitherGearSetOrName'));
 
 				let gearSet;
 				if (newVal.name) {
@@ -152,7 +152,7 @@ export default {
 					gearSet = settings.gearSets.find(l => l.id === newVal.gearSetId);
 
 				if (!gearSet)
-					return Response.error();
+					return Response.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId);
 
 				gearSet.inventory = (newVal.inventory ? newVal.inventory : []).map(l => {
 					return {

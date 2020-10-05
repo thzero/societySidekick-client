@@ -75,7 +75,7 @@ export default {
 	},
 	methods: {
 		dialogEditOpen() {
-			this.$emit('dialogEdit', this.value);
+			this.$emit('dialog-edit', this.value);
 		},
 		getGameSystemName(id) {
 			const results = this.$store.getters.getGameSystem(id);
@@ -98,7 +98,7 @@ export default {
 			return this.scenarioNameById(scenario.scenarioId, this.$store);
 		},
 		scenarioNameById(id) {
-			return id ? this.serviceGameSystem.determineScenarioNameById(id, this.$store) : '';
+			return id ? this.serviceGameSystem.determineScenarioNameById(this.correlationId(), id, this.$store) : '';
 		},
 		scenarioOrder(id) {
 			if (!this.character || !this.character.inventory)

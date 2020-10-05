@@ -209,7 +209,7 @@ export default {
 	extends: baseCharacterDetailsDialog,
 	computed: {
 		archetypes() {
-			return this.serviceGameSystem.archetypes(this.$store, true);
+			return this.serviceGameSystem.archetypes(this.correlationId(), this.$store, true);
 		},
 		boonsAdvanced() {
 			const boons = this.boons.filter(l => l.type == PatfinderSharedConstants.BoonTypes.ADVANCED);
@@ -224,11 +224,11 @@ export default {
 			return VueUtility.selectBlank(boons);
 		},
 		classes() {
-			return this.serviceGameSystem.classes(this.$store, true);
+			return this.serviceGameSystem.classes(this.correlationId(), this.$store, true);
 		}
 	},
 	methods: {
-		initResponseDetails(details) {
+		initResponseDetails(correlationId, details) {
 			details.archetypeId = this.innerValue.archetypeId;
 			details.boonAdvancedId = this.innerValue.boonAdvancedId;
 			details.boonFactionId = this.innerValue.boonFactionId;

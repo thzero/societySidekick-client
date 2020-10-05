@@ -14,36 +14,37 @@ export default {
 	}),
 	computed: {
 		boons() {
+			const correlationId = this.correlationId();
 			const results = this.value && this.value.boons ? this.value.boons : [];
 			const scenarios = this.value && this.value.scenarios ? this.value.scenarios : [];
 			for (const scenario of scenarios)
-				this.boonsScenario(results, scenario);
+				this.boonsScenario(correlationId, results, scenario);
 			for (const result of results)
-				result.name = this.boonName(result.boonId);
+				result.name = this.boonName(correlationId, result.boonId);
 			return LibraryUtility.sortByName(results, true);
 		}
 	},
 	methods: {
 		boonName(id) {
-			return this.serviceGameSystem.boonNameById(id, this.$store);
+			return this.serviceGameSystem.boonNameById(this.correlationId(), id, this.$store);
 		},
 		async dialogBoonEdit(value) {
 			if (!value)
 				return;
-			await this.$refs.boonDialog.reset(this.clone(value));
+			await this.$refs.boonDialog.reset(this.correlationId(), this.clone(value));
 			this.dialogBoon.open();
 		},
 		async dialogBoonNew() {
-			let item = this.initializeCharacterBoon();
+			let item = this.initializeCharacterBoon(this.correlationId());
 			delete item.id;
-			await this.$refs.boonDialog.reset(item);
+			await this.$refs.boonDialog.reset(this.correlationId(), item);
 			this.dialogBoon.open();
 		},
-		initializeCharacterBoon() {
-			return this.serviceGameSystem.initializeCharacterBoon(this.value);
+		initializeCharacterBoon(correlationId) {
+			return this.serviceGameSystem.initializeCharacterBoon(correlationId, this.value);
 		},
-		initializeCharacterBoon2(boonId, scenario) {
-			const results = this.initializeCharacterBoon();
+		initializeCharacterBoon2(correlationId, boonId, scenario) {
+			const results = this.initializeCharacterBoon(correlationId);
 			results.boonId = boonId;
 			results.locationId = scenario.locationId;
 			results.scenario = scenario;

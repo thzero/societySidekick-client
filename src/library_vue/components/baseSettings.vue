@@ -37,15 +37,15 @@ export default {
 		}
 	},
 	async created() {
-		await this.reset();
+		await this.reset(this.correlationId(), null);
 		this.serviceUsers = this.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
 	},
 	async mount() {
-		await this.reset();
+		await this.reset(this.correlationId(), null);
 	},
 	methods: {
 		async cancel() {
-			await this.reset();
+			await this.reset(this.correlationId());
 		},
 		async close() {
 		},
@@ -57,26 +57,28 @@ export default {
 			this.fieldType = null;
 			this.name = '';
 		},
-		async preCompleteI() {
+		// eslint-disable-next-line
+		async preCompleteI(correlationId, value) {
 		},
-		async preComplete() {
+		async preComplete(correlationId) {
 			const responses = [];
 
-			await this.preCompleteI(responses);
+			await this.preCompleteI(correlationId, responses);
 
-			const response = Response.success();
+			const response = Response.success(correlationId);
 			for (let item of responses)
 				response.success &= item.success;
 			return response;
 		},
-		reset() {
+		reset(correlationId) {
 			let self = this;
 			setTimeout(() => {
-				self.resetI();
+				self.resetI(correlationId);
 			},
 			150);
 		},
-		resetI() {
+		// eslint-disable-next-line
+		resetI(correlationId) {
 		}
 	}
 };

@@ -11,16 +11,18 @@ const store = {
 		listing: []
 	},
 	actions: {
-		async getBoonListing({ commit }, gameSystemId) {
+		async getBoonListing({ commit }, params) {
 			const crypto = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
-			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'boons', gameSystemId))
+			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'boons', params.gameSystemId))
 				return;
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_BOONS);
-			const response = await service.listing(gameSystemId);
-			this.$logger.debug('store.boons', 'setBoonListing', 'response', response);
+			const response = await service.listing(params.correlationId, params.gameSystemId);
+			this.$logger.debug('store.boons', 'setBoonListing', 'response', response, params.correlationId);
 			if (response.success) {
-				commit('setBoonListing', response.success && response.results ? response.results.data : null);
-				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'boons', gameSystemId);
+				const listing = response.success && response.results ? response.results.data : null;
+				commit('setBoonListing', { correlationId: params.correlationId, listing: listing });
+				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'boons', params.gameSystemId);
+				return listing;
 			}
 		}
 	},
@@ -32,20 +34,20 @@ const store = {
 		}
 	},
 	mutations: {
-		setBoonListing(state, listing) {
-			this.$logger.debug('store.boons', 'setBoonListing', 'list.a', listing);
-			this.$logger.debug('store.boons', 'setBoonListing', 'list..b', state.listing);
-			if (!listing)
+		setBoonListing(state, params) {
+			this.$logger.debug('store.boons', 'setBoonListing', 'list.a', params.listing, params.correlationId);
+			this.$logger.debug('store.boons', 'setBoonListing', 'list..b', state.listing, params.correlationId);
+			if (!params.listing)
 				return;
-			listing.forEach((item) => {
+			params.listing.forEach((item) => {
 				state.listing = VueUtility.updateArrayById(state.listing, item);
 			});
-			this.$logger.debug('store.boons', 'setBoonListing', 'list..c', state.listing);
+			this.$logger.debug('store.boons', 'setBoonListing', 'list..c', state.listing, params.correlationId);
 		}
 	},
 	dispatcher: {
-		async getBoonListing(gameSystemId) {
-			await Vue.prototype.$store.dispatch('getBoonListing', gameSystemId);
+		async getBoonListing(correlationId, gameSystemId) {
+			await Vue.prototype.$store.dispatch('getBoonListing', { correlationId: correlationId, gameSystemId: gameSystemId });
 		}
 	}
 };

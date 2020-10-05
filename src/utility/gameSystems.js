@@ -3,11 +3,11 @@ import SharedConstants from '@/common/constants';
 import AppUtility from '@/utility/app';
 
 class GameSystemsUtility {
-	static gameSystemNumber(user, gameSystemId) {
+	static gameSystemNumber(correlationId, user, gameSystemId) {
 		if (!user || !user.settings)
 			return '';
 
-		return AppUtility.settings().getSettingsUserGameSystem(user, gameSystemId, (settings) => { return settings.number; });
+		return AppUtility.settings().getSettingsUserGameSystem(correlationId, user, gameSystemId, (settings) => { return settings.number; });
 	}
 
 	static numberName(id, trans) {

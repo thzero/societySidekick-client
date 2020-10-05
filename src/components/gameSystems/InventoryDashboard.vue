@@ -266,7 +266,7 @@
 													:character="value"
 													:editable="editable"
 													:collapse="collapseInner"
-													@dialogEdit="dialogInventoryEdit"
+													@dialog-edit="dialogInventoryEdit"
 												/>
 											</template>
 										</tbody>

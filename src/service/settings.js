@@ -11,84 +11,84 @@ import SettingsGameSystem from '@/common/data/settingsGameSystem';
 import SettingsScenario from '@/common/data/settingsScenario';
 
 class Settings extends BaseSettings {
-	deleteSettingsUserFavorite(store, user, id) {
+	deleteSettingsUserFavorite(correlationId, store, user, id) {
 		if (!store)
-			return Response.error();
+			return Response.error('Settings', 'deleteSettingsUserFavorite', null, null, null, null, correlationId);
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		settings.favorites = LibraryUtility.deleteArrayById(settings.favorites, id);
-		return store.dispatcher.user.setUserSettings(settings);
+		return store.dispatcher.user.setUserSettings(correlationId, settings);
 	}
 
-	deleteSettingsUserLocation(store, user, id) {
+	deleteSettingsUserLocation(correlationId, store, user, id) {
 		if (!store)
-			return Response.error();
+			return Response.error('Settings', 'deleteSettingsUserLocation', null, null, null, null, correlationId);
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		settings.locations = LibraryUtility.deleteArrayById(settings.locations, id);
-		return store.dispatcher.user.setUserSettings(settings);
+		return store.dispatcher.user.setUserSettings(correlationId, settings);
 	}
 
-	getSettingsUserBoons(user, funcAttribute) {
+	getSettingsUserBoons(correlationId, user, funcAttribute) {
 		if (!user || !user.settings)
 			return null;
 
 		return funcAttribute(user.settings.boons);
 	}
 
-	getSettingsUserFavorite(user, userId) {
+	getSettingsUserFavorite(correlationId, user, userId) {
 		if (!user || !user.settings)
 			return null;
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		let favorite = settings.favorites.find(l => l.id === userId);
 		if (!favorite)
 			favorite = new SettingsFavorite();
 		return favorite.favorite;
 	}
 
-	getSettingsUserFavorites(user) {
+	getSettingsUserFavorites(correlationId, user) {
 		if (!user || !user.settings)
 			return null;
 
 		return user.settings.favorites ? user.settings.favorites : [];
 	}
 
-	getSettingsUserLocation(user, id) {
+	getSettingsUserLocation(correlationId, user, id) {
 		if (!user || !user.settings)
 			return null;
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		const location = settings.locations.find(l => l.id === id);
 		return location;
 	}
 
-	getSettingsUserLocations(user) {
+	getSettingsUserLocations(correlationId, user) {
 		if (!user || !user.settings)
 			return null;
 
 		return user.settings.locations ? user.settings.locations : [];
 	}
 
-	getSettingsUserGamerTag(user) {
+	getSettingsUserGamerTag(correlationId, user) {
 		if (!user || !user.settings)
 			return null;
 
 		return user.settings.gamerTag;
 	}
 
-	getSettingsUserGameSystem(user, gameSystemFilter, funcAttribute) {
+	getSettingsUserGameSystem(correlationId, user, gameSystemFilter, funcAttribute) {
 		if (!user || !user.settings)
 			return null;
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		let gameSystem = settings.gameSystems.find(l => l.id === gameSystemFilter);
 		if (!gameSystem)
 			gameSystem = new SettingsGameSystem();
 		return funcAttribute(gameSystem);
 	}
 
-	getSettingsUserGameSystemFilter(user, funcAttribute) {
+	getSettingsUserGameSystemFilter(correlationId, user, funcAttribute) {
 		if (!user || !user.settings)
 			return null;
 
@@ -96,17 +96,17 @@ class Settings extends BaseSettings {
 		return funcAttribute(settings.home);
 	}
 
-	getSettingsUserScenarios(user, funcAttribute) {
+	getSettingsUserScenarios(correlationId, user, funcAttribute) {
 		if (!user || !user.settings)
 			return null;
 		return funcAttribute(user.settings.scenarios);
 	}
 
-	getSettingsUserScenariosGameSystem(user, gameSystemFilter, funcAttribute) {
+	getSettingsUserScenariosGameSystem(correlationId, user, gameSystemFilter, funcAttribute) {
 		if (!user || !user.settings)
 			return null;
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		let gameSystem = settings.scenarios.additional.find(l => l.id === gameSystemFilter);
 		if (!gameSystem)
 			gameSystem = new SettingsScenario();
@@ -117,20 +117,20 @@ class Settings extends BaseSettings {
 		return AppUtility.initializeSettingsUser();
 	}
 
-	updateSettingsUserBoons(store, user, newVal, func) {
+	updateSettingsUserBoons(correlationId, store, user, newVal, func) {
 		if (!store)
 			return;
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		func(settings.boons, newVal);
-		return store.dispatcher.user.setUserSettings(settings);
+		return store.dispatcher.user.setUserSettings(correlationId, settings);
 	}
 
-	updateSettingsUserFavorite(store, user, userId, newVal) {
+	updateSettingsUserFavorite(correlationId, store, user, userId, newVal) {
 		if (!store)
-			return Response.error();
+			return Response.error('Settings', 'updateSettingsUserFavorite', null, null, null, null, correlationId);
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		let favorite = settings.favorites.find(l => l.id === userId);
 		if (!favorite) {
 			favorite = new SettingsFavorite();
@@ -138,37 +138,38 @@ class Settings extends BaseSettings {
 			settings.favorites.push(favorite);
 		}
 		favorite.favorite = newVal;
-		return store.dispatcher.user.setUserSettings(settings);
+		return store.dispatcher.user.setUserSettings(correlationId, settings);
 	}
 
-	updateSettingsUserGameSystem(store, user, gameSystemFilter, newVal, func) {
+	updateSettingsUserGameSystem(correlationId, store, user, gameSystemFilter, newVal, func) {
 		if (!store)
-			return Response.error();
+			return Response.error('Settings', 'updateSettingsUserGameSystem', null, null, null, null, correlationId);
 
-		const settings = this.mergeUser(user.settings);
+
+		const settings = this.mergeUser(correlationId, user.settings);
 		let gameSystem = settings.gameSystems.find(l => l.id === gameSystemFilter);
 		if (!gameSystem) {
 			gameSystem = new SettingsGameSystem(gameSystemFilter);
 			settings.gameSystems.push(gameSystem);
 		}
 		func(gameSystem, newVal);
-		return store.dispatcher.user.setUserSettings(settings);
+		return store.dispatcher.user.setUserSettings(correlationId, settings);
 	}
 
-	updateSettingsUserGameSystemFilter(store, user, newVal, func) {
+	updateSettingsUserGameSystemFilter(correlationId, store, user, newVal, func) {
 		if (!store)
-			return Response.error();
+			return Response.error('Settings', 'updateSettingsUserGameSystemFilter', null, null, null, null, correlationId);
 
 		const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
 		func(settings.home, newVal);
-		return store.dispatcher.user.setUserSettings(settings);
+		return store.dispatcher.user.setUserSettings(correlationId, settings);
 	}
 
-	updateSettingsUserLocation(store, user, id, newVal, func) {
+	updateSettingsUserLocation(correlationId, store, user, id, newVal, func) {
 		if (!store)
-			return Response.error();
+			return Response.error('Settings', 'updateSettingsUserLocation', null, null, null, null, correlationId);
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		let location = settings.locations.find(l => l.id === id);
 		if (!location) {
 			location = new SettingsLocation();
@@ -176,23 +177,23 @@ class Settings extends BaseSettings {
 			settings.locations.push(location);
 		}
 		func(location, newVal);
-		return store.dispatcher.user.setUserSettings(settings);
+		return store.dispatcher.user.setUserSettings(correlationId, settings);
 	}
 
-	updateSettingsUserScenarios(store, user, newVal, func) {
+	updateSettingsUserScenarios(correlationId, store, user, newVal, func) {
 		if (!store)
 			return;
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		func(settings.scenarios, newVal);
-		return store.dispatcher.user.setUserSettings(settings);
+		return store.dispatcher.user.setUserSettings(correlationId, settings);
 	}
 
-	updateSettingsUserScenariosGameSystem(store, user, gameSystemFilter, newVal, func) {
+	updateSettingsUserScenariosGameSystem(correlationId, store, user, gameSystemFilter, newVal, func) {
 		if (!store)
-			return Response.error();
+			return Response.error('Settings', 'updateSettingsUserScenariosGameSystem', null, null, null, null, correlationId);
 
-		const settings = this.mergeUser(user.settings);
+		const settings = this.mergeUser(correlationId, user.settings);
 		let scenario = settings.scenarios.additional.find(l => l.id === gameSystemFilter);
 		if (!scenario) {
 			scenario = new SettingsScenario();
@@ -200,7 +201,7 @@ class Settings extends BaseSettings {
 			settings.scenarios.additional.push(scenario);
 		}
 		func(scenario, newVal);
-		return store.dispatcher.user.setUserSettings(settings);
+		return store.dispatcher.user.setUserSettings(correlationId, settings);
 	}
 }
 

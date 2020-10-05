@@ -43,7 +43,7 @@ export default {
 		async cancel() {
 			this.$emit('cancel');
 		},
-		cleanup(value, isCreate) {
+		cleanup(correlationId, value, isCreate) {
 			delete value.timestamp;
 			if (isCreate)
 				delete value.updatedTimestamp;
@@ -63,40 +63,41 @@ export default {
 		},
 		initializeServices() {
 		},
+		// eslint-disable-next-line
 		async ok() {
 			this.$emit('ok');
 			return true;
 		},
-		async preComplete() {
+		async preComplete(correlationId) {
 			const value = this.innerValue;
 			delete value._id;
 			value.gameSystemId = this.gameSystemId;
-			this.preCompleteI(value);
+			this.preCompleteI(correlationId, value);
 			const isUpdate = this.innerValue.id ? true : false;
-			this.cleanup(value, !isUpdate);
+			this.cleanup(correlationId, value, !isUpdate);
 			const response = isUpdate ?
-				await this.preCompleteSubmitUpdate(this.$store.dispatcher, value) :
-				await this.preCompleteSubmitCreate(this.$store.dispatcher, value);
-			this.logger.debug('VAdminFormDialog', 'preComplete', 'response', response);
+				await this.preCompleteSubmitUpdate(correlationId, this.$store.dispatcher, value) :
+				await this.preCompleteSubmitCreate(correlationId, this.$store.dispatcher, value);
+			this.logger.debug('VAdminFormDialog', 'preComplete', 'response', response, correlationId);
 			return response;
 		},
 		// eslint-disable-next-line
-		preCompleteI(value) {
+		preCompleteI(correlationId, value) {
 		},
 		// eslint-disable-next-line
-		async preCompleteSubmitCreate(dispatcher, value) {
+		async preCompleteSubmitCreate(correlationId, dispatcher, value) {
 			throw new NotImplementedError();
 		},
 		// eslint-disable-next-line
-		async preCompleteSubmitUpdate(dispatcher, value) {
+		async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
 			throw new NotImplementedError();
 		},
-		async resetDialog(value) {
+		async resetDialog(correlationId, value) {
 			// forces random key gen so that the editor gets reset for each new item
 			this.randomKey = VueUtility.randomKeyGen();
 			if (value) {
 				const temp = this.clone(value);
-				temp.timestamp = temp.timestamp ? LibraryUtilityconvertTimestampToLocal(temp.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
+				temp.timestamp = temp.timestamp ? LibraryUtility.convertTimestampToLocal(temp.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
 				temp.updatedTimestamp = temp.updatedTimestamp ? temp.updatedTimestamp : LibraryUtility.getTimestamp();
 				this.gameSystemId = temp.gameSystemId;
 				await this.resetDialogI(temp);
@@ -107,7 +108,7 @@ export default {
 			this.innerValue = null;
 		},
 		// eslint-disable-next-line
-		async resetDialogI(value) {
+		async resetDialogI(correlationId, value) {
 		}
 	}
 };

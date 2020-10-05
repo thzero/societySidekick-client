@@ -42,7 +42,7 @@ export default {
 	}),
 	computed: {
 		boonUsesArray() {
-			let uses = this.boonUses(this.value.boonId);
+			let uses = this.boonUses(this.correlationId(), this.value.boonId);
 			if (!uses)
 				return [];
 
@@ -60,27 +60,28 @@ export default {
 	},
 	methods: {
 		boonDescription(id) {
-			return this._serviceMarkup.trimResults(this._serviceMarkup.render(this.serviceGameSystem.boonDescriptionById(id, this.$store)));
+			const correlationId = this.correlationId();
+			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, this.serviceGameSystem.boonDescriptionById(correlationId, id, this.$store)));
 		},
 		boonName(id) {
-			return this.serviceGameSystem.boonNameById(id, this.$store);
+			return this.serviceGameSystem.boonNameById(this.correlationId(), id, this.$store);
 		},
 		boonUses(id) {
-			return this.serviceGameSystem.boonUsesById(id, this.$store);
+			return this.serviceGameSystem.boonUsesById(this.correlationId(), id, this.$store);
 		},
 		dialogBoonOpen() {
-			this.$emit('dialogEdit', this.value);
+			this.$emit('dialog-edit', this.value);
 		},
 		getGameSystemName(id) {
 			const results = this.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		locationName(id, at) {
-			const location = AppUtility.settings().getSettingsUserLocation(this.$store.state.user.user, id);
+			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), this.$store.state.user.user, id);
 			return location ? (at ? '@ ' : '') + location.name : '';
 		},
 		scenarioName(value) {
-			return this.serviceGameSystem.determineScenarioName(value, this.$store);
+			return this.serviceGameSystem.determineScenarioName(this.correlationId(), value, this.$store);
 		}
 	}
 };

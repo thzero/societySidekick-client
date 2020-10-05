@@ -215,6 +215,8 @@ export default {
 
 			this.forceRecomputeCounter;
 
+			const correlationId = this.correlationId();
+
 			let results = this.$store.state.characters.characters.slice(0);
 			results = results.filter(l => l.gameSystemId === this.gameSystemFilter);
 
@@ -230,8 +232,8 @@ export default {
 
 			let classes = this.classCache[this.gameSystemFilter];
 			if (!classes) {
-				await this.$store.dispatcher.classes.getClassListing(this.gameSystemFilter);
-				// await this.initialize(this.gameSystemFilter)
+				await this.$store.dispatcher.classes.getClassListing(correlationId, this.gameSystemFilter);
+				// await this.initialize(correlationId, this.gameSystemFilter)
 				classes = this.$store.state.classes.listing;
 				if (classes) {
 					classes = classes.filter(l => l.gameSystemId == this.gameSystemFilter);
@@ -242,8 +244,8 @@ export default {
 
 			let factions = this.factionsCache[this.gameSystemFilter];
 			if (!factions) {
-				await this.$store.dispatcher.factions.getFactionListing(this.gameSystemFilter);
-				// await this.initialize(this.gameSystemFilter)
+				await this.$store.dispatcher.factions.getFactionListing(correlationId, this.gameSystemFilter);
+				// await this.initialize(correlationId, this.gameSystemFilter)
 				factions = this.$store.state.factions.listing;
 				if (factions) {
 					factions = factions.filter(l => l.gameSystemId == this.gameSystemFilter);
@@ -335,10 +337,10 @@ export default {
 			const characters = user.settings.characters ? user.settings.characters : {};
 			return funcAttribute(characters);
 		},
-		updateSettingsUserCharacter(user, newVal, func) {
-			const settings = AppUtility.settings().mergeUser(user.settings);
+		updateSettingsUserCharacter(correlationId, user, newVal, func) {
+			const settings = AppUtility.settings().mergeUser(correlationId, user.settings);
 			func(settings.characters, newVal);
-			this.$store.dispatcher.user.setUserSettings(settings);
+			this.$store.dispatcher.user.setUserSettings(correlationId, settings);
 		}
 	}
 };

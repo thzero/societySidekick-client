@@ -90,7 +90,7 @@ export default {
 	}),
 	computed: {
 		description() {
-			return this.markup(this.value);
+			return this.markup(this.correlationId(), this.value);
 		},
 		fullscreenInternal() {
 			return VueUtility.fullscreen(this.$vuetify);
@@ -120,10 +120,10 @@ export default {
 			this.dialogSignal = false;
 			this.$emit('ok');
 		},
-		markup(value) {
+		markup(correlationId, value) {
 			if (!value)
 				return null;
-			return this._serviceMarkup.trimResults(this._serviceMarkup.render(value));
+			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, value));
 		}
 	}
 };

@@ -29,7 +29,7 @@ export default {
 			return this.value.boon1Id || this.value.boon2Id;
 		},
 		isInitial() {
-			return this.rulesGameSystem.calculateCharacterScenarioInitial(this.value);
+			return this.rulesGameSystem.calculateCharacterScenarioInitial(this.correlationId(), this.value);
 		},
 		scenarioLevel() {
 			return this.value.level;
@@ -37,43 +37,43 @@ export default {
 	},
 	created() {
 		this.initializeServices();
-		this.lookups = this.initializeLookups();
+		this.lookups = this.initializeLookups(this.correlationId());
 	},
 	methods: {
 		boonName(id) {
-			return this.serviceGameSystem.boonNameById(id, this.$store);
+			return this.serviceGameSystem.boonNameById(this.correlationId(), id, this.$store);
 		},
 		factionName(id) {
-			return this.serviceGameSystem.factionNameById(id, this.$store);
+			return this.serviceGameSystem.factionNameById(this.correlationId(), id, this.$store);
 		},
 		dialogScenarioOpen() {
-			this.$emit('dialogEdit', this.value);
+			this.$emit('dialog-edit', this.value);
 		},
 		getGameSystemName(id) {
 			const results = this.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
-		initializeLookups() {
-			return this.serviceGameSystem.initializeLookups(this.$injector);
+		initializeLookups(correlationId) {
+			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
 		},
 		initializeServices() {
 			this.notImplementedError();
 		},
 		locationName(id) {
-			const location = AppUtility.settings().getSettingsUserLocation(this.$store.state.user.user, id);
+			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), this.$store.state.user.user, id);
 			return location ? '@ ' + location.name : '';
 		},
 		scenarioParticipantName(id) {
-			return this.serviceGameSystem.scenarioLookupParticipantName(id, this.lookups);
+			return this.serviceGameSystem.scenarioLookupParticipantName(this.correlationId(), id, this.lookups);
 		},
 		scenarioStatusName(id) {
-			return this.serviceGameSystem.scenarioLookupStatusName(id, this.lookups);
+			return this.serviceGameSystem.scenarioLookupStatusName(this.correlationId(), id, this.lookups);
 		},
 		scenarioName(value) {
-			return this.serviceGameSystem.determineScenarioName(value, this.$store);
+			return this.serviceGameSystem.determineScenarioName(this.correlationId(), value, this.$store);
 		},
 		scenarioDescription(value) {
-			return this.serviceGameSystem.determineScenarioDescription(value, this.$store);
+			return this.serviceGameSystem.determineScenarioDescription(this.correlationId(), value, this.$store);
 		},
 		statusName(value) {
 			return this.serviceGameSystem.characterLookupStatusName(value, this.lookups);

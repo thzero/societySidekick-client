@@ -47,7 +47,7 @@ export default {
 	computed: {
 		boons: {
 			get: function () {
-				const results = this.serviceGameSystem.boons(this.$store, true);
+				const results = this.serviceGameSystem.boons(this.correlationId(), this.$store, true);
 				const scenarioId = this.innerValue ? this.innerValue.scenarioId : null;
 				const results2 = results ? results.filter(l => l.scenarioId == scenarioId) : [];
 				return VueUtility.selectBlank(results2);
@@ -55,10 +55,10 @@ export default {
 			cache: false
 		},
 		factions() {
-			return this.serviceGameSystem.factions(this.$store, true);
+			return this.serviceGameSystem.factions(this.correlationId(), this.$store, true);
 		},
 		locations() {
-			return VueUtility.selectBlank(Utility.sortByName(AppUtility.settings().getSettingsUserLocations(this.$store.state.user.user), true));
+			return VueUtility.selectBlank(LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.correlationId(), this.$store.state.user.user), true));
 		},
 		outputType() {
 			return 'timestamp';
@@ -78,7 +78,7 @@ export default {
 	async created() {
 		this.initializeServices();
 		this.innerValue = this.initScenario();
-		this.lookups = await this.initializeLookups();
+		this.lookups = await this.initializeLookups(this.correlationId());
 	},
 	methods: {
 		async cancel() {
@@ -87,24 +87,25 @@ export default {
 		async close() {
 		},
 		dialogScenariosOk(id) {
+			const correlationId = this.correlationId();
 			this.$set(this.innerValue, 'scenarioId', id);
-			this.scenarioName = this.serviceGameSystem.determineScenarioNameById(id, this.$store);
-			this.dialogScenariosOkI(id);
-			this.experiencePointsEarned = this.rulesGameSystem.calculateScenarioExperiencePointsEarned(this.innerValue);
+			this.scenarioName = this.serviceGameSystem.determineScenarioNameById(correlationId, id, this.$store);
+			this.dialogScenariosOkI(this.correlationId(), id);
+			this.experiencePointsEarned = this.rulesGameSystem.calculateScenarioExperiencePointsEarned(correlationId, this.innerValue);
 			this.dialogScenarios.ok();
 		},
 		// eslint-disable-next-line
-		dialogScenariosOkI(id) {
+		dialogScenariosOkI(correlationId, id) {
 		},
 		async dialogScenariosOpen() {
-			await this.$refs.scenarioLookup.reset();
+			await this.$refs.scenarioLookup.reset(this.correlationId(), null);
 			this.dialogScenarios.open();
 		},
 		gameSystemId() {
 			this.notImplementedError();
 		},
-		initializeLookups() {
-			return this.serviceGameSystem.initializeLookups(this.$injector);
+		initializeLookups(correlationId) {
+			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
 		},
 		initResponse() {
 			const details = {
@@ -116,9 +117,9 @@ export default {
 				scenarioParticipant: this.innerValue.scenarioParticipant,
 				scenarioStatus: this.innerValue.scenarioStatus
 			};
-			return this.initResponseDetails(details);
+			return this.initResponseDetails(this.correlationId(), details);
 		},
-		initResponseDetails(details) {
+		initResponseDetails(correlationId, details) {
 			return details;
 		},
 		initializeServices() {
@@ -129,9 +130,9 @@ export default {
 			return true;
 		},
 		onChange(newValue) {
-			this.rulesGameSystem.calculateScenario(newValue);
+			this.rulesGameSystem.calculateScenario(this.correlationId(), newValue);
 		},
-		async preComplete() {
+		async preComplete(correlationId) {
 			const scenario = this.initResponse();
 			scenario.id = this.innerValue.id;
 			scenario.gameSystemId = this.gameSystemId();
@@ -140,24 +141,24 @@ export default {
 			scenario.status = this.innerValue.status;
 			scenario.timestamp = this.innerValue.timestamp;
 			scenario.updatedTimestamp = this.character.updatedTimestamp;
-			const response = await this.$store.dispatcher.characters.updateCharacterScenario(this.character.id, scenario);
-			this.logger.debug('BaseScenarioDialog', 'preComplete', response);
+			const response = await this.$store.dispatcher.characters.updateCharacterScenario(correlationId, this.character.id, scenario);
+			this.logger.debug('BaseScenarioDialog', 'preComplete', 'response', response, correlationId);
 			return response;
 		},
-		async preCompleteResponseDelete() {
-			return await this.$store.dispatcher.characters.deleteCharacterScenario(this.character.id, this.innerValue.id);
+		async preCompleteResponseDelete(correlationId) {
+			return await this.$store.dispatcher.characters.deleteCharacterScenario(correlationId, this.character.id, this.innerValue.id);
 		},
-		async resetDialog(value) {
+		async resetDialog(correlationId, value) {
 			this.steps = 1;
 			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
 			this.experiencePointsEarned = value ? value.experiencePointsEarned : 0;
-			this.scenarioName = this.serviceGameSystem.determineScenarioName(value, this.$store);
-			await this.resetDialogI(value);
+			this.scenarioName = this.serviceGameSystem.determineScenarioName(correlationId, value, this.$store);
+			await this.resetDialogI(correlationId, value);
 			this.isNew = value && !value.id;
 			this.innerValue = value;
 		},
 		// eslint-disable-next-line
-		async resetDialogI(value) {
+		async resetDialogI(correlationId, value) {
 		}
 	}
 };

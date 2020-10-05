@@ -553,13 +553,13 @@ export default {
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		},
 		scenarioAdvancementSpeedName(id) {
-			return this.serviceGameSystem.scenarioLookupAdvancementSpeedName(id, this.lookups);
+			return this.serviceGameSystem.scenarioLookupAdvancementSpeedName(this.correlationId(), id, this.lookups);
 		},
 		scenarioAdventureName(id) {
-			return this.serviceGameSystem.scenarioLookupAdventureName(id, this.lookups);
+			return this.serviceGameSystem.scenarioLookupAdventureName(this.correlationId(), id, this.lookups);
 		},
 		scenarioEventName(id) {
-			return this.serviceGameSystem.scenarioLookupEventName(id, this.lookups);
+			return this.serviceGameSystem.scenarioLookupEventName(this.correlationId(), id, this.lookups);
 		}
 	}
 };

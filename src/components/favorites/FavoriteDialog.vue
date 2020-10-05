@@ -54,20 +54,24 @@ export default {
 		name: null
 	}),
 	methods: {
+		// eslint-disable-next-line
 		async cancel() {
 			this.$emit('cancel');
 		},
+		// eslint-disable-next-line
 		async close() {
 		},
+		// eslint-disable-next-line
 		async ok() {
 			this.$emit('ok');
 			return true;
 		},
-		async preCompleteResponseOk() {
-			return AppUtility.settings().updateSettingsUserFavorite(this.$store, this.$store.state.user.user, this.id, this.favorite);
+		// eslint-disable-next-line
+		async preCompleteResponseOk(correlationId) {
+			return AppUtility.settings().updateSettingsUserFavorite(correlationId, this.$store, this.$store.state.user.user, this.id, this.favorite);
 		},
 		// eslint-disable-next-line
-		async resetDialog(value) {
+		async resetDialog(correlationId, value) {
 			this.id = value ? value.id : LibraryUtility.generateId();
 			this.favorite = value ? value.favorite : null;
 			this.name = value ? value.name : null;

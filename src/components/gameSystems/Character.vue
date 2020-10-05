@@ -302,6 +302,41 @@ export default {
 		VLoadingOverlay
 	},
 	extends: base,
+	async beforeRouteEnter(to, from, next) {
+		// eslint-disable-next-line
+		// console.log('beforeRouteEnter1')
+		// called before the route that renders this component is confirmed.
+		// does NOT have access to `this` component instance,
+		// because it has not been created yet when this guard is called!
+		//VueUtility.checkId(to, from, next)
+		// next(vm => {
+		//	 // access to component instance via `vm`
+		//	 vm.character = vm.$store.getters.getCharacter(vm.$route.params.id)
+		// })
+		const results = VueUtility.checkId(to);
+		await Vue.prototype.$store.dispatcher.characters.getCharacterListing({ basics: true });
+		if (results) {
+			next(async vm => {
+				// access to component instance via `vm`
+				vm.logger.debug('Character', 'beforeRouteEnter2');
+				vm.determineActiveTab();
+			});
+		}
+	},
+	async beforeRouteUpdate(to, from, next) {
+		// called when the route that renders this component has changed,
+		// but this component is reused in the new route.
+		// has access to `this` component instance.
+		const correlationId = this.correlationId();
+
+		this.logger.debug('Character', 'beforeRouteUpdate', null, null, correlationId);
+		const results = VueUtility.checkId(to);
+		this.determineActiveTab();
+		await this.$store.dispatcher.characters.getCharacterListing(correlationId, { basics: true });
+		// this.character = this.$store.getters.getCharacter(this.getId())
+		if (results)
+			next();
+	},
 	data: () => ({
 		drawer: false,
 		initializeCompleted: false,
@@ -315,7 +350,7 @@ export default {
 	}),
 	computed: {
 		character() {
-			this.logger.debug('Character', 'character', 'id', this.getId());
+			this.logger.debug('Character', 'character', 'id', this.getId(), this.correlationId());
 			const results = this.$store.getters.getCharacter(this.getId());
 			return results ? results : {};
 		},
@@ -359,7 +394,8 @@ export default {
 			this.drawer = false;
 		},
 		determineActiveTab() {
-			this.logger.debug('Character', 'determineActiveTab');
+			const correlationId = this.correlationId();
+			this.logger.debug('Character', 'determineActiveTab', null, null, correlationId);
 			let tab = this.tabDashboard;
 			const page = this.$route.params.page;
 			if (!String.isNullOrEmpty(page))
@@ -378,10 +414,10 @@ export default {
 			const results = this.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
-		async initializeCharacter() {
+		async initializeCharacter(correlationId) {
 			const self = this;
 			// try and fetch an update from the api
-			this.$store.dispatcher.characters.getCharacter(this.getId())
+			this.$store.dispatcher.characters.getCharacter(correlationId, this.getId())
 				.then(async (response) => {
 					try {
 						self.logger.debug('Character', 'initializeCharacter', 'response', response);
@@ -392,7 +428,7 @@ export default {
 
 						// TODO: Check to see if we can even see it.... otherwise redirect to homepage?
 
-						await self.initializeGameSystem();
+						await self.initializeGameSystem(correlationId);
 
 						const timeout = setTimeout(function () {
 							self.initializeCompleted = true;
@@ -407,12 +443,12 @@ export default {
 					VueUtility.invalid();
 				});
 		},
-		async initializeGameSystem() {
+		async initializeGameSystem(correlationId) {
 			// GameSystems Update
 			if (this.isGameSystemPathfinder2e)
-				this.servicePathfinder2e.initializeFetches(this.$store);
+				this.servicePathfinder2e.initializeFetches(correlationId, this.$store);
 			if (this.isGameSystemStarfinder1e)
-				this.serviceStarfinder1e.initializeFetches(this.$store);
+				this.serviceStarfinder1e.initializeFetches(correlationId, this.$store);
 		},
 		initializeTabs() {
 			// TODO: Depending on security results, only some of these should be displayed...
@@ -420,39 +456,6 @@ export default {
 			this.tabSupport.add(this.tabBoons, 'list_alt', this.$trans.t('characters.boons.namePlural'));
 			this.tabSupport.add(this.tabInventory, 'list_alt', this.$trans.t('characters.inventory'));
 		}
-	},
-	async beforeRouteEnter(to, from, next) {
-		// eslint-disable-next-line
-		// console.log('beforeRouteEnter1')
-		// called before the route that renders this component is confirmed.
-		// does NOT have access to `this` component instance,
-		// because it has not been created yet when this guard is called!
-		//VueUtility.checkId(to, from, next)
-		// next(vm => {
-		//	 // access to component instance via `vm`
-		//	 vm.character = vm.$store.getters.getCharacter(vm.$route.params.id)
-		// })
-		const results = VueUtility.checkId(to);
-		await Vue.prototype.$store.dispatcher.characters.getCharacterListing({ basics: true });
-		if (results) {
-			next(async vm => {
-				// access to component instance via `vm`
-				vm.logger.debug('Character', 'beforeRouteEnter2');
-				vm.determineActiveTab();
-			});
-		}
-	},
-	async beforeRouteUpdate(to, from, next) {
-		// called when the route that renders this component has changed,
-		// but this component is reused in the new route.
-		// has access to `this` component instance.
-		this.logger.debug('Character', 'beforeRouteUpdate');
-		const results = VueUtility.checkId(to);
-		this.determineActiveTab();
-		await this.$store.dispatcher.characters.getCharacterListing({ basics: true });
-		// this.character = this.$store.getters.getCharacter(this.getId())
-		if (results)
-			next();
 	}
 };
 </script>

@@ -70,7 +70,7 @@ export default {
 	watch: {
 		async gameSystemId(newValue) {
 			if (newValue) {
-				const response = await this.serviceCharacters.fetchNumber(this.gameSystemId);
+				const response = await this.serviceCharacters.fetchNumber(this.correlationId(), this.gameSystemId);
 				this.number = response && response.success ? response.results : null;
 				return;
 			}
@@ -95,11 +95,11 @@ export default {
 			this.fieldType = null;
 			this.name = '';
 		},
-		async preComplete() {
+		async preComplete(correlationId) {
 			const name = String.trim(this.name);
 			const number = String.trim(this.number + '');
-			const response = await this.$store.dispatcher.characters.createCharacter(this.gameSystemId, name, number);
-			this.logger.debug('CharacterNewDialog', 'preComplete', response);
+			const response = await this.$store.dispatcher.characters.createCharacter(correlationId, this.gameSystemId, name, number);
+			this.logger.debug('CharacterNewDialog', 'preComplete', 'response', response, correlationId);
 			if (response && response.success) {
 				this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ response.results.id ]}));
 				return response;

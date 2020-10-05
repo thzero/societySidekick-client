@@ -241,14 +241,14 @@ export default {
 			return VueUtility.selectBlank(boons);
 		},
 		classes() {
-			return this.serviceGameSystem.classes(this.$store, true);
+			return this.serviceGameSystem.classes(this.correlationId(), this.$store, true);
 		},
 		themes() {
-			return this.serviceGameSystem.themes(this.$store, true);
+			return this.serviceGameSystem.themes(this.correlationId(), this.$store, true);
 		}
 	},
 	methods: {
-		initResponseDetails(details) {
+		initResponseDetails(correlationId, details) {
 			details.boonAllyId = this.innerValue.boonAllyId;
 			details.boonFactionId = this.innerValue.boonFactionId;
 			details.boonPersonalId = this.innerValue.boonPersonalId;

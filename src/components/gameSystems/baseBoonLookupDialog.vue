@@ -27,7 +27,7 @@ export default {
 	}),
 	computed: {
 		boons() {
-			let results = this.serviceGameSystem.boons(this.$store);
+			let results = this.serviceGameSystem.boons(this.correlationId, this.$store);
 			results = results.filter(l => l.scenarioId == null);
 			if (this.boonNameFilter)
 				results = results.filter(l => l.name ? l.name.toLowerCase().indexOf(this.boonNameFilter.toLowerCase()) > -1 : false);
@@ -36,19 +36,19 @@ export default {
 	},
 	created() {
 		this.initializeServices();
-		this.lookups = this.initializeLookups();
+		this.lookups = this.initializeLookups(this.correlationId());
 	},
 	methods: {
 		boonName(item) {
-			return this.serviceGameSystem.boonName(item, this.$store);
+			return this.serviceGameSystem.boonName(this.correlationId(), item, this.$store);
 		},
 		async close() {
 		},
 		async cancel() {
 			this.$emit('cancel');
 		},
-		initializeLookups() {
-			return this.serviceGameSystem.initializeLookups(this.$injector);
+		initializeLookups(correlationId) {
+			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
 		},
 		initializeServices() {
 			this.notImplementedError();
@@ -97,12 +97,13 @@ export default {
 		playedTimestamp(item) {
 			return LibraryUtility.getDateHuman(item ? item.timestamp : 0);
 		},
-		async resetDialog() {
+		async resetDialog(correlationId) {
 			this.played = this.$store.getters.getScenarioPlayed(this.characterId);
 			this.boonNameFilter = null;
-			await this.resetDialogI();
+			await this.resetDialogI(correlationId);
 		},
-		async resetDialogI() {
+		// eslint-disable-next-line
+		async resetDialogI(correlationId) {
 		}
 	}
 };

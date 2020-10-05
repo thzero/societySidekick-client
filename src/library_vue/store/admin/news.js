@@ -10,68 +10,68 @@ const store = {
 		news: null
 	},
 	actions: {
-		async createAdminNews({ commit }, item) {
+		async createAdminNews({ commit }, params) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_NEWS);
-			const response = await service.create(item);
+			const response = await service.create(params.correlationId, params.item);
 			this.$logger.debug('store.admin.news', 'createAdminNews', 'response', response);
 			if (response && response.success)
-				commit('setAdminNews', response.success && response.results ? response.results : null);
+				commit('setAdminNews', { correlationId: params.correlationId, item: response.success && response.results ? response.results : null });
 			return response;
 		},
-		async deleteAdminNews({ commit }, id) {
+		async deleteAdminNews({ commit }, params) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_NEWS);
-			const response = await service.delete(id);
+			const response = await service.delete(params.correlationId, params.id);
 			this.$logger.debug('store.admin.news', 'deleteAdminNews', 'response', response);
 			if (response && response.success) {
-				commit('deleteAdminNews', id);
-				Vue.prototype.$store.dispatcher.news.delete(id);
+				commit('deleteAdminNews', params);
+				Vue.prototype.$store.dispatcher.news.delete(params.correlationId, params.id);
 			}
 			return response;
 		},
 		async searchAdminNews({ commit }, params) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_NEWS);
-			const response = await service.search(params);
+			const response = await service.search(params.correlationId, params.params);
 			this.$logger.debug('store.admin.news', 'searchAdminNews', 'response', response);
-			commit('setAdminNewsListing', response.success && response.results ? response.results.data : null);
+			commit('setAdminNewsListing', { correlationId: params.correlationId, list: response.success && response.results ? response.results.data : null });
 		},
-		async updateAdminNews({ commit }, item) {
+		async updateAdminNews({ commit }, params) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_NEWS);
-			const response = await service.update(item);
+			const response = await service.update(params.correlationId, params.item);
 			this.$logger.debug('store.admin.news', 'updateAdminNews', 'response', response);
 			if (response && response.success)
-				commit('setAdminNews', response.success && response.results ? response.results : null);
+				commit('setAdminNews', { correlationId: params.correlationId, item: response.success && response.results ? response.results : null });
 			return response;
 		}
 	},
 	mutations: {
-		deleteAdminNews(state, id) {
-			return LibraryUtility.deleteArrayById(state.news, id);
+		deleteAdminNews(state, params) {
+			return LibraryUtility.deleteArrayById(state.news, params.id);
 		},
-		setAdminNews(state, item) {
-			this.$logger.debug('store.admin.news', 'setAdminNews', 'items.a', item);
-			this.$logger.debug('store.admin.news', 'setAdminNews', 'items.b', state.news);
-			state.news = VueUtility.updateArrayById(state.news, item);
-			this.$logger.debug('store.admin.news', 'setAdminNews', 'items.c', state.news);
+		setAdminNews(state, params) {
+			this.$logger.debug('store.admin.news', 'setAdminNews', 'items.a', params.item, params.correlationId);
+			this.$logger.debug('store.admin.news', 'setAdminNews', 'items.b', state.news, params.correlationId);
+			state.news = VueUtility.updateArrayById(state.news, params.item);
+			this.$logger.debug('store.admin.news', 'setAdminNews', 'items.c', state.news, params.correlationId);
 		},
-		setAdminNewsListing(state, list) {
-			this.$logger.debug('store.admin.news', 'setAdminNewsListing', 'list.a', list);
-			this.$logger.debug('store.admin.news', 'setAdminNewsListing', 'list.b', state.news);
-			state.news = list;
-			this.$logger.debug('store.admin.news', 'setAdminNewsListing', 'list.c', state.news);
+		setAdminNewsListing(state, params) {
+			this.$logger.debug('store.admin.news', 'setAdminNewsListing', 'list.a', params.list, params.correlationId);
+			this.$logger.debug('store.admin.news', 'setAdminNewsListing', 'list.b', state.news, params.correlationId);
+			state.news = params.list;
+			this.$logger.debug('store.admin.news', 'setAdminNewsListing', 'list.c', state.news, params.correlationId);
 		}
 	},
 	dispatcher: {
-		async createAdminNews(item) {
-			return await Vue.prototype.$store.dispatch('createAdminNews', item);
+		async createAdminNews(correlationId, item) {
+			return await Vue.prototype.$store.dispatch('createAdminNews', { correlationId: correlationId, item: item });
 		},
-		async deleteAdminNews(id) {
-			return await Vue.prototype.$store.dispatch('deleteAdminNews', id);
+		async deleteAdminNews(correlationId, id) {
+			return await Vue.prototype.$store.dispatch('deleteAdminNews', { correlationId: correlationId, id: id });
 		},
-		async searchNews(params) {
-			await Vue.prototype.$store.dispatch('searchAdminNews', params);
+		async searchNews(correlationId, params) {
+			await Vue.prototype.$store.dispatch('searchAdminNews', { correlationId: correlationId, params: params });
 		},
-		async updateAdminNews(item) {
-			return await Vue.prototype.$store.dispatch('updateAdminNews', item);
+		async updateAdminNews(correlationId, item) {
+			return await Vue.prototype.$store.dispatch('updateAdminNews', { correlationId: correlationId, item: item });
 		}
 	}
 };

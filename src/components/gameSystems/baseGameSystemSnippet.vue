@@ -32,14 +32,14 @@ export default {
 			const results = this.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
-		initLookup() {
-			return this.serviceGameSystem.initializeLookups(this.$injector);
+		initLookup(correlationId) {
+			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
 		},
 		isParticipantGamemaster(participant) {
 			return participant == SharedConstants.ScenarioParticipants.GAMEMASTER;
 		},
 		locationName(id) {
-			const location = AppUtility.settings().getSettingsUserLocation(this.$store.state.user.user, id);
+			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), this.$store.state.user.user, id);
 			return location ? '@ ' + location.name : '';
 		}
 	}

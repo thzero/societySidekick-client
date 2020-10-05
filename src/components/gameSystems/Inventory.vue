@@ -55,7 +55,7 @@ export default {
 	extends: baseInventory,
 	methods: {
 		scenarioNameById(id) {
-			return id ? this.serviceGameSystem.determineScenarioNameById(id, this.$store) : '';
+			return id ? this.serviceGameSystem.determineScenarioNameById(this.correlationId(), id, this.$store) : '';
 		}
 	}
 };

@@ -65,20 +65,20 @@ export default {
 		async dialogConfirmOk() {
 			this.$emit('ok');
 		},
-		async preComplete() {
+		async preComplete(correlationId) {
 			const character = this.$store.getters.getCharacter(this.characterId);
 			if (character) {
 				if (character.inventory && character.inventory.length > 0) {
-					this.dialogConfirmSignal.open();
-					return this.error('InventoryGearSetLoadDialog', 'preComplete');
+					this.dialogConfirmSignal.open(correlationId);
+					return this.error('InventoryGearSetLoadDialog', 'preComplete', null, null, null, null, correlationId);
 				}
 			}
 
 			return this.preCompleteConfirm();
 		},
-		async preCompleteConfirm() {
-			const response = await this.$store.dispatcher.characters.loadCharacterInventory(this.characterId, this.gearSetId);
-			this.logger.debug('InventoryGearSetLoadDialog', 'preCompleteConfirm', response);
+		async preCompleteConfirm(correlationId) {
+			const response = await this.$store.dispatcher.characters.loadCharacterInventory(correlationId, this.characterId, this.gearSetId);
+			this.logger.debug('InventoryGearSetLoadDialog', 'preCompleteConfirm', 'response', response, correlationId);
 			return response;
 		}
 	}

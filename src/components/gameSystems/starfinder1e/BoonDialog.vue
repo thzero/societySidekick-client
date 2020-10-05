@@ -18,7 +18,7 @@ export default {
 		gameSystemId() {
 			return SharedConstants.GameSystems.Starfinder1e.id;
 		},
-		initResponseDetails(details) {
+		initResponseDetails(correlationId, details) {
 			return details;
 		},
 		initBoon() {

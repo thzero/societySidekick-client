@@ -32,14 +32,14 @@ export default {
 		getRoles() {
 			return {};
 		},
-		async preComplete() {
+		async preComplete(correlationId) {
 			const item = {
 				id: this.innerValue.id,
 				roles: this.innerValue.roles,
 				updatedTimestamp: this.innerValue.updatedTimestamp
 			};
-			const response = await this.$store.dispatcher.adminUsers.updateAdminUser(item);
-			this.logger.debug('VUsersAdminFormDialog', 'preComplete', response);
+			const response = await this.$store.dispatcher.adminUsers.updateAdminUser(correlationId, item);
+			this.logger.debug('VUsersAdminFormDialog', 'preComplete', 'response', response, correlationId);
 			return response;
 		}
 	}

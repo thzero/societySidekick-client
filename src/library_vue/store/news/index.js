@@ -9,33 +9,33 @@ const store = {
 		latest: null
 	},
 	actions: {
-		async deleteNews({ commit }, id) {
-			commit('deleteNews', id);
+		async deleteNews({ commit }, params) {
+			commit('deleteNews', params);
 		},
-		async getLatestNews({ commit }) {
+		async getLatestNews({ commit }, correlationId) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_NEWS);
-			const response = await service.latest();
+			const response = await service.latest(correlationId);
 			this.$logger.debug('store.news', 'getLatestNews', 'response', response);
-			commit('setLatestNews', response.success && response.results ? response.results.data : null);
+			commit('setLatestNews', { correlationId: correlationId, latest: response.success && response.results ? response.results.data : null });
 		}
 	},
 	mutations: {
-		deleteNews(state, id) {
-			LibraryUtility.deleteArrayById(state.latest, id);
+		deleteNews(state, params) {
+			LibraryUtility.deleteArrayById(state.latest, params.id);
 		},
-		setLatestNews(state, latest) {
-			this.$logger.debug('store.news', 'setLatest', 'item.a', latest);
-			this.$logger.debug('store.news', 'setLatest', 'item.b', state.latest);
-			state.latest = latest;
-			this.$logger.debug('store.news', 'setLatest', 'item.c', state.latest);
+		setLatestNews(state, params) {
+			this.$logger.debug('store.news', 'setLatest', 'item.a', params.latest, params.correlationId);
+			this.$logger.debug('store.news', 'setLatest', 'item.b', state.latest, params.correlationId);
+			state.latest = params.latest;
+			this.$logger.debug('store.news', 'setLatest', 'item.c', state.latest, params.correlationId);
 		}
 	},
 	dispatcher: {
-		async delete(id) {
-			await Vue.prototype.$store.dispatch('deleteNews', id);
+		async delete(correlationId, id) {
+			await Vue.prototype.$store.dispatch('deleteNews', { correlationId: correlationId, id: id });
 		},
-		async getLatest() {
-			await Vue.prototype.$store.dispatch('getLatestNews');
+		async getLatest(correlationId) {
+			await Vue.prototype.$store.dispatch('getLatestNews', correlationId);
 		}
 	}
 };

@@ -102,9 +102,10 @@ export default {
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminFactions.searchAdminFactions({});
-		await this.$store.dispatcher.adminScenarios.searchAdminScenarios({});
-		await this.$store.dispatcher.adminBoons.searchAdminBoons({});
+		const correlationId = this.correlationId();
+		await this.$store.dispatcher.adminFactions.searchAdminFactions(correlationId, {});
+		await this.$store.dispatcher.adminScenarios.searchAdminScenarios(correlationId, {});
+		await this.$store.dispatcher.adminBoons.searchAdminBoons(correlationId, {});
 	},
 	methods: {
 		defaultItem() {

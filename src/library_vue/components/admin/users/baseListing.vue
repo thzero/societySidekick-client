@@ -11,13 +11,13 @@ export default {
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminUsers.searchAdminUsers({});
+		await this.$store.dispatcher.adminUsers.searchAdminUsers(this.correlationId(), {});
 	},
 	methods: {
 		defaultItem() {
 		},
-		async dialogDeletePreCompleteOkDelete(dispatcher, id) {
-			return await dispatcher.adminUsers.deleteAdminUser(id);
+		async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+			return await dispatcher.adminUsers.deleteAdminUser(correlationId, id);
 		},
 		initializeHeaders() {
 			return [

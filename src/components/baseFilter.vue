@@ -17,6 +17,7 @@ export default {
 		}
 	},
 	data: () => ({
+		gameSystemFilterOverrideI: null,
 		lookups: [],
 		serviceGameSystem: null,
 		sortKeys: []
@@ -24,28 +25,32 @@ export default {
 	computed: {
 		gameSystemFilter: {
 			get: function () {
-				if (this.externalList)
-					return this.gameSystemFilterOverride;
+				if (this.externalList) {
+					if (this.gameSystemFilterOverrideI)
+						return this.gameSystemFilterOverrideI;
 
-				return AppUtility.settings().getSettingsUserGameSystemFilter(this.$store.state.user.user, (settings) => settings.gameSystemFilter);
+					return this.gameSystemFilterOverride;
+				}
+
+				return AppUtility.settings().getSettingsUserGameSystemFilter(this.correlationId(), this.$store.state.user.user, (settings) => settings.gameSystemFilter);
 			},
 			set: function (newVal) {
 				if (this.externalList) {
-					this.gameSystemFilterOverride = newVal;
+					this.gameSystemFilterOverrideI = newVal;
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserGameSystemFilter(this.$store, this.$store.state.user.user, newVal, (settings) => { return settings.gameSystemFilter = newVal; });
+				AppUtility.settings().updateSettingsUserGameSystemFilter(this.correlationId(), this.$store, this.$store.state.user.user, newVal, (settings) => { return settings.gameSystemFilter = newVal; });
 			}
 		}
 	},
 	created() {
 		this.initializeServices();
-		this.lookups = this.initializeLookups();
+		this.lookups = this.initializeLookups(this.correlationId());
 	},
 	methods: {
-		initializeLookups() {
-			return this.serviceGameSystem.initializeLookups(this.$injector);
+		initializeLookups(correlationId) {
+			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
 		},
 		initializeServices() {
 			this.notImplementedError();

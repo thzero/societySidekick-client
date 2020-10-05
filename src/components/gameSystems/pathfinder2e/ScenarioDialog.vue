@@ -458,22 +458,22 @@ export default {
 	}),
 	computed: {
 		isAchievementPointsEarnedReadOnly() {
-			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.innerValue);
+			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.correlationId(), this.innerValue);
 		},
 		isAdventureScenario() {
-			return this.rulesGameSystem.isAdventureScenario(this.innerValue);
+			return this.rulesGameSystem.isAdventureScenario(this.correlationId(), this.innerValue);
 		},
 		isDowntimePointsReadOnly() {
-			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.innerValue);
+			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.correlationId(), this.innerValue);
 		}
 	},
 	methods: {
-		dialogScenariosOkI(id) {
+		dialogScenariosOkI(correlationId, id) {
 			this.$set(this.innerValue, 'scenarioAdventure', this.getScenarioAdventure(id));
-			this.achievementPointsEarned = this.rulesGameSystem.calculateScenarioAchievementPointsEarned(this.innerValue);
-			this.downtimePointsEarned = this.rulesGameSystem.calculateScenarioDowntimePointsEarned(this.innerValue);
-			this.fameEarned = this.rulesGameSystem.calculateScenarioFameEarned(this.innerValue);
-			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(this.innerValue.scenarioAdventure, this.lookups);
+			this.achievementPointsEarned = this.rulesGameSystem.calculateScenarioAchievementPointsEarned(correlationId, this.innerValue);
+			this.downtimePointsEarned = this.rulesGameSystem.calculateScenarioDowntimePointsEarned(correlationId, this.innerValue);
+			this.fameEarned = this.rulesGameSystem.calculateScenarioFameEarned(correlationId, this.innerValue);
+			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, this.innerValue.scenarioAdventure, this.lookups);
 
 			if (this.innerValue.status != SharedConstants.CharactersStatus.ACTIVE) {
 				this.achievementPointsEarned = 0;
@@ -493,7 +493,7 @@ export default {
 		gameSystemId() {
 			return SharedConstants.GameSystems.Pathfinder2e.id;
 		},
-		initResponseDetails(details) {
+		initResponseDetails(correlationId, details) {
 			details.achievementPointsEarned = this.rulesGameSystem.clean(this.achievementPointsEarned);
 			details.achievementPointsSpent = this.rulesGameSystem.clean(this.innerValue.achievementPointsSpent);
 			details.boon1Id = this.innerValue.boon1Id;
@@ -504,7 +504,7 @@ export default {
 			details.fameEarned = this.rulesGameSystem.clean(this.fameEarned);
 			details.fameSpent = this.rulesGameSystem.clean(this.innerValue.fameSpent);
 			details.reputationFactionId = this.innerValue.fameFactionId;
-			details.reputationEarned = this.rulesGameSystem.calculateScenarioReputationEarned(this.innerValue);
+			details.reputationEarned = this.rulesGameSystem.calculateScenarioReputationEarned(correlationId, this.innerValue);
 			details.reputationAdditionalFactionId = this.innerValue.reputationAdditionalFactionId;
 			details.reputationAdditionalEarned = this.rulesGameSystem.clean(this.innerValue.reputationAdditionalEarned);
 			details.scenarioAdvancementSpeed = this.innerValue.scenarioAdvancementSpeed;
@@ -519,14 +519,14 @@ export default {
 			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		},
-		async resetDialogI(value) {
-			await this.$store.dispatcher.scenarios.getScenarioListingPlayed(this.character ? this.character.id : null);
+		async resetDialogI(correlationId, value) {
+			await this.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, this.character ? this.character.id : null);
 			this.achievementPointsEarned = value && value.experiencePointsEarned ? value.experiencePointsEarned : 0;
 			this.downtimePointsEarned = value && value.downtimePointsEarned ? value.downtimePointsEarned : 0;
 			this.fameEarned = value && value.fameEarned ? value.fameEarned : 0;
 			value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : this.character.factionId;
 			value.reputationFactionId = value && value.reputationFactionId ? value.reputationFactionId	: this.character.factionId;
-			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(value.scenarioAdventure, this.lookups);
+			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenarioAdventure, this.lookups);
 		}
 	}
 };

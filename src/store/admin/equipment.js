@@ -10,66 +10,66 @@ const store = {
 		equipment: null
 	},
 	actions: {
-		async createAdminEquipment({ commit }, item) {
+		async createAdminEquipment({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
-			const response = await service.create(item);
-			this.$logger.debug('store.admin.equipment', 'createAdminEquipment', 'response', response);
+			const response = await service.create(params.correlationId, params.item);
+			this.$logger.debug('store.admin.equipment', 'createAdminEquipment', 'response', response, params.correlationId);
 			if (response && response.success)
-				commit('setAdminEquipment', response.success && response.results ? response.results : null);
+				commit('setAdminEquipment', { correlationId: params.correlationId, item: response.success && response.results ? response.results : null });
 			return response;
 		},
-		async deleteAdminEquipment({ commit }, id) {
+		async deleteAdminEquipment({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
-			const response = await service.delete(id);
-			this.$logger.debug('store.admin.equipment', 'deleteAdminEquipment', 'response', response);
+			const response = await service.delete(params.correlationId, params.id);
+			this.$logger.debug('store.admin.equipment', 'deleteAdminEquipment', 'response', response, params.correlationId);
 			if (response && response.success)
-				commit('deleteAdminEquipment', id);
+				commit('deleteAdminEquipment', { correlationId: params.correlationId, id: params.id });
 			return response;
 		},
 		async searchAdminEquipment({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
-			const response = await service.search(params);
-			this.$logger.debug('store.admin.equipment', 'searchAdminEquipment', 'response', response);
-			commit('setAdminEquipmentListing', response.success && response.results ? response.results.data : null);
+			const service = this._vm.$injector.getSparamservice(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
+			const response = await service.search(params.correlationId, params.params);
+			this.$logger.debug('store.admin.equipment', 'searchAdminEquipment', 'response', response, params.correlationId);
+			commit('setAdminEquipmentListing', { correlationId: params.correlationId, list: response.success && response.results ? response.results.data : null });
 		},
-		async updateAdminEquipment({ commit }, item) {
+		async updateAdminEquipment({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
-			const response = await service.update(item);
-			this.$logger.debug('store.admin.equipment', 'updateAdminEquipment', 'response', response);
+			const response = await service.update(params.correlationId, params.item);
+			this.$logger.debug('store.admin.equipment', 'updateAdminEquipment', 'response', response, params.correlationId);
 			if (response && response.success)
-				commit('setAdminEquipment', response.success && response.results ? response.results : null);
+				commit('setAdminEquipment', { correlationId: params.correlationId, item: response.success && response.results ? response.results : null });
 			return response;
 		}
 	},
 	mutations: {
-		deleteAdminEquipment(state, id) {
-			return LibraryUtility.deleteArrayById(state.equipment, id);
+		deleteAdminEquipment(state, params) {
+			return LibraryUtility.deleteArrayById(state.equipment, params.id);
 		},
-		setAdminEquipment(state, item) {
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.a', item);
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.b', state.equipment);
-			state.equipment = VueUtility.updateArrayById(state.equipment, item);
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.c', state.equipment);
+		setAdminEquipment(state, params) {
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.a', params.item, params.correlationId);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.b', state.equipment, params.correlationId);
+			state.equipment = VueUtility.updateArrayById(state.equipment, params.item);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.c', state.equipment, params.correlationId);
 		},
-		setAdminEquipmentListing(state, list) {
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.a', list);
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.b', state.equipment);
-			state.equipment = list;
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.c', state.equipment);
+		setAdminEquipmentListing(state, params) {
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.a', params.list, params.correlationId);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.b', state.equipment, params.correlationId);
+			state.equipment = params.list;
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.c', state.equipment, params.correlationId);
 		}
 	},
 	dispatcher: {
-		async createAdminEquipment(item) {
-			return await Vue.prototype.$store.dispatch('createAdminEquipment', item);
+		async createAdminEquipment(correlationId, item) {
+			return await Vue.prototype.$store.dispatch('createAdminEquipment', { correlationId: correlationId, item: item });
 		},
-		async deleteAdminEquipment(id) {
-			return await Vue.prototype.$store.dispatch('deleteAdminEquipment', id);
+		async deleteAdminEquipment(correlationId, id) {
+			return await Vue.prototype.$store.dispatch('deleteAdminEquipment', { correlationId: correlationId, id: id });
 		},
-		async searchEquipment(params) {
-			await Vue.prototype.$store.dispatch('searchAdminEquipment', params);
+		async searchEquipment(correlationId, params) {
+			await Vue.prototype.$store.dispatch('searchAdminEquipment', { correlationId: correlationId, params: params });
 		},
-		async updateAdminEquipment(item) {
-			return await Vue.prototype.$store.dispatch('updateAdminEquipment', item);
+		async updateAdminEquipment(correlationId, item) {
+			return await Vue.prototype.$store.dispatch('updateAdminEquipment', { correlationId: correlationId, item: item });
 		}
 	}
 };

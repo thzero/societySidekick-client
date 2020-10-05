@@ -28,23 +28,23 @@ export default {
 			return this.gameSystemId === SharedConstants.GameSystems.Starfinder1e.id;
 		},
 		serviceGameSystem() {
-			return this.getServiceByGameSystemId(this.gameSystemId);
+			return this.getServiceByGameSystemId(this.correlationId(), this.gameSystemId);
 		}
 	},
 	methods: {
-		getServiceByGameSystemId(gameSystemId) {
+		getServiceByGameSystemId(correlationId, gameSystemId) {
 			if (!gameSystemId)
 				return null;
 
-			const response = this.serviceGameSystems.getServiceByGameSystemId(gameSystemId);
+			const response = this.serviceGameSystems.getServiceByGameSystemId(correlationId, gameSystemId);
 			if (!response || !response.success)
 				return null;
 
 			return response.results;
 		},
 		initLookupsByGameSystemId(gameSystemId) {
-			const service = this.getServiceByGameSystemId(gameSystemId);
-			const lookups = service ? service.initializeLookups(this.$injector) : null;
+			const service = this.getServiceByGameSystemId(correlationId, gameSystemId);
+			const lookups = service ? service.initializeLookups(correlationId, this.$injector) : null;
 			return lookups;
 		},
 		initializeServices() {

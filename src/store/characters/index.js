@@ -13,118 +13,118 @@ const store = {
 		status: []
 	},
 	actions: {
-		async createCharacter({ commit }, value) {
-			if (!value)
-				return Response.error('Invalid chraacter value.');
+		async createCharacter({ commit }, params) {
+			if (!params.value)
+				return Response.error('store.characters', 'createCharacter', 'Invalid chraacter value.', null, null, null, params.correlationId);
 
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.create(value);
-			this.$logger.debug('store.characters', 'createCharacter', 'response', response);
+			const response = await service.create(params.correlationId, params.value);
+			this.$logger.debug('store.characters', 'createCharacter', 'response', response, params.correlationId);
 			if (response && response.success)
-				commit('setCharacter', response.success && response.results ? response.results : null);
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
-		async deleteCharacter({ commit }, characterId) {
+		async deleteCharacter({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.delete(characterId);
-			this.$logger.debug('store.characters', 'deleteCharacter', 'response', response);
+			const response = await service.delete(params.correlationId, params.characterId);
+			this.$logger.debug('store.characters', 'deleteCharacter', 'response', response, params.correlationId);
 			if (response && response.success)
-				commit('deleteCharacter', characterId);
+				commit('deleteCharacter', { correlationId: params.correlationId, characterId: params.characterId });
 			return response;
 		},
 		async deleteCharacterBoon({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.deleteBoon(params.characterId, params.boonId);
-			this.$logger.debug('store.characters', 'deleteCharacterBoon', 'response', response);
+			const response = await service.deleteBoon(params.correlationId, params.characterId, params.boonId);
+			this.$logger.debug('store.characters', 'deleteCharacterBoon', 'response', response, params.correlationId);
 			if (response && response.success && response.results)
-				commit('setCharacter', response.results);
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
 		async deleteCharacterInventory({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.deleteInventory(params.characterId, params.inventoryId);
-			this.$logger.debug('store.characters', 'deleteCharacterInventory', 'response', response);
+			const response = await service.deleteInventory(params.correlationId, params.characterId, params.inventoryId);
+			this.$logger.debug('store.characters', 'deleteCharacterInventory', 'response', response, params.correlationId);
 			if (response && response.success && response.results)
-				commit('setCharacter', response.results);
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
 		async deleteCharacterScenario({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.deleteScenario(params.characterId, params.scenarioId);
-			this.$logger.debug('store.characters', 'deleteCharacterScenario', 'response', response);
+			const response = await service.deleteScenario(params.correlationId, params.characterId, params.scenarioId);
+			this.$logger.debug('store.characters', 'deleteCharacterScenario', 'response', response, params.correlationId);
 			if (response && response.success && response.results)
-				commit('setCharacter', response.results);
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
-		async getCharacter({ commit }, id) {
+		async getCharacter({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.fetch(id);
-			this.$logger.debug('store.characters', 'getCharacter', 'response', response);
+			const response = await service.fetch(params.correlationId, params.id);
+			this.$logger.debug('store.characters', 'getCharacter', 'response', response, params.correlationId);
 			if (response && response.success)
-				commit('setCharacter', response.results ? response.results : null);
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results ? response.results : null });
 			return response;
 		},
-		async getCharacterListing({ commit }, sections) {
+		async getCharacterListing({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			if (!this.state.user.user)
 				return;
-			const response = await service.listing(sections);
-			this.$logger.debug('store.characters', 'getCharacterListing', 'response', response);
+			const response = await service.listing(params.correlationId, params.sections);
+			this.$logger.debug('store.characters', 'getCharacterListing', 'response', response, params.correlationId);
 			if (response && response.success)
-				commit('setCharacterListing', { results: response.success && response.results ? response.results.data : null, sections: sections });
+				commit('setCharacterListing', { correlationId: params.correlationId, results: response.success && response.results ? response.results.data : null, sections: params.sections });
 		},
 		// eslint-disable-next-line
-		async initializeCharacters({ commit }) {
+		async initializeCharacters({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.initialize();
-			this.$logger.debug('store.characters', 'initializeCharacters', 'response', response);
-			commit('setCharacterLookups', response.success && response.results ? response.results.lookups : null);
+			const response = await service.initialize(params.correlationId);
+			this.$logger.debug('store.characters', 'initializeCharacters', 'response', response, params.correlationId);
+			commit('setCharacterLookups', { correlationId: params.correlationId, lookups: response.success && response.results ? response.results.lookups : null });
 		},
 		async loadCharacterInventory({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.loadInventory(params.characterId, params.gearSetId);
-			this.$logger.debug('store.characters', 'loadCharacterInventory', 'response', response);
+			const response = await service.loadInventory(params.correlationId, params.characterId, params.gearSetId);
+			this.$logger.debug('store.characters', 'loadCharacterInventory', 'response', response, params.correlationId);
 			if (response && response.success && response.results)
-				commit('setCharacter', response.results);
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
-		async setCharacter({ commit }, character) {
+		async setCharacter({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.create(character);
-			this.$logger.debug('store.characters', 'setCharacter', 'response', response);
-			commit('setCharacter', response.success && response.results ? response.results : null);
+			const response = await service.create(params.correlationId, params.character);
+			this.$logger.debug('store.characters', 'setCharacter', 'response', response, params.correlationId);
+			commit('setCharacter', { correlationId: params.correlationId, character: response.success && response.results ? response.results : null });
 			return response;
 		},
 		async updateCharacterBoon({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.updateBoon(params.characterId, params.boon);
-			this.$logger.debug('store.characters', 'updateCharacterBoon', 'response', response);
+			const response = await service.updateBoon(params.correlationId, params.characterId, params.boon);
+			this.$logger.debug('store.characters', 'updateCharacterBoon', 'response', response, params.correlationId);
 			if (response && response.success && response.results)
-				commit('setCharacter', response.results);
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
-		async updateCharacterDetails({ commit }, details) {
+		async updateCharacterDetails({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.updateDetails(details);
-			this.$logger.debug('store.characters', 'updateCharacterDetails', 'response', response);
+			const response = await service.updateDetails(params.correlationId, params.details);
+			this.$logger.debug('store.characters', 'updateCharacterDetails', 'response', response, params.correlationId);
 			if (response && response.success && response.results)
-				commit('setCharacter', response.results);
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
 		async updateCharacterInventory({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.updateInventory(params.characterId, params.inventory);
-			this.$logger.debug('store.characters', 'updateCharacterInventory', 'response', response);
+			const response = await service.updateInventory(params.correlationId, params.characterId, params.inventory);
+			this.$logger.debug('store.characters', 'updateCharacterInventory', 'response', response, params.correlationId);
 			if (response && response.success && response.results)
-				commit('setCharacter', response.results);
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
 		async updateCharacterScenario({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.updateScenario(params.characterId, params.scenario);
-			this.$logger.debug('store.characters', 'updateCharacterScenario', 'response', response);
+			const response = await service.updateScenario(params.correlationId, params.characterId, params.scenario);
+			this.$logger.debug('store.characters', 'updateCharacterScenario', 'response', response, params.correlationId);
 			if (response && response.success && response.results)
-				commit('setCharacter', response.results);
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		}
 	},
@@ -136,23 +136,23 @@ const store = {
 		}
 	},
 	mutations: {
-		deleteCharacter(state, characterId) {
-			this.$logger.debug('store.characters', 'deleteCharacter', 'item.a', characterId);
-			this.$logger.debug('store.characters', 'deleteCharacter', 'item.b', state.characters);
-			LibraryUtility.deleteArrayById(state.characters, characterId);
-			this.$logger.debug('store.characters', 'deleteCharacter', 'item.c', state.characters);
+		deleteCharacter(state, params) {
+			this.$logger.debug('store.characters', 'deleteCharacter', 'item.a', params.characterId, params.correlationId);
+			this.$logger.debug('store.characters', 'deleteCharacter', 'item.b', state.characters, params.correlationId);
+			LibraryUtility.deleteArrayById(state.characters, params.characterId);
+			this.$logger.debug('store.characters', 'deleteCharacter', 'item.c', state.characters, params.correlationId);
 		},
-		setCharacter(state, character) {
-			this.$logger.debug('store.characters', 'setCharacter', 'item.a', character);
-			this.$logger.debug('store.characters', 'setCharacter', 'item.b', state.characters);
-			state.characters = VueUtility.updateArrayById(state.characters, character);
-			this.$logger.debug('store.characters', 'setCharacter', 'item.c', state.characters);
+		setCharacter(state, params) {
+			this.$logger.debug('store.characters', 'setCharacter', 'item.a', params.character, params.correlationId);
+			this.$logger.debug('store.characters', 'setCharacter', 'item.b', state.characters, params.correlationId);
+			state.characters = VueUtility.updateArrayById(state.characters, params.character, params.correlationId);
+			this.$logger.debug('store.characters', 'setCharacter', 'item.c', state.characters, params.correlationId);
 		},
 		setCharacterListing(state, params) {
-			this.$logger.debug('store.characters', 'setCharacterListing', 'params', params);
-			this.$logger.debug('store.characters', 'setCharacterListing', 'params.results', params.results);
-			this.$logger.debug('store.characters', 'setCharacterListing', 'params.sections', params.sections);
-			this.$logger.debug('store.characters', 'setCharacterListing', 'state.characters', state.characters);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'params', params, params.correlationId);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'params.results', params.results, params.correlationId);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'params.sections', params.sections, params.correlationId);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'state.characters', state.characters, params.correlationId);
 			if (params.sections) {
 				let character;
 				params.results.forEach((item) => {
@@ -166,57 +166,57 @@ const store = {
 			}
 			else
 				state.characters = params.results ? params.results : [];
-			this.$logger.debug('store.characters', 'setCharacterListing', 'state.characters', state.characters);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'state.characters', state.characters, params.correlationId);
 		},
-		setCharacterLookups(state, lookups) {
-			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.a', lookups);
-			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.b', state.status);
-			state.status = lookups ? lookups.status : [];
-			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.c', state.status);
+		setCharacterLookups(state, params) {
+			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.a', params.lookups, params.correlationId);
+			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.b', state.status, params.correlationId);
+			state.status = params.lookups ? params.lookups.status : [];
+			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.c', state.status, params.correlationId);
 		}
 	},
 	dispatcher: {
-		async createCharacter(gameSystemId, name, number) {
-			return await Vue.prototype.$store.dispatch('createCharacter', { gameSystemId: gameSystemId, name: name, number: number });
+		async createCharacter(correlationId, gameSystemId, name, number) {
+			return await Vue.prototype.$store.dispatch('createCharacter', { correlationId: correlationId, gameSystemId: gameSystemId, name: name, number: number });
 		},
-		async deleteCharacter(characterId) {
-			return await Vue.prototype.$store.dispatch('deleteCharacter', characterId);
+		async deleteCharacter(correlationId, characterId) {
+			return await Vue.prototype.$store.dispatch('deleteCharacter', { correlationId: correlationId, characterId: characterId });
 		},
-		async deleteCharacterBoon(characterId, boonId) {
-			return await Vue.prototype.$store.dispatch('deleteCharacterBoon', { characterId: characterId, boonId: boonId});
+		async deleteCharacterBoon(correlationId, characterId, boonId) {
+			return await Vue.prototype.$store.dispatch('deleteCharacterBoon', { correlationId: correlationId, characterId: characterId, boonId: boonId});
 		},
-		async deleteCharacterInventory(characterId, inventoryId) {
-			return await Vue.prototype.$store.dispatch('deleteCharacterInventory', { characterId: characterId, inventoryId: inventoryId});
+		async deleteCharacterInventory(correlationId, characterId, inventoryId) {
+			return await Vue.prototype.$store.dispatch('deleteCharacterInventory', { correlationId: correlationId, characterId: characterId, inventoryId: inventoryId});
 		},
-		async deleteCharacterScenario(characterId, scenarioId) {
-			return await Vue.prototype.$store.dispatch('deleteCharacterScenario', { characterId: characterId, scenarioId: scenarioId});
+		async deleteCharacterScenario(correlationId, characterId, scenarioId) {
+			return await Vue.prototype.$store.dispatch('deleteCharacterScenario', { correlationId: correlationId, characterId: characterId, scenarioId: scenarioId});
 		},
-		async getCharacter(id) {
-			return await Vue.prototype.$store.dispatch('getCharacter', id);
+		async getCharacter(correlationId, id) {
+			return await Vue.prototype.$store.dispatch('getCharacter', { correlationId: correlationId, id: id });
 		},
-		async getCharacterListing(sections) {
-			await Vue.prototype.$store.dispatch('getCharacterListing', sections);
+		async getCharacterListing(correlationId, sections) {
+			await Vue.prototype.$store.dispatch('getCharacterListing', { correlationId: correlationId, sections: sections });
 		},
-		async initializeCharacters() {
-			await Vue.prototype.$store.dispatch('initializeCharacters');
+		async initializeCharacters(correlationId) {
+			await Vue.prototype.$store.dispatch('initializeCharacters', { correlationId: correlationId });
 		},
-		async setCharacter(character) {
-			await Vue.prototype.$store.dispatch('setCharacter', character);
+		async setCharacter(correlationId, character) {
+			await Vue.prototype.$store.dispatch('setCharacter', { correlationId: correlationId, character: character });
 		},
-		async loadCharacterInventory(characterId, gearSetId) {
-			return await Vue.prototype.$store.dispatch('loadCharacterInventory', { characterId: characterId, gearSetId: gearSetId});
+		async loadCharacterInventory(correlationId, characterId, gearSetId) {
+			return await Vue.prototype.$store.dispatch('loadCharacterInventory', { correlationId: correlationId, characterId: characterId, gearSetId: gearSetId});
 		},
-		async updateCharacterBoon(characterId, boon) {
-			return await Vue.prototype.$store.dispatch('updateCharacterBoon', { characterId: characterId, boon: boon});
+		async updateCharacterBoon(correlationId, characterId, boon) {
+			return await Vue.prototype.$store.dispatch('updateCharacterBoon', { correlationId: correlationId, characterId: characterId, boon: boon});
 		},
-		async updateCharacterDetails(details) {
-			return await Vue.prototype.$store.dispatch('updateCharacterDetails', details);
+		async updateCharacterDetails(correlationId, details) {
+			return await Vue.prototype.$store.dispatch('updateCharacterDetails', { correlationId: correlationId, details: details });
 		},
-		async updateCharacterInventory(characterId, inventory) {
-			return await Vue.prototype.$store.dispatch('updateCharacterInventory', { characterId: characterId, inventory: inventory});
+		async updateCharacterInventory(correlationId, characterId, inventory) {
+			return await Vue.prototype.$store.dispatch('updateCharacterInventory', { correlationId: correlationId, characterId: characterId, inventory: inventory});
 		},
-		async updateCharacterScenario(characterId, scenario) {
-			return await Vue.prototype.$store.dispatch('updateCharacterScenario', { characterId: characterId, scenario: scenario});
+		async updateCharacterScenario(correlationId, characterId, scenario) {
+			return await Vue.prototype.$store.dispatch('updateCharacterScenario', { correlationId: correlationId, characterId: characterId, scenario: scenario});
 		}
 	}
 };

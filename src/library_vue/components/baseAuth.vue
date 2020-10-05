@@ -64,7 +64,7 @@ export default {
 	async mounted() {
 		await this.auth.signInCompleted();
 		Vue.prototype.$EventBus.$on('auth', isLoggedIn => {
-			this.logger.debug('BaseAuth', 'mounted', 'isLoggedIn', isLoggedIn);
+			this.logger.debug('BaseAuth', 'mounted', 'isLoggedIn', isLoggedIn, this.correlationId());
 			this.isLoggedIn = isLoggedIn;
 			this.disabled = isLoggedIn;
 		});
@@ -72,7 +72,7 @@ export default {
 	methods: {
 		async signInGoogle() {
 			this.disabled = true;
-			await this.auth.signIn();
+			await this.auth.signIn(this.correlationId());
 		}
 	}
 };

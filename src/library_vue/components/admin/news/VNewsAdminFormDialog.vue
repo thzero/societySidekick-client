@@ -18,13 +18,13 @@ export default {
 	},
 	extends: VAdminFormDialog,
 	methods: {
-		async preComplete() {
+		async preComplete(correlationId) {
 			let response;
 			if (this.innerValue.id)
-				response = await this.$store.dispatcher.adminNews.updateAdminNews(this.innerValue);
+				response = await this.$store.dispatcher.adminNews.updateAdminNews(correlationId, this.innerValue);
 			else
-				response = await this.$store.dispatcher.adminNews.createAdminNews(this.innerValue);
-			this.logger.debug('VNewsAdminFormDialog', 'preComplete', response);
+				response = await this.$store.dispatcher.adminNews.createAdminNews(correlationId, this.innerValue);
+			this.logger.debug('VNewsAdminFormDialog', 'preComplete', 'response', response, correlationId);
 			return response;
 		}
 	}

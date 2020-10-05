@@ -15,7 +15,6 @@ export default {
 		serverErrors: []
 	}),
 	async created() {
-		this.utility = Utility;
 		this.logger = this.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_LOGGER);
 	},
 	methods: {
@@ -25,8 +24,8 @@ export default {
 		clone(value) {
 			return LibraryUtility.cloneDeep(value);
 		},
-		error() {
-			return Response.error();
+		error(message, err, code, errors, correlationId) {
+			return Response.error(message, err, code, errors, correlationId);
 		},
 		getDateHuman(date) {
 			return LibraryUtility.getDateHuman(date);
@@ -40,8 +39,8 @@ export default {
 		observerIsNull(value){
 			return !value || Object.keys(value).length === 0;
 		},
-		success() {
-			return Response.success();
+		success(correlationId) {
+			return Response.success(correlationId);
 		}
 	}
 };

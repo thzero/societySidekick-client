@@ -84,7 +84,7 @@
 						:character="value"
 						:editable="editable"
 						:collapse="collapseInner"
-						@dialogEdit="dialogScenarioEdit"
+						@dialog-edit="dialogScenarioEdit"
 					/>
 				</div>
 			</v-flex>

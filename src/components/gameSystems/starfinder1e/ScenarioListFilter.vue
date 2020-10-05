@@ -45,7 +45,7 @@ export default {
 				if (this.externalList)
 					return this.scenarioAdventureFilterOverride;
 
-				return AppUtility.settings().getSettingsUserScenariosGameSystem(this.$store.state.user.user, SharedConstants.GameSystems.Starfinder1e.id, (settings) => settings.scenarioAdventureFilter);
+				return AppUtility.settings().getSettingsUserScenariosGameSystem(this.correlationId(), this.$store.state.user.user, SharedConstants.GameSystems.Starfinder1e.id, (settings) => settings.scenarioAdventureFilter);
 			},
 			set: function (newVal) {
 				if (this.externalList) {
@@ -54,7 +54,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenariosGameSystem(this.$store, this.$store.state.user.user, SharedConstants.GameSystems.Starfinder1e.id, newVal, (settings) => { return settings.scenarioAdventureFilter = newVal; });
+				AppUtility.settings().updateSettingsUserScenariosGameSystem(this.correlationId(), this.$store, this.$store.state.user.user, SharedConstants.GameSystems.Starfinder1e.id, newVal, (settings) => { return settings.scenarioAdventureFilter = newVal; });
 			}
 		},
 		scenarioAdventures() {
@@ -79,7 +79,7 @@ export default {
 			if (!filter)
 				return true;
 
-			const scenarioName = this.serviceGameSystem.scenarioName(scenario);
+			const scenarioName = this.serviceGameSystem.scenarioName(this.correlationId(), scenario);
 			return scenarioName.toLowerCase().indexOf(filter.toLowerCase()) == -1;
 		},
 		initializeServices() {

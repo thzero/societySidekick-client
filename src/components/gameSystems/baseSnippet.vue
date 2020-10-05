@@ -48,17 +48,17 @@ export default {
 	},
 	created() {
 		this.initializeServices();
-		this.lookups = this.initializeLookups();
+		this.lookups = this.initializeLookups(this.correlationId());
 	},
 	methods: {
 		getGameSystemName(id) {
 			const results = this.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
-		initializeLookups() {
+		initializeLookups(correlationId) {
 			if (!this.serviceGameSystem)
 				return [];
-			return this.serviceGameSystem.initializeLookups(this.$injector);
+			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
 		},
 		initializeServices() {
 		}

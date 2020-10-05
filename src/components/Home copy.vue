@@ -13,6 +13,35 @@
 				xl4
 				pb-4
 			>
+				<v-card color="basil">
+					<v-tabs
+						v-model="tab2"
+						background-color="transparent"
+						color="basil"
+						grow
+					>
+						<v-tab
+							v-for="item in items"
+							:key="item"
+						>
+							{{ item }}
+						</v-tab>
+					</v-tabs>
+
+					<v-tabs-items v-model="tab2">
+						<v-tab-item
+							v-for="item in items"
+							:key="item"
+						>sdfsdfsdf
+							<v-card
+								color="basil"
+								flat
+							>sdfsdfsdf
+								<v-card-text>{{ text }}</v-card-text>
+							</v-card>
+						</v-tab-item>
+					</v-tabs-items>
+				</v-card>
 				<v-card
 					class="mb-2"
 				>
@@ -125,6 +154,9 @@
 					>
 						{{ $t('titles.statistics') }}
 					</v-tab>
+					<v-tab>
+						sdfsdf
+					</v-tab>
 				</v-tabs>
 				<v-tabs-items
 					v-model="tab"
@@ -161,7 +193,14 @@
 							:user="user"
 						/>
 					</v-tab-item>
+					<v-tab-item
+						transition="fade-transition"
+						reverse-transition="fade-transition"
+					>
+						sdfasdfasdf
+					</v-tab-item>
 				</v-tabs-items>
+				<CharacterList />
 			</v-flex>
 			<v-flex
 				v-if="$vuetify.breakpoint.smAndDown"
@@ -306,7 +345,8 @@ export default {
 			const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
 			return funcAttribute(settings.home);
 		},
-		updateSettingsUserTab(correlationId, user, newVal, func) {
+		updateSettingsUserTab(user, newVal, func) {
+			const correlationId = this.correlationId();
 			const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
 			func(settings.home, newVal);
 			this.$store.dispatcher.user.setUserSettings(correlationId, settings);

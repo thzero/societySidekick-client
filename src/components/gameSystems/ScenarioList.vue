@@ -343,7 +343,7 @@ export default {
 				if (this.isExternalList)
 					return this.seasonFilterOverride;
 
-				return AppUtility.settings().getSettingsUserScenarios(this.user, (settings) => settings.seasonFilter);
+				return AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.seasonFilter);
 			},
 			set: function (newVal) {
 				if (this.isExternalList) {
@@ -351,7 +351,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenarios(this.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
 			}
 		},
 		sortBy: {
@@ -359,7 +359,7 @@ export default {
 				if (this.isExternalList)
 					return this.sortByOverride;
 
-				const result = AppUtility.settings().getSettingsUserScenarios(this.user, (settings) => settings.sortBy);
+				const result = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.sortBy);
 				return result ? result : SharedConstants.SortBy.Scenarios.ScenarioName;
 			},
 			set: function (newVal) {
@@ -369,7 +369,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenarios(this.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
 			}
 		},
 		sortDirection: {
@@ -377,7 +377,7 @@ export default {
 				if (this.isExternalList)
 					return this.sortDirectionOverride;
 
-				return AppUtility.settings().getSettingsUserScenarios(this.user, (settings) => settings.sortDirection);
+				return AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.sortDirection);
 			},
 			set: function (newVal) {
 				if (this.isExternalList) {
@@ -386,7 +386,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenarios(this.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
 		},
 		scenarioSeasons: {
@@ -476,6 +476,8 @@ export default {
 			if (!this.characterList)
 				return [];
 
+			const correlationId = this.correlationId();
+
 			this.forceRecomputeCounter;
 
 			let characters = this.characterList.slice(0);
@@ -484,7 +486,7 @@ export default {
 			if (!characters || characters.length <= 0)
 				return [];
 
-			const scenarios = await this.executeScenariosCache(this);
+			const scenarios = await this.executeScenariosCache(correlationId, this);
 			if (!scenarios || scenarios.length === 0)
 				return [];
 
@@ -595,14 +597,14 @@ export default {
 				return self.$refs.scenarioListFilterStarfinder1e.filterScenarioName(temp, value);
 		},
 		// eslint-disable-next-line
-		async executeScenariosCache() {
+		async executeScenariosCache(correlationId) {
 			const self = this;
 			// eslint-disable-next-line
 			return new Promise(async (resolve, reject) => {
 				try {
 					let scenarios = self.scenariosCache[self.gameSystemFilter];
 					if (!scenarios) {
-						await self.$store.dispatcher.scenarios.getScenarioListing(self.gameSystemFilter);
+						await self.$store.dispatcher.scenarios.getScenarioListing(correlationId, self.gameSystemFilter);
 						scenarios = self.$store.state.scenarios.listing;
 						if (scenarios) {
 							scenarios = scenarios.filter(l => l.gameSystemId == self.gameSystemFilter);

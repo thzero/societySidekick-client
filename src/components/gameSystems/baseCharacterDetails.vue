@@ -38,43 +38,45 @@ export default {
 	}),
 	created() {
 		this.initializeServices();
-		this.lookups = this.initializeLookups();
+		this.lookups = this.initializeLookups(this.correlationId());
 		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 	},
 	methods: {
 		boonDescription(id) {
-			const description = this.serviceGameSystem.boonDescriptionById(id, this.$store);
+			const correlationId = this.correlationId();
+			const description = this.serviceGameSystem.boonDescriptionById(correlationId, id, this.$store);
 			if (!description)
 				return null;
-			return this._serviceMarkup.trimResults(this._serviceMarkup.render(description));
+			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, description));
 		},
 		boonName(id) {
-			return this.serviceGameSystem.boonNameById(id, this.$store);
+			return this.serviceGameSystem.boonNameById(this.correlationId(), id, this.$store);
 		},
 		factionDescription(id) {
-			const description = this.serviceGameSystem.factionDescriptionById(id, this.$store);
+			const correlationId = this.correlationId();
+			const description = this.serviceGameSystem.factionDescriptionById(correlationId, id, this.$store);
 			if (!description)
 				return null;
-			return this._serviceMarkup.trimResults(this._serviceMarkup.render(description));
+			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, description));
 		},
 		factionName(id) {
-			return this.serviceGameSystem.factionNameById(id, this.$store);
+			return this.serviceGameSystem.factionNameById(this.correlationId(), id, this.$store);
 		},
 		async dialogConfirmDeleteOk() {
 			VueUtility.invalid();
 		},
 		async dialogDetailsOpen() {
-			await this.$refs.detailsDialog.reset(this.value);
+			await this.$refs.detailsDialog.reset(this.correlationId(), this.value);
 			this.dialogDetailsSignal.open();
 		},
 		dialogDetailsDeleteOpen() {
 			this.dialogConfirmDeleteSignal.open();
 		},
-		async dialogPreCompleteOkDelete() {
-			return await this.$store.dispatcher.characters.deleteCharacter(this.value.id);
+		async dialogPreCompleteOkDelete(correlationId) {
+			return await this.$store.dispatcher.characters.deleteCharacter(correlationId, this.value.id);
 		},
-		initializeLookups() {
-			return this.serviceGameSystem.initializeLookups(this.$injector);
+		initializeLookups(correlationId) {
+			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
 		},
 		initializeServices() {
 			this.notImplementedError();

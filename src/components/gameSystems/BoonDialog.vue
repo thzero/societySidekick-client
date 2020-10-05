@@ -93,7 +93,7 @@ export default {
 	methods: {
 		async resetDialogI(value) {
 			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
-			this.boonName = this.serviceGameSystem.boonNameById(value.boonId, this.$store);
+			this.boonName = this.serviceGameSystem.boonNameById(this.correlationId(), value.boonId, this.$store);
 		}
 	}
 };

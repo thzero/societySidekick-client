@@ -10,34 +10,34 @@ const store = {
 		scenarios: null
 	},
 	actions: {
-		async createAdminScenario({ commit }, item) {
+		async createAdminScenario({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
-			const response = await service.create(item);
-			this.$logger.debug('store.admin', 'createAdminScenario', 'response', response);
+			const response = await service.create(params.correlationId, params.item);
+			this.$logger.debug('store.admin', 'createAdminScenario', 'response', response, params.correlationId);
 			if (response && response.success)
-				commit('setAdminScenarios', response.success && response.results ? response.results : null);
+				commit('setAdminScenarios', { correlationId: params.correlationId, item: response.success && response.results ? response.results : null });
 			return response;
 		},
-		async deleteAdminScenario({ commit }, id) {
+		async deleteAdminScenario({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
-			const response = await service.delete(id);
-			this.$logger.debug('store.admin', 'deleteAdminScenario', 'response', response);
+			const response = await service.delete(params.correlationId, params.id);
+			this.$logger.debug('store.admin', 'deleteAdminScenario', 'response', response, params.correlationId);
 			if (response && response.success)
-				commit('deleteAdminScenario', id);
+				commit('deleteAdminScenario', { correlationId: params.correlationId, id: params.id });
 			return response;
 		},
 		async searchAdminScenarios({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
-			const response = await service.search(params);
-			this.$logger.debug('store.admin', 'searchAdminScenarios', 'response', response);
-			commit('setAdminScenariosListing', response.success && response.results ? response.results.data : null);
+			const response = await service.search(params.correlationId, params.params);
+			this.$logger.debug('store.admin', 'searchAdminScenarios', 'response', response, params.correlationId);
+			commit('setAdminScenariosListing', { correlationId: params.correlationId, list: response.success && response.results ? response.results.data : null });
 		},
-		async updateAdminScenario({ commit }, item) {
+		async updateAdminScenario({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
-			const response = await service.update(item);
-			this.$logger.debug('store.admin', 'updateAdminScenario', 'response', response);
+			const response = await service.update(params.correlationId, params.item);
+			this.$logger.debug('store.admin', 'updateAdminScenario', 'response', response, params.correlationId);
 			if (response && response.success)
-				commit('setAdminScenarios', response.success && response.results ? response.results : null);
+				commit('setAdminScenarios', { correlationId: params.correlationId, item: response.success && response.results ? response.results : null });
 			return response;
 		}
 	},
@@ -49,34 +49,34 @@ const store = {
 		}
 	},
 	mutations: {
-		deleteAdminScenario(state, id) {
-			return LibraryUtility.deleteArrayById(state.scenarios, id);
+		deleteAdminScenario(state, params) {
+			return LibraryUtility.deleteArrayById(state.scenarios, params.id);
 		},
-		setAdminScenarios(state, item) {
-			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.a', item);
-			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.b', state.scenarios);
-			state.scenarios = VueUtility.updateArrayById(state.scenarios, item);
-			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.c', state.scenarios);
+		setAdminScenarios(state, params) {
+			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.a', params.item, params.correlationId);
+			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.b', state.scenarios, params.correlationId);
+			state.scenarios = VueUtility.updateArrayById(state.scenarios, params.item);
+			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.c', state.scenarios, params.correlationId);
 		},
-		setAdminScenariosListing(state, list) {
-			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.a', list);
-			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.b', state.scenarios);
-			state.scenarios = list;
-			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.c', state.scenarios);
+		setAdminScenariosListing(state, params) {
+			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.a', params.list, params.correlationId);
+			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.b', state.scenarios, params.correlationId);
+			state.scenarios = params.list;
+			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.c', state.scenarios, params.correlationId);
 		}
 	},
 	dispatcher: {
-		async createAdminScenario(item) {
-			return await Vue.prototype.$store.dispatch('createAdminScenario', item);
+		async createAdminScenario(correlationId, item) {
+			return await Vue.prototype.$store.dispatch('createAdminScenario', { correlationId: correlationId, item: item });
 		},
-		async deleteAdminScenario(id) {
-			return await Vue.prototype.$store.dispatch('deleteAdminScenario', id);
+		async deleteAdminScenario(correlationId, id) {
+			return await Vue.prototype.$store.dispatch('deleteAdminScenario', { correlationId: correlationId, id: id });
 		},
-		async searchAdminScenarios(params) {
-			await Vue.prototype.$store.dispatch('searchAdminScenarios', params);
+		async searchAdminScenarios(correlationId, params) {
+			await Vue.prototype.$store.dispatch('searchAdminScenarios', { correlationId: correlationId, params: params });
 		},
-		async updateAdminScenario(item) {
-			return await Vue.prototype.$store.dispatch('updateAdminScenario', item);
+		async updateAdminScenario(correlationId, item) {
+			return await Vue.prototype.$store.dispatch('updateAdminScenario', { correlationId: correlationId, item: item });
 		}
 	}
 };

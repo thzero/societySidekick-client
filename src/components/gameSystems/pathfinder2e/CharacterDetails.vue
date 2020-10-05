@@ -1054,7 +1054,7 @@ export default {
 	},
 	methods: {
 		classNamesAndLevels(value) {
-			return this.serviceGameSystem.classNamesAndLevels(value, this.$store);
+			return this.serviceGameSystem.classNamesAndLevels(this.correlationId(), value, this.$store);
 		},
 		initializeServices() {
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
