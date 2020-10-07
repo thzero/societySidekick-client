@@ -123,6 +123,10 @@ export default {
 		async resetDialog(correlationId, value) {
 			this.steps = 1;
 			this.innerValue = value ? this.clone(value) : {};
+			this.resetDialogI(correlationId);
+		},
+		// eslint-disable-next-line
+		async resetDialogI(correlationId) {
 		}
 	}
 };

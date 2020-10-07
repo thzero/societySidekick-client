@@ -35,9 +35,6 @@
 					<template v-slot:[`item.gameSystemId`]="{ item }">
 						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
 					</template>
-					<template v-slot:[`item.gameSystemId`]="{ item }">
-						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
-					</template>
 					<template v-slot:[`item.factionId`]="{ item }">
 						<span>{{ getFactionName(item.factionId) }}</span>
 					</template>

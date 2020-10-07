@@ -118,7 +118,23 @@
 							/>
 							<VSelectWithValidation
 								ref="archetype"
-								v-model="innerValue.archetypeId"
+								v-model="archetypeId1"
+								vid="archetype"
+								:items="archetypes"
+								:label="$t('characters.gameSystems.pathfinder2e.archetype')"
+								class="pb-2"
+							/>
+							<VSelectWithValidation
+								ref="archetype"
+								v-model="archetypeId2"
+								vid="archetype"
+								:items="archetypes"
+								:label="$t('characters.gameSystems.pathfinder2e.archetype')"
+								class="pb-2"
+							/>
+							<VSelectWithValidation
+								ref="archetype"
+								v-model="archetypeId3"
 								vid="archetype"
 								:items="archetypes"
 								:label="$t('characters.gameSystems.pathfinder2e.archetype')"
@@ -207,6 +223,11 @@ import baseCharacterDetailsDialog from '@/components/gameSystems/baseCharacterDe
 export default {
 	name: 'Pathfinder2eCharacterDetailsDialog',
 	extends: baseCharacterDetailsDialog,
+	data: () => ({
+		archetypeId1: null,
+		archetypeId2: null,
+		archetypeId3: null
+	}),
 	computed: {
 		archetypes() {
 			return this.serviceGameSystem.archetypes(this.correlationId(), this.$store, true);
@@ -229,7 +250,13 @@ export default {
 	},
 	methods: {
 		initResponseDetails(correlationId, details) {
-			details.archetypeId = this.innerValue.archetypeId;
+			details.archetypeIds = [];
+			if (!String.isNullOrEmpty(this.archetypeId1))
+				details.archetypeIds.push(this.archetypeId1);
+			if (!String.isNullOrEmpty(this.archetypeId1))
+				details.archetypeIds.push(this.archetypeId2);
+			if (!String.isNullOrEmpty(this.archetypeId1))
+				details.archetypeIds.push(this.archetypeId3);
 			details.boonAdvancedId = this.innerValue.boonAdvancedId;
 			details.boonFactionId = this.innerValue.boonFactionId;
 			details.boonGeneric1Id = this.innerValue.boonGeneric1Id;
@@ -240,6 +267,20 @@ export default {
 		},
 		initializeServices() {
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+		},
+		// eslint-disable-next-line
+		async resetDialogI(correlationId) {
+			if (this.innerValue.archetypeIds) {
+				this.innerValue.archetypeIds.forEach((item, index) => {
+					if (index === 0)
+						this.archetypeId1 = item;
+					else if (index === 1)
+						this.archetypeId2 = item;
+					else if (index === 2)
+						this.archetypeId3 = item;
+
+				});
+			}
 		}
 	}
 };
