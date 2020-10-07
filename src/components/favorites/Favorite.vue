@@ -68,10 +68,10 @@ export default {
 	},
 	methods: {
 		dialogFavoriteDelete() {
-			this.$emit('dialogFavoriteDelete', this.value);
+			this.$emit('dialog-favorite-delete', this.value);
 		},
 		dialogFavoriteOpen() {
-			this.$emit('dialogFavoriteEdit', this.value);
+			this.$emit('dialog-favorite-edit', this.value);
 		}
 	}
 };

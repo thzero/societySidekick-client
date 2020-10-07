@@ -194,8 +194,8 @@
 						>
 							<Favorite
 								:value="item"
-								@dialogFavoriteDelete="dialogFavoriteDelete"
-								@dialogFavoriteEdit="dialogFavoriteEdit"
+								@dialog-favorite-delete="dialogFavoriteDelete"
+								@dialog-favorite-edit="dialogFavoriteEdit"
 							/>
 						</v-flex>
 					</v-layout>
