@@ -27,7 +27,7 @@ const store = {
 			return response;
 		},
 		async searchAdminEquipment({ commit }, params) {
-			const service = this._vm.$injector.getSparamservice(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
+			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
 			const response = await service.search(params.correlationId, params.params);
 			this.$logger.debug('store.admin.equipment', 'searchAdminEquipment', 'response', response, params.correlationId);
 			commit('setAdminEquipmentListing', { correlationId: params.correlationId, list: response.success && response.results ? response.results.data : null });

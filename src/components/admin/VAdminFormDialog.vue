@@ -42,7 +42,7 @@ export default {
 
 			return response.results;
 		},
-		initLookupsByGameSystemId(gameSystemId) {
+		initLookupsByGameSystemId(correlationId, gameSystemId) {
 			const service = this.getServiceByGameSystemId(correlationId, gameSystemId);
 			const lookups = service ? service.initializeLookups(correlationId, this.$injector) : null;
 			return lookups;

@@ -41,8 +41,9 @@ export default {
 			this.serviceGameSystems = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
 		},
 		initialize() {
+			const correlationId = this.correlationId();
 			for (const gameSystem in SharedConstants.GameSystems)
-				this.initLookupsByGameSystemId(SharedConstants.GameSystems[gameSystem].id);
+				this.initLookupsByGameSystemId(correlationId, SharedConstants.GameSystems[gameSystem].id);
 		},
 		initLookupsByGameSystemId(correlationId, gameSystemId) {
 			const service = this.getServiceByGameSystemId(correlationId, gameSystemId);
