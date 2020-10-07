@@ -330,7 +330,7 @@ export default {
 	created() {
 		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 
-		this.$EventBus.$on('displayMarkup', (value) => {
+		this.$EventBus.$on('display-markup', (value) => {
 			this.markup(this.correlationId(), value);
 			this.dialogDisplayMarkupSignal.open();
 		});
