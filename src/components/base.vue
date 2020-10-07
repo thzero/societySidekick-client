@@ -20,7 +20,7 @@ export default {
 			delay = delay ? delay : 1000;
 			if (this.hover)
 				clearTimeout(this.hover);
-			this.hover = setTimeout(() => { this.$EventBus.$emit('displayMarkup', value); }, delay);
+			this.hover = setTimeout(() => { this.$EventBus.$emit('display-markup', value); }, delay);
 		},
 		handleDisplayHoverClear() {
 			if (this.hover)
