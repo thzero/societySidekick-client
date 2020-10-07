@@ -24,8 +24,8 @@ export default {
 		clone(value) {
 			return LibraryUtility.cloneDeep(value);
 		},
-		error(message, err, code, errors, correlationId) {
-			return Response.error(message, err, code, errors, correlationId);
+		error(clazz, method, message, err, code, errors, correlationId) {
+			return Response.error(clazz, method, message, err, code, errors, correlationId);
 		},
 		getDateHuman(date) {
 			return LibraryUtility.getDateHuman(date);

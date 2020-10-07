@@ -3,8 +3,6 @@ import LibraryUtility from '@thzero/library_common/utility';
 
 import BaseSettings from '@thzero/library_client/service/baseSettings';
 
-import Response from '@thzero/library_common/response';
-
 import SettingsLocation from '@/common/data/settingsLocation';
 import SettingsFavorite from '@/common/data/settingsFavorite';
 import SettingsGameSystem from '@/common/data/settingsGameSystem';
@@ -13,7 +11,7 @@ import SettingsScenario from '@/common/data/settingsScenario';
 class Settings extends BaseSettings {
 	deleteSettingsUserFavorite(correlationId, store, user, id) {
 		if (!store)
-			return Response.error('Settings', 'deleteSettingsUserFavorite', null, null, null, null, correlationId);
+			return this._error('Settings', 'deleteSettingsUserFavorite', null, null, null, null, correlationId);
 
 		const settings = this.mergeUser(correlationId, user.settings);
 		settings.favorites = LibraryUtility.deleteArrayById(settings.favorites, id);
@@ -22,7 +20,7 @@ class Settings extends BaseSettings {
 
 	deleteSettingsUserLocation(correlationId, store, user, id) {
 		if (!store)
-			return Response.error('Settings', 'deleteSettingsUserLocation', null, null, null, null, correlationId);
+			return this._error('Settings', 'deleteSettingsUserLocation', null, null, null, null, correlationId);
 
 		const settings = this.mergeUser(correlationId, user.settings);
 		settings.locations = LibraryUtility.deleteArrayById(settings.locations, id);
@@ -128,7 +126,7 @@ class Settings extends BaseSettings {
 
 	updateSettingsUserFavorite(correlationId, store, user, userId, newVal) {
 		if (!store)
-			return Response.error('Settings', 'updateSettingsUserFavorite', null, null, null, null, correlationId);
+			return this._error('Settings', 'updateSettingsUserFavorite', null, null, null, null, correlationId);
 
 		const settings = this.mergeUser(correlationId, user.settings);
 		let favorite = settings.favorites.find(l => l.id === userId);
@@ -143,7 +141,7 @@ class Settings extends BaseSettings {
 
 	updateSettingsUserGameSystem(correlationId, store, user, gameSystemFilter, newVal, func) {
 		if (!store)
-			return Response.error('Settings', 'updateSettingsUserGameSystem', null, null, null, null, correlationId);
+			return this._error('Settings', 'updateSettingsUserGameSystem', null, null, null, null, correlationId);
 
 
 		const settings = this.mergeUser(correlationId, user.settings);
@@ -158,7 +156,7 @@ class Settings extends BaseSettings {
 
 	updateSettingsUserGameSystemFilter(correlationId, store, user, newVal, func) {
 		if (!store)
-			return Response.error('Settings', 'updateSettingsUserGameSystemFilter', null, null, null, null, correlationId);
+			return this._error('Settings', 'updateSettingsUserGameSystemFilter', null, null, null, null, correlationId);
 
 		const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
 		func(settings.home, newVal);
@@ -167,7 +165,7 @@ class Settings extends BaseSettings {
 
 	updateSettingsUserLocation(correlationId, store, user, id, newVal, func) {
 		if (!store)
-			return Response.error('Settings', 'updateSettingsUserLocation', null, null, null, null, correlationId);
+			return this._error('Settings', 'updateSettingsUserLocation', null, null, null, null, correlationId);
 
 		const settings = this.mergeUser(correlationId, user.settings);
 		let location = settings.locations.find(l => l.id === id);
@@ -191,7 +189,7 @@ class Settings extends BaseSettings {
 
 	updateSettingsUserScenariosGameSystem(correlationId, store, user, gameSystemFilter, newVal, func) {
 		if (!store)
-			return Response.error('Settings', 'updateSettingsUserScenariosGameSystem', null, null, null, null, correlationId);
+			return this._error('Settings', 'updateSettingsUserScenariosGameSystem', null, null, null, null, correlationId);
 
 		const settings = this.mergeUser(correlationId, user.settings);
 		let scenario = settings.scenarios.additional.find(l => l.id === gameSystemFilter);

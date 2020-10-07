@@ -64,7 +64,6 @@ import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWi
 import baseInventoryGearSetDialog from '@/components/gameSystems/baseInventoryGearSetDialog';
 
 import DialogSupport from '@/library_vue/components/support/dialog';
-import Response from '@thzero/library_common/response';
 
 export default {
 	name: 'InventoryGearSetSaveDialog',
@@ -117,12 +116,12 @@ export default {
 		async rename(correlationId) {
 			const response = await AppUtility.settings().updateSettingsUserGameSystem(this.$store, this.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name }, (settings, newVal) => {
 				if (!newVal && !this.gameSystemId)
-					return Response.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.invalidRequest'));
+					return this.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.invalidRequest'));
 
 				const name = String.trim(newVal.name);
 				const gearSet = settings.gearSets.find(l => l.id === newVal.gearSetId);
 				if (!gearSet)
-					return Response.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.renameInvalidGearSet'));
+					return this.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.renameInvalidGearSet'));
 
 				gearSet.name = name;
 
@@ -134,10 +133,10 @@ export default {
 		async save(correlationId) {
 			const response = await AppUtility.settings().updateSettingsUserGameSystem(correlationId, this.$store, this.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name, inventory: this.inventory }, (settings, newVal) => {
 				if (!newVal && !this.gameSystemId)
-					return Response.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.invalidRequest'));
+					return this.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.invalidRequest'));
 
 				if (newVal.name && newVal.gearSetId)
-					return Response.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.eitherGearSetOrName'));
+					return this.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.eitherGearSetOrName'));
 
 				let gearSet;
 				if (newVal.name) {
@@ -152,7 +151,7 @@ export default {
 					gearSet = settings.gearSets.find(l => l.id === newVal.gearSetId);
 
 				if (!gearSet)
-					return Response.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId);
+					return this.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId);
 
 				gearSet.inventory = (newVal.inventory ? newVal.inventory : []).map(l => {
 					return {

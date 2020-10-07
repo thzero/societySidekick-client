@@ -32,13 +32,13 @@
 							</v-btn>
 						</v-toolbar>
 					</template>
-					<template v-slot:item.gameSystemId="{ item }">
+					<template v-slot:[`item.gameSystemId`]="{ item }">
 						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
 					</template>
-					<template v-slot:item.type="{ item }">
+					<template v-slot:[`item.type`]="{ item }">
 						<span>{{ getTypeName(item.gameSystemId, item.type) }}</span>
 					</template>
-					<template v-slot:item.action="{ item }">
+					<template v-slot:[`item.action`]="{ item }">
 						<v-icon
 							small
 							class="mr-2"
