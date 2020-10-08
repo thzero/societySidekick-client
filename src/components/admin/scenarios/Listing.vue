@@ -10,7 +10,7 @@
 					:sort-desc="[ true, false, false, false ]"
 					class="elevation-1"
 				>
-					<template v-slot:top>
+					<template #top>
 						<v-toolbar
 							flat
 							color="white"
@@ -32,16 +32,16 @@
 							</v-btn>
 						</v-toolbar>
 					</template>
-					<template v-slot:item.gameSystemId="{ item }">
+					<template #[`item.gameSystemId`]="{ item }">
 						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
 					</template>
-					<template v-slot:item.repeatable="{ item }">
+					<template #[`item.repeatable`]="{ item }">
 						<span>{{ item.repeatable ? $t('strings.yes') : $t('strings.no') }}</span>
 					</template>
-					<template v-slot:item.type="{ item }">
+					<template #[`item.type`]="{ item }">
 						<span>{{ getTypeName(item.gameSystemId, item.type) }}</span>
 					</template>
-					<template v-slot:item.action="{ item }">
+					<template #[`item.action`]="{ item }">
 						<v-icon
 							small
 							class="mr-2"
@@ -56,7 +56,7 @@
 							delete
 						</v-icon>
 					</template>
-					<template v-slot:no-data>
+					<template #no-data>
 						{{ $t('scenarios.noData') }}
 					</template>
 				</v-data-table>
