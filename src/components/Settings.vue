@@ -241,8 +241,8 @@
 						>
 							<Location
 								:value="item"
-								@dialogLocationDelete="dialogLocationDelete"
-								@dialogLocationEdit="dialogLocationEdit"
+								@dialog-location-delete="dialogLocationDelete"
+								@dialog-location-edit="dialogLocationEdit"
 							/>
 						</v-flex>
 					</v-layout>

@@ -68,10 +68,10 @@ export default {
 	},
 	methods: {
 		dialogLocationDelete() {
-			this.$emit('dialogLocationDelete', this.value);
+			this.$emit('dialog-location-delete', this.value);
 		},
 		dialogLocationOpen() {
-			this.$emit('dialogLocationEdit', this.value);
+			this.$emit('dialog-location-edit', this.value);
 		}
 	}
 };

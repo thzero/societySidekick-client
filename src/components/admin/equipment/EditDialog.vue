@@ -75,11 +75,11 @@
 					<!-- // GameSystems Update -->
 					<Pathfinder2eEquipmentSnippet
 						v-if="isGameSystemPathfinder2e"
-						:value="innerValue"
+						v-model="innerValue"
 					/>
 					<Starfinder1eEquipmentSnippet
 						v-if="isGameSystemStarfinder1e"
-						:value="innerValue"
+						v-model="innerValue"
 					/>
 				</td>
 			</tr>
