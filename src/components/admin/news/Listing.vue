@@ -9,7 +9,7 @@
 					:sort-desc="false"
 					class="elevation-1"
 				>
-					<template v-slot:top>
+					<template #top>
 						<v-toolbar
 							flat
 							color="white"
@@ -31,25 +31,25 @@
 							</v-btn>
 						</v-toolbar>
 					</template>
-					<template v-slot:item.gameSystemId="{ item }">
+					<template #[`item.gameSystemId`]="{ item }">
 						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
 					</template>
-					<template v-slot:item.article="{ item }">
+					<template #[`item.article`]="{ item }">
 						<VMarkdown v-model="item.article" />
 					</template>
-					<template v-slot:item.sticky="{ item }">
+					<template #[`item.sticky`]="{ item }">
 						<span>{{ item.sticky ? $t('strings.yes') : $t('strings.no') }}</span>
 					</template>
-					<template v-slot:item.requiresAuth="{ item }">
+					<template #[`item.requiresAuth`]="{ item }">
 						<span>{{ item.requiresAuth ? $t('strings.yes') : $t('strings.no') }}</span>
 					</template>
-					<template v-slot:item.status="{ item }">
+					<template #[`item.status`]="{ item }">
 						<span>{{ $t(`news.status.${item.status}`) }}</span>
 					</template>
-					<template v-slot:item.timestamp="{ item }">
+					<template #[`item.timestamp`]="{ item }">
 						<span>{{ getDateHuman(item.timestamp) }}</span>
 					</template>
-					<template v-slot:item.action="{ item }">
+					<template #[`item.action`]="{ item }">
 						<v-icon
 							small
 							class="mr-2"
@@ -64,7 +64,7 @@
 							delete
 						</v-icon>
 					</template>
-					<template v-slot:no-data>
+					<template #no-data>
 						{{ $t('news.noData') }}
 					</template>
 				</v-data-table>

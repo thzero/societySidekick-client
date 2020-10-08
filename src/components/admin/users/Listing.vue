@@ -10,7 +10,7 @@
 					:sort-desc="[ true, false, false, false ]"
 					class="elevation-1"
 				>
-					<template v-slot:top>
+					<template #top>
 						<v-toolbar
 							flat
 							color="white"
@@ -32,13 +32,13 @@
 							</v-btn>
 						</v-toolbar>
 					</template>
-					<template v-slot:item.gameSystemId="{ item }">
+					<template #[`item.gameSystemId`]="{ item }">
 						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
 					</template>
-					<template v-slot:item.roles="{ item }">
+					<template #[`item.roles`]="{ item }">
 						<span>{{ item && item.roles ? item.roles.join(', ') : '' }}</span>
 					</template>
-					<template v-slot:item.action="{ item }">
+					<template #[`item.action`]="{ item }">
 						<v-icon
 							small
 							class="mr-2"
@@ -53,7 +53,7 @@
 							delete
 						</v-icon>
 					</template>
-					<template v-slot:no-data>
+					<template #no-data>
 						{{ $t('users.noData') }}
 					</template>
 				</v-data-table>
