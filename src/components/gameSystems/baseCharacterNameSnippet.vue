@@ -43,7 +43,7 @@ export default {
 	},
 	computed: {
 		secondary() {
-			let userNumber = GameSystemsUtility.gameSystemNumber(this.user, this.gameSystemId());
+			let userNumber = GameSystemsUtility.gameSystemNumber(this.correlationId(), this.user, this.gameSystemId());
 			userNumber = '#' + (userNumber ? userNumber : '******');
 			const number = (this.value.number ? this.value.number : '*') + '';
 			if (this.includeCharacterNumber)

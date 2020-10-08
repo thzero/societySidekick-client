@@ -104,7 +104,7 @@ export default {
 			this.shareUrl = null;
 		},
 		hasGamerTag() {
-			return this.isLoggedIn && AppUtility.settings().getSettingsUserGamerTag(this.$store.user.user);
+			return this.isLoggedIn && AppUtility.settings().getSettingsUserGamerTag(this.correlationId(), this.$store.user.user);
 		},
 		isLoggedIn() {
 			return this.$store.state.user && this.$store.state.user.isLoggedIn;

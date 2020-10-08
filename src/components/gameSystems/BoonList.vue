@@ -198,8 +198,8 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
@@ -283,27 +283,27 @@ export default {
 		},
 		seasonFilter: {
 			get: function () {
-				return AppUtility.settings().getSettingsUserBoons(this.user, (settings) => settings.seasonFilter);
+				return AppUtility.settings().getSettingsUserBoons(this.correlationId(), this.user, (settings) => settings.seasonFilter);
 			},
 			set: function (newVal) {
-				AppUtility.settings().updateSettingsUserBoons(this.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
+				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
 			}
 		},
 		sortBy: {
 			get: function () {
-				const result = AppUtility.settings().getSettingsUserBoons(this.user, (settings) => settings.sortBy);
+				const result = AppUtility.settings().getSettingsUserBoons(this.correlationId(), this.user, (settings) => settings.sortBy);
 				return result ? result : SharedConstants.SortBy.Boons.BoonName;
 			},
 			set: function (newVal) {
-				AppUtility.settings().updateSettingsUserBoons(this.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
+				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
 			}
 		},
 		sortDirection: {
 			get: function () {
-				return AppUtility.settings().getSettingsUserBoons(this.user, (settings) => settings.sortDirection);
+				return AppUtility.settings().getSettingsUserBoons(this.correlationId(), this.user, (settings) => settings.sortDirection);
 			},
 			set: function (newVal) {
-				AppUtility.settings().updateSettingsUserBoons(this.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
+				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
 		},
 		scenarioSeasons: {
@@ -370,17 +370,19 @@ export default {
 
 			this.forceRecomputeCounter;
 
+			const correlationId = this.correlationId();
+
 			let characters = this.characterList.slice(0);
 			characters = characters.filter(l => l.gameSystemId === this.gameSystemFilter);
 
 			if (!characters || characters.length <= 0)
 				return [];
 
-			const boons = await this.executeBoonsCache(this);
+			const boons = await this.executeBoonsCache(correlationId, this);
 			if (!boons || boons.length === 0)
 				return [];
 
-			let scenarios = await this.executeScenariosCache(this);
+			let scenarios = await this.executeScenariosCache(correlationId, this);
 			if (!scenarios || scenarios.length === 0)
 				scenarios = [];
 
@@ -550,14 +552,14 @@ export default {
 			return true;
 		},
 		// eslint-disable-next-line
-		async executeBoonsCache() {
+		async executeBoonsCache(correlationId) {
 			const self = this;
 			// eslint-disable-next-line
 			return new Promise(async (resolve, reject) => {
 				try {
 					let boons = self.boonsCache[self.gameSystemFilter];
 					if (!boons) {
-						await self.$store.dispatcher.boons.getBoonListing(self.gameSystemFilter);
+						await self.$store.dispatcher.boons.getBoonListing(correlationId, self.gameSystemFilter);
 						boons = self.$store.state.boons.listing;
 						if (boons) {
 							boons = boons.filter(l => l.gameSystemId == self.gameSystemFilter);
@@ -591,14 +593,14 @@ export default {
 				return self.$refs.scenarioListFilterStarfinder1e.filterScenarioName(temp, value);
 		},
 		// eslint-disable-next-line
-		async executeScenariosCache() {
+		async executeScenariosCache(correlationId) {
 			const self = this;
 			// eslint-disable-next-line
 			return new Promise(async (resolve, reject) => {
 				try {
 					let scenarios = self.scenariosCache[self.gameSystemFilter];
 					if (!scenarios) {
-						await self.$store.dispatcher.scenarios.getScenarioListing(self.gameSystemFilter);
+						await self.$store.dispatcher.scenarios.getScenarioListing(correlationId, self.gameSystemFilter);
 						scenarios = self.$store.state.scenarios.listing;
 						if (scenarios) {
 							scenarios = scenarios.filter(l => l.gameSystemId == self.gameSystemFilter);
@@ -623,9 +625,9 @@ export default {
 				return values;
 
 			if (ascending)
-				return values.sort((a, b) => Utility.sortByString(a, b, (v) => { return v && v.boon ? v.boon.name : null; }));
+				return values.sort((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.boon ? v.boon.name : null; }));
 
-			return values.sort((a, b) => Utility.sortByString(b, a, (v) => { return v && v.boon ? v.boon.name : null; }));
+			return values.sort((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.boon ? v.boon.name : null; }));
 		}
 	}
 };

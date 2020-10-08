@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
 import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
@@ -63,8 +63,8 @@ export default {
 			this.$emit('ok');
 			return true;
 		},
-		async preCompleteResponseOk() {
-			const response = AppUtility.settings().updateSettingsUserLocation(this.$store, this.$store.state.user.user, this.id, { name: this.name, location: this.location }, (settings, newVal) => {
+		async preCompleteResponseOk(correlationId) {
+			const response = AppUtility.settings().updateSettingsUserLocation(correlationId, this.$store, this.$store.state.user.user, this.id, { name: this.name, location: this.location }, (settings, newVal) => {
 				settings.name = newVal.name;
 				settings.location = newVal.location;
 			});
@@ -72,7 +72,7 @@ export default {
 		},
 		// eslint-disable-next-line
 		async resetDialog(value) {
-			this.id = value ? value.id : Utility.generateId();
+			this.id = value ? value.id : LibraryUtility.generateId();
 			this.location = value ? value.location : null;
 			this.name = value ? value.name : null;
 		}

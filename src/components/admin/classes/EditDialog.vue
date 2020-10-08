@@ -67,7 +67,7 @@ export default {
 	computed: {
 		types: {
 			get() {
-				const lookups = this.initLookupsByGameSystemId(this.gameSystemId);
+				const lookups = this.initLookupsByGameSystemId(this.correlationId(), this.gameSystemId);
 				return lookups ? lookups.classTypes : [];
 			},
 			cache: false
@@ -75,19 +75,19 @@ export default {
 	},
 	methods: {
 		// eslint-disable-next-line
-		preCompleteI(value) {
+		async preCompleteI(correlationId, value) {
 		},
-		async preCompleteSubmitCreate(dispatcher, value) {
+		async preCompleteSubmitCreate(correlationId, dispatcher, value) {
 			delete value.timestamp;
 			delete value.updatedTimestamp;
-			return await dispatcher.adminClasses.createAdminClass(value);
+			return await dispatcher.adminClasses.createAdminClass(correlationId, value);
 		},
-		async preCompleteSubmitUpdate(dispatcher, value) {
+		async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
 			delete value.timestamp;
-			return await dispatcher.adminClasses.updateAdminClass(value);
+			return await dispatcher.adminClasses.updateAdminClass(correlationId, value);
 		},
 		// eslint-disable-next-line
-		resetDialogI(value) {
+		resetDialogI(correlationId, value) {
 		}
 	}
 };

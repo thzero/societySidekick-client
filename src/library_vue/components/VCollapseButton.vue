@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseControlEdit from './baseControlEdit';
 
@@ -56,7 +56,7 @@ export default {
 			this.update(this, value);
 			this.$emit('click');
 		},
-		update: Utility.debounce(async function(self, value) {
+		update: LibraryUtility.debounce(async function(self, value) {
 			self.innerValue = value;
 		}, 500)
 	}

@@ -51,19 +51,19 @@ export default {
 	extends: VAdminFormDialog,
 	methods: {
 		// eslint-disable-next-line
-		preCompleteI(value) {
+		async preCompleteI(correlationId, value) {
 		},
-		async preCompleteSubmitCreate(dispatcher, value) {
+		async preCompleteSubmitCreate(correlationId, dispatcher, value) {
 			delete value.timestamp;
 			delete value.updatedTimestamp;
-			return await dispatcher.adminFactions.createAdminFaction(value);
+			return await dispatcher.adminFactions.createAdminFaction(correlationId, value);
 		},
-		async preCompleteSubmitUpdate(dispatcher, value) {
+		async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
 			delete value.timestamp;
-			return await dispatcher.adminFactions.updateAdminFaction(value);
+			return await dispatcher.adminFactions.updateAdminFaction(correlationId, value);
 		},
 		// eslint-disable-next-line
-		resetDialogI(value) {
+		resetDialogI(correlationId, value) {
 		}
 	}
 };

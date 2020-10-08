@@ -12,23 +12,24 @@ export default {
 	}),
 	methods: {
 		boonName(id) {
-			return this.serviceGameSystem.boonNameById(id, this.$store);
+			return this.serviceGameSystem.boonNameById(this.correlationId(), id, this.$store);
 		},
 		async dialogScenarioEdit(value) {
 			if (!value)
 				return;
-			await this.$refs.scenarioDialog.reset(this.clone(value));
+			await this.$refs.scenarioDialog.reset(this.correlationId(), this.clone(value));
 			this.dialogScenario.open();
 		},
 		async dialogScenarioNew() {
-			let item = this.initializeCharacterScenario();
+			const correlationId = this.correlationId();
+			let item = this.initializeCharacterScenario(correlationId);
 			delete item.id;
 			item.fameFactionId = this.value.factionId;
-			await this.$refs.scenarioDialog.reset(item);
+			await this.$refs.scenarioDialog.reset(correlationId, item);
 			this.dialogScenario.open();
 		},
-		initializeCharacterScenario() {
-			return this.serviceGameSystem.initializeCharacterScenario(this.value);
+		initializeCharacterScenario(correlationId) {
+			return this.serviceGameSystem.initializeCharacterScenario(correlationId, this.value);
 		}
 	}
 };

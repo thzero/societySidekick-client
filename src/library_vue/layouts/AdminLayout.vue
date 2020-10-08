@@ -163,7 +163,7 @@ export default {
 		},
 		async dialogSignOutOk() {
 			this.dialogSignOut.ok();
-			await auth.signOut();
+			await auth.signOut(this.correlationId());
 		}
 	}
 };

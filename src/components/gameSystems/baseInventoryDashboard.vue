@@ -1,6 +1,6 @@
 <script>
-import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseDashboard from '@/components/baseDashboard';
 import InventoryGearSetDeleteDialog from '@/components/gameSystems/InventoryGearSetDeleteDialog';
@@ -60,7 +60,7 @@ export default {
 				temp.inventory.push(inv);
 			}
 
-			list = Utility.sortByOrder(list, true);
+			list = LibraryUtility.sortByOrder(list, true);
 			for (const item of list)
 				item.inventory = this.groupedLines3(item.inventory);
 
@@ -89,7 +89,7 @@ export default {
 			if (!this.value)
 				return false;
 
-			const gearSets = AppUtility.settings().getSettingsUserGameSystem(this.$store.state.user.user, this.value.gameSystemId, (settings) => { return settings.gearSets; });
+			const gearSets = AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), this.$store.state.user.user, this.value.gameSystemId, (settings) => { return settings.gearSets; });
 			return gearSets && gearSets.length > 0;
 		},
 		hasInventory() {
@@ -101,7 +101,7 @@ export default {
 	},
 	methods: {
 		async dialogInventoryEdit(value) {
-			await this.$refs.inventoryDialog.reset({ id: value.id, character: this.clone(this.value) });
+			await this.$refs.inventoryDialog.reset(this.correlationId(), { id: value.id, character: this.clone(this.value) });
 			this.dialogInventory.open();
 		},
 		async dialogInventoryNew() {
@@ -110,21 +110,21 @@ export default {
 			const character = this.clone(this.value);
 			character.inventory = character.inventory ? character.inventory : [];
 			character.inventory.push(item);
-			const last = Utility.sortByOrder(character.scenarios).slice(-1).pop();
+			const last = LibraryUtility.sortByOrder(character.scenarios).slice(-1).pop();
 			item.boughtScenarioId = last ? last.id : null;
-			await this.$refs.inventoryDialog.reset({ id: item.id, character: character });
+			await this.$refs.inventoryDialog.reset(this.correlationId(), { id: item.id, character: character });
 			this.dialogInventory.open();
 		},
 		async dialogInventoryGearSetDelete() {
-			await this.$refs.inventoryGearSetDeleteDialog.reset();
+			await this.$refs.inventoryGearSetDeleteDialog.reset(this.correlationId(), null);
 			this.dialogInventoryGearSetDeleteSupport.open();
 		},
 		async dialogInventoryGearSetLoad() {
-			await this.$refs.inventoryGearSetLoadDialog.reset();
+			await this.$refs.inventoryGearSetLoadDialog.reset(this.correlationId(), null);
 			this.dialogInventoryGearSetLoadSupport.open();
 		},
 		async dialogInventoryGearSetSave() {
-			await this.$refs.inventoryGearSetSaveDialog.reset();
+			await this.$refs.inventoryGearSetSaveDialog.reset(this.correlationId(), null);
 			this.dialogInventoryGearSetSaveSupport.open();
 		},
 		dialogInventorOk() {
@@ -180,7 +180,7 @@ export default {
 			return this.scenarioNameById(scenario.scenarioId, this.$store);
 		},
 		scenarioNameById(id) {
-			return id ? this.serviceGameSystem.determineScenarioNameById(id, this.$store) : '';
+			return id ? this.serviceGameSystem.determineScenarioNameById(this.correlationId(), id, this.$store) : '';
 		}
 	}
 };

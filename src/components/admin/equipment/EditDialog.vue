@@ -120,21 +120,21 @@ export default {
 	computed: {
 		categories: {
 			get() {
-				const lookups = this.initLookupsByGameSystemId(this.gameSystemId);
+				const lookups = this.initLookupsByGameSystemId(this.correlationId(), this.gameSystemId);
 				return lookups ? lookups.equipmentCategories : [];
 			},
 			cache: false
 		},
 		secondaryCategories: {
 			get() {
-				const lookups = this.initLookupsByGameSystemId(this.gameSystemId);
+				const lookups = this.initLookupsByGameSystemId(this.correlationId(), this.gameSystemId);
 				return lookups ? lookups.equipmentSecondaryCategories : [];
 			},
 			cache: false
 		},
 		tertiaryCategories: {
 			get() {
-				const lookups = this.initLookupsByGameSystemId(this.gameSystemId);
+				const lookups = this.initLookupsByGameSystemId(this.correlationId(), this.gameSystemId);
 				return lookups ? lookups.equipmentTertiaryCategories : [];
 			},
 			cache: false
@@ -142,19 +142,19 @@ export default {
 	},
 	methods: {
 		// eslint-disable-next-line
-		preCompleteI(value) {
+		async preCompleteI(correlationId, value) {
 		},
-		async preCompleteSubmitCreate(dispatcher, value) {
+		async preCompleteSubmitCreate(correlationId, dispatcher, value) {
 			delete value.timestamp;
 			delete value.updatedTimestamp;
-			return await dispatcher.adminEquipment.createAdminEquipment(value);
+			return await dispatcher.adminEquipment.createAdminEquipment(correlationId, value);
 		},
-		async preCompleteSubmitUpdate(dispatcher, value) {
+		async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
 			delete value.timestamp;
-			return await dispatcher.adminEquipment.updateAdminEquipment(value);
+			return await dispatcher.adminEquipment.updateAdminEquipment(correlationId, value);
 		},
 		// eslint-disable-next-line
-		resetDialogI(value) {
+		resetDialogI(correlationId, value) {
 		}
 	}
 };

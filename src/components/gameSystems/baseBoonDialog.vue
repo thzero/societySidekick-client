@@ -1,6 +1,6 @@
 <script>
-import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import VDateTimeFieldWithValidation from '@/library_vue/components/form/VDateTimeFieldWithValidation';
@@ -43,7 +43,7 @@ export default {
 	}),
 	computed: {
 		locations() {
-			return VueUtility.selectBlank(Utility.sortByName(AppUtility.settings().getSettingsUserLocations(this.$store.state.user.user), true));
+			return VueUtility.selectBlank(LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.correlationId(), this.$store.state.user.user), true));
 		},
 		outputType() {
 			return 'timestamp';
@@ -58,51 +58,58 @@ export default {
 		}
 	},
 	async created() {
+		const correlationId = this.correlationId();
 		this.initializeServices();
-		this.innerValue = this.initBoon();
-		this.lookups = await this.initializeLookups();
+		this.innerValue = this.initBoon(correlationId);
+		this.lookups = await this.initializeLookups(correlationId);
 	},
 	methods: {
+		// eslint-disable-next-line
 		async cancel() {
 			this.$emit('cancel');
 		},
+		// eslint-disable-next-line
 		async close() {
 		},
+		// eslint-disable-next-line
 		dialogBoonsOk(id) {
+			const correlationId = this.correlationId();
 			this.$set(this.innerValue, 'boonId', id);
-			this.boonName = this.serviceGameSystem.boonNameById(id, this.$store);
-			this.dialogBoonsOkI(id);
-			this.dialogBoons.ok();
+			this.boonName = this.serviceGameSystem.boonNameById(correlationId, id, this.$store);
+			this.dialogBoonsOkI(correlationId, id);
+			this.dialogBoons.ok(correlationId);
 		},
 		// eslint-disable-next-line
-		dialogBoonsOkI(id) {
+		dialogBoonsOkI(correlationId, id) {
 		},
 		async dialogBoonsOpen() {
-			await this.$refs.boonLookup.reset();
+			await this.$refs.boonLookup.reset(this.correlationId(), null);
 			this.dialogBoons.open();
 		},
 		gameSystemId() {
 			this.notImplementedError();
 		},
-		initBoon() {
+		// eslint-disable-next-line
+		initBoon(correlationId) {
 			this.notImplementedError();
 		},
-		initializeLookups() {
-			return this.serviceGameSystem.initializeLookups(this.$injector);
+		initializeLookups(correlationId) {
+			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
 		},
 		initResponse() {
 			const details = {
 				boonId: this.innerValue.boonId,
 				locationId: this.innerValue.locationId
 			};
-			return this.initResponseDetails(details);
+			return this.initResponseDetails(this.correlationId(), details);
 		},
-		initResponseDetails(details) {
+		initResponseDetails(correlationId, details) {
 			return details;
 		},
 		initializeServices() {
 			this.notImplementedError();
 		},
+		// eslint-disable-next-line
 		async ok() {
 			this.$emit('ok', this.innerValue);
 			return true;
@@ -110,29 +117,29 @@ export default {
 		// eslint-disable-next-line
 		onChange(newValue) {
 		},
-		async preComplete() {
-			const boon = this.initResponse();
+		async preComplete(correlationId) {
+			const boon = this.initResponse(correlationId);
 			boon.id = this.innerValue.id;
 			boon.gameSystemId = this.gameSystemId();
 			boon.boonId = this.innerValue.boonId;
 			boon.timestamp = this.innerValue.timestamp;
 			boon.updatedTimestamp = this.character.updatedTimestamp;
-			const response = await this.$store.dispatcher.characters.updateCharacterBoon(this.character.id, boon);
-			this.logger.debug('BaseBoonDialog', 'preComplete', response);
+			const response = await this.$store.dispatcher.characters.updateCharacterBoon(correlationId, this.character.id, boon);
+			this.logger.debug('BaseBoonDialog', 'preComplete', 'response', response, correlationId);
 			return response;
 		},
-		async preCompleteResponseDelete() {
-			return await this.$store.dispatcher.characters.deleteCharacterBoon(this.character.id, this.innerValue.id);
+		async preCompleteResponseDelete(correlationId) {
+			return await this.$store.dispatcher.characters.deleteCharacterBoon(correlationId, this.character.id, this.innerValue.id);
 		},
-		async resetDialog(value) {
+		async resetDialog(correlationId, value) {
 			this.steps = 1;
-			value.timestamp = value.timestamp ? Utility.convertTimestampToLocal(value.timestamp).valueOf() : Utility.getTimestampLocal().valueOf();
-			await this.resetDialogI(value);
+			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
+			await this.resetDialogI(correlationId, value);
 			this.isNew = value && !value.id;
 			this.innerValue = value;
 		},
 		// eslint-disable-next-line
-		async resetDialogI(value) {
+		async resetDialogI(correlationId, value) {
 		}
 	}
 };

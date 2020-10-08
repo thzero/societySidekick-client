@@ -91,11 +91,12 @@ export default {
 			this.$emit('cancel');
 		},
 		async dialogOk() {
+			const correlationId = this.correlationId();
 			if (this.preCompleteOk) {
-				const response = await this.preCompleteOk();
-				this.logger.debug('ConfirmationDialog', 'dialogOk', 'response', response);
+				const response = await this.preCompleteOk(correlationId);
+				this.logger.debug('ConfirmationDialog', 'dialogOk', 'response', response, correlationId);
 				if (!response || !response.success) {
-					VueUtility.handleError(this.$refs.obs, this.serverErrors, response);
+					VueUtility.handleError(this.$refs.obs, this.serverErrors, response, correlationId);
 					return;
 				}
 			}

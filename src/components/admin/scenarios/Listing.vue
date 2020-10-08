@@ -98,17 +98,17 @@ export default {
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminScenarios.searchAdminScenarios({});
+		await this.$store.dispatcher.adminScenarios.searchAdminScenarios(this.correlationId(), {});
 	},
 	methods: {
 		defaultItem() {
 			return new ScenarioData();
 		},
-		dialogDeletePreCompleteDispatcher(dispatcher) {
+		dialogDeletePreCompleteDispatcher(correlationId, dispatcher) {
 			return dispatcher.adminScenarios;
 		},
-		async dialogDeletePreCompleteOkDelete(dispatcher, id) {
-			return await dispatcher.adminScenarios.deleteAdminScenario(id);
+		async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+			return await dispatcher.adminScenarios.deleteAdminScenario(correlationId, id);
 		},
 		getTypeName(gameSystemId, type) {
 			const lookups = this.getLookupsByGameSystemId(gameSystemId);

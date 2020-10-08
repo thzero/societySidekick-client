@@ -88,33 +88,34 @@ export default {
 	}),
 	methods: {
 		cancel() {
+			const correlationId = this.correlationId();
 			this.serverErrors = [];
-			this.clear();
-			this.logger.debug('FormControl', 'cancel', 'cancel', 'cancel');
+			this.clear(correlationId);
+			this.logger.debug('FormControl', 'cancel', null, null, correlationId);
 			this.$emit('cancel');
 		},
-		async clear() {
+		async clear(correlationId) {
 			this.serverErrors = [];
-			this.logger.debug('FormControl', 'clear', 'clear');
+			this.logger.debug('FormControl', 'clear', null, null, correlationId);
 			this.$nextTick(async () => {
-				await this.$refs.obs.reset();
+				await this.$refs.obs.reset(correlationId);
 			});
 			this.disabled = false;
 		},
 		observer() {
 			this.$refs.obs;
 		},
-		reset(value) {
+		reset(correlationId, value) {
 			const timer = setInterval(async () => {
 				clearInterval(timer);
 				const el = document.getElementsByClassName('v-card__text');
 				if (el && el.length > 0)
 					el[0].scrollTop = 0;
 			}, 25);
-			this.resetControl(value);
+			this.resetControl(correlationId, value);
 		},
 		// eslint-disable-next-line
-		resetControl(value) {
+		resetControl(correlationId, value) {
 		},
 		setErrors(errors) {
 			this.$refs.obs.setErrors(errors);
@@ -122,23 +123,25 @@ export default {
 		async submit() {
 			this.serverErrors = [];
 
-			const result = await this.$refs.obs.validate();
-			this.logger.debug('FormControl', 'submit', 'result', result);
+			const correlationId = this.correlationId();
+
+			const result = await this.$refs.obs.validate(correlationId);
+			this.logger.debug('FormControl', 'submit', 'result', result, correlationId);
 			if (!result)
 				return;
 
 			if (this.preCompleteOk) {
-				const response = await this.preCompleteOk();
-				this.logger.debug('FormControl', 'submit', 'response', response);
+				const response = await this.preCompleteOk(correlationId);
+				this.logger.debug('FormControl', 'submit', 'response', response, correlationId);
 				if (!response || !response.success) {
-					VueUtility.handleError(this.$refs.obs, this.serverErrors, response);
+					VueUtility.handleError(this.$refs.obs, this.serverErrors, response, correlationId);
 					return;
 				}
 			}
 
-			this.logger.debug('FormControl', 'submit', 'ok');
+			this.logger.debug('FormControl', 'submit', 'ok', null, correlationId);
 			this.$emit('ok');
-			this.clear();
+			this.clear(correlationId);
 		}
 	}
 };

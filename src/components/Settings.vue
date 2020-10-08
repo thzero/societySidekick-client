@@ -194,8 +194,8 @@
 						>
 							<Favorite
 								:value="item"
-								@dialogFavoriteDelete="dialogFavoriteDelete"
-								@dialogFavoriteEdit="dialogFavoriteEdit"
+								@dialog-favorite-delete="dialogFavoriteDelete"
+								@dialog-favorite-edit="dialogFavoriteEdit"
 							/>
 						</v-flex>
 					</v-layout>
@@ -281,8 +281,8 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 import GameSystemsUtility from '@/utility/gameSystems';
 
 import Favorite from '@/components/favorites/Favorite';
@@ -320,14 +320,14 @@ export default {
 	}),
 	asyncComputed: {
 		async favorites() {
-			// return Utility.sortByName(AppUtility.settings().getSettingsUserFavorites(this.user), true)
-			const response = await this.$store.dispatcher.user.getUserFavorites();
+			// return LibraryUtility.sortByName(AppUtility.settings().getSettingsUserFavorites(this.correlationId(), this.user), true)
+			const response = await this.$store.dispatcher.user.getUserFavorites(this.correlationId());
 			return response && response.success ? response.results : [];
 		}
 	},
 	computed: {
 		locations() {
-			return Utility.sortByName(AppUtility.settings().getSettingsUserLocations(this.user), true);
+			return LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.correlationId(), this.user), true);
 		},
 		gameSystemIds() {
 			return SharedConstants.GameSystems;
@@ -360,15 +360,15 @@ export default {
 			this.dialogFavoriteDeleteItemId = null;
 		},
 		async dialogFavoriteDeletePreCompleteOk() {
-			const response = AppUtility.settings().deleteSettingsUserFavorite(this.$store, this.$store.state.user.user, this.dialogFavoriteDeleteItemId);
+			const response = AppUtility.settings().deleteSettingsUserFavorite(this.correlationId(), this.$store, this.$store.state.user.user, this.dialogFavoriteDeleteItemId);
 			return response;
 		},
 		async dialogFavoriteEdit(value) {
-			await this.$refs.favoriteDialog.reset(this.clone(value));
+			await this.$refs.favoriteDialog.reset(this.correlationId(), this.clone(value));
 			this.dialogFavoriteSignal.open();
 		},
 		async dialogFavoriteNew() {
-			await this.$refs.favoriteDialog.reset(null);
+			await this.$refs.favoriteDialog.reset(this.correlationId(), null);
 			this.dialogFavoriteSignal.open();
 		},
 		async dialogLocationDelete(value) {
@@ -387,15 +387,15 @@ export default {
 			this.dialogLocationDeleteItemId = null;
 		},
 		async dialogLocationDeletePreCompleteOk() {
-			const response = AppUtility.settings().deleteSettingsUserLocation(this.$store, this.$store.state.user.user, this.dialogLocationDeleteItemId);
+			const response = AppUtility.settings().deleteSettingsUserLocation(this.correlationId(), this.$store, this.$store.state.user.user, this.dialogLocationDeleteItemId);
 			return response;
 		},
 		async dialogLocationEdit(value) {
-			await this.$refs.locationDialog.reset(this.clone(value));
+			await this.$refs.locationDialog.reset(this.correlationId(), this.clone(value));
 			this.dialogLocationSignal.open();
 		},
 		async dialogLocationNew() {
-			await this.$refs.locationDialog.reset(null);
+			await this.$refs.locationDialog.reset(this.correlationId(), null);
 			this.dialogLocationSignal.open();
 		},
 		getGameSystemActive(id) {
@@ -409,23 +409,25 @@ export default {
 		getGameSystemNumberName(id) {
 			return GameSystemsUtility.numberName(id, this.$trans);
 		},
-		async preCompleteI(responses) {
+		// eslint-disable-next-line
+		async preCompleteI(correlationId, responses) {
 			// GameSystems Update
 			if (this.isGameSystemDungeonsAndDragons5e)
-				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(this.$store, this.user, SharedConstants.GameSystems.DungeonsAndDragons5e.id, this.gameSystemNumberDungeonsAndDragons5e, (settings, newVal) => { settings.number = String.trim(newVal); }));
+				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(correlationId, this.$store, this.user, SharedConstants.GameSystems.DungeonsAndDragons5e.id, this.gameSystemNumberDungeonsAndDragons5e, (settings, newVal) => { settings.number = String.trim(newVal); }));
 			if (this.isGameSystemPathfinder2e)
-				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(this.$store, this.user, SharedConstants.GameSystems.Pathfinder2e.id, this.gameSystemNumberPathfinder2e, (settings, newVal) => { settings.number = String.trim(newVal); }));
+				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(correlationId, this.$store, this.user, SharedConstants.GameSystems.Pathfinder2e.id, this.gameSystemNumberPathfinder2e, (settings, newVal) => { settings.number = String.trim(newVal); }));
 			if (this.isGameSystemStarfinder1e)
-				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(this.$store, this.user, SharedConstants.GameSystems.Starfinder1e.id, this.gameSystemNumberStarfinder1e, (settings, newVal) => { settings.number = String.trim(newVal); }));
+				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(correlationId, this.$store, this.user, SharedConstants.GameSystems.Starfinder1e.id, this.gameSystemNumberStarfinder1e, (settings, newVal) => { settings.number = String.trim(newVal); }));
 		},
-		resetI() {
+		// eslint-disable-next-line
+		resetI(correlationId) {
 			// GameSystems Update
 			if (this.isGameSystemDungeonsAndDragons5e)
-				this.gameSystemNumberDungeonsAndDragons5e = this.clone(AppUtility.settings().getSettingsUserGameSystem(this.user, SharedConstants.GameSystems.DungeonsAndDragons5e.id, (settings) => { return settings.number; }));
+				this.gameSystemNumberDungeonsAndDragons5e = this.clone(AppUtility.settings().getSettingsUserGameSystem(correlationId, this.user, SharedConstants.GameSystems.DungeonsAndDragons5e.id, (settings) => { return settings.number; }));
 			if (this.isGameSystemPathfinder2e)
-				this.gameSystemNumberPathfinder2e = this.clone(AppUtility.settings().getSettingsUserGameSystem(this.user, SharedConstants.GameSystems.Pathfinder2e.id, (settings) => { return settings.number; }));
+				this.gameSystemNumberPathfinder2e = this.clone(AppUtility.settings().getSettingsUserGameSystem(correlationId, this.user, SharedConstants.GameSystems.Pathfinder2e.id, (settings) => { return settings.number; }));
 			if (this.isGameSystemStarfinder1e)
-				this.gameSystemNumberStarfinder1e = this.clone(AppUtility.settings().getSettingsUserGameSystem(this.user, SharedConstants.GameSystems.Starfinder1e.id, (settings) => { return settings.number; }));
+				this.gameSystemNumberStarfinder1e = this.clone(AppUtility.settings().getSettingsUserGameSystem(correlationId, this.user, SharedConstants.GameSystems.Starfinder1e.id, (settings) => { return settings.number; }));
 		}
 	}
 };

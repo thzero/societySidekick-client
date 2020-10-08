@@ -87,7 +87,7 @@
 					:character="value"
 					:editable="editable"
 					:collapse="collapseInner"
-					@dialogEdit="dialogBoonEdit"
+					@dialog-edit="dialogBoonEdit"
 				/>
 			</v-flex>
 		</v-layout>
@@ -121,11 +121,11 @@ export default {
 	},
 	extends: baseBoonDashboard,
 	methods: {
-		boonsScenario(results, scenario) {
+		boonsScenario(correlationId, results, scenario) {
 			if (scenario.boon1Id)
-				results.push(this.initializeCharacterBoon2(scenario.boon1Id, scenario));
+				results.push(this.initializeCharacterBoon2(correlationId, scenario.boon1Id, scenario));
 			if (scenario.boon2Id)
-				results.push(this.initializeCharacterBoon2(scenario.boon2Id, scenario));
+				results.push(this.initializeCharacterBoon2(correlationId, scenario.boon2Id, scenario));
 		},
 		initializeServices() {
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);

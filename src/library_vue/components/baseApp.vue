@@ -6,8 +6,9 @@ export default {
 	extends: base,
 	async created() {
 		this.$EventBus.$on('auth-refresh', async (user) => {
-			this.logger.debug('BaseApp', 'created', 'auth-refresh', user);
-			let items = await this.initialize();
+			const correlationId = this.correlationId();
+			this.logger.debug('BaseApp', 'created', 'auth-refresh', user, correlationId);
+			let items = await this.initialize(correlationId);
 			if (!items)
 				return;
 			await Promise.all(items);
@@ -15,13 +16,14 @@ export default {
 	},
 	async mounted() {
 		(async () => {
-			let items = await this.initialize();
+			const correlationId = this.correlationId();
+			let items = await this.initialize(correlationId);
 			if (!items)
 				return;
 			await Promise.all(items);
 			// await Promise.all([
-			// 	this.$store.dispatcher.root.initialize(),
-			// 	this.$store.dispatcher.characters.initializeCharacters()
+			// 	this.$store.dispatcher.root.initialize(correlationId),
+			// 	this.$store.dispatcher.characters.initializeCharacters(correlationId)
 			// ])
 		})().catch(err => {
 			// eslint-disable-next-line

@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseListing from '@/library_vue/components/admin/news/baseListing';
 import EditDialog from '@/components/admin/news/EditDialog';
@@ -105,7 +105,7 @@ export default {
 	extends: baseListing,
 	methods: {
 		defaultItem() {
-			return Utility.instantiate(new NewsData());
+			return LibraryUtility.instantiate(new NewsData());
 		},
 		getGameSystemName(id) {
 			const results = this.$store.getters.getGameSystem(id);

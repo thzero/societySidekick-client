@@ -3,7 +3,7 @@ import Vue from 'vue';
 
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import VFormDialog from '@/library_vue/components/form/VFormDialog';
@@ -42,21 +42,21 @@ export default {
 	}),
 	computed: {
 		scenarios() {
-			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.$store);
+			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.correlationId(), this.$store);
 			results = this.scenarioListFilter(results);
 			if (this.scenarioNameFilter)
 				results = results.filter(l => l.name ? l.name.toLowerCase().indexOf(this.scenarioNameFilter.toLowerCase()) > -1 : false);
 			return results;
 		},
 		scenariosSeasons() {
-			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.$store).filter(l => l.season && !String.isNullOrEmpty(l.season));
+			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.correlationId(), this.$store).filter(l => l.season && !String.isNullOrEmpty(l.season));
 			results = [...new Set(results.map(item => item.season))].map(item => { return { id: item, name: item }; });
 			return VueUtility.selectBlank(results);
 		}
 	},
 	created() {
 		this.initializeServices();
-		this.lookups = this.initializeLookups();
+		this.lookups = this.initializeLookups(this.correlationId());
 		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 	},
 	methods: {
@@ -68,8 +68,8 @@ export default {
 		getServiceGameSystem() {
 			return this.serviceGameSystemOverride ? this.serviceGameSystemOverride : this.serviceGameSystem;
 		},
-		initializeLookups() {
-			return this.getServiceGameSystem().initializeLookups(this.$injector);
+		initializeLookups(correlationId) {
+			return this.getServiceGameSystem().initializeLookups(correlationId, this.$injector);
 		},
 		initializeServices() {
 			this.notImplementedError();
@@ -93,10 +93,10 @@ export default {
 			}
 			return false;
 		},
-		markup(value) {
+		markup(correlationId, value) {
 			if (!value)
 				return null;
-			return this._serviceMarkup.trimResults(this._serviceMarkup.render(value));
+			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, value));
 		},
 		async ok(id) {
 			this.$emit('ok', id);
@@ -121,20 +121,23 @@ export default {
 			return character ? character.number : null;
 		},
 		playedTimestamp(item) {
-			return Utility.getDateHuman(item ? item.timestamp : 0);
+			return LibraryUtility.getDateHuman(item ? item.timestamp : 0);
 		},
-		async resetDialog() {
+		// eslint-disable-next-line
+		async resetDialog(correlationId) {
 			this.played = this.$store.getters.getScenarioPlayed(this.characterId);
 			this.scenarioAdventureFilter = null;
 			this.scenarioNameFilter = null;
 			this.scenarioSeasonFilter = null;
-			await this.resetDialogI();
+			await this.resetDialogI(correlationId);
 		},
-		async resetDialogI() {
+		// eslint-disable-next-line
+		async resetDialogI(correlationId) {
 		},
 		scenarioDescription(item) {
-			const value = this.getServiceGameSystem().scenarioDescription(item);
-			return this.markup(value);
+			const correlationId = this.correlationId();
+			const value = this.getServiceGameSystem().scenarioDescription(correlationId, item);
+			return this.markup(correlationId, value);
 		},
 		scenarioListFilter(results) {
 			results = results ? results.filter(l => l.id !== this.scenarioListFilterInitial()) : [];
@@ -148,7 +151,7 @@ export default {
 			this.notImplementedError();
 		},
 		scenarioName(item) {
-			return this.getServiceGameSystem().scenarioName(item);
+			return this.getServiceGameSystem().scenarioName(this.correlationId(), item);
 		},
 		scenarioParticipant(id) {
 			const participant = this.lookups.scenarioParticipants.find(l => l.id === id);

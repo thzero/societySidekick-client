@@ -96,14 +96,14 @@ export default {
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminEquipment.searchEquipment({});
+		await this.$store.dispatcher.adminEquipment.searchEquipment(this.correlationId(), {});
 	},
 	methods: {
 		defaultItem() {
 			return new EquipmentData();
 		},
-		async dialogDeletePreCompleteOkDelete(dispatcher, id) {
-			return await dispatcher.adminEquipment.deleteAdminEquipment(id);
+		async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+			return await dispatcher.adminEquipment.deleteAdminEquipment(correlationId, id);
 		},
 		getCategoryName(gameSystemId, category) {
 			const lookups = this.getLookupsByGameSystemId(gameSystemId);

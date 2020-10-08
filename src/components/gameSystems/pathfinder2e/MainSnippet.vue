@@ -22,9 +22,9 @@ export default {
 	extends: baseMainSnippet,
 	computed: {
 		gameSystemNumber() {
-			const doh = AppUtility.settings().getSettingsUserGameSystem(this.$store.state.user.user, SharedConstants.GameSystems.Pathfinder2e.id, (settings) => { return settings.achievementPoints; });
-			return doh;
-			// return GameSystemsUtility.gameSystemNumber(this.$store.state.user.user, SharedConstants.GameSystems.Pathfinder2e.id);
+			const number = AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), this.$store.state.user.user, SharedConstants.GameSystems.Pathfinder2e.id, (settings) => { return settings.achievementPoints; });
+			return number;
+			// return GameSystemsUtility.gameSystemNumber(this.correlationId(), this.$store.state.user.user, SharedConstants.GameSystems.Pathfinder2e.id);
 		}
 	},
 	methods: {

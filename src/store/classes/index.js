@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
 const store = {
@@ -11,16 +11,18 @@ const store = {
 		listing: []
 	},
 	actions: {
-		async getClassListing({ commit }, gameSystemId) {
+		async getClassListing({ commit }, params) {
 			const crypto = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
-			if (await Utility.checksumUpdateCheck(crypto, this.state, commit, 'classes', gameSystemId))
+			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'classes', params.gameSystemId))
 				return;
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CLASSES);
-			const response = await service.listing(gameSystemId);
-			this.$logger.debug('store.classes', 'setClassListing', 'response', response);
+			const response = await service.listing(params.correlationId, params.gameSystemId);
+			this.$logger.debug('store.classes', 'setClassListing', 'response', response, params.correlationId);
 			if (response.success) {
-				commit('setClassListing', response.success && response.results ? response.results.data : null);
-				Utility.checksumUpdateComplete(crypto, this.state, commit, 'classes', gameSystemId);
+				const listing = response.success && response.results ? response.results.data : null;
+				commit('setClassListing', { correlationId: params.correlationId, listing: listing });
+				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'classes', params.gameSystemId);
+				return listing;
 			}
 		}
 	},
@@ -32,20 +34,20 @@ const store = {
 		}
 	},
 	mutations: {
-		setClassListing(state, listing) {
-			this.$logger.debug('store.classes', 'setClassListing', 'list.a', listing);
-			this.$logger.debug('store.classes', 'setClassListing', 'list.b', state.listing);
-			if (!listing)
+		setClassListing(state, params) {
+			this.$logger.debug('store.classes', 'setClassListing', 'list.a', params.listing, params.correlationId);
+			this.$logger.debug('store.classes', 'setClassListing', 'list.b', state.listing, params.correlationId);
+			if (!params.listing)
 				return;
-			listing.forEach((item) => {
+				params.listing.forEach((item) => {
 				state.listing = VueUtility.updateArrayById(state.listing, item);
 			});
-			this.$logger.debug('store.classes', 'setClassListing', 'list.c', state.listing);
+			this.$logger.debug('store.classes', 'setClassListing', 'list.c', state.listing, params.correlationId);
 		}
 	},
 	dispatcher: {
-		async getClassListing(gameSystemId) {
-			await Vue.prototype.$store.dispatch('getClassListing', gameSystemId);
+		async getClassListing(correlationId, gameSystemId) {
+			await Vue.prototype.$store.dispatch('getClassListing', { correlationId: correlationId, gameSystemId: gameSystemId });
 		}
 	}
 };

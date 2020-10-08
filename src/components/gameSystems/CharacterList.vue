@@ -177,8 +177,8 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue/components/VDirectionButton';
@@ -215,6 +215,8 @@ export default {
 
 			this.forceRecomputeCounter;
 
+			const correlationId = this.correlationId();
+
 			let results = this.$store.state.characters.characters.slice(0);
 			results = results.filter(l => l.gameSystemId === this.gameSystemFilter);
 
@@ -230,8 +232,8 @@ export default {
 
 			let classes = this.classCache[this.gameSystemFilter];
 			if (!classes) {
-				await this.$store.dispatcher.classes.getClassListing(this.gameSystemFilter);
-				// await this.initialize(this.gameSystemFilter)
+				await this.$store.dispatcher.classes.getClassListing(correlationId, this.gameSystemFilter);
+				// await this.initialize(correlationId, this.gameSystemFilter)
 				classes = this.$store.state.classes.listing;
 				if (classes) {
 					classes = classes.filter(l => l.gameSystemId == this.gameSystemFilter);
@@ -242,8 +244,8 @@ export default {
 
 			let factions = this.factionsCache[this.gameSystemFilter];
 			if (!factions) {
-				await this.$store.dispatcher.factions.getFactionListing(this.gameSystemFilter);
-				// await this.initialize(this.gameSystemFilter)
+				await this.$store.dispatcher.factions.getFactionListing(correlationId, this.gameSystemFilter);
+				// await this.initialize(correlationId, this.gameSystemFilter)
 				factions = this.$store.state.factions.listing;
 				if (factions) {
 					factions = factions.filter(l => l.gameSystemId == this.gameSystemFilter);
@@ -265,12 +267,12 @@ export default {
 			// TODO: Offer different sorts
 			// TODO: need to incorporation direction...
 			if (this.sortBy === SharedConstants.SortBy.Characters.CharacterName)
-				results = Utility.sortByName(results, this.sortDirection);
+				results = LibraryUtility.sortByName(results, this.sortDirection);
 			else if (this.sortBy === SharedConstants.SortBy.Characters.Level)
-				// results.sort((a, b) => Utility.sortByNumber(a, b, (obj) => {
+				// results.sort((a, b) => LibraryUtility.sortByNumber(a, b, (obj) => {
 				// 	return (obj ? ( obj.level ? obj.level : 0): 0);
 				// }));
-				results = Utility.sortByNumberEx(results, (obj) => {
+				results = LibraryUtility.sortByNumberEx(results, (obj) => {
 						return (obj ? ( obj.level ? obj.level : 0): 0);
 					},
 					this.sortDirection);
@@ -318,7 +320,7 @@ export default {
 			return level ? level : 0;
 		},
 		clickCharacter(id) {
-			this.$navRouter.push(Utility.formatUrl({ url: '/character', params: [ id ]}));
+			this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ id ]}));
 		},
 		clickClear() {
 			AppUtility.settings().clearUser(this.$store, this.$store.state.user.user, (settings) => {
@@ -335,10 +337,10 @@ export default {
 			const characters = user.settings.characters ? user.settings.characters : {};
 			return funcAttribute(characters);
 		},
-		updateSettingsUserCharacter(user, newVal, func) {
-			const settings = AppUtility.settings().mergeUser(user.settings);
+		updateSettingsUserCharacter(correlationId, user, newVal, func) {
+			const settings = AppUtility.settings().mergeUser(correlationId, user.settings);
 			func(settings.characters, newVal);
-			this.$store.dispatcher.user.setUserSettings(settings);
+			this.$store.dispatcher.user.setUserSettings(correlationId, settings);
 		}
 	}
 };

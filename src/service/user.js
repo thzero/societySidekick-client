@@ -10,58 +10,58 @@ class UserService extends BaseUserService {
 		this._serviceStore = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_STORE);
 	}
 
-	async fetchFavoritesByGamerId(user) {
+	async fetchFavoritesByGamerId(correlationId, user) {
 		if (!user)
-			return this._error('UserService', 'fetchFavoritesByGamerId', 'Invalid user.');
+			return this._error('UserService', 'fetchFavoritesByGamerId', 'Invalid user.', null, null, null, correlationId);
 
-		this._logger.debug('UserService', 'fetchFavoritesByGamerId', 'userId', user.id);
+		this._logger.debug('UserService', 'fetchFavoritesByGamerId', 'userId', user.id, correlationId);
 		try {
-			const response = await this._serviceCommunicationRest.getById(LibraryConstants.ExternalKeys.BACKEND, 'user/favorites', user.id);
-			this._logger.debug('UserService', 'fetchFavoritesByGamerId', 'response', response);
+			const response = await this._serviceCommunicationRest.getById(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'user/favorites', user.id);
+			this._logger.debug('UserService', 'fetchFavoritesByGamerId', 'response', response, correlationId);
 			if (response && response.success)
 				return response;
 		}
 		catch(err) {
-			this._logger.exception('UserService', 'fetchFavoritesByGamerId', err);
+			this._logger.exception('UserService', 'fetchFavoritesByGamerId', err, correlationId);
 		}
 
-		return this._error('UserService', 'fetchFavoritesByGamerId');
+		return this._error('UserService', 'fetchFavoritesByGamerId', null, null, null, null, correlationId);
 	}
 
-	async fetchByGamerId(gamerId) {
+	async fetchByGamerId(correlationId, gamerId) {
 		if (!gamerId)
 			return this._error('UserService', 'fetchByGamerId', 'Invalid gamerId.');
 
-		this._logger.debug('UserService', 'fetchByGamerId', 'gamerId', gamerId);
+		this._logger.debug('UserService', 'fetchByGamerId', 'gamerId', gamerId, correlationId);
 		try {
-			const response = await this._serviceCommunicationRest.getById(LibraryConstants.ExternalKeys.BACKEND, 'user/gamerId', gamerId);
-			this._logger.debug('UserService', 'fetchByGamerId', 'response', response);
+			const response = await this._serviceCommunicationRest.getById(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'user/gamerId', gamerId);
+			this._logger.debug('UserService', 'fetchByGamerId', 'response', response, correlationId);
 			if (response && response.success)
 				return response;
 		}
 		catch(err) {
-			this._logger.exception('UserService', 'fetchByGamerId', err);
+			this._logger.exception('UserService', 'fetchByGamerId', err, correlationId);
 		}
 
-		return this._error('UserService', 'fetchByGamerId');
+		return this._error('UserService', 'fetchByGamerId', null, null, null, null, correlationId);
 	}
 
-	async fetchByGamerTag(gamerTag) {
+	async fetchByGamerTag(correlationId, gamerTag) {
 		if (!gamerTag)
-			return this._error('UserService', 'fetchByGamerTag', 'Invalid gamerTag.');
+			return this._error('UserService', 'fetchByGamerTag', 'Invalid gamerTag.', null, null, null, correlationId);
 
-		this._logger.debug('UserService', 'fetchByGamerTag', 'gamerTag', gamerTag);
+		this._logger.debug('UserService', 'fetchByGamerTag', 'gamerTag', gamerTag, correlationId);
 		try {
-			const response = await this._serviceCommunicationRest.getById(LibraryConstants.ExternalKeys.BACKEND, 'user/gamerTag', gamerTag);
-			this._logger.debug('UserService', 'fetchByGamerTag', 'response', response);
+			const response = await this._serviceCommunicationRest.getById(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'user/gamerTag', gamerTag);
+			this._logger.debug('UserService', 'fetchByGamerTag', 'response', response, correlationId);
 			if (response && response.success)
 				return response;
 		}
 		catch(err) {
-			this._logger.exception('UserService', 'fetchByGamerTag', err);
+			this._logger.exception('UserService', 'fetchByGamerTag', err, correlationId);
 		}
 
-		return this._error('UserService', 'fetchByGamerTag');
+		return this._error('UserService', 'fetchByGamerTag', null, null, null, null, correlationId);
 	}
 }
 

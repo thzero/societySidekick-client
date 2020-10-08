@@ -4,7 +4,7 @@ import TranslateService from '@thzero/library_client/service/translate';
 
 class VueTranslateService extends TranslateService {
 	// eslint-disable-next-line
-	translate(id) {
+	translate(correlationId, id) {
 		return Vue.prototype.$trans.t(id);
 	}
 }

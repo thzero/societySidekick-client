@@ -32,13 +32,13 @@
 							</v-btn>
 						</v-toolbar>
 					</template>
-					<template v-slot:item.gameSystemId="{ item }">
+					<template v-slot:[`item.gameSystemId`]="{ item }">
 						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
 					</template>
-					<template v-slot:item.type="{ item }">
+					<template v-slot:[`item.type`]="{ item }">
 						<span>{{ getTypeName(item.gameSystemId, item.type) }}</span>
 					</template>
-					<template v-slot:item.action="{ item }">
+					<template v-slot:[`item.action`]="{ item }">
 						<v-icon
 							small
 							class="mr-2"
@@ -96,14 +96,14 @@ export default {
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminClasses.searchAdminClasses({});
+		await this.$store.dispatcher.adminClasses.searchAdminClasses(this.correlationId(), {});
 	},
 	methods: {
 		defaultItem() {
 			return new ClassData();
 		},
-		async dialogDeletePreCompleteOkDelete(dispatcher, id) {
-			return await dispatcher.adminClasses.deleteAdminClass(id);
+		async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+			return await dispatcher.adminClasses.deleteAdminClass(correlationId, id);
 		},
 		getTypeName(gameSystemId, type) {
 			const lookups = this.getLookupsByGameSystemId(gameSystemId);

@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
 import VCheckboxWithValidation from '@/library_vue/components/form/VCheckboxWithValidation';
@@ -103,28 +103,30 @@ export default {
 	computed: {
 		types: {
 			get() {
-				const lookups = this.initLookupsByGameSystemId(this.gameSystemId);
+				const lookups = this.initLookupsByGameSystemId(this.correlationId(), this.gameSystemId);
 				return lookups ? lookups.scenarioAdventures : [];
 			},
 			cache: false
 		}
 	},
 	methods: {
-		preCompleteI(value) {
+		// eslint-disable-next-line
+		async preCompleteI(correlationId, value) {
 			value.repeatable = value.repeatable ? value.repeatable : false;
 		},
-		async preCompleteSubmitCreate(dispatcher, value) {
+		async preCompleteSubmitCreate(correlationId, dispatcher, value) {
 			delete value.timestamp;
 			delete value.updatedTimestamp;
-			return await dispatcher.adminScenarios.createAdminScenario(value);
+			return await dispatcher.adminScenarios.createAdminScenario(correlationId, value);
 		},
-		async preCompleteSubmitUpdate(dispatcher, value) {
+		async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
 			delete value.timestamp;
 			value.season = value.season ? value.season : null;
-			return await dispatcher.adminScenarios.updateAdminScenario(value);
+			return await dispatcher.adminScenarios.updateAdminScenario(correlationId, value);
 		},
-		resetDialogI(value) {
-			value.updatedTimestamp = value.updatedTimestamp ? value.updatedTimestamp : Utility.getTimestamp();
+		// eslint-disable-next-line
+		resetDialogI(correlationId, value) {
+			value.updatedTimestamp = value.updatedTimestamp ? value.updatedTimestamp : LibraryUtility.getTimestamp();
 		}
 	}
 };

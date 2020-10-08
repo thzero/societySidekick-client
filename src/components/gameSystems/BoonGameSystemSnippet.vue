@@ -94,7 +94,7 @@ import Vue from 'vue';
 
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseGameSystemSnippet from '@/components/gameSystems/baseGameSystemSnippet';
 
@@ -113,16 +113,17 @@ export default {
 		boonDescription() {
 			if (!this.value.boon.description)
 				return '';
-			return this._serviceMarkup.trimResults(this._serviceMarkup.render(this.value.boon.description));
+			const correlationId = this.correlationId();
+			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, this.value.boon.description));
 		},
 		playedTimestamp(item) {
-			return Utility.getDateHuman(item ? item.timestamp : 0);
+			return LibraryUtility.getDateHuman(item ? item.timestamp : 0);
 		},
 		scenarioDescription(scenario) {
 			return scenario ? scenario.description : '';
 		},
 		scenarioName(scenario) {
-			return scenario ? this.serviceGameSystem.scenarioName(scenario) : '';
+			return scenario ? this.serviceGameSystem.scenarioName(this.correlationId(), scenario) : '';
 		}
 	}
 };

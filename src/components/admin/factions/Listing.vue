@@ -92,14 +92,14 @@ export default {
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminFactions.searchAdminFactions({});
+		await this.$store.dispatcher.adminFactions.searchAdminFactions(this.correlationId(), {});
 	},
 	methods: {
 		defaultItem() {
 			return new FactionData();
 		},
-		async dialogDeletePreCompleteOkDelete(dispatcher, id) {
-			return await dispatcher.adminFactions.deleteAdminFaction(id);
+		async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+			return await dispatcher.adminFactions.deleteAdminFaction(correlationId, id);
 		},
 		initializeHeaders() {
 			return [

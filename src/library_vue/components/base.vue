@@ -1,7 +1,7 @@
 <script>
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import Response from '@thzero/library_common/response';
 
@@ -15,18 +15,20 @@ export default {
 		serverErrors: []
 	}),
 	async created() {
-		this.utility = Utility;
 		this.logger = this.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_LOGGER);
 	},
 	methods: {
-		clone(value) {
-			return Utility.cloneDeep(value);
+		correlationId() {
+			return LibraryUtility.generateId();
 		},
-		error() {
-			return Response.error();
+		clone(value) {
+			return LibraryUtility.cloneDeep(value);
+		},
+		error(clazz, method, message, err, code, errors, correlationId) {
+			return Response.error(clazz, method, message, err, code, errors, correlationId);
 		},
 		getDateHuman(date) {
-			return this.utility.getDateHuman(date);
+			return LibraryUtility.getDateHuman(date);
 		},
 		noBreakingSpaces() {
 			return '\xa0';
@@ -37,8 +39,8 @@ export default {
 		observerIsNull(value){
 			return !value || Object.keys(value).length === 0;
 		},
-		success() {
-			return Response.success();
+		success(correlationId) {
+			return Response.success(correlationId);
 		}
 	}
 };

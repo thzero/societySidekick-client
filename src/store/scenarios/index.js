@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
 const store = {
@@ -12,23 +12,25 @@ const store = {
 		played: []
 	},
 	actions: {
-		async getScenarioListing({ commit }, gameSystemId) {
+		async getScenarioListing({ commit }, params) {
 			const crypto = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
-			if (await Utility.checksumUpdateCheck(crypto, this.state, commit, 'scenarios', gameSystemId))
+			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'scenarios', params.gameSystemId))
 				return;
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
-			const response = await service.listing(gameSystemId);
-			this.$logger.debug('store.scenarios', 'getScenarioListing', 'response', response);
+			const response = await service.listing(params.correlationId, params.gameSystemId);
+			this.$logger.debug('store.scenarios', 'getScenarioListing', 'response', response, params.correlationId);
 			if (response.success) {
-				commit('setScenarioListing', response.success && response.results ? response.results.data : null);
-				Utility.checksumUpdateComplete(crypto, this.state, commit, 'scenarios', gameSystemId);
+				const listing = response.success && response.results ? response.results.data : null;
+				commit('setScenarioListing', { correlationId: params.correlationId, listing: listing });
+				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'scenarios', params.gameSystemId);
+				return listing;
 			}
 		},
-		async getScenarioListingPlayed({ commit }, characterId) {
+		async getScenarioListingPlayed({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
-			const response = await service.played(characterId);
-			this.$logger.debug('store.scenarios', 'getScenarioListingPlayed', 'response', response);
-			commit('setScenarioListingPlayed', { played: response.success && response.results ? response.results : null, characterId: characterId });
+			const response = await service.played(params.correlationId, params.characterId);
+			this.$logger.debug('store.scenarios', 'getScenarioListingPlayed', 'response', response, params.correlationId);
+			commit('setScenarioListingPlayed', { correlationId: params.correlationId, played: response.success && response.results ? response.results : null, characterId: params.characterId });
 		}
 	},
 	getters: {
@@ -45,34 +47,34 @@ const store = {
 		}
 	},
 	mutations: {
-		setScenarioListing(state, listing) {
-			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.a', listing);
-			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.b', state.listing);
-			if (!listing)
+		setScenarioListing(state, params) {
+			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.a', params.listing, params.correlationId);
+			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.b', state.listing, params.correlationId);
+			if (!params.listing)
 				return;
 
-			listing.forEach((item) => {
+				params.listing.forEach((item) => {
 				state.listing = VueUtility.updateArrayById(state.listing, item);
 			});
-			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.c', state.listing);
+			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.c', state.listing, params.correlationId);
 		},
 		setScenarioListingPlayed(state, params) {
-			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.a', params);
-			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.b', state.played);
+			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.a', params, params.correlationId);
+			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.b', state.played, params.correlationId);
 			const results = state.played.find(played => played.id === params.characterId);
 			if (!results)
 				state.played.push({ id: params.characterId, played: params.played });
 			else
 				results.played = params.played;
-			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.c', state.played);
+			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.c', state.played, params.correlationId);
 		}
 	},
 	dispatcher: {
-		async getScenarioListing(gameSystemId) {
-			await Vue.prototype.$store.dispatch('getScenarioListing', gameSystemId);
+		async getScenarioListing(correlationId, gameSystemId) {
+			await Vue.prototype.$store.dispatch('getScenarioListing', { correlationId: correlationId, gameSystemId: gameSystemId });
 		},
-		async getScenarioListingPlayed(characterId) {
-			return await Vue.prototype.$store.dispatch('getScenarioListingPlayed', characterId);
+		async getScenarioListingPlayed(correlationId, characterId) {
+			return await Vue.prototype.$store.dispatch('getScenarioListingPlayed', { correlationId: correlationId, characterId: characterId });
 		}
 	}
 };

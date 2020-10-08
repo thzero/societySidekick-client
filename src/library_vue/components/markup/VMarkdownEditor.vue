@@ -56,7 +56,8 @@ export default {
 	}),
 	computed: {
 		preview() {
-			return this._serviceMarkup.trimResults(this._serviceMarkup.render(this.innerValue ? this.innerValue : ''));
+			const correlationId = this.correlationId();
+			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, this.innerValue ? this.innerValue : ''));
 		}
 	},
 	watch: {

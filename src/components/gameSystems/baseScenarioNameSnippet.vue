@@ -19,10 +19,10 @@ export default {
 	extends: baseSnippet,
 	computed: {
 		scenarioDescription() {
-			return this.serviceGameSystem.scenarioDescription(this.value);
+			return this.serviceGameSystem.scenarioDescription(this.correlationId(), this.value);
 		},
 		scenarioName() {
-			return this.serviceGameSystem.scenarioName(this.value);
+			return this.serviceGameSystem.scenarioName(this.correlationId(), this.value);
 		}
 	}
 };

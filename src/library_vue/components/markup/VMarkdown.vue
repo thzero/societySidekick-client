@@ -27,7 +27,8 @@ export default {
 	},
 	computed: {
 		display() {
-			return this._serviceMarkup.trimResults(this._serviceMarkup.render(this.value));
+			const correlationId = this.correlationId();
+			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, this.value));
 		}
 	},
 	created() {

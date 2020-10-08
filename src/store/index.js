@@ -4,8 +4,8 @@ import VuexPersist from 'vuex-persist';
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 
 // Admin Update
 import adminBoons from '@/store/admin/boons';
@@ -35,36 +35,36 @@ class AppStore extends BaseStore {
 				version: null
 			},
 			actions: {
-				async getGameSystems({ commit }) {
+				async getGameSystems({ commit }, correlationId) {
 					const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_API);
-					const response = await service.gameSystems();
-					this.$logger.debug('store', 'getGameSystems', 'response', response);
-					commit('setGameSystems', response.success && response.results ? response.results.data : []);
+					const response = await service.gameSystems(correlationId);
+					this.$logger.debug('store', 'getGameSystems', 'response', response, correlationId);
+					commit('setGameSystems', { correlationId : correlationId, gameSystems: response.success && response.results ? response.results.data : [] });
 				},
-				async getPlans({ commit }) {
+				async getPlans({ commit }, correlationId) {
 					const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_PLANS);
-					const response = await service.plans();
-					this.$logger.debug('store', 'getPlans', 'response', response);
-					commit('setPlans', response.success && response.results ? response.results.data : []);
+					const response = await service.plans(correlationId);
+					this.$logger.debug('store', 'getPlans', 'response', response, correlationId);
+					commit('setPlans', { correlationId : correlationId, plans: response.success && response.results ? response.results.data : [] });
 				},
-				async getVersion({ commit }) {
+				async getVersion({ commit }, correlationId) {
 					const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_VERSION);
-					const version = await service.version();
-					this.$logger.debug('store', 'getVersion', 'version', version);
-					commit('setVersion', version);
+					const version = await service.version(correlationId);
+					this.$logger.debug('store', 'getVersion', 'version', version, correlationId);
+					commit('setVersion', { correlationId : correlationId, version: version });
 				},
-				async initialize({ commit }) {
+				async initialize({ commit }, correlationId) {
 					const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_API);
-					const response = await service.initialize();
+					const response = await service.initialize(correlationId);
 					this.$logger.debug('store', 'initialize', 'response', response);
 					if (response && response.success) {
-						commit('setGameSystems', response.results.gameSystems.data);
-						commit('setPlans', response.results.plans);
-						commit('setVersion', response.results.version);
+						commit('setGameSystems', { correlationId : correlationId, gameSystems: response.results.gameSystems.data });
+						commit('setPlans', { correlationId : correlationId, plans: response.results.plans });
+						commit('setVersion', { correlationId : correlationId, version: response.results.version });
 					}
 				},
-				async setSettings({ commit }, settings) {
-					commit('setSettings', settings);
+				async setSettings({ commit }, params) {
+					commit('setSettings', params);
 				}
 			},
 			getters: {
@@ -83,41 +83,41 @@ class AppStore extends BaseStore {
 				setCheckumLastUpdate(state, last) {
 					state.checksumLastUpdate = last;
 				},
-				setGameSystems(state, gameSystems) {
-					this.$logger.debug('setGameSystems.a', gameSystems);
-					this.$logger.debug('setGameSystems.b', state.gameSystems);
-					state.gameSystems = gameSystems;
-					this.$logger.debug('setGameSystems.c', state.gameSystems);
+				setGameSystems(state, params) {
+					this.$logger.debug('store', 'setGameSystems', 'gameSystems.a', params.gameSystems, params.correlationId);
+					this.$logger.debug('store', 'setGameSystems', 'gameSystems.b', state.gameSystems, params.correlationId);
+					state.gameSystems = params.gameSystems;
+					this.$logger.debug('store', 'setGameSystems', 'gameSystems.c', state.gameSystems, params.correlationId);
 				},
-				setPlans(state, plans) {
-					this.$logger.debug('setPlans.a', plans);
-					this.$logger.debug('setPlans.b', state.plans);
-					state.plans = plans;
-					this.$logger.debug('setPlans.c', state.plans);
+				setPlans(state, params) {
+					this.$logger.debug('store', 'setPlans', 'plans.a', params.plans, params.correlationId);
+					this.$logger.debug('store', 'setPlans', 'plans.b', state.plans, params.correlationId);
+					state.plans = params.plans;
+					this.$logger.debug('store', 'setPlans', 'plans.c', state.plans, params.correlationId);
 				},
-				setSettings(state, settings) {
-					state.settings = Utility.merge3({}, state.settings, settings);
+				setSettings(state, params) {
+					state.settings = LibraryUtility.merge3({}, state.settings, params.settings);
 				},
-				setVersion(state, version) {
-					this.$logger.debug('setVersion.version', version);
-					state.version = version;
+				setVersion(state, params) {
+					this.$logger.debug('store', 'setVersion', 'version', params.version, params.correlationId);
+					state.version = params.version;
 				}
 			},
 			dispatcher: {
-				async getGameSystems() {
-					await Vue.prototype.$store.dispatch('getGameSystems');
+				async getGameSystems(correlationId) {
+					await Vue.prototype.$store.dispatch('getGameSystems', correlationId);
 				},
-				async getPlans() {
-					await Vue.prototype.$store.dispatch('getPlans');
+				async getPlans(correlationId) {
+					await Vue.prototype.$store.dispatch('getPlans', correlationId);
 				},
-				async setSettings(settings) {
-					await Vue.prototype.$store.dispatch('setSettings', settings);
+				async getVersion(correlationId) {
+					await Vue.prototype.$store.dispatch('getVersion', correlationId);
 				},
-				async getVersion(version) {
-					await Vue.prototype.$store.dispatch('getVersion', version);
+				async initialize(correlationId) {
+					await Vue.prototype.$store.dispatch('initialize', correlationId);
 				},
-				async initialize() {
-					await Vue.prototype.$store.dispatch('initialize');
+				async setSettings(correlationId, settings) {
+					await Vue.prototype.$store.dispatch('setSettings', { correlationId: correlationId, settings: settings });
 				}
 			}
 		};

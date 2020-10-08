@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import base from './base';
 import VVersion from './VVersion';
@@ -39,14 +39,14 @@ export default {
 	}),
 	computed: {
 		breakpointName() {
-			return Utility.isDev ? this.$vuetify.breakpoint.name : '';
+			return LibraryUtility.isDev ? this.$vuetify.breakpoint.name : '';
 		},
 		isDev() {
-			return Utility.isDev;
+			return LibraryUtility.isDev;
 		}
 	},
 	async created() {
-		await this.$store.dispatcher.root.getVersion();
+		await this.$store.dispatcher.root.getVersion(this.correlationId());
 		this.version = this.$store.state.version;
 	}
 };

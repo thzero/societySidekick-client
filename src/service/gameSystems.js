@@ -3,10 +3,8 @@ import SharedConstants from '@/common/constants';
 
 import Service from '@thzero/library_client/service/index';
 
-import Response from '@thzero/library_common/response';
-
 class GameSystemsService extends Service {
-	getServiceByGameSystemId(gameSystemId) {
+	getServiceByGameSystemId(correlationId, gameSystemId) {
 		// GameSystems Update
 		let service = null;
 		switch (gameSystemId) {
@@ -18,9 +16,10 @@ class GameSystemsService extends Service {
 				break;
 		}
 
-		const response = Response.success();
-		response.results = service;
-		return service ? response : Response.error(`Invalid service for gamesystem '${gameSystemId}'.`);
+		if (service)
+			return this._successResponse(service, correlationId);
+
+		return this._error('GameSystemService', 'getServiceByGameSystemId', null, null, null, null, correlationId).add(`Invalid service for gamesystem '${gameSystemId}'.`);
 	}
 }
 

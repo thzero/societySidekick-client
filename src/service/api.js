@@ -4,12 +4,12 @@ import LibraryConstants from '@thzero/library_client/constants';
 import RestExternalService from '@thzero/library_client/service/externalRest';
 
 class ApiService extends RestExternalService {
-	async initialize() {
+	async initialize(correlationId) {
 		try {
 			const version = {
 				client: Constants.Version
 			};
-			const response = await this._serviceCommunicationRest.get(LibraryConstants.ExternalKeys.BACKEND, 'initialize');
+			const response = await this._serviceCommunicationRest.get(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'initialize');
 			this._logger.debug('ApiService', 'initialize', 'response', response);
 			if (response && response.success) {
 				version.server = response.results.version;
@@ -19,23 +19,23 @@ class ApiService extends RestExternalService {
 			return response;
 		}
 		catch(err) {
-			this._logger.exception('ApiService', 'initialize', err);
+			this._logger.exception('ApiService', 'initialize', err, correlationId);
 		}
 
-		return this._error('ApiService', 'initialize');
+		return this._error('ApiService', 'initialize', null, null, null, null, correlationId);
 	}
 
-	async gameSystems() {
+	async gameSystems(correlationId) {
 		try {
-			const response = await this._serviceCommunicationRest.get(LibraryConstants.ExternalKeys.BACKEND, 'gameSystems');
-			this._logger.debug('ApiService', 'gameSystems', 'response', response);
+			const response = await this._serviceCommunicationRest.get(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'gameSystems');
+			this._logger.debug('ApiService', 'gameSystems', 'response', response, correlationId);
 			return response;
 		}
 		catch(err) {
-			this._logger.exception('ApiService', 'gameSystems', err);
+			this._logger.exception('ApiService', 'gameSystems', err, correlationId);
 		}
 
-		return this._error('ApiService', 'gameSystems');
+		return this._error('ApiService', 'gameSystems', null, null, null, null, correlationId);
 	}
 }
 

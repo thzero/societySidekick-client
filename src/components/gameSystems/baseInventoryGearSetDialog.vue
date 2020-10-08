@@ -19,23 +19,27 @@ export default {
 	}),
 	computed: {
 		gearSets() {
-			return AppUtility.settings().getSettingsUserGameSystem(this.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets);
+			return AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), this.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets);
 		},
 		gearSetsBlank() {
-			return VueUtility.selectBlank(AppUtility.settings().getSettingsUserGameSystem(this.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets));
+			return VueUtility.selectBlank(AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), this.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets));
 		}
 	},
 	methods: {
+		// eslint-disable-next-line
 		async cancel() {
 			this.$emit('cancel');
 		},
+		// eslint-disable-next-line
 		async close() {
 		},
+		// eslint-disable-next-line
 		async ok() {
 			this.$emit('ok');
 			return true;
 		},
-		async resetDialog() {
+		// eslint-disable-next-line
+		async resetDialog(correlationId) {
 			this.name = null;
 			this.gearSetId = null;
 		}

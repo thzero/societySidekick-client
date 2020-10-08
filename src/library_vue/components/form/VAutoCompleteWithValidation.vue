@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseControlEdit from '../baseControlEdit';
 
@@ -90,7 +90,7 @@ export default {
 		validation() {
 			return this.$refs.prv;
 		},
-		update: Utility.debounce(async function(self, newVal) {
+		update: LibraryUtility.debounce(async function(self, newVal) {
 			self.loading = true;
 			if (self.querySelection)
 				self.innerItems = await this.querySelection(newVal);

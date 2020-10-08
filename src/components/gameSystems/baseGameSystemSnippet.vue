@@ -1,8 +1,8 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseSnippet from '@/components/gameSystems/baseSnippet';
 
@@ -26,20 +26,20 @@ export default {
 	},
 	methods: {
 		clickCharacter(id) {
-			this.$navRouter.push(Utility.formatUrl({ url: '/character', params: [ id ]}));
+			this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ id ]}));
 		},
 		getGameSystemName(id) {
 			const results = this.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
-		initLookup() {
-			return this.serviceGameSystem.initializeLookups(this.$injector);
+		initLookup(correlationId) {
+			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
 		},
 		isParticipantGamemaster(participant) {
 			return participant == SharedConstants.ScenarioParticipants.GAMEMASTER;
 		},
 		locationName(id) {
-			const location = AppUtility.settings().getSettingsUserLocation(this.$store.state.user.user, id);
+			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), this.$store.state.user.user, id);
 			return location ? '@ ' + location.name : '';
 		}
 	}

@@ -172,56 +172,60 @@ export default {
 	watch: {
 		// Handles external model changes.
 		signal(value) {
+			const correlationId = this.correlationId();
 			this.$emit(value ? 'open' : 'close');
-			this.logger.debug('FormDialog', 'signal', 'value', value);
+			this.logger.debug('FormDialog', 'signal', 'value', value, correlationId);
 			this.dialogSignal = value;
-			this.logger.debug('FormDialog', 'signal', 'dialogSignal', this.dialogSignal);
+			this.logger.debug('FormDialog', 'signal', 'dialogSignal', this.dialogSignal, correlationId);
 		}
 	},
 	mounted() {
 		this.onResize();
 	},
 	methods: {
-		clear() {
+		clear(correlationId) {
 			this.serverErrors = [];
-			this.logger.debug('FormDialog', 'clear', 'clear');
+			this.logger.debug('FormDialog', 'clear', 'clear', null, correlationId);
 			this.$nextTick(() => {
-				this.$refs.obs.reset();
+				this.$refs.obs.reset(correlationId);
 			});
 			this.disabled = false;
 		},
 		handleCancel() {
+			const correlationId = this.correlationId();
 			this.serverErrors = [];
 			this.dialogSignal = false;
-			this.clear();
-			this.logger.debug('FormDialog', 'cancel', 'cancel');
+			this.clear(correlationId);
+			this.logger.debug('FormDialog', 'cancel', 'cancel', null, correlationId);
 			this.$emit('cancel');
 		},
 		handleClear() {
-			this.clear();
+			this.clear(this.correlationId());
 		},
 		async handleDelete() {
 			this.serverErrors = [];
-			this.dialogDeleteConfirmSignal.open();
+			this.dialogDeleteConfirmSignal.open(this.correlationId());
 		},
 		async handleDeleteConfirmOk() {
 			this.serverErrors = [];
 
+			const correlationId = this.correlationId();
+
 			this.dialogDeleteConfirmSignal.ok();
 
 			if (this.preCompleteDelete) {
-				const response = await this.preCompleteDelete();
-				this.logger.debug('FormDialog', 'handleDeleteConfirmOk', 'response', response);
+				const response = await this.preCompleteDelete(correlationId);
+				this.logger.debug('FormDialog', 'handleDeleteConfirmOk', 'response', response, correlationId);
 				if (!response || !response.success) {
-					VueUtility.handleError(this.$refs.obs, this.serverErrors, response);
+					VueUtility.handleError(this.$refs.obs, this.serverErrors, response, correlationId);
 					return;
 				}
 			}
 
 			this.dialogSignal = false;
-			this.logger.debug('FormDialog', 'handleDeleteConfirmOk', 'delete');
+			this.logger.debug('FormDialog', 'handleDeleteConfirmOk', 'delete', null, correlationId);
 			this.$emit('ok');
-			this.clear();
+			this.clear(correlationId);
 		},
 		observer() {
 			this.$refs.obs;
@@ -230,17 +234,17 @@ export default {
 			const temp = window.innerHeight - 200;
 			this.dialogHeightI = Math.ceil(temp * this.scrollableAutoResizeFactor);
 		},
-		async reset(value) {
+		async reset(correlationId, value) {
 			const timer = setInterval(async () => {
 				clearInterval(timer);
 				const el = document.getElementsByClassName('v-card__text');
 				if (el && el.length > 0)
 					el[0].scrollTop = 0;
 			}, 25);
-			await this.resetDialog(value);
+			await this.resetDialog(correlationId, value);
 		},
 		// eslint-disable-next-line
-		async resetDialog(value) {
+		async resetDialog(correlationId, value) {
 		},
 		setErrors(errors) {
 			this.$refs.obs.setErrors(errors);
@@ -248,24 +252,26 @@ export default {
 		async submit() {
 			this.serverErrors = [];
 
-			const result = await this.$refs.obs.validate();
-			this.logger.debug('FormDialog', 'submit', 'result', result);
+			const correlationId = this.correlationId();
+
+			const result = await this.$refs.obs.validate(correlationId);
+			this.logger.debug('FormDialog', 'submit', 'result', result, correlationId);
 			if (!result)
 				return;
 
 			if (this.preCompleteOk) {
-				const response = await this.preCompleteOk();
-				this.logger.debug('FormDialog', 'submit', 'response', response);
+				const response = await this.preCompleteOk(correlationId);
+				this.logger.debug('FormDialog', 'submit', 'response', response, correlationId);
 				if (!response || !response.success) {
-					VueUtility.handleError(this.$refs.obs, this.serverErrors, response);
+					VueUtility.handleError(this.$refs.obs, this.serverErrors, response, correlationId);
 					return;
 				}
 			}
 
 			this.dialogSignal = false;
-			this.logger.debug('FormDialog', 'submit', 'ok');
+			this.logger.debug('FormDialog', 'submit', 'ok', null, correlationId);
 			this.$emit('ok');
-			this.clear();
+			this.clear(correlationId);
 		}
 	}
 };

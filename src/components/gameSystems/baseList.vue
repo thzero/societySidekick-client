@@ -26,18 +26,22 @@ export default {
 	computed: {
 		gameSystemFilter: {
 			get: function () {
-				if (this.isExternalListScenarios)
-					return this.gameSystemFilterOverride;
+				if (this.isExternalListScenarios) {
+					if (this.gameSystemFilterOverrideI)
+						return this.gameSystemFilterOverrideI;
 
-				return AppUtility.settings().getSettingsUserGameSystemFilter(this.$store.state.user.user, (settings) => settings.gameSystemFilter);
+					return this.gameSystemFilterOverride;
+				}
+
+				return AppUtility.settings().getSettingsUserGameSystemFilter(this.correlationId(), this.$store.state.user.user, (settings) => settings.gameSystemFilter);
 			},
 			set: function (newVal) {
 				if (this.isExternalListScenarios) {
-					this.gameSystemFilterOverride = newVal;
+					this.gameSystemFilterOverrideI = newVal;
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserGameSystemFilter(this.$store, this.$store.state.user.user, newVal, (settings) => { return settings.gameSystemFilter = newVal; });
+				AppUtility.settings().updateSettingsUserGameSystemFilter(this.correlationId(), this.$store, this.$store.state.user.user, newVal, (settings) => { return settings.gameSystemFilter = newVal; });
 			}
 		},
 		gameSystems() {

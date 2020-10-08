@@ -194,12 +194,12 @@ export default {
 			set() {}
 		},
 		gameSystemNumber() {
-			return GameSystemsUtility.gameSystemNumber(this.user, this.gameSystemFilter);
+			return GameSystemsUtility.gameSystemNumber(this.correlationId(), this.user, this.gameSystemFilter);
 		},
 		gameSystems() {
 			let results = this.$store.state.gameSystems.slice(0);
 			results = results.filter(l => {
-				return GameSystemsUtility.gameSystemNumber(this.user, l.id);
+				return GameSystemsUtility.gameSystemNumber(this.correlationId(), this.user, l.id);
 			});
 			return results;
 		},
@@ -225,7 +225,7 @@ export default {
 	async mounted() {
 		check(this.$route);
 
-		await this.fetch();
+		await this.fetch(this.correlationId());
 	},
 	methods: {
 		clickPrint() {
@@ -235,7 +235,7 @@ export default {
 			this.$refs.shareDialog.openDialog(this.gameSystemFilter);
 			this.dialogShare.open();
 		},
-		async fetch() {
+		async fetch(correlationId) {
 			if (!this.serviceUsers)
 				return;
 
@@ -259,16 +259,16 @@ export default {
 				if (!this.isLoggedIn)
 					VueUtility.invalid();
 				this.user = this.$store.state.user.user;
-				this.logger.debug('Cards', 'fetch', 'user', this.user);
+				this.logger.debug('Cards', 'fetch', 'user', this.user, correlationId);
 				return;
 			}
 
-			const responseUser = await this.serviceUsers.fetchByGamerId(gamerTag);
-			this.logger.debug('Cards', 'fetch', 'response', responseUser);
+			const responseUser = await this.serviceUsers.fetchByGamerId(correlationId, gamerTag);
+			this.logger.debug('Cards', 'fetch', 'response', responseUser, correlationId);
 			if (responseUser && responseUser.success) {
 				this.user = responseUser.results;
 				this.external = true;
-				this.logger.debug('Cards', 'fetch', 'user', this.user);
+				this.logger.debug('Cards', 'fetch', 'user', this.user, correlationId);
 				return;
 			}
 
@@ -298,7 +298,7 @@ export default {
 		// navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
 		// will be reused, and this hook will be called when that happens.
 		// has access to `this` component instance.
-		this.logger.debug('Cards', 'beforeRouteUpdate');
+		this.logger.debug('Cards', 'beforeRouteUpdate', null, null, this.correlationId());
 		const results = check(to);
 		if (results)
 			next();

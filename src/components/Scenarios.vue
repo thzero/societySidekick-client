@@ -195,7 +195,7 @@ export default {
 			return results ? results.name : '';
 		},
 		gameSystemNumber() {
-			return GameSystemsUtility.gameSystemNumber(this.user, this.gameSystemId);
+			return GameSystemsUtility.gameSystemNumber(this.correlationId(), this.user, this.gameSystemId);
 		},
 		hasFavorite() {
 			return this.$store.state.user.user != null;
@@ -208,7 +208,7 @@ export default {
 				if (this.isAuthUserUser)
 					return true;
 
-				return AppUtility.settings().getSettingsUserFavorite(this.$store.state.user.user, this.user ? this.user.id : null);
+				return AppUtility.settings().getSettingsUserFavorite(this.correlationId(), this.$store.state.user.user, this.user ? this.user.id : null);
 			},
 			set: function (newVal) {
 				if (!this.hasFavorite)
@@ -216,7 +216,7 @@ export default {
 				if (this.isAuthUserUser)
 					return;
 
-				AppUtility.settings().updateSettingsUserFavorite(this.$store, this.$store.state.user.user, this.user ? this.user.id : null, newVal);
+				AppUtility.settings().updateSettingsUserFavorite(this.correlationId(), this.$store, this.$store.state.user.user, this.user ? this.user.id : null, newVal);
 			}
 		},
 		isAuthUserUser() {
@@ -226,10 +226,10 @@ export default {
 		},
 		tab: {
 			get: function () {
-				return this.getSettingsUserTab(this.$store.state.user.user, (settings) => settings.tab);
+				return this.getSettingsUserTab(this.correlationId(), this.$store.state.user.user, (settings) => settings.tab);
 			},
 			set: function (newVal) {
-				this.updateSettingsUserTab(this.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
+				this.updateSettingsUserTab(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
 			}
 		},
 		userDisplayName() {
@@ -245,10 +245,10 @@ export default {
 
 		this.initializeCompleted = false;
 
-		await this.fetch();
+		await this.fetch(this.correlationId());
 	},
 	methods: {
-		async fetch() {
+		async fetch(correlationId) {
 			const self = this;
 
 			try {
@@ -268,8 +268,8 @@ export default {
 				}
 				this.gameSystemId = gameSystem.id;
 
-				const responseUser = await this.serviceUsers.fetchByGamerId(gamerTag);
-				this.logger.debug('Scenarios', 'fetch', 'response', responseUser);
+				const responseUser = await this.serviceUsers.fetchByGamerId(correlationId, gamerTag);
+				this.logger.debug('Scenarios', 'fetch', 'response', responseUser, correlationId);
 				if (!responseUser || !responseUser.success) {
 					VueUtility.invalid();
 					return;
@@ -278,8 +278,8 @@ export default {
 				this.user = responseUser.results;
 				this.logger.debug('Scenarios', 'fetch', 'user', this.user);
 
-				const responseCharacter = await this.serviceCharacters.listingByShortId(gamerTag, this.gameSystemId);
-				this.logger.debug('Scenarios', 'fetch', 'response', responseCharacter);
+				const responseCharacter = await this.serviceCharacters.listingByShortId(correlationId, gamerTag, this.gameSystemId);
+				this.logger.debug('Scenarios', 'fetch', 'response', responseCharacter, correlationId);
 				if (!responseCharacter || !responseCharacter.success) {
 					//VueUtility.invalid()
 					return;
@@ -288,7 +288,7 @@ export default {
 				const characters = responseCharacter.results.data;
 				for (const character of characters)
 					character.user = this.user;
-				this.logger.debug('Scenarios', 'fetch', 'characters', characters);
+				this.logger.debug('Scenarios', 'fetch', 'characters', characters, correlationId);
 				this.characters = characters;
 
 				// this.$refs.scenarioList.execute()

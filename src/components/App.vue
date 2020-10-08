@@ -11,10 +11,10 @@ export default {
 	name: 'App',
 	extends: baseApp,
 	methods: {
-		initialize() {
+		initialize(correlationId) {
 			return [
-				this.$store.dispatcher.root.initialize(),
-				this.$store.dispatcher.characters.initializeCharacters()
+				this.$store.dispatcher.root.initialize(correlationId),
+				this.$store.dispatcher.characters.initializeCharacters(correlationId)
 			];
 		}
 	}

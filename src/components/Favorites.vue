@@ -51,10 +51,10 @@ export default {
 		},
 		tab: {
 			get: function () {
-				return this.getSettingsUserTab(this.$store.state.user.user, (settings) => settings.tab);
+				return this.getSettingsUserTab(this.correlationId(), this.$store.state.user.user, (settings) => settings.tab);
 			},
 			set: function (newVal) {
-				this.updateSettingsUserTab(this.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
+				this.updateSettingsUserTab(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
 			}
 		},
 		user() {
@@ -71,25 +71,25 @@ export default {
 	async mounted() {
 		this.initializeCompleted = false;
 
-		await this.fetch();
+		await this.fetch(this.correlationId());
 	},
 	methods: {
-		async fetch() {
+		async fetch(correlationId) {
 			const self = this;
 
 			try {
 				if (!this.serviceCharacters || !this.serviceUsers)
 					return;
 
-				const responseFavorites = await this.serviceCharacters.listingByFavorites();
-				this.logger.debug('Favorites', 'fetch', 'response', responseFavorites);
+				const responseFavorites = await this.serviceCharacters.listingByFavorites(correlationId);
+				this.logger.debug('Favorites', 'fetch', 'response', responseFavorites, correlationId);
 				if (!responseFavorites || !responseFavorites.success)
 					return;
 
 				const user = this.$store.state.user.user;
 				const characters = responseFavorites.results.data;
-				await this.$store.dispatcher.characters.getCharacterListing({ listing: true });
-				this.logger.debug('Favorites', 'fetch', 'characters', characters);
+				await this.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true });
+				this.logger.debug('Favorites', 'fetch', 'characters', characters, correlationId);
 				for (const char of this.$store.state.characters.characters) {
 					char.user = user;
 					characters.push(char);

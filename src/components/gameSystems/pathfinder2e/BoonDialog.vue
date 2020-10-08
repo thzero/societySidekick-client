@@ -18,7 +18,7 @@ export default {
 		gameSystemId() {
 			return SharedConstants.GameSystems.Pathfinder2e.id;
 		},
-		initResponseDetails(details) {
+		initResponseDetails(correlationId, details) {
 			return details;
 		},
 		initBoon() {

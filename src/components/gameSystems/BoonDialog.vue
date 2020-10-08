@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseBoonDialog from '@/components/gameSystems/baseBoonDialog';
 
@@ -92,8 +92,8 @@ export default {
 	}),
 	methods: {
 		async resetDialogI(value) {
-			value.timestamp = value.timestamp ? Utility.convertTimestampToLocal(value.timestamp).valueOf() : Utility.getTimestampLocal().valueOf();
-			this.boonName = this.serviceGameSystem.boonNameById(value.boonId, this.$store);
+			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
+			this.boonName = this.serviceGameSystem.boonNameById(this.correlationId(), value.boonId, this.$store);
 		}
 	}
 };

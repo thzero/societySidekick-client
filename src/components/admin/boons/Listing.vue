@@ -32,19 +32,19 @@
 							</v-btn>
 						</v-toolbar>
 					</template>
-					<template v-slot:item.gameSystemId="{ item }">
+					<template v-slot:[`item.gameSystemId`]="{ item }">
 						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
 					</template>
-					<template v-slot:item.factionId="{ item }">
+					<template v-slot:[`item.factionId`]="{ item }">
 						<span>{{ getFactionName(item.factionId) }}</span>
 					</template>
-					<template v-slot:item.scenario="{ item }">
+					<template v-slot:[`item.scenario`]="{ item }">
 						<span>{{ scenarioName(item) }}</span>
 					</template>
-					<template v-slot:item.type="{ item }">
+					<template v-slot:[`item.type`]="{ item }">
 						<span>{{ getTypeName(item.gameSystemId, item.type) }}</span>
 					</template>
-					<template v-slot:item.action="{ item }">
+					<template v-slot:[`item.action`]="{ item }">
 						<v-icon
 							small
 							class="mr-2"
@@ -102,9 +102,10 @@ export default {
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminFactions.searchAdminFactions({});
-		await this.$store.dispatcher.adminScenarios.searchAdminScenarios({});
-		await this.$store.dispatcher.adminBoons.searchAdminBoons({});
+		const correlationId = this.correlationId();
+		await this.$store.dispatcher.adminFactions.searchAdminFactions(correlationId, {});
+		await this.$store.dispatcher.adminScenarios.searchAdminScenarios(correlationId, {});
+		await this.$store.dispatcher.adminBoons.searchAdminBoons(correlationId, {});
 	},
 	methods: {
 		defaultItem() {

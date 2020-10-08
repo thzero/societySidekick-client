@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
 const store = {
@@ -11,16 +11,18 @@ const store = {
 		listing: []
 	},
 	actions: {
-		async getFactionListing({ commit }, gameSystemId) {
+		async getFactionListing({ commit }, params) {
 			const crypto = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
-			if (await Utility.checksumUpdateCheck(crypto, this.state, commit, 'factions', gameSystemId))
+			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'factions', params.gameSystemId))
 				return;
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_FACTIONS);
-			const response = await service.listing(gameSystemId);
-			this.$logger.debug('store.factions', 'getFactionListing', 'response', response);
+			const response = await service.listing(params.correlationId, params.gameSystemId);
+			this.$logger.debug('store.factions', 'getFactionListing', 'response', response, params.correlationId);
 			if (response.success) {
-				commit('setFactionListing', response.success && response.results ? response.results.data : null);
-				Utility.checksumUpdateComplete(crypto, this.state, commit, 'factions', gameSystemId);
+				const listing = response.success && response.results ? response.results.data : null;
+				commit('setFactionListing', { correlationId: params.correlationId, listing: listing });
+				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'factions', params.gameSystemId);
+				return listing;
 			}
 		}
 	},
@@ -32,20 +34,20 @@ const store = {
 		}
 	},
 	mutations: {
-		setFactionListing(state, listing) {
-			this.$logger.debug('store.factions', 'setFactionListing', 'list.a', listing);
-			this.$logger.debug('store.factions', 'setFactionListing', 'list.b', state.listing);
-			if (!listing)
+		setFactionListing(state, params) {
+			this.$logger.debug('store.factions', 'setFactionListing', 'list.a', params.listing, params.correlationId);
+			this.$logger.debug('store.factions', 'setFactionListing', 'list.b', state.listing, params.correlationId);
+			if (!params.listing)
 				return;
-			listing.forEach((item) => {
+				params.listing.forEach((item) => {
 				state.listing = VueUtility.updateArrayById(state.listing, item);
 			});
-			this.$logger.debug('store.factions', 'setFactionListing', 'list.c', state.listing);
+			this.$logger.debug('store.factions', 'setFactionListing', 'list.c', state.listing, params.correlationId);
 		}
 	},
 	dispatcher: {
-		async getFactionListing(gameSystemId) {
-			await Vue.prototype.$store.dispatch('getFactionListing', gameSystemId);
+		async getFactionListing(correlationId, gameSystemId) {
+			await Vue.prototype.$store.dispatch('getFactionListing', { correlationId: correlationId, gameSystemId: gameSystemId });
 		}
 	}
 };

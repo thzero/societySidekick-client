@@ -3,8 +3,8 @@ const { version_major, version_minor, version_patch, version_date } = require('.
 import VersionService from '@thzero/library_client/service/version';
 
 class AppVersionService extends VersionService {
-	async _version() {
-		return this._generate(version_major, version_minor, version_patch, version_date);
+	async _version(correlationId) {
+		return this._generate(correlationId, version_major, version_minor, version_patch, version_date);
 	}
 }
 

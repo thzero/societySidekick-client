@@ -1,10 +1,10 @@
 import Vue from 'vue';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import {} from '@thzero/library_common/utility/string';
 
-Vue.config.devtools = Utility.isDev;
+Vue.config.devtools = LibraryUtility.isDev;
 Vue.config.productionTip = false;
 
 // eslint-disable-next-line

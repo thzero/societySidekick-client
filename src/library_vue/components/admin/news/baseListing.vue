@@ -15,14 +15,14 @@ export default {
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminNews.searchNews({});
+		await this.$store.dispatcher.adminNews.searchNews(this.correlationId(), {});
 	},
 	methods: {
 		defaultItem() {
 			return null;
 		},
-		async dialogDeletePreCompleteOkDelete(dispatcher, id) {
-			return await dispatcher.adminNews.deleteAdminNews(id);
+		async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+			return await dispatcher.adminNews.deleteAdminNews(correlationId, id);
 		},
 		initializeHeaders() {
 			return [

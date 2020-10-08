@@ -14,95 +14,97 @@ const store = {
 		user: null
 	},
 	actions: {
-		async getUserFavorites() {
+		// eslint-disable-next-line
+		async getUserFavorites(correlationId) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
-			const response = await service.fetchFavoritesByGamerId(this.state.user.user);
+			const response = await service.fetchFavoritesByGamerId(correlationId, this.state.user.user);
 			this.$logger.debug('store.user', 'getUserFavorites', 'response', response);
 			return response;
 		},
-		async resetUser({ commit }) {
-			commit('resetUser');
+		async resetUser({ commit }, correlationId) {
+			commit('resetUser', correlationId);
 		},
-		async setUserAuthCompleted({ commit }, authCompleted) {
-			commit('setUserAuthCompleted', authCompleted);
+		async setUserAuthCompleted({ commit }, params) {
+			commit('setUserAuthCompleted', params);
 		},
-		async setUserClaims({ commit }, claims) {
-			commit('setUserClaims', claims);
+		async setUserClaims({ commit }, params) {
+			commit('setUserClaims', params);
 		},
-		async setUserLoggedIn({ commit }, isLoggedIn) {
-			commit('setUserLoggedIn', isLoggedIn);
+		async setUserLoggedIn({ commit }, params) {
+			commit('setUserLoggedIn', params);
 		},
-		async setUserSettings({ commit }, settings) {
+		async setUserSettings({ commit }, params) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
-			settings = VueUtility.settings().mergeUser(settings);
-			const response = await service.updateSettings(this.state.user.user, settings);
+			params.settings = VueUtility.settings().mergeUser(params.correlationId, params.settings);
+			const response = await service.updateSettings(params.correlationId, this.state.user.user, params.settings);
 			this.$logger.debug('store.user', 'setUserSettings', 'response', response);
 			if (response && response.success && response.results)
-				commit('setUserSettings', response.results);
+				commit('setUserSettings', { correlationId: params.correlationId, user: response.results });
 			return response;
 		},
-		async setUserTokenResult({ commit }, tokenResult) {
-			commit('setUserTokenResult', tokenResult);
+		async setUserTokenResult({ commit }, params) {
+			commit('setUserTokenResult', params);
 		},
-		async setUser({ commit }, user) {
-			commit('setUser', user);
+		async setUser({ commit }, params) {
+			commit('setUser', params);
 		}
 	},
 	mutations: {
-		resetUser(state) {
+		// eslint-disable-next-line
+		resetUser(state, correlationId) {
 			state.claims = null;
 			state.isLoggedIn = false;
 			state.token = null;
 			state.tokenResult = null;
 			state.user = null;
 		},
-		setUserAuthCompleted(state, authCompleted) {
-			state.authCompleted = authCompleted;
+		setUserAuthCompleted(state, params) {
+			state.authCompleted = params.authCompleted;
 		},
-		setUserClaims(state, claims) {
-			state.claims = claims;
+		setUserClaims(state, params) {
+			state.claims = params.claims;
 		},
-		setUserLoggedIn(state, isLoggedIn) {
-			state.isLoggedIn = isLoggedIn;
+		setUserLoggedIn(state, params) {
+			state.isLoggedIn = params.isLoggedIn;
 		},
-		setUserSettings(state, user) {
-			user.settings = VueUtility.settings().mergeUser(user.settings);
-			state.user = user;
+		setUserSettings(state, params) {
+			params.user.settings = VueUtility.settings().mergeUser(params.correlationId, params.user.settings);
+			state.user = params.user;
 		},
-		setUserTokenResult(state, tokenResult) {
-			state.tokenResult = tokenResult;
-			state.token = tokenResult ? tokenResult.token : null;
+		setUserTokenResult(state, params) {
+			state.tokenResult = params.tokenResult;
+			state.token = params.tokenResult ? params.tokenResult.token : null;
 		},
-		setUser(state, user) {
-			if (user)
-				user.settings = VueUtility.settings().mergeUser(user.settings);
-			state.user = user;
+		setUser(state, params) {
+			if (params.user)
+				params.user.settings = VueUtility.settings().mergeUser(params.correlationId, params.user.settings);
+			state.user = params.user;
 		}
 	},
 	dispatcher: {
-		async getUserFavorites() {
-			return await Vue.prototype.$store.dispatch('getUserFavorites');
+		async getUserFavorites(correlationId) {
+			return await Vue.prototype.$store.dispatch('getUserFavorites', correlationId);
 		},
-		async resetUser() {
-			await Vue.prototype.$store.dispatch('resetUser');
+		async resetUser(correlationId) {
+			await Vue.prototype.$store.dispatch('resetUser', correlationId);
 		},
-		async setAuthCompleted(authCompleted) {
-			await Vue.prototype.$store.dispatch('setUserAuthCompleted', authCompleted);
+		async setAuthCompleted(correlationId, authCompleted) {
+			await Vue.prototype.$store.dispatch('setUserAuthCompleted', { correlationId: correlationId, authCompleted: authCompleted });
 		},
-		async setClaims(claims) {
-			await Vue.prototype.$store.dispatch('setUserClaims', claims);
+		async setClaims(correlationId, claims) {
+			await Vue.prototype.$store.dispatch('setUserClaims', { correlationId: correlationId, authCompleted: claims });
 		},
-		async setLoggedIn(isLoggedIn) {
-			await Vue.prototype.$store.dispatch('setUserLoggedIn', isLoggedIn);
+		async setLoggedIn(correlationId, isLoggedIn) {
+			await Vue.prototype.$store.dispatch('setUserLoggedIn', { correlationId: correlationId, isLoggedIn: isLoggedIn });
 		},
-		async setUserSettings(settings) {
-			return await Vue.prototype.$store.dispatch('setUserSettings', settings);
+		async setUserSettings(correlationId, settings) {
+			return await Vue.prototype.$store.dispatch('setUserSettings', { correlationId: correlationId, settings: settings });
 		},
-		async setTokenResult(tokenResult) {
-			await Vue.prototype.$store.dispatch('setUserTokenResult', tokenResult);
+		async setTokenResult(correlationId, tokenResult) {
+			await Vue.prototype.$store.dispatch('setUserTokenResult', { correlationId: correlationId, tokenResult: tokenResult });
 		},
-		async setUser(user) {
-			await Vue.prototype.$store.dispatch('setUser', user);
+		async setUser(correlationId, user) {
+			await Vue.prototype.$store.dispatch('setUser', { correlationId: correlationId, user: user });
 		}
 	}
 };

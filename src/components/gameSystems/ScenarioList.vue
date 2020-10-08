@@ -261,8 +261,8 @@ import { firstBy } from 'thenby';
 
 import SharedConstants from '@/common/constants';
 
-import Utility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
@@ -343,7 +343,7 @@ export default {
 				if (this.isExternalList)
 					return this.seasonFilterOverride;
 
-				return AppUtility.settings().getSettingsUserScenarios(this.user, (settings) => settings.seasonFilter);
+				return AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.seasonFilter);
 			},
 			set: function (newVal) {
 				if (this.isExternalList) {
@@ -351,7 +351,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenarios(this.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
 			}
 		},
 		sortBy: {
@@ -359,7 +359,7 @@ export default {
 				if (this.isExternalList)
 					return this.sortByOverride;
 
-				const result = AppUtility.settings().getSettingsUserScenarios(this.user, (settings) => settings.sortBy);
+				const result = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.sortBy);
 				return result ? result : SharedConstants.SortBy.Scenarios.ScenarioName;
 			},
 			set: function (newVal) {
@@ -369,7 +369,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenarios(this.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
 			}
 		},
 		sortDirection: {
@@ -377,7 +377,7 @@ export default {
 				if (this.isExternalList)
 					return this.sortDirectionOverride;
 
-				return AppUtility.settings().getSettingsUserScenarios(this.user, (settings) => settings.sortDirection);
+				return AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.sortDirection);
 			},
 			set: function (newVal) {
 				if (this.isExternalList) {
@@ -386,7 +386,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenarios(this.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
 		},
 		scenarioSeasons: {
@@ -476,6 +476,8 @@ export default {
 			if (!this.characterList)
 				return [];
 
+			const correlationId = this.correlationId();
+
 			this.forceRecomputeCounter;
 
 			let characters = this.characterList.slice(0);
@@ -484,7 +486,7 @@ export default {
 			if (!characters || characters.length <= 0)
 				return [];
 
-			const scenarios = await this.executeScenariosCache(this);
+			const scenarios = await this.executeScenariosCache(correlationId, this);
 			if (!scenarios || scenarios.length === 0)
 				return [];
 
@@ -595,14 +597,14 @@ export default {
 				return self.$refs.scenarioListFilterStarfinder1e.filterScenarioName(temp, value);
 		},
 		// eslint-disable-next-line
-		async executeScenariosCache() {
+		async executeScenariosCache(correlationId) {
 			const self = this;
 			// eslint-disable-next-line
 			return new Promise(async (resolve, reject) => {
 				try {
 					let scenarios = self.scenariosCache[self.gameSystemFilter];
 					if (!scenarios) {
-						await self.$store.dispatcher.scenarios.getScenarioListing(self.gameSystemFilter);
+						await self.$store.dispatcher.scenarios.getScenarioListing(correlationId, self.gameSystemFilter);
 						scenarios = self.$store.state.scenarios.listing;
 						if (scenarios) {
 							scenarios = scenarios.filter(l => l.gameSystemId == self.gameSystemFilter);
@@ -628,13 +630,13 @@ export default {
 
 			if (ascending)
 				return values.sort(
-					firstBy((a, b) => Utility.sortByString(a, b, (v) => { return v && v.scenario ? v.character.name : null; }))
-					.thenBy((a, b) => Utility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
+					firstBy((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.character.name : null; }))
+					.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
 				);
 
 			return values.sort(
-				firstBy((a, b) => Utility.sortByString(b, a, (v) => { return v && v.scenario ? v.character.name : null; }))
-				.thenBy((a, b) => Utility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
+				firstBy((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.character.name : null; }))
+				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
 			);
 		},
 		sortByDatePlayed(values, ascending) {
@@ -642,9 +644,9 @@ export default {
 				return values;
 
 			if (ascending)
-				return values.sort((a, b) => Utility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }));
+				return values.sort((a, b) => LibraryUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }));
 
-			return values.sort((a, b) => Utility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }));
+			return values.sort((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }));
 		},
 		sortByScenarioName(values, ascending) {
 			if (!values || !Array.isArray(values))
@@ -652,25 +654,25 @@ export default {
 
 			if (ascending)
 				return values.sort(
-					firstBy((a, b) => Utility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-					.thenBy((a, b) => Utility.sortByNumber(a, b, (v) => {
+					firstBy((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
 						return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647;
 					}))
-					.thenBy((a, b) => Utility.sortByNumber(a, b, (v) => {
+					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
 						return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647;
 					}))
-					.thenBy((a, b) => Utility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
+					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
 				);
 
 			return values.sort(
-				firstBy((a, b) => Utility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-				.thenBy((a, b) => Utility.sortByNumber(b, a, (v) => {
+				firstBy((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
 					return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647;
 				}))
-				.thenBy((a, b) => Utility.sortByNumber(b, a, (v) => {
+				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
 					return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647;
 				}))
-				.thenBy((a, b) => Utility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
+				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
 			);
 		},
 		sortByScenarioNumber(values, ascending) {
@@ -679,25 +681,25 @@ export default {
 
 			if (ascending)
 				return values.sort(
-					firstBy((a, b) => Utility.sortByNumber(a, b, (v) => {
+					firstBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
 						return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : -2147483647;
 					}))
-					.thenBy((a, b) => Utility.sortByNumber(a, b, (v) => {
+					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
 						return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : -2147483647;
 					}))
-					.thenBy((a, b) => Utility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-					.thenBy((a, b) => Utility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
+					.thenBy((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
 				);
 
 			return values.sort(
-				firstBy((a, b) => Utility.sortByNumber(b, a, (v) => {
+				firstBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
 					return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647;
 				}))
-				.thenBy((a, b) => Utility.sortByNumber(b, a, (v) => {
+				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
 					return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647;
 				}))
-				.thenBy((a, b) => Utility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-				.thenBy((a, b) => Utility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
+				.thenBy((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
 			);
 		},
 		sortBySeason(values, ascending) {
@@ -706,25 +708,25 @@ export default {
 
 			if (ascending)
 				return values.sort(
-					firstBy((a, b) => Utility.sortByNumber(a, b, (v) => {
+					firstBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
 						return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647;
 					}))
-					.thenBy((a, b) => Utility.sortByNumber(a, b, (v) => {
+					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
 						return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : -2147483647;
 					}))
-					.thenBy((a, b) => Utility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-					.thenBy((a, b) => Utility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
+					.thenBy((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
 				);
 
 			return values.sort(
-				firstBy((a, b) => Utility.sortByNumber(b, a, (v) => {
+				firstBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
 					return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647;
 				}))
-				.thenBy((a, b) => Utility.sortByNumber(b, a, (v) => {
+				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
 					return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647;
 				}))
-				.thenBy((a, b) => Utility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-				.thenBy((a, b) => Utility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
+				.thenBy((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
 			);
 		}
 	}

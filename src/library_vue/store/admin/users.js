@@ -2,7 +2,7 @@ import Vue from 'vue';
 
 import LibraryConstants from '@thzero/library_client/constants';
 
-import Utility from '@thzero/library_common/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '../../utility/index';
 
 const store = {
@@ -10,57 +10,57 @@ const store = {
 		users: null
 	},
 	actions: {
-		async deleteAdminUser({ commit }, id) {
+		async deleteAdminUser({ commit }, params) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_USERS);
-			const response = await service.delete(id);
+			const response = await service.delete(params.correlationId, params.id);
 			this.$logger.debug('store.admin.users', 'deleteAdminUser', 'response', response);
 			if (response && response.success) {
-				commit('deleteAdminUser', id);
-				Vue.prototype.$store.dispatcher.users.delete(id);
+				commit('deleteAdminUser', { correlationId: params.correlationId, id: params.id });
+				Vue.prototype.$store.dispatcher.users.delete(params.correlationId, params.id);
 			}
 			return response;
 		},
 		async searchAdminUsers({ commit }, params) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_USERS);
-			const response = await service.search(params);
+			const response = await service.search(params.correlationId, params.params);
 			this.$logger.debug('store.admin.users', 'searchAdminUsers', 'response', response);
-			commit('setAdminUsersListing', response.success && response.results ? response.results.data : null);
+			commit('setAdminUsersListing', { correlationId: params.correlationId, list: response.success && response.results ? response.results.data : null });
 		},
-		async updateAdminUser({ commit }, item) {
+		async updateAdminUser({ commit }, params) {
 			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_ADMIN_USERS);
-			const response = await service.update(item);
+			const response = await service.update(params.correlationId, params.item);
 			this.$logger.debug('store.admin.users', 'updateAdminUser', 'response', response);
 			if (response && response.success)
-				commit('setAdminUsers', response.success && response.results ? response.results : null);
+				commit('setAdminUsers', { correlationId: params.correlationId, item: response.results });
 			return response;
 		}
 	},
 	mutations: {
-		deleteAdminUser(state, id) {
-			return Utility.deleteArrayById(state.users, id);
+		deleteAdminUser(state, params) {
+			return LibraryUtility.deleteArrayById(state.users, params.id);
 		},
-		setAdminUsers(state, item) {
-			this.$logger.debug('store.admin.users', 'setAdminUsers', 'items.a', item);
-			this.$logger.debug('store.admin.users', 'setAdminUsers', 'items.b', state.users);
-			state.users = VueUtility.updateArrayById(state.users, item);
-			this.$logger.debug('store.admin.users', 'setAdminUsers', 'items.c', state.users);
+		setAdminUsers(state, params) {
+			this.$logger.debug('store.admin.users', 'setAdminUsers', 'items.a', params.item, params.correlationId);
+			this.$logger.debug('store.admin.users', 'setAdminUsers', 'items.b', state.users, params.correlationId);
+			state.users = VueUtility.updateArrayById(state.users, params.item);
+			this.$logger.debug('store.admin.users', 'setAdminUsers', 'items.c', state.users, params.correlationId);
 		},
-		setAdminUsersListing(state, list) {
-			this.$logger.debug('store.admin.users', 'setAdminUsersListing', 'list.a', list);
-			this.$logger.debug('store.admin.users', 'setAdminUsersListing', 'list.b', state.users);
-			state.users = list;
-			this.$logger.debug('store.admin.users', 'setAdminUsersListing', 'list.c', state.users);
+		setAdminUsersListing(state, params) {
+			this.$logger.debug('store.admin.users', 'setAdminUsersListing', 'list.a', params.list, params.correlationId);
+			this.$logger.debug('store.admin.users', 'setAdminUsersListing', 'list.b', state.users, params.correlationId);
+			state.users = params.list;
+			this.$logger.debug('store.admin.users', 'setAdminUsersListing', 'list.c', state.users, params.correlationId);
 		}
 	},
 	dispatcher: {
-		async deleteAdminUser(id) {
-			return await Vue.prototype.$store.dispatch('deleteAdminUser', id);
+		async deleteAdminUser(correlationId, id) {
+			return await Vue.prototype.$store.dispatch('deleteAdminUser', { correlationId: correlationId, id: id });
 		},
-		async searchAdminUsers(params) {
-			await Vue.prototype.$store.dispatch('searchAdminUsers', params);
+		async searchAdminUsers(correlationId, params) {
+			await Vue.prototype.$store.dispatch('searchAdminUsers', { correlationId: correlationId, params: params });
 		},
-		async updateAdminUser(item) {
-			return await Vue.prototype.$store.dispatch('updateAdminUser', item);
+		async updateAdminUser(correlationId, item) {
+			return await Vue.prototype.$store.dispatch('updateAdminUser', { correlationId: correlationId, item: item });
 		}
 	}
 };
