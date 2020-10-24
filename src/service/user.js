@@ -3,6 +3,13 @@ import LibraryConstants from '@thzero/library_client/constants';
 import BaseUserService from '@thzero/library_client/service/baseUser';
 
 class UserService extends BaseUserService {
+	constructor() {
+		super();
+
+		this._serviceCommunicationRest = null;
+		this._serviceStore = null;
+	}
+
 	async init(injector) {
 		await super.init(injector);
 
