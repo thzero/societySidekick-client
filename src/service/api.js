@@ -10,7 +10,7 @@ class ApiService extends RestExternalService {
 				client: Constants.Version
 			};
 			const response = await this._serviceCommunicationRest.get(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'initialize');
-			this._logger.debug('ApiService', 'initialize', 'response', response);
+			this._logger.debug('ApiService', 'initialize', 'response', response, correlationId);
 			if (response && response.success) {
 				version.server = response.results.version;
 				response.results.version = version;
@@ -27,7 +27,7 @@ class ApiService extends RestExternalService {
 
 	async gameSystems(correlationId) {
 		try {
-			const response = await this._serviceCommunicationRest.get(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'gameSystems');
+			const response = await this._serviceCommunicationRest.get(LibraryConstants.ExternalKeys.BACKEND, 'gameSystems');
 			this._logger.debug('ApiService', 'gameSystems', 'response', response, correlationId);
 			return response;
 		}
@@ -35,7 +35,7 @@ class ApiService extends RestExternalService {
 			this._logger.exception('ApiService', 'gameSystems', err, correlationId);
 		}
 
-		return this._error('ApiService', 'gameSystems', null, null, null, null, correlationId);
+		return this._error('ApiService', 'gameSystems', null, null, null, correlationId);
 	}
 }
 
