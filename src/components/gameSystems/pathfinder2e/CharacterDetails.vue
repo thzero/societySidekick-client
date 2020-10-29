@@ -966,7 +966,7 @@
 						style="margin-right: 40px; top: -20px;"
 					>
 						<template
-							v-slot:activator
+							#activator
 						>
 							<v-btn
 								v-model="fab"

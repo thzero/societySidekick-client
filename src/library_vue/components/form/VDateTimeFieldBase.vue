@@ -3,7 +3,7 @@
 		v-model="display"
 		:width="dialogWidth"
 	>
-		<template v-slot:activator="{ on }">
+		<template #activator="{ on }">
 			<v-text-field
 				v-bind="textFieldProps"
 				:disabled="disabled"
@@ -13,7 +13,7 @@
 				readonly
 				v-on="on"
 			>
-				<template v-slot:progress>
+				<template #progress>
 					<slot name="progress">
 						<v-progress-linear
 							color="primary"

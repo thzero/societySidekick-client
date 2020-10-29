@@ -86,7 +86,7 @@
 				bottom
 				offset-y
 			>
-				<template v-slot:activator="{ on }">
+				<template #activator="{ on }">
 					<v-btn
 						class="hidden-sm-and-down mr-3"
 						v-on="on"
@@ -101,7 +101,7 @@
 				bottom
 				offset-y
 			>
-				<template v-slot:activator="{ on }">
+				<template #activator="{ on }">
 					<v-btn
 						class="hidden-sm-and-down mr-3"
 						v-on="on"
@@ -116,7 +116,7 @@
 				bottom
 				offset-y
 			>
-				<template v-slot:activator="{ on }">
+				<template #activator="{ on }">
 					<v-btn
 						class="hidden-sm-and-down"
 						v-on="on"
@@ -131,7 +131,7 @@
 				left
 				:close-on-content-click="closeOnContentClick"
 			>
-				<template v-slot:activator="{ on }">
+				<template #activator="{ on }">
 					<v-btn
 						icon
 						v-on="on"
