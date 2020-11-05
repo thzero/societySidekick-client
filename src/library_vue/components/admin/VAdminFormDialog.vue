@@ -100,7 +100,7 @@ export default {
 				temp.timestamp = temp.timestamp ? LibraryUtility.convertTimestampToLocal(temp.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
 				temp.updatedTimestamp = temp.updatedTimestamp ? temp.updatedTimestamp : LibraryUtility.getTimestamp();
 				this.gameSystemId = temp.gameSystemId;
-				await this.resetDialogI(temp);
+				await this.resetDialogI(correlationId, temp);
 				this.innerValue = temp;
 				return;
 			}

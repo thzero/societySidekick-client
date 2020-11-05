@@ -68,7 +68,7 @@
 								style="top: -24px;"
 							>
 								<template
-									v-slot:activator
+									#activator
 								>
 									<v-btn
 										v-model="fab"
@@ -87,7 +87,7 @@
 									v-if="hasScenarios"
 									left
 								>
-									<template v-slot:activator="{ on }">
+									<template #activator="{ on }">
 										<v-btn
 											fab
 											dark
@@ -105,7 +105,7 @@
 									v-if="hasInventory"
 									left
 								>
-									<template v-slot:activator="{ on }">
+									<template #activator="{ on }">
 										<v-btn
 											v-if="hasInventory"
 											fab
@@ -124,7 +124,7 @@
 									v-if="hasScenarios"
 									left
 								>
-									<template v-slot:activator="{ on }">
+									<template #activator="{ on }">
 										<v-btn
 											fab
 											dark
@@ -141,7 +141,7 @@
 									v-if="hasGearSets"
 									left
 								>
-									<template v-slot:activator="{ on }">
+									<template #activator="{ on }">
 										<v-btn
 											v-if="hasGearSets"
 											left

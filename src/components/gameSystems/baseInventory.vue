@@ -4,7 +4,7 @@
 			class="text-bottom body-2"
 		>
 			<v-tooltip bottom>
-				<template v-slot:activator="{ on }">
+				<template #activator="{ on }">
 					<span v-on="on">{{ scenarioOrder(value.boughtScenarioId) }}</span>
 				</template>
 				<span>{{ scenarioName(value.boughtScenarioId) }}</span>
@@ -26,7 +26,7 @@
 			class="text-bottom body-2"
 		>
 			<v-tooltip bottom>
-				<template v-slot:activator="{ on }">
+				<template #activator="{ on }">
 					<span v-on="on">{{ scenarioOrder(value.soldScenarioId) }}</span>
 				</template>
 				<span>{{ scenarioName(value.soldScenarioId) }}</span>
