@@ -14,11 +14,11 @@ const store = {
 	},
 	actions: {
 		async createCharacter({ commit }, params) {
-			if (!params.value)
-				return Response.error('store.characters', 'createCharacter', 'Invalid chraacter value.', null, null, null, params.correlationId);
+			if (!params.details)
+				return Response.error('store.characters', 'createCharacter', 'Invalid chraacter details.', null, null, null, params.correlationId);
 
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.create(params.correlationId, params.value);
+			const response = await service.create(params.correlationId, params.details);
 			this.$logger.debug('store.characters', 'createCharacter', 'response', response, params.correlationId);
 			if (response && response.success)
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
@@ -176,8 +176,8 @@ const store = {
 		}
 	},
 	dispatcher: {
-		async createCharacter(correlationId, gameSystemId, name, number) {
-			return await Vue.prototype.$store.dispatch('createCharacter', { correlationId: correlationId, gameSystemId: gameSystemId, name: name, number: number });
+		async createCharacter(correlationId, details) {
+			return await Vue.prototype.$store.dispatch('createCharacter', { correlationId: correlationId, details: details });
 		},
 		async deleteCharacter(correlationId, characterId) {
 			return await Vue.prototype.$store.dispatch('deleteCharacter', { correlationId: correlationId, characterId: characterId });

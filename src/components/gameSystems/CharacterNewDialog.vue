@@ -98,7 +98,7 @@ export default {
 		async preComplete(correlationId) {
 			const name = String.trim(this.name);
 			const number = String.trim(this.number + '');
-			const response = await this.$store.dispatcher.characters.createCharacter(correlationId, this.gameSystemId, name, number);
+			const response = await this.$store.dispatcher.characters.createCharacter(correlationId, { gameSystemId: this.gameSystemId, name: name, number: number });
 			this.logger.debug('CharacterNewDialog', 'preComplete', 'response', response, correlationId);
 			if (response && response.success) {
 				this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ response.results.id ]}));
