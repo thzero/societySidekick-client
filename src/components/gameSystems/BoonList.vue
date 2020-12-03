@@ -615,7 +615,7 @@ export default {
 				}
 			});
 		},
-		scenarioName(scenario) {
+		scenarioName(correlationId, scenario) {
 			if (!scenario || !scenario.scenario)
 				return '';
 			return scenario.scenario.name;

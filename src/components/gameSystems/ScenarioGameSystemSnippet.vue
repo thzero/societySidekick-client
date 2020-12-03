@@ -193,8 +193,8 @@ export default {
 		}
 	},
 	methods: {
-		scenarioName(scenario) {
-			return scenario ? this.serviceGameSystem.scenarioName(this.correlationId(), scenario) : '';
+		scenarioName(correlationId, scenario) {
+			return scenario ? this.serviceGameSystem.scenarioName(correlationId,  scenario) : '';
 		}
 	}
 };

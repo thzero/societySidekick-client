@@ -34,7 +34,7 @@ export default {
 	computed: {
 		characterCurrencyCurrent: {
 			get: function () {
-				return this.rulesGameSystem.calculateCharacterCurrencyCurrent(this.character, this.total);
+				return this.rulesGameSystem.calculateCharacterCurrencyCurrent(this.correlationId(), this.character, this.total);
 			},
 			set: function() {},
 			cache: false
@@ -48,7 +48,7 @@ export default {
 				if (!scenario)
 					return 0;
 
-				return this.rulesGameSystem.calculateCharacterCurrencyScenario(scenario, this.total);
+				return this.rulesGameSystem.calculateCharacterCurrencyScenario(this.correlationId(), scenario, this.total);
 			},
 			set: function() {},
 			cache: false
@@ -213,8 +213,8 @@ export default {
 				this.innerValue.value = null;
 			});
 		},
-		scenarioName(scenario) {
-			return scenario ? this.serviceGameSystem.scenarioName(this.correlationId(), scenario) : '';
+		scenarioName(correlationId, scenario) {
+			return scenario ? this.serviceGameSystem.scenarioName(correlationId, scenario) : '';
 		},
 		transCurrency() {
 			return '';
