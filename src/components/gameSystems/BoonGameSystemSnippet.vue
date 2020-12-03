@@ -122,8 +122,8 @@ export default {
 		scenarioDescription(scenario) {
 			return scenario ? scenario.description : '';
 		},
-		scenarioName(scenario) {
-			return scenario ? this.serviceGameSystem.scenarioName(this.correlationId(), scenario) : '';
+		scenarioName(correlationId, scenario) {
+			return scenario ? this.serviceGameSystem.scenarioName(correlationId,  scenario) : '';
 		}
 	}
 };
