@@ -519,9 +519,18 @@ export default {
 			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		},
+		// eslint-disable-next-line
+		onChangeI(correlationId, newValue) {
+			this.achievementPointsEarned = newValue && newValue.achievementPointsEarned ? newValue.achievementPointsEarned : 0;
+			this.downtimePointsEarned = newValue && newValue.downtimePointsEarned ? newValue.downtimePointsEarned : 0;
+			this.fameEarned = newValue && newValue.fameEarned ? newValue.fameEarned : 0;
+			// value.fameFactionId = newValue && newValue.fameFactionId ? newValue.fameFactionId : this.character.factionId;
+			// value.reputationFactionId = newValue && newValue.reputationFactionId ? newValue.reputationFactionId : this.character.factionId;
+			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, newValue.scenarioAdventure, this.lookups);
+		},
 		async resetDialogI(correlationId, value) {
 			await this.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, this.character ? this.character.id : null);
-			this.achievementPointsEarned = value && value.experiencePointsEarned ? value.experiencePointsEarned : 0;
+			this.achievementPointsEarned = value && value.achievementPointsEarned ? value.achievementPointsEarned : 0;
 			this.downtimePointsEarned = value && value.downtimePointsEarned ? value.downtimePointsEarned : 0;
 			this.fameEarned = value && value.fameEarned ? value.fameEarned : 0;
 			value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : this.character.factionId;

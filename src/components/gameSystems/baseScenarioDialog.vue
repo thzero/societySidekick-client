@@ -130,7 +130,13 @@ export default {
 			return true;
 		},
 		onChange(newValue) {
-			this.rulesGameSystem.calculateScenario(this.correlationId(), newValue);
+			const correlationId = this.correlationId();
+			this.rulesGameSystem.calculateScenario(correlationId, newValue);
+			this.experiencePointsEarned = newValue ? newValue.experiencePointsEarned : 0;
+			this.onChangeI(correlationId, newValue);
+		},
+		// eslint-disable-next-line
+		onChangeI(correlationId, newValue) {
 		},
 		async preComplete(correlationId) {
 			const scenario = this.initResponse();
