@@ -34,6 +34,7 @@ export default {
 		dateFormat: DEFAULT_DATE_FORMAT,
 		dateTimeFormat: DEFAULT_DATE_FORMAT + ' ' + DEFAULT_TIME_FORMAT,
 		dialogScenarios: new DialogSupport(),
+		initialized: false,
 		innerValue: null,
 		isNew: false,
 		lookups: {},
@@ -76,6 +77,7 @@ export default {
 		}
 	},
 	async created() {
+		this.initialized = false;
 		this.initializeServices();
 		this.innerValue = this.initScenario();
 		this.lookups = await this.initializeLookups(this.correlationId());
@@ -130,6 +132,9 @@ export default {
 			return true;
 		},
 		onChange(newValue) {
+			if (!this.initialized)
+				return;
+
 			const correlationId = this.correlationId();
 			this.rulesGameSystem.calculateScenario(correlationId, newValue);
 			this.experiencePointsEarned = newValue ? newValue.experiencePointsEarned : 0;
@@ -155,6 +160,7 @@ export default {
 			return await this.$store.dispatcher.characters.deleteCharacterScenario(correlationId, this.character.id, this.innerValue.id);
 		},
 		async resetDialog(correlationId, value) {
+			this.initialized = false;
 			this.steps = 1;
 			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
 			this.experiencePointsEarned = value ? value.experiencePointsEarned : 0;
@@ -162,6 +168,7 @@ export default {
 			await this.resetDialogI(correlationId, value);
 			this.isNew = value && !value.id;
 			this.innerValue = value;
+			this.initialized = true;
 		},
 		// eslint-disable-next-line
 		async resetDialogI(correlationId, value) {
