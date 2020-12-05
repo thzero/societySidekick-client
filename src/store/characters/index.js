@@ -99,32 +99,40 @@ const store = {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateBoon(params.correlationId, params.characterId, params.boon);
 			this.$logger.debug('store.characters', 'updateCharacterBoon', 'response', response, params.correlationId);
-			if (response && response.success && response.results)
+			if (response && response.success && response.results) {
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
+				this.dispatcher.user.refreshUserSettings(params.correlationId);
+			}
 			return response;
 		},
 		async updateCharacterDetails({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateDetails(params.correlationId, params.details);
 			this.$logger.debug('store.characters', 'updateCharacterDetails', 'response', response, params.correlationId);
-			if (response && response.success && response.results)
+			if (response && response.success && response.results) {
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
+				this.dispatcher.user.refreshUserSettings(params.correlationId);
+			}
 			return response;
 		},
 		async updateCharacterInventory({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateInventory(params.correlationId, params.characterId, params.inventory);
 			this.$logger.debug('store.characters', 'updateCharacterInventory', 'response', response, params.correlationId);
-			if (response && response.success && response.results)
+			if (response && response.success && response.results) {
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
+				this.dispatcher.user.refreshUserSettings(params.correlationId);
+			}
 			return response;
 		},
 		async updateCharacterScenario({ commit }, params) {
 			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateScenario(params.correlationId, params.characterId, params.scenario);
 			this.$logger.debug('store.characters', 'updateCharacterScenario', 'response', response, params.correlationId);
-			if (response && response.success && response.results)
+			if (response && response.success && response.results) {
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
+				this.dispatcher.user.refreshUserSettings(params.correlationId);
+			}
 			return response;
 		}
 	},

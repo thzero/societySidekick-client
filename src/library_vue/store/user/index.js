@@ -21,6 +21,14 @@ const store = {
 			this.$logger.debug('store.user', 'getUserFavorites', 'response', response);
 			return response;
 		},
+		async refreshUserSettings({ commit }, correlationId) {
+			const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
+			const response = await service.refreshSettings(correlationId, this.state.user.user);
+			this.$logger.debug('store.user', 'refreshUserSettings', 'response', response);
+			if (response && response.success && response.results)
+				commit('setUserSettings', { correlationId: correlationId, user: response.results });
+			return response;
+		},
 		async resetUser({ commit }, correlationId) {
 			commit('resetUser', correlationId);
 		},
@@ -84,6 +92,9 @@ const store = {
 	dispatcher: {
 		async getUserFavorites(correlationId) {
 			return await Vue.prototype.$store.dispatch('getUserFavorites', correlationId);
+		},
+		async refreshUserSettings(correlationId) {
+			await Vue.prototype.$store.dispatch('refreshUserSettings', correlationId);
 		},
 		async resetUser(correlationId) {
 			await Vue.prototype.$store.dispatch('resetUser', correlationId);
