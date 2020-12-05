@@ -82,7 +82,7 @@ export default {
 			this.notImplementedError();
 		},
 		statusName(id) {
-			return this.serviceGameSystem.characterLookupStatusName(id, this.lookups);
+			return this.serviceGameSystem.characterLookupStatusName(this.correlationId(), id, this.lookups);
 		}
 	}
 };

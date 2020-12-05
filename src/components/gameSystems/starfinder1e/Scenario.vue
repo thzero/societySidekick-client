@@ -100,7 +100,7 @@
 												{{ scenarioAdvancementSpeedName(value.scenarioAdvancementSpeed) }}
 											</td>
 											<td class="scenario text-top body-2 starfinder1eScenario2 gameSystemHeaderSpacer">
-												{{ scenarioAdventureName(value.scenarioAdventure) }}
+												{{ scenarioAdventureName(value.scenario ? value.scenario.type : null) }}
 											</td>
 											<td class="scenario text-top body-2 starfinder1eScenario2 gameSystemHeaderSpacer">
 												{{ scenarioParticipantName(value.scenarioParticipant) }}

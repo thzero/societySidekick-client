@@ -211,7 +211,7 @@
 						>
 							<VNumberFieldWithValidation
 								ref="experiencePointsEarned"
-								v-model="experiencePointsEarned"
+								v-model="innerValue.experiencePointsEarned"
 								rules="required|decimal:1|min_value:0|max_value:12|"
 								vid="experiencePointsEarned"
 								:label="$t('characters.gameSystems.pathfinder2e.experiencePoints') + ' ' + $t('characters.earned')"
@@ -452,7 +452,7 @@ export default {
 	data: () => ({
 		achievementPointsEarned: 0,
 		downtimePointsEarned: 0,
-		experiencePointsEarned: 0,
+		// experiencePointsEarned: 0,
 		fameEarned: 0,
 		scenarioAdventureName: null
 	}),
@@ -473,13 +473,11 @@ export default {
 			this.achievementPointsEarned = this.rulesGameSystem.calculateScenarioAchievementPointsEarned(correlationId, this.innerValue);
 			this.downtimePointsEarned = this.rulesGameSystem.calculateScenarioDowntimePointsEarned(correlationId, this.innerValue);
 			this.fameEarned = this.rulesGameSystem.calculateScenarioFameEarned(correlationId, this.innerValue);
-			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, this.innerValue.scenarioAdventure, this.lookups);
 
 			if (this.innerValue.status != SharedConstants.CharactersStatus.ACTIVE) {
 				this.achievementPointsEarned = 0;
 				this.downtimePointsEarned = 0;
 				this.fameEarned = 0;
-				this.scenarioAdventureName = 0;
 				this.innerValue.currencyIncomeEarned = 0;
 				this.innerValue.currencyEarned = 0;
 			}
@@ -508,7 +506,6 @@ export default {
 			details.reputationAdditionalFactionId = this.innerValue.reputationAdditionalFactionId;
 			details.reputationAdditionalEarned = this.rulesGameSystem.clean(this.innerValue.reputationAdditionalEarned);
 			details.scenarioAdvancementSpeed = this.innerValue.scenarioAdvancementSpeed;
-			details.scenarioAdventure = this.innerValue.scenarioAdventure;
 			details.scenarioEvent = this.innerValue.scenarioEvent;
 			return details;
 		},
@@ -519,14 +516,23 @@ export default {
 			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		},
+		// eslint-disable-next-line
+		onChangeI(correlationId, newValue) {
+			this.achievementPointsEarned = newValue && newValue.achievementPointsEarned ? newValue.achievementPointsEarned : 0;
+			this.downtimePointsEarned = newValue && newValue.downtimePointsEarned ? newValue.downtimePointsEarned : 0;
+			this.fameEarned = newValue && newValue.fameEarned ? newValue.fameEarned : 0;
+			// value.fameFactionId = newValue && newValue.fameFactionId ? newValue.fameFactionId : this.character.factionId;
+			// value.reputationFactionId = newValue && newValue.reputationFactionId ? newValue.reputationFactionId : this.character.factionId;
+			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, newValue.scenario ? newValue.scenario.type : null, this.lookups);
+		},
 		async resetDialogI(correlationId, value) {
 			await this.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, this.character ? this.character.id : null);
-			this.achievementPointsEarned = value && value.experiencePointsEarned ? value.experiencePointsEarned : 0;
+			this.achievementPointsEarned = value && value.achievementPointsEarned ? value.achievementPointsEarned : 0;
 			this.downtimePointsEarned = value && value.downtimePointsEarned ? value.downtimePointsEarned : 0;
 			this.fameEarned = value && value.fameEarned ? value.fameEarned : 0;
 			value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : this.character.factionId;
 			value.reputationFactionId = value && value.reputationFactionId ? value.reputationFactionId	: this.character.factionId;
-			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenarioAdventure, this.lookups);
+			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenario ? value.scenario.type : null, this.lookups);
 		}
 	}
 };

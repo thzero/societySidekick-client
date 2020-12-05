@@ -34,6 +34,7 @@ export default {
 		dateFormat: DEFAULT_DATE_FORMAT,
 		dateTimeFormat: DEFAULT_DATE_FORMAT + ' ' + DEFAULT_TIME_FORMAT,
 		dialogScenarios: new DialogSupport(),
+		initialized: false,
 		innerValue: null,
 		isNew: false,
 		lookups: {},
@@ -76,9 +77,11 @@ export default {
 		}
 	},
 	async created() {
+		this.initialized = false;
 		this.initializeServices();
 		this.innerValue = this.initScenario();
 		this.lookups = await this.initializeLookups(this.correlationId());
+		this.initialized = true;
 	},
 	methods: {
 		async cancel() {
@@ -91,7 +94,7 @@ export default {
 			this.$set(this.innerValue, 'scenarioId', id);
 			this.scenarioName = this.serviceGameSystem.determineScenarioNameById(correlationId, id, this.$store);
 			this.dialogScenariosOkI(this.correlationId(), id);
-			this.experiencePointsEarned = this.rulesGameSystem.calculateScenarioExperiencePointsEarned(correlationId, this.innerValue);
+			// this.experiencePointsEarned = this.rulesGameSystem.calculateScenarioExperiencePointsEarned(correlationId, this.innerValue);
 			this.dialogScenarios.ok();
 		},
 		// eslint-disable-next-line
@@ -130,7 +133,16 @@ export default {
 			return true;
 		},
 		onChange(newValue) {
-			this.rulesGameSystem.calculateScenario(this.correlationId(), newValue);
+			if (!this.initialized)
+				return;
+
+			const correlationId = this.correlationId();
+			this.rulesGameSystem.calculateScenario(correlationId, newValue);
+			// this.experiencePointsEarned = newValue ? newValue.experiencePointsEarned : 0;
+			this.onChangeI(correlationId, newValue);
+		},
+		// eslint-disable-next-line
+		onChangeI(correlationId, newValue) {
 		},
 		async preComplete(correlationId) {
 			const scenario = this.initResponse();
@@ -151,8 +163,12 @@ export default {
 		async resetDialog(correlationId, value) {
 			this.steps = 1;
 			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
-			this.experiencePointsEarned = value ? value.experiencePointsEarned : 0;
+			// this.experiencePointsEarned = value ? value.experiencePointsEarned : 0;
 			this.scenarioName = this.serviceGameSystem.determineScenarioName(correlationId, value, this.$store);
+
+			let scenarios = this.$store.state.scenarios.listing;
+			value.scenario = scenarios.find(l => l.id === value.scenarioId);
+
 			await this.resetDialogI(correlationId, value);
 			this.isNew = value && !value.id;
 			this.innerValue = value;

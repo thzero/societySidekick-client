@@ -430,6 +430,16 @@ export default {
 
 						await self.initializeGameSystem(correlationId);
 
+						try {
+							let scenarios = this.$store.state.scenarios.listing;
+							if (!scenarios || (scenarios.length <= 0))
+								await this.$store.dispatcher.scenarios.getScenarioListing(correlationId, response.results.gameSystemId);
+						}
+						catch(err) {
+							self.logger.error('Character', 'initializeCharacter', null, err, null, null, correlationId);
+							VueUtility.invalid();
+						}
+
 						const timeout = setTimeout(function () {
 							self.initializeCompleted = true;
 							clearTimeout(timeout);
