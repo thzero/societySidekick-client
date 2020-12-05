@@ -228,7 +228,7 @@
 							<VNumberFieldWithValidation
 								ref="achievementPointsEarned"
 								v-model="achievementPointsEarned"
-								rules="required|decimal:1|min_value:0|max_value:12|"
+								rules="required|decimal:1|min_value:0|max_value:36|"
 								vid="achievementPointsEarned"
 								:label="$t('characters.gameSystems.pathfinder2e.achievementPoints') + ' ' + $t('characters.earned')"
 								:readonly="isAchievementPointsEarnedReadOnly"
