@@ -419,7 +419,6 @@ export default {
 			details.fameSpent = this.rulesGameSystem.clean(this.innerValue.fameSpent);
 			details.reputationEarned = this.rulesGameSystem.calculateScenarioReputationEarned(correlationId, this.innerValue);
 			details.scenarioAdvancementSpeed = this.innerValue.scenarioAdvancementSpeed;
-			details.scenarioAdventure = this.innerValue.scenarioAdventure;
 			return details;
 		},
 		initScenario() {
@@ -429,10 +428,15 @@ export default {
 			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		},
+		// eslint-disable-next-line
+		onChangeI(correlationId, newValue) {
+			newValue.fameFactionId = newValue && newValue.fameFactionId ? newValue.fameFactionId : this.character.factionId;
+			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, newValue.scenario ? newValue.scenario.type : null, this.lookups);
+		},
 		async resetDialogI(correlationId, value) {
 			value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : this.character.factionId;
 			await this.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, this.character ? this.character.id : null);
-			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenarioAdventure, this.lookups);
+			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenario ? value.scenario.type : null, this.lookups);
 		}
 	}
 };

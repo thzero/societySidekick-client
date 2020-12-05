@@ -94,7 +94,7 @@ export default {
 			this.$set(this.innerValue, 'scenarioId', id);
 			this.scenarioName = this.serviceGameSystem.determineScenarioNameById(correlationId, id, this.$store);
 			this.dialogScenariosOkI(this.correlationId(), id);
-			this.experiencePointsEarned = this.rulesGameSystem.calculateScenarioExperiencePointsEarned(correlationId, this.innerValue);
+			// this.experiencePointsEarned = this.rulesGameSystem.calculateScenarioExperiencePointsEarned(correlationId, this.innerValue);
 			this.dialogScenarios.ok();
 		},
 		// eslint-disable-next-line
@@ -138,7 +138,7 @@ export default {
 
 			const correlationId = this.correlationId();
 			this.rulesGameSystem.calculateScenario(correlationId, newValue);
-			this.experiencePointsEarned = newValue ? newValue.experiencePointsEarned : 0;
+			// this.experiencePointsEarned = newValue ? newValue.experiencePointsEarned : 0;
 			this.onChangeI(correlationId, newValue);
 		},
 		// eslint-disable-next-line
@@ -163,8 +163,12 @@ export default {
 		async resetDialog(correlationId, value) {
 			this.steps = 1;
 			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
-			this.experiencePointsEarned = value ? value.experiencePointsEarned : 0;
+			// this.experiencePointsEarned = value ? value.experiencePointsEarned : 0;
 			this.scenarioName = this.serviceGameSystem.determineScenarioName(correlationId, value, this.$store);
+
+			let scenarios = this.$store.state.scenarios.listing;
+			value.scenario = scenarios.find(l => l.id === value.scenarioId);
+
 			await this.resetDialogI(correlationId, value);
 			this.isNew = value && !value.id;
 			this.innerValue = value;
