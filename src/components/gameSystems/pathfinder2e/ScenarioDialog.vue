@@ -15,52 +15,50 @@
 			v-model="steps"
 		>
 			<v-stepper-header>
-				<template>
-					<v-stepper-step
-						complete
-						editable
-						edit-icon="mdi-cicle-slice-8"
-						step="1"
-					>
-						{{ $t('characters.scenarios.name') }}
-					</v-stepper-step>
-					<v-divider />
-					<v-stepper-step
-						complete
-						editable
-						edit-icon="mdi-cicle-slice-8"
-						step="2"
-					>
-						{{ $t('characters.gameSystems.pathfinder2e.experience') }}
-					</v-stepper-step>
-					<v-divider />
-					<v-stepper-step
-						complete
-						editable
-						edit-icon="mdi-cicle-slice-8"
-						step="3"
-					>
-						{{ $t('characters.gameSystems.pathfinder2e.currency') }}
-					</v-stepper-step>
-					<v-divider />
-					<v-stepper-step
-						complete
-						editable
-						edit-icon="mdi-cicle-slice-8"
-						step="4"
-					>
-						{{ $t('characters.gameSystems.pathfinder2e.fame.name') }}
-					</v-stepper-step>
-					<v-divider />
-					<v-stepper-step
-						complete
-						editable
-						edit-icon="mdi-cicle-slice-8"
-						step="5"
-					>
-						{{ $t('characters.gameSystems.pathfinder2e.boons.name') }}
-					</v-stepper-step>
-				</template>
+				<v-stepper-step
+					complete
+					editable
+					edit-icon="mdi-cicle-slice-8"
+					step="1"
+				>
+					{{ $t('characters.scenarios.name') }}
+				</v-stepper-step>
+				<v-divider />
+				<v-stepper-step
+					complete
+					editable
+					edit-icon="mdi-cicle-slice-8"
+					step="2"
+				>
+					{{ $t('characters.gameSystems.pathfinder2e.experience') }}
+				</v-stepper-step>
+				<v-divider />
+				<v-stepper-step
+					complete
+					editable
+					edit-icon="mdi-cicle-slice-8"
+					step="3"
+				>
+					{{ $t('characters.gameSystems.pathfinder2e.currency') }}
+				</v-stepper-step>
+				<v-divider />
+				<v-stepper-step
+					complete
+					editable
+					edit-icon="mdi-cicle-slice-8"
+					step="4"
+				>
+					{{ $t('characters.gameSystems.pathfinder2e.fame.name') }}
+				</v-stepper-step>
+				<v-divider />
+				<v-stepper-step
+					complete
+					editable
+					edit-icon="mdi-cicle-slice-8"
+					step="5"
+				>
+					{{ $t('characters.gameSystems.pathfinder2e.boons.name') }}
+				</v-stepper-step>
 			</v-stepper-header>
 			<v-stepper-items>
 				<v-stepper-content

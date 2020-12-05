@@ -11,7 +11,7 @@
 					fixed-header
 					:height="height"
 				>
-					<template v-slot:default>
+					<template #default>
 						<thead>
 							<tr>
 								<th class="text-left">
