@@ -76,7 +76,7 @@ export default {
 			return this.serviceGameSystem.determineScenarioDescription(this.correlationId(), value, this.$store);
 		},
 		statusName(value) {
-			return this.serviceGameSystem.characterLookupStatusName(value, this.lookups);
+			return this.serviceGameSystem.characterLookupStatusName(this.correlationId(), value, this.lookups);
 		}
 	}
 };
