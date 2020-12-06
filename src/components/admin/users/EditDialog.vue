@@ -1,11 +1,11 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import BaseEditDialog from '@/library_vue/components/admin/users/EditDialog';
+import VUsersAdminFormDialog from '@/library_vue/components/admin/users/VUsersAdminFormDialog';
 
 export default {
 	name: 'AdminUsersEditDialog',
-	extends: BaseEditDialog,
+	extends: VUsersAdminFormDialog,
 	methods: {
 		getRoles() {
 			return Object.values(SharedConstants.Roles);
