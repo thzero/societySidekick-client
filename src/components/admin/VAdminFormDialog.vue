@@ -11,7 +11,7 @@ export default {
 	extends: baseAdminFormDialog,
 	data: () => ({
 		gameSystemId: null,
-		serviceGameSystems: null
+		serviceGameSystemsUtility: null
 	}),
 	computed: {
 		gameSystems() {
@@ -36,7 +36,7 @@ export default {
 			if (!gameSystemId)
 				return null;
 
-			const response = this.serviceGameSystems.getServiceByGameSystemId(correlationId, gameSystemId);
+			const response = this.serviceGameSystemsUtility.getServiceByGameSystemId(correlationId, gameSystemId);
 			if (!response || !response.success)
 				return null;
 
@@ -48,7 +48,7 @@ export default {
 			return lookups;
 		},
 		initializeServices() {
-			this.serviceGameSystems = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
+			this.serviceGameSystemsUtility = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
 		}
 	}
 };
