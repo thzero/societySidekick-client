@@ -1,9 +1,9 @@
 {
   "name": "skick",
-  "version": "0.13.14",
+  "version": "0.13.15",
   "version_major": 0,
   "version_minor": 13,
-  "version_patch": 14,
+  "version_patch": 15,
   "version_date": "12/17/2020",
   "description": "A web application to manage society play characters.",
   "author": "thZero",
@@ -28,8 +28,8 @@
   "dependencies": {
     "@thzero/library_cli": "^0.12.0",
     "@thzero/library_client": "^0.12.1",
-    "@thzero/library_client_firebase": "^0.12.0",
-    "@thzero/library_client_service_rest_axios": "^0.12.0",
+    "@thzero/library_client_firebase": "^0.12.1",
+    "@thzero/library_client_service_rest_axios": "^0.12.1",
     "@thzero/library_common": "^0.12.0",
     "core-js": "^3.8.1",
     "dayjs": "^1.9.7",
