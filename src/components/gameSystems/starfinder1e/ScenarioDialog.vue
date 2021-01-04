@@ -413,8 +413,10 @@ export default {
 			details.boon2Id = this.innerValue.boon2Id;
 			details.classId = this.innerValue.classId;
 			details.fameFactionId = this.innerValue.fameFactionId;
-			details.fameEarned = this.rulesGameSystem.clean(this.fameEarned);
-			details.fameSpent = this.rulesGameSystem.clean(this.innerValue.fameSpent);
+			// details.fameEarned = this.rulesGameSystem.clean(this.fameEarned);
+			details.fameEarned = this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.fameEarned));
+			// details.fameSpent = this.rulesGameSystem.clean(this.innerValue.fameSpent);
+			details.fameSpent = this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.innerValue.fameSpent));
 			details.reputationEarned = this.rulesGameSystem.calculateScenarioReputationEarned(correlationId, this.innerValue);
 			details.scenarioAdvancementSpeed = this.innerValue.scenarioAdvancementSpeed;
 			return details;
@@ -427,9 +429,10 @@ export default {
 			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		},
 		// eslint-disable-next-line
-		onChangeI(correlationId, newValue) {
+		onChangeI(correlationId, newValue, recalculateScenario) {
 			newValue.fameFactionId = newValue && newValue.fameFactionId ? newValue.fameFactionId : this.character.factionId;
 			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, newValue.scenario ? newValue.scenario.type : null, this.lookups);
+			return recalculateScenario;
 		},
 		async resetDialogI(correlationId, value) {
 			value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : this.character.factionId;
