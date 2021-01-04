@@ -1,5 +1,5 @@
 module.exports = {
-  plugins: ["lodash"],
+  plugins: ['lodash'],
   // presets: [
   //   '@vue/cli-plugin-babel/preset'
   // ]

@@ -38,7 +38,9 @@ export default {
 		innerValue: null,
 		isNew: false,
 		lookups: {},
+		previousValue: null,
 		rulesGameSystem: null,
+		scenarionType: null,
 		scenarioName: null,
 		scenarios: [],
 		serviceGameSystem: null,
@@ -92,9 +94,13 @@ export default {
 		dialogScenariosOk(id) {
 			const correlationId = this.correlationId();
 			this.$set(this.innerValue, 'scenarioId', id);
-			this.scenarioName = this.serviceGameSystem.determineScenarioNameById(correlationId, id, this.$store);
+			this.$set(this.innerValue, 'scenario', this.$store.getters.getScenario(id));
+
+			this.rulesGameSystem.calculateScenario(correlationId, this.innerValue);
+			this.scenarioName = this.serviceGameSystem.determineScenarioName(correlationId, this.innerValue, this.$store);
+
 			this.dialogScenariosOkI(this.correlationId(), id);
-			// this.experiencePointsEarned = this.rulesGameSystem.calculateScenarioExperiencePointsEarned(correlationId, this.innerValue);
+
 			this.dialogScenarios.ok();
 		},
 		// eslint-disable-next-line
@@ -112,10 +118,10 @@ export default {
 		},
 		initResponse() {
 			const details = {
-				experiencePointsEarned: this.rulesGameSystem.clean(this.innerValue.experiencePointsEarned),
-				currencyEarned: this.rulesGameSystem.cleanDecimal(this.innerValue.currencyEarned),
-				currencyIncomeEarned: this.rulesGameSystem.cleanDecimal(this.innerValue.currencyIncomeEarned),
-				currencySpent: this.rulesGameSystem.cleanDecimal(this.innerValue.currencySpent),
+				experiencePointsEarned: this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.innerValue.experiencePointsEarned)),
+				currencyEarned: this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.innerValue.currencyEarned)),
+				currencyIncomeEarned: this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.innerValue.currencyIncomeEarned)),
+				currencySpent: this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.innerValue.currencySpent)),
 				locationId: this.innerValue.locationId,
 				scenarioParticipant: this.innerValue.scenarioParticipant,
 				scenarioStatus: this.innerValue.scenarioStatus
@@ -136,13 +142,22 @@ export default {
 			if (!this.initialized)
 				return;
 
+			let recalculateScenario = (this.previousValue == null);
+			if (this.previousValue)
+				recalculateScenario = (this.previousValue.scenarioId != newValue.scenarioId);
+
 			const correlationId = this.correlationId();
-			this.rulesGameSystem.calculateScenario(correlationId, newValue);
 			// this.experiencePointsEarned = newValue ? newValue.experiencePointsEarned : 0;
-			this.onChangeI(correlationId, newValue);
+			recalculateScenario = this.onChangeI(correlationId, newValue, recalculateScenario);
+
+			if (recalculateScenario)
+				this.rulesGameSystem.calculateScenario(correlationId, newValue);
+
+			this.previousValue = this.clone(newValue);
 		},
 		// eslint-disable-next-line
-		onChangeI(correlationId, newValue) {
+		onChangeI(correlationId, newValue, recalculateScenario) {
+			return recalculateScenario;
 		},
 		async preComplete(correlationId) {
 			const scenario = this.initResponse();
@@ -163,14 +178,16 @@ export default {
 		async resetDialog(correlationId, value) {
 			this.steps = 1;
 			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
-			// this.experiencePointsEarned = value ? value.experiencePointsEarned : 0;
 			this.scenarioName = this.serviceGameSystem.determineScenarioName(correlationId, value, this.$store);
 
-			let scenarios = this.$store.state.scenarios.listing;
-			value.scenario = scenarios.find(l => l.id === value.scenarioId);
+			// let scenarios = this.$store.state.scenarios.listing;
+			// value.scenario = scenarios.find(l => l.id === value.scenarioId);
+			value.scenario = this.$store.getters.getScenario(value.scenarioId);
+			// this.rulesGameSystem.calculateScenario(correlationId, value);
 
 			await this.resetDialogI(correlationId, value);
 			this.isNew = value && !value.id;
+			this.previousValue = this.clone(value);
 			this.innerValue = value;
 		},
 		// eslint-disable-next-line

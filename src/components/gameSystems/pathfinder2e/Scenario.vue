@@ -324,6 +324,7 @@
 										>
 											<td class="scenario" />
 											<td class="scenario" />
+											<td class="scenario" />
 											<td class="scenario body-2 pathfinder2eReputation2 gameSystemHeaderSpacer">
 												{{ factionName(value.reputationAdditionalFactionId) }}
 											</td>
