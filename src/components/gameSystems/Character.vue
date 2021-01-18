@@ -495,6 +495,6 @@ export default {
 }
 
 .v-navigation-drawer--temporary {
-		z-index: auto;
+	z-index: auto;
 }
 </style>
