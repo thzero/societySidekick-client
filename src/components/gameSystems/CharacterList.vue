@@ -292,19 +292,19 @@ export default {
 		},
 		sortBy: {
 			get: function () {
-				const result = this.getSettingsUser(this.$store.state.user.user, (settings) => settings.sortBy);
+				const result = this.getSettingsUser(this.correlationId(), this.$store.state.user.user, (settings) => settings.sortBy);
 				return result ? result : SharedConstants.SortBy.Characters.CharacterName;
 			},
 			set: function (newVal) {
-				this.updateSettingsUserCharacter(this.$store.state.user.user, newVal, (settings) => { settings.sortBy = newVal; });
+				this.updateSettingsUserCharacter(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { settings.sortBy = newVal; });
 			}
 		},
 		sortDirection: {
 			get: function () {
-				return this.getSettingsUser(this.$store.state.user.user, (settings) => settings.sortDirection);
+				return this.getSettingsUser(this.correlationId(), this.$store.state.user.user, (settings) => settings.sortDirection);
 			},
 			set: function (newVal) {
-				this.updateSettingsUserCharacter(this.$store.state.user.user, newVal, (settings) => { settings.sortDirection = newVal; });
+				this.updateSettingsUserCharacter(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
 		}
 	},
@@ -331,7 +331,7 @@ export default {
 				settings.characters.sortDirection = true;
 			});
 		},
-		getSettingsUser(user, funcAttribute) {
+		getSettingsUser(correlationId, user, funcAttribute) {
 			if (!user || !user.settings)
 				return null;
 			const characters = user.settings.characters ? user.settings.characters : {};
