@@ -462,6 +462,7 @@
 		  "repeatable": "Repeatable",
 		  "results": "Scenario Results",
 		  "resultsDescription": "Result",
+		  "resultsSeparator": "Separator",
 		  "season": "Season",
 		  "type": "Type"
 	   },

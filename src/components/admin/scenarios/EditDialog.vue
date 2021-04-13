@@ -147,6 +147,12 @@
 								vid="results4Description"
 								:label="$t('forms.scenarios.resultsDescription')"
 							/>
+							<VTextFieldWithValidation
+								ref="successResultsSeparator"
+								v-model="innerValue.successResultsSeparator"
+								vid="successResultsSeparator"
+								:label="$t('forms.scenarios.resultsSeparator')"
+							/>
 						</v-card-text>
 					</v-card>
 				</v-stepper-content>
@@ -221,6 +227,11 @@ export default {
 		// eslint-disable-next-line
 		resetDialogI(correlationId, value) {
 			this.steps = 1;
+
+			this.results1Description = null;
+			this.results2Description = null;
+			this.results3Description = null;
+			this.results4Description = null;
 
 			value.updatedTimestamp = value.updatedTimestamp ? value.updatedTimestamp : LibraryUtility.getTimestamp();
 
