@@ -7,75 +7,151 @@
 		@cancel="cancel"
 		@ok="ok"
 	>
-		<VTextFieldWithValidation
-			ref="name"
-			v-model="innerValue.name"
-			vid="name"
-			rules="required|min:3|max:50|"
-			:label="$t('forms.name')"
-			:counter="50"
-		/>
+		<v-stepper
+			v-model="steps"
+		>
+			<v-stepper-header>
+				<v-stepper-step
+					complete
+					editable
+					edit-icon="mdi-cicle-slice-8"
+					step="1"
+				>
+					{{ $t('forms.scenarios.name') }}
+				</v-stepper-step>
+				<v-divider />
+				<v-stepper-step
+					complete
+					editable
+					edit-icon="mdi-cicle-slice-8"
+					step="2"
+				>
+					{{ $t('forms.scenarios.results') }}
+				</v-stepper-step>
+				<v-divider />
+			</v-stepper-header>
+			<v-stepper-items>
+				<v-stepper-content
+					step="1"
+					pa-0
+					class="pa-0"
+				>
+					<v-card
+						tile
+						outlined
+					>
+						<v-card-text>
+							<VTextFieldWithValidation
+								ref="name"
+								v-model="innerValue.name"
+								vid="name"
+								rules="required|min:3|max:50|"
+								:label="$t('forms.name')"
+								:counter="50"
+							/>
 
-		<table width="100%">
-			<tr>
-				<td class="pr-2">
-					<VSelectWithValidation
-						ref="gameSystem"
-						v-model="gameSystemId"
-						vid="gameSystem"
-						:items="gameSystems"
-						:label="$t('forms.scenarios.gameSystem')"
-					/>
-				</td>
-				<td>
-					<VSelectWithValidation
-						ref="type"
-						v-model="innerValue.type"
-						vid="type"
-						:items="types"
-						:label="$t('forms.scenarios.type')"
-					/>
-				</td>
-			</tr>
-		</table>
+							<table width="100%">
+								<tr>
+									<td class="pr-2">
+										<VSelectWithValidation
+											ref="gameSystem"
+											v-model="gameSystemId"
+											vid="gameSystem"
+											:items="gameSystems"
+											:label="$t('forms.scenarios.gameSystem')"
+										/>
+									</td>
+									<td>
+										<VSelectWithValidation
+											ref="type"
+											v-model="innerValue.type"
+											vid="type"
+											:items="types"
+											:label="$t('forms.scenarios.type')"
+										/>
+									</td>
+								</tr>
+							</table>
 
-		<table width="100%">
-			<tr>
-				<td class="pr-2">
-					<VNumberFieldWithValidation
-						ref="season"
-						v-model="innerValue.season"
-						rules="min_value:0|max_value:99|"
-						vid="season"
-						:label="$t('forms.scenarios.season')"
-						step="1"
-					/>
-				</td>
-				<td class="pr-2">
-					<VTextFieldWithValidation
-						ref="scenario"
-						v-model="innerValue.scenario"
-						vid="scenario"
-						:label="$t('forms.scenarios.identifier')"
-					/>
-				</td>
-				<td>
-					<VCheckboxWithValidation
-						ref="repeatable"
-						v-model="innerValue.repeatable"
-						vid="repeatable"
-						:label="$t('forms.scenarios.repeatable')"
-					/>
-				</td>
-			</tr>
-		</table>
-		<VMarkdownEditor
-			:key="randomKey"
-			ref="description"
-			v-model="innerValue.description"
-			vid="description"
-			:options="editorOptions"
-		/>
+							<table width="100%">
+								<tr>
+									<td class="pr-2">
+										<VNumberFieldWithValidation
+											ref="season"
+											v-model="innerValue.season"
+											rules="min_value:0|max_value:99|"
+											vid="season"
+											:label="$t('forms.scenarios.season')"
+											step="1"
+										/>
+									</td>
+									<td class="pr-2">
+										<VTextFieldWithValidation
+											ref="scenario"
+											v-model="innerValue.scenario"
+											vid="scenario"
+											:label="$t('forms.scenarios.identifier')"
+										/>
+									</td>
+									<td>
+										<VCheckboxWithValidation
+											ref="repeatable"
+											v-model="innerValue.repeatable"
+											vid="repeatable"
+											:label="$t('forms.scenarios.repeatable')"
+										/>
+									</td>
+								</tr>
+							</table>
+							<VMarkdownEditor
+								:key="randomKey"
+								ref="description"
+								v-model="innerValue.description"
+								vid="description"
+								:options="editorOptions"
+							/>
+						</v-card-text>
+					</v-card>
+				</v-stepper-content>
+				<v-stepper-content
+					step="2"
+					pa-0
+					class="pa-0"
+				>
+					<v-card
+						tile
+						outlined
+					>
+						<v-card-text>
+							<VTextFieldWithValidation
+								ref="results1Description"
+								v-model="results1Description"
+								vid="results1Description"
+								:label="$t('forms.scenarios.resultsDescription')"
+							/>
+							<VTextFieldWithValidation
+								ref="results2Description"
+								v-model="results2Description"
+								vid="results2Description"
+								:label="$t('forms.scenarios.resultsDescription')"
+							/>
+							<VTextFieldWithValidation
+								ref="results3Description"
+								v-model="results3Description"
+								vid="results3Description"
+								:label="$t('forms.scenarios.resultsDescription')"
+							/>
+							<VTextFieldWithValidation
+								ref="results4Description"
+								v-model="results4Description"
+								vid="results4Description"
+								:label="$t('forms.scenarios.resultsDescription')"
+							/>
+						</v-card-text>
+					</v-card>
+				</v-stepper-content>
+			</v-stepper-items>
+		</v-stepper>
 	</VAdminFormDialog>
 </template>
 
@@ -100,6 +176,13 @@ export default {
 		VTextFieldWithValidation
 	},
 	extends: VAdminFormDialog,
+	data: () => ({
+		results1Description: null,
+		results2Description: null,
+		results3Description: null,
+		results4Description: null,
+		steps: 1
+	}),
 	computed: {
 		types: {
 			get() {
@@ -113,20 +196,69 @@ export default {
 		// eslint-disable-next-line
 		async preCompleteI(correlationId, value) {
 			value.repeatable = value.repeatable ? value.repeatable : false;
+
+			this.successResult(correlationId, value, 1, this.results1Description);
+			this.successResult(correlationId, value, 2, this.results2Description);
+			this.successResult(correlationId, value, 3, this.results3Description);
+			this.successResult(correlationId, value, 4, this.results4Description);
 		},
 		async preCompleteSubmitCreate(correlationId, dispatcher, value) {
 			delete value.timestamp;
 			delete value.updatedTimestamp;
-			return await dispatcher.adminScenarios.createAdminScenario(correlationId, value);
+			const results = await dispatcher.adminScenarios.createAdminScenario(correlationId, value);
+			this.steps = 1;
+			return results;
+
 		},
 		async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
 			delete value.timestamp;
 			value.season = value.season ? value.season : null;
-			return await dispatcher.adminScenarios.updateAdminScenario(correlationId, value);
+			const results = await dispatcher.adminScenarios.updateAdminScenario(correlationId, value);
+			this.steps = 1;
+			return results;
+
 		},
 		// eslint-disable-next-line
 		resetDialogI(correlationId, value) {
+			this.steps = 1;
+
 			value.updatedTimestamp = value.updatedTimestamp ? value.updatedTimestamp : LibraryUtility.getTimestamp();
+
+			if (value.successResults) {
+				let item;
+				for (let i = 1; i < 5; i++) {
+					item = value.successResults.find(l => l.id === i);
+					if (!item)
+						continue;
+
+					if (i === 1)
+						this.results1Description = item.description;
+					else if (i === 2)
+						this.results2Description = item.description;
+					else if (i === 3)
+						this.results3Description = item.description;
+					else if (i === 4)
+						this.results4Description = item.description;
+				}
+			}
+		},
+		successResult(correlationId, value, i, description) {
+			if (!value.successResults)
+				value.successResults = [];
+
+			LibraryUtility.deleteArrayById(value.successResults, i);
+			if (!String.isNullOrEmpty(description))
+				value.successResults.push({ id: i, description: description });
+			// let item = value.successResults.find(l => l.id === i);
+			// if (!item) {
+			// 	if (String.isNullOrEmpty(description))
+			// 		return;
+
+			// 	item = { id: i };
+			// 	value.successResults.push(item);
+			// }
+
+			// item.description = description;
 		}
 	}
 };
