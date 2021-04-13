@@ -507,19 +507,24 @@ export default {
 		downtimePointsEarned: 0,
 		// experiencePointsEarned: 0,
 		fameEarned: 0,
+ 		// scenarioResults
 		results1Checked: false,
 		results2Checked: false,
 		results3Checked: false,
 		results4Checked: false,
+		results6Checked: false,
+		results7Checked: false,
 		results1Description: null,
 		results2Description: null,
 		results3Description: null,
 		results4Description: null,
+		results5Description: null,
+		results6Description: null,
 		scenarioAdventureName: null
 	}),
 	computed: {
-		hasResults() {
-			return this.results1Description || this.results2Description || this.results3Description || this.results4Description;
+		hasResults() { // scenarioResults
+			return this.results1Description || this.results2Description || this.results3Description || this.results4Description || this.results5Description || this.results6Description;
 		},
 		isAchievementPointsEarnedReadOnly() {
 			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.correlationId(), this.innerValue);
@@ -580,10 +585,13 @@ export default {
 			details.scenarioAdvancementSpeed = this.innerValue.scenarioAdvancementSpeed;
 			details.scenarioEvent = this.innerValue.scenarioEvent;
 
+ 			// scenarioResults
 			this.successResult(correlationId, details, 1, this.results1Checked);
 			this.successResult(correlationId, details, 2, this.results2Checked);
 			this.successResult(correlationId, details, 3, this.results3Checked);
 			this.successResult(correlationId, details, 4, this.results4Checked);
+			this.successResult(correlationId, details, 5, this.results4Checked);
+			this.successResult(correlationId, details, 6, this.results4Checked);
 
 			return details;
 		},
@@ -620,6 +628,7 @@ export default {
 			value.reputationFactionId = value && value.reputationFactionId ? value.reputationFactionId	: this.character.factionId;
 			// this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenario ? value.scenario.type : null, this.lookups);
 
+ 			// scenarioResults
 			if (value.scenario.successResults) {
 				let item;
 				for (let i = 1; i < 5; i++) {
