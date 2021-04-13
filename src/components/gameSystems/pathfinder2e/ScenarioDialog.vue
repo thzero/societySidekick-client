@@ -222,6 +222,13 @@
 												vid="results3Checked"
 												:label="results3Description"
 											/>
+											<VCheckboxWithValidation
+												v-if="results5Description"
+												ref="results5Checked"
+												v-model="results5Checked"
+												vid="results5Checked"
+												:label="results5Description"
+											/>
 										</div>
 									</td>
 									<td class="text-top">
@@ -238,6 +245,13 @@
 											v-model="results4Checked"
 											vid="results4Checked"
 											:label="results4Description"
+										/>
+										<VCheckboxWithValidation
+											v-if="results6Description"
+											ref="results6Checked"
+											v-model="results6Checked"
+											vid="results6Checked"
+											:label="results6Description"
 										/>
 									</td>
 								</tr>
@@ -631,7 +645,7 @@ export default {
  			// scenarioResults
 			if (value.scenario.successResults) {
 				let item;
-				for (let i = 1; i < 5; i++) {
+				for (let i = 1; i < 7; i++) {
 					item = value.scenario.successResults.find(l => l.id === i);
 					if (!item)
 						continue;
@@ -651,6 +665,14 @@ export default {
 					else if (i === 4) {
 						this.results4Description = item.description;
 						this.results4Checked = this.successResultChecked(correlationId, value, item.id);
+					}
+					else if (i === 5) {
+						this.results5Description = item.description;
+						this.results5Checked = this.successResultChecked(correlationId, value, item.id);
+					}
+					else if (i === 6) {
+						this.results6Description = item.description;
+						this.results6Checked = this.successResultChecked(correlationId, value, item.id);
 					}
 				}
 			}
