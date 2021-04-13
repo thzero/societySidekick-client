@@ -303,6 +303,7 @@
 		  "event": "Event",
 		  "order": "Order",
 		  "repeatable": "Repeatable",
+		  "results": "Results",
 		  "season": "Season",
 		  "type": "Type"
 	   },
@@ -459,6 +460,8 @@
 		  "name": "Scenario",
 		  "namePlural": "Scenarios",
 		  "repeatable": "Repeatable",
+		  "results": "Scenario Results",
+		  "resultsDescription": "Result",
 		  "season": "Season",
 		  "type": "Type"
 	   },

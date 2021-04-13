@@ -192,6 +192,56 @@
 									</td>
 								</tr>
 							</table>
+							<span
+								v-if="hasResults"
+								class="title"
+							>
+								{{ $t('characters.scenarios.results') }}
+							</span>
+							<table
+								v-if="hasResults"
+								border="0"
+								cellpadding="0"
+								cellspacing="0"
+								style="width: 100%;"
+							>
+								<tr>
+									<td class="text-top">
+										<div class="pr-4">
+											<VCheckboxWithValidation
+												v-if="results1Description"
+												ref="results1Checked"
+												v-model="results1Checked"
+												vid="results1Checked"
+												:label="results1Description"
+											/>
+											<VCheckboxWithValidation
+												v-if="results3Description"
+												ref="results3Checked"
+												v-model="results3Checked"
+												vid="results3Checked"
+												:label="results3Description"
+											/>
+										</div>
+									</td>
+									<td class="text-top">
+										<VCheckboxWithValidation
+											v-if="results2Description"
+											ref="results2Checked"
+											v-model="results2Checked"
+											vid="results2Checked"
+											:label="results2Description"
+										/>
+										<VCheckboxWithValidation
+											v-if="results4Description"
+											ref="results4Checked"
+											v-model="results4Checked"
+											vid="results4Checked"
+											:label="results4Description"
+										/>
+									</td>
+								</tr>
+							</table>
 						</v-card-text>
 					</v-card>
 				</v-stepper-content>
@@ -435,16 +485,21 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
+import LibraryUtility from '@thzero/library_common/utility';
+
 import baseScenarioDialog from '@/components/gameSystems/baseScenarioDialog';
 
 import ScenarioLookupDialog from '@/components/gameSystems/pathfinder2e/ScenarioLookupDialog';
 
 import CharacterScenario from '@/common/gameSystems/pathfinder2e/data/characterScenario';
 
+import VCheckboxWithValidation from '@/library_vue/components/form/VCheckboxWithValidation';
+
 export default {
 	name: 'Pathfinder2eScenarioDialog',
 	components: {
-		ScenarioLookupDialog
+		ScenarioLookupDialog,
+		VCheckboxWithValidation
 	},
 	extends: baseScenarioDialog,
 	data: () => ({
@@ -452,9 +507,20 @@ export default {
 		downtimePointsEarned: 0,
 		// experiencePointsEarned: 0,
 		fameEarned: 0,
+		results1Checked: false,
+		results2Checked: false,
+		results3Checked: false,
+		results4Checked: false,
+		results1Description: null,
+		results2Description: null,
+		results3Description: null,
+		results4Description: null,
 		scenarioAdventureName: null
 	}),
 	computed: {
+		hasResults() {
+			return this.results1Description && this.results2Description && this.results3Description && this.results4Description;
+		},
 		isAchievementPointsEarnedReadOnly() {
 			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.correlationId(), this.innerValue);
 		},
@@ -513,6 +579,12 @@ export default {
 
 			details.scenarioAdvancementSpeed = this.innerValue.scenarioAdvancementSpeed;
 			details.scenarioEvent = this.innerValue.scenarioEvent;
+
+			this.successResult(correlationId, details, 1, this.results1Checked);
+			this.successResult(correlationId, details, 2, this.results2Checked);
+			this.successResult(correlationId, details, 3, this.results3Checked);
+			this.successResult(correlationId, details, 4, this.results4Checked);
+
 			return details;
 		},
 		initScenario() {
@@ -547,6 +619,49 @@ export default {
 			value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : this.character.factionId;
 			value.reputationFactionId = value && value.reputationFactionId ? value.reputationFactionId	: this.character.factionId;
 			// this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenario ? value.scenario.type : null, this.lookups);
+
+			if (value.scenario.successResults) {
+				let item;
+				for (let i = 1; i < 5; i++) {
+					item = value.scenario.successResults.find(l => l.id === i);
+					if (!item)
+						continue;
+
+					if (i === 1) {
+						this.results1Description = item.description;
+						this.results1Checked = this.successResultChecked(correlationId, value, item.id);
+					}
+					else if (i === 2) {
+						this.results2Description = item.description;
+						this.results2Checked = this.successResultChecked(correlationId, value, item.id);
+					}
+					else if (i === 3) {
+						this.results3Description = item.description;
+						this.results3Checked = this.successResultChecked(correlationId, value, item.id);
+					}
+					else if (i === 4) {
+						this.results4Description = item.description;
+						this.results4Checked = this.successResultChecked(correlationId, value, item.id);
+					}
+				}
+			}
+		},
+		successResult(correlationId, value, i, checked) {
+			if (!value.scenarioSuccessResults)
+				value.scenarioSuccessResults = [];
+
+			LibraryUtility.deleteArrayById(value.scenarioSuccessResults, i);
+			value.scenarioSuccessResults.push({ id: i, checked: checked });
+		},
+		successResultChecked(correlationId, value, id) {
+			if (!value || !value.scenarioSuccessResults || String.isNullOrEmpty(id))
+				return false;
+
+			let item = value.scenarioSuccessResults.find(l => l.id === id);
+			if (!item)
+				return false;
+
+			return item.checked;
 		}
 	}
 };
