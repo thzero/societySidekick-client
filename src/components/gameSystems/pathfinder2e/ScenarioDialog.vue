@@ -519,7 +519,7 @@ export default {
 	}),
 	computed: {
 		hasResults() {
-			return this.results1Description && this.results2Description && this.results3Description && this.results4Description;
+			return this.results1Description || this.results2Description || this.results3Description || this.results4Description;
 		},
 		isAchievementPointsEarnedReadOnly() {
 			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.correlationId(), this.innerValue);
