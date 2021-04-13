@@ -1,4 +1,8 @@
 <script>
+import Vue from 'vue';
+
+import LibraryConstants from '@thzero/library_client/constants';
+
 import AppUtility from '@/utility/app';
 
 import baseEdit from '@/components/baseEdit';
@@ -38,6 +42,7 @@ export default {
 	created() {
 		this.initializeServices();
 		this.lookups = this.initializeLookups(this.correlationId());
+		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 	},
 	methods: {
 		boonName(id) {
@@ -63,17 +68,22 @@ export default {
 			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), this.$store.state.user.user, id);
 			return location ? '@ ' + location.name : '';
 		},
+		markup(correlationId, value) {
+			if (!value)
+				return null;
+			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, value));
+		},
+		scenarioDescription(value) {
+			return this.markup(this.correlationId(), this.serviceGameSystem.determineScenarioDescription(this.correlationId(), value, this.$store));
+		},
+		scenarioName(value) {
+			return this.serviceGameSystem.determineScenarioName(this.correlationId(), value, this.$store);
+		},
 		scenarioParticipantName(id) {
 			return this.serviceGameSystem.scenarioLookupParticipantName(this.correlationId(), id, this.lookups);
 		},
 		scenarioStatusName(id) {
 			return this.serviceGameSystem.scenarioLookupStatusName(this.correlationId(), id, this.lookups);
-		},
-		scenarioName(value) {
-			return this.serviceGameSystem.determineScenarioName(this.correlationId(), value, this.$store);
-		},
-		scenarioDescription(value) {
-			return this.serviceGameSystem.determineScenarioDescription(this.correlationId(), value, this.$store);
 		},
 		statusName(value) {
 			return this.serviceGameSystem.characterLookupStatusName(this.correlationId(), value, this.lookups);
