@@ -643,7 +643,7 @@ export default {
 			// this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenario ? value.scenario.type : null, this.lookups);
 
  			// scenarioResults
-			if (value.scenario.successResults) {
+			if (value.scenario && value.scenario.successResults) {
 				let item;
 				for (let i = 1; i < 7; i++) {
 					item = value.scenario.successResults.find(l => l.id === i);
