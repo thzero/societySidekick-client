@@ -604,8 +604,8 @@ export default {
 			this.successResult(correlationId, details, 2, this.results2Checked);
 			this.successResult(correlationId, details, 3, this.results3Checked);
 			this.successResult(correlationId, details, 4, this.results4Checked);
-			this.successResult(correlationId, details, 5, this.results4Checked);
-			this.successResult(correlationId, details, 6, this.results4Checked);
+			this.successResult(correlationId, details, 5, this.results5Checked);
+			this.successResult(correlationId, details, 6, this.results6Checked);
 
 			return details;
 		},
