@@ -449,6 +449,7 @@
 		  "requiresAuth": "Requires Authentication",
 		  "sticky": "Sticky"
 	   },
+	   "not": "Not",
 	   "number": "Number",
 	   "role": "Role",
 	   "roles": "Roles",
@@ -460,6 +461,7 @@
 		  "name": "Scenario",
 		  "namePlural": "Scenarios",
 		  "number": "Number",
+		  "played": "Played",
 		  "repeatable": "Repeatable",
 		  "results": "Scenario Results",
 		  "resultsDescription": "Result",

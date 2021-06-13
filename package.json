@@ -1,10 +1,10 @@
 {
   "name": "skick",
-  "version": "0.13.40",
+  "version": "0.13.41",
   "version_major": 0,
   "version_minor": 13,
-  "version_patch": 40,
-  "version_date": "06/07/2021",
+  "version_patch": 41,
+  "version_date": "06/13/2021",
   "description": "A web application to manage society play characters.",
   "author": "thZero",
   "license": "MIT",
@@ -22,8 +22,8 @@
     "deploy": "firebase deploy",
     "gcloud-build": "cross-env gcloud builds submit --config ./cloudbuild.yaml ./ --substitutions=_CONFIG=\"${CONFIG}\",_FIREBASE_TOKEN=\"${FIREBASETOKEN}\"",
     "lint": "vue-cli-service lint",
-    "cli-id": "./node_modules/.bin/library-cli --generate",
-    "cli-update": "./node_modules/.bin/library-cli --updateversion --pi"
+    "cli-id": ".\\node_modules\\.bin\\library-cli --generate",
+    "cli-update": ".\\node_modules\\.bin\\library-cli --updateversion --pi"
   },
   "dependencies": {
     "@thzero/library_client": "^0.13.9",
