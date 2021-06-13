@@ -69,6 +69,20 @@
 							>
 								<tr>
 									<td>
+										<VNumber
+											ref="uses"
+											v-model="scenarioNumberFilter"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.scenarios.name')+' '+$t('forms.scenarios.number')"
+											step="1"
+											class="pb-1"
+										/>
+									</td>
+								</tr>
+								<tr>
+									<td>
 										<!-- // GameSystems Update -->
 										<ScenarioListFilterPathfinder2e
 											v-show="isGameSystemPathfinder2e"
@@ -131,6 +145,20 @@
 								class="mb-1"
 								style="width: 100%;"
 							>
+								<tr>
+									<td>
+										<VNumber
+											ref="uses"
+											v-model="scenarioNumberFilter"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.scenarios.name')+' '+$t('forms.scenarios.number')"
+											step="1"
+											class="pb-1"
+										/>
+									</td>
+								</tr>
 								<tr>
 									<td>
 										<!-- // GameSystems Update -->
@@ -267,6 +295,7 @@ import VueUtility from '@/library_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue/components/VDirectionButton';
+import VNumber from '@/library_vue/components/form/VNumberField';
 import VSelect2 from '@/library_vue/components/form/VSelect';
 import VText2 from '@/library_vue/components/form/VTextField';
 
@@ -288,6 +317,7 @@ export default {
 		ScenarioSnippet,
 		ShareDialog,
 		VDirectionButton,
+		VNumber,
 		VSelect2,
 		VText2
 	},
@@ -306,6 +336,7 @@ export default {
 		dialogShare: new DialogSupport(),
 		forceRecomputeCounter: 0,
 		scenarioNameValue: null,
+		scenarioNumberValue: null,
 		scenariosCache: {},
 		sortByOverride: null,
 		sortDirectionOverride: true,
@@ -329,15 +360,6 @@ export default {
 			},
 			set() {}
 		},
-		scenarioNameFilter: {
-			get: function () {
-				return this.scenarioNameValue;
-			},
-			set: function (newVal) {
-				this.scenarioNameValue = newVal;
-				this.forceRecomputeCounter++;
-			}
-		},
 		seasonFilter: {
 			get: function () {
 				if (this.isExternalList)
@@ -352,6 +374,24 @@ export default {
 				}
 
 				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
+			}
+		},
+		scenarioNameFilter: {
+			get: function () {
+				return this.scenarioNameValue;
+			},
+			set: function (newVal) {
+				this.scenarioNameValue = newVal;
+				this.forceRecomputeCounter++;
+			}
+		},
+		scenarioNumberFilter: {
+			get: function () {
+				return this.scenarioNumberValue;
+			},
+			set: function (newVal) {
+				this.scenarioNumberValue = newVal;
+				this.forceRecomputeCounter++;
 			}
 		},
 		sortBy: {
@@ -432,6 +472,7 @@ export default {
 		clickClear() {
 			if (this.isExternalList) {
 				this.scenarioNameValue = null;
+				this.scenarioNumberValue = null;
 				this.seasonFilterOverride = null;
 				this.sortByOverride = SharedConstants.SortBy.Scenarios.ScenarioName;
 				this.sortDirectionOverride = true;
@@ -443,6 +484,7 @@ export default {
 
 			AppUtility.settings().clearUser(this.$store, this.user, (settings) => {
 				this.scenarioNameValue = null;
+				this.scenarioNumberValue = null;
 				settings.scenarios.seasonFilter = null;
 				settings.scenarios.sortBy = SharedConstants.SortBy.Scenarios.ScenarioName;
 				settings.scenarios.sortDirection = true;
@@ -534,6 +576,11 @@ export default {
 								continue;
 						}
 						else if (temp.name && (temp.name.toLowerCase().indexOf(this.scenarioNameValue.toLowerCase()) == -1))
+							continue;
+					}
+
+					if (this.scenarioNumberValue) {
+						if (!temp.scenario || (temp.scenario.indexOf(this.scenarioNumberFilter) == -1))
 							continue;
 					}
 

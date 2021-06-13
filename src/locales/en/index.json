@@ -459,6 +459,7 @@
 		  "identifier": "Identifier",
 		  "name": "Scenario",
 		  "namePlural": "Scenarios",
+		  "number": "Number",
 		  "repeatable": "Repeatable",
 		  "results": "Scenario Results",
 		  "resultsDescription": "Result",
