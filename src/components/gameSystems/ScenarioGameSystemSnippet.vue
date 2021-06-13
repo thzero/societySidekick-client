@@ -67,7 +67,9 @@
 						</v-chip>
 					</td>
 				</tr>
-				<tr>
+				<tr
+					v-if="value.character"
+				>
 					<th
 						class="text-left subtitle-2 gameSystemHeaderSpacer"
 					>
@@ -148,7 +150,9 @@
 						</table>
 					</td>
 				</tr>
-				<tr>
+				<tr
+					v-if="value.timestamp"
+				>
 					<th
 						class="text-left subtitle-2 gameSystemHeaderSpacer"
 					>

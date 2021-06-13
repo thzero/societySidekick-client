@@ -41,15 +41,6 @@
 								:readonly="true"
 								class="pb-1"
 							/>
-							<VText2
-								ref="scenarioNameFilter"
-								v-model="scenarioNameFilter"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.scenarios.name') + ' ' + $t('forms.name')"
-								class="pb-1"
-							/>
 							<VSelect2
 								ref="scenarioSeasons"
 								v-model="seasonFilter"
@@ -58,6 +49,17 @@
 								:hide-details="true"
 								:solo-inverted="true"
 								:label="$t('forms.scenarios.season')"
+								class="pb-1"
+							/>
+							<VNumber
+								ref="uses"
+								v-model="scenarioNumberFilter"
+								:flat="true"
+								:hide-details="true"
+								:solo-inverted="true"
+								:label="$t('forms.scenarios.name')+' '+$t('forms.scenarios.number')"
+								step="1"
+								class="pb-1"
 							/>
 							<table
 								v-if="$vuetify.breakpoint.mdAndDown"
@@ -67,6 +69,33 @@
 								style="width: 100%;"
 								class="pt-1"
 							>
+								<tr>
+									<td>
+										<VText2
+											ref="scenarioNameFilter"
+											v-model="scenarioNameFilter"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.scenarios.name') + ' ' + $t('forms.name')"
+											class="pb-1"
+										/>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<VSelect2
+											ref="scenariosNotPlayedFilter"
+											v-model="scenariosNotPlayedFilter"
+											:items="scenariosNotPlayedList"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('sdfsdf')"
+											class="pb-1"
+										/>
+									</td>
+								</tr>
 								<tr>
 									<td>
 										<!-- // GameSystems Update -->
@@ -131,6 +160,33 @@
 								class="mb-1"
 								style="width: 100%;"
 							>
+								<tr>
+									<td>
+										<VText2
+											ref="scenarioNameFilter"
+											v-model="scenarioNameFilter"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.scenarios.name') + ' ' + $t('forms.name')"
+											class="pb-1"
+										/>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<VSelect2
+											ref="scenariosNotPlayedFilter"
+											v-model="scenariosNotPlayedFilter"
+											:items="scenariosNotPlayedList"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('sdfsdf')"
+											class="pb-1"
+										/>
+									</td>
+								</tr>
 								<tr>
 									<td>
 										<!-- // GameSystems Update -->
@@ -267,6 +323,7 @@ import VueUtility from '@/library_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue/components/VDirectionButton';
+import VNumber from '@/library_vue/components/form/VNumberField';
 import VSelect2 from '@/library_vue/components/form/VSelect';
 import VText2 from '@/library_vue/components/form/VTextField';
 
@@ -288,6 +345,7 @@ export default {
 		ScenarioSnippet,
 		ShareDialog,
 		VDirectionButton,
+		VNumber,
 		VSelect2,
 		VText2
 	},
@@ -306,6 +364,8 @@ export default {
 		dialogShare: new DialogSupport(),
 		forceRecomputeCounter: 0,
 		scenarioNameValue: null,
+		scenarioNumberValue: null,
+		scenariosNotPlayed: false,
 		scenariosCache: {},
 		sortByOverride: null,
 		sortDirectionOverride: true,
@@ -329,15 +389,6 @@ export default {
 			},
 			set() {}
 		},
-		scenarioNameFilter: {
-			get: function () {
-				return this.scenarioNameValue;
-			},
-			set: function (newVal) {
-				this.scenarioNameValue = newVal;
-				this.forceRecomputeCounter++;
-			}
-		},
 		seasonFilter: {
 			get: function () {
 				if (this.isExternalList)
@@ -352,6 +403,33 @@ export default {
 				}
 
 				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
+			}
+		},
+		scenarioNameFilter: {
+			get: function () {
+				return this.scenarioNameValue;
+			},
+			set: function (newVal) {
+				this.scenarioNameValue = newVal;
+				this.forceRecomputeCounter++;
+			}
+		},
+		scenariosNotPlayedFilter: {
+			get: function () {
+				return this.scenariosNotPlayed;
+			},
+			set: function (newVal) {
+				this.scenariosNotPlayed = newVal;
+				this.forceRecomputeCounter++;
+			}
+		},
+		scenarioNumberFilter: {
+			get: function () {
+				return this.scenarioNumberValue;
+			},
+			set: function (newVal) {
+				this.scenarioNumberValue = newVal;
+				this.forceRecomputeCounter++;
 			}
 		},
 		sortBy: {
@@ -401,6 +479,9 @@ export default {
 			},
 			cache: false
 		},
+		scenariosNotPlayedList() {
+			return VueUtility.selectBlank([ { id: true, name: this.$trans.t('strings.no') }, { id: false, name: this.$trans.t('strings.yes') } ], this.$trans.t('forms.scenarios.namePlural') + ' ' + this.$trans.t('forms.scenarios.played'));
+		},
 		userIdFilter: {
 			get: function () {
 				return this.userIdFilterValue;
@@ -432,6 +513,7 @@ export default {
 		clickClear() {
 			if (this.isExternalList) {
 				this.scenarioNameValue = null;
+				this.scenarioNumberValue = null;
 				this.seasonFilterOverride = null;
 				this.sortByOverride = SharedConstants.SortBy.Scenarios.ScenarioName;
 				this.sortDirectionOverride = true;
@@ -443,6 +525,7 @@ export default {
 
 			AppUtility.settings().clearUser(this.$store, this.user, (settings) => {
 				this.scenarioNameValue = null;
+				this.scenarioNumberValue = null;
 				settings.scenarios.seasonFilter = null;
 				settings.scenarios.sortBy = SharedConstants.SortBy.Scenarios.ScenarioName;
 				settings.scenarios.sortDirection = true;
@@ -506,52 +589,59 @@ export default {
 				this.users.push({ id: user.id, name: name });
 			}
 
-			let temp;
+			let found;
 			let scenarioT;
-			// spin through the characters and gather up all the scenarios...
-			for (const character of characters) {
-				if (!character.scenarios)
-					continue;
 
-				if (this.isExternalListFavorites) {
-					if (this.userIdFilterValue) {
-						if (character.userId !== this.userIdFilterValue)
-							continue;
+			if (this.scenariosNotPlayed) {
+				let scenarioIds = [];
+				for (const character of characters) {
+					for (const scenario of character.scenarios) {
+						if (!scenarioIds.find(l => l === scenario.scenarioId))
+							scenarioIds.push(scenario.scenarioId);
 					}
 				}
-
-				for (const scenario of character.scenarios) {
-					temp = scenarios.find(l => l.id == scenario.scenarioId);
-					if (!temp)
+				for (const scenario of scenarios) {
+					if (scenarioIds.find(l => l === scenario.id))
 						continue;
-
-					if (temp.type == SharedConstants.ScenarioTypes.INITIAL)
-						continue;
-
-					if (this.scenarioNameValue) {
-						if (this.executeFilterOverride(this)) {
-							if (this.executeScenarioNameFilter(this, temp, this.scenarioNameValue))
-								continue;
-						}
-						else if (temp.name && (temp.name.toLowerCase().indexOf(this.scenarioNameValue.toLowerCase()) == -1))
-							continue;
-					}
-
-					if (this.seasonFilter) {
-						if (temp.season !== this.seasonFilter)
-							continue;
-					}
-
-					if (this.executeFilterOverride(this)) {
-						if (!this.executeAdditionalFilter(this, temp))
-							continue;
-					}
 
 					scenarioT = this.clone(scenario);
-					scenarioT.character = character;
-					scenarioT.scenario = temp;
-					scenarioT.user = character.user ? character.user : this.user;
+					scenarioT.scenario = scenario;
+					scenarioT.user = this.user;
 					results.push(scenarioT);
+				}
+			}
+			else {
+				// spin through the characters and gather up all the scenarios...
+				for (const character of characters) {
+					if (!character.scenarios)
+						continue;
+
+					if (this.isExternalListFavorites) {
+						if (this.userIdFilterValue) {
+							if (character.userId !== this.userIdFilterValue)
+								continue;
+						}
+					}
+
+					for (const scenario of character.scenarios) {
+						found = scenarios.find(l => l.id === scenario.scenarioId);
+						if (!found)
+							continue;
+
+						if (found.type === SharedConstants.ScenarioTypes.INITIAL)
+							continue;
+							
+						found = this.filter(found);
+
+						if (!found)
+							continue;
+
+						scenarioT = this.clone(scenario);
+						scenarioT.character = character;
+						scenarioT.scenario = found;
+						scenarioT.user = character.user ? character.user : this.user;
+						results.push(scenarioT);
+					}
 				}
 			}
 
@@ -572,6 +662,33 @@ export default {
 				results = this.sortBySeason(results, this.sortDirection);
 
 			return results;
+		},
+		filter(temp) {
+			if (this.scenarioNameValue) {
+				if (this.executeFilterOverride(this)) {
+					if (this.executeScenarioNameFilter(this, temp, this.scenarioNameValue))
+					return null;
+				}
+				else if (temp.name && (temp.name.toLowerCase().indexOf(this.scenarioNameValue.toLowerCase()) == -1))
+					return null;
+			}
+
+			if (this.scenarioNumberValue) {
+				if (!temp.scenario || (temp.scenario.indexOf(this.scenarioNumberFilter) == -1))
+					return null;
+			}
+
+			if (this.seasonFilter) {
+				if (temp.season !== this.seasonFilter)
+					return null;
+			}
+
+			if (this.executeFilterOverride(this)) {
+				if (!this.executeAdditionalFilter(this, temp))
+				return null;
+			}
+
+			return temp;
 		},
 		executeAdditionalFilter(self, temp) {
 			// GameSystems Update
