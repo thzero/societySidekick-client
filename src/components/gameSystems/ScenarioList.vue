@@ -419,6 +419,13 @@ export default {
 				return this.scenariosNotPlayed;
 			},
 			set: function (newVal) {
+				if (newVal) {
+					if (
+						(this.sortBy === SharedConstants.SortBy.Scenarios.CharacterName) ||
+						(this.sortBy === SharedConstants.SortBy.Scenarios.DatePlayed)
+					)
+						this.sortBy = SharedConstants.SortBy.Scenarios.Season;
+				}
 				this.scenariosNotPlayed = newVal;
 				this.forceRecomputeCounter++;
 			}
@@ -647,19 +654,23 @@ export default {
 
 			if (!results || results.length <= 0)
 				return [];
-
+				
 			// TODO: Offer different sorts
 			// TODO: need to incorporation direction...
-			if (this.sortBy === SharedConstants.SortBy.Scenarios.CharacterName)
-				results = this.sortByCharacterName(results, this.sortDirection);
-			else if (this.sortBy === SharedConstants.SortBy.Scenarios.DatePlayed)
-				results = this.sortByDatePlayed(results, this.sortDirection);
-			else if (this.sortBy === SharedConstants.SortBy.Scenarios.ScenarioName)
+			if (this.sortBy === SharedConstants.SortBy.Scenarios.ScenarioName)
 				results = this.sortByScenarioName(results, this.sortDirection);
 			else if (this.sortBy === SharedConstants.SortBy.Scenarios.ScenarioNumber)
 				results = this.sortByScenarioNumber(results, this.sortDirection);
 			else if (this.sortBy === SharedConstants.SortBy.Scenarios.Season)
 				results = this.sortBySeason(results, this.sortDirection);
+
+			if (!this.scenariosNotPlayed) {
+				// TODO: need to incorporation direction...
+				if (this.sortBy === SharedConstants.SortBy.Scenarios.CharacterName)
+					results = this.sortByCharacterName(results, this.sortDirection);
+				else if (this.sortBy === SharedConstants.SortBy.Scenarios.DatePlayed)
+					results = this.sortByDatePlayed(results, this.sortDirection);
+			}
 
 			return results;
 		},
