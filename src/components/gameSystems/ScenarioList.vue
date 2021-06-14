@@ -607,8 +607,13 @@ export default {
 							scenarioIds.push(scenario.scenarioId);
 					}
 				}
+
 				for (const scenario of scenarios) {
 					if (scenarioIds.find(l => l === scenario.id))
+						continue;
+
+					found = this.filter(scenario);
+					if (!found)
 						continue;
 
 					scenarioT = this.clone(scenario);
