@@ -160,6 +160,7 @@
 				"adventures": {
 					"adventure": "Adventure",
 					"adventurePath": "Adventure Path",
+					"bounty": "Bounty",
 					"module": "Module",
 					"quest": "Quest",
 					"scenario": "Scenario",
@@ -245,6 +246,7 @@
 				"adventures": {
 					"adventure": "Adventure",
 					"adventurePath": "Adventure Path",
+					"bounty": "Bounty",
 					"module": "Module",
 					"quest": "Quest",
 					"scenario": "Scenario",
