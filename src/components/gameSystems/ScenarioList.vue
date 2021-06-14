@@ -526,7 +526,7 @@ export default {
 					id: SharedConstants.ScenarioListingTypes.All, 
 					name: this.$trans.t('forms.scenarios.all') 
 				} 
-			], this.$trans.t('forms.scenarios.namePlural') + ' ' + this.$trans.t('forms.scenarios.played'));
+			], this.$trans.t('forms.scenarios.name') + ' ' + this.$trans.t('forms.listing') + ' ' + this.$trans.t('forms.scenarios.type'));
 		},
 		sortKeys: {
 			get: function () {
