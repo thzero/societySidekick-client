@@ -115,6 +115,18 @@
 											<v-icon>mdi-filter-variant-remove</v-icon>
 										</v-btn>
 									</td>
+									<td>
+										<table style="margin-left: auto; margin-right: 0px;">
+											<tr>
+												<td>
+													<VGameSystemListingSyleButton 
+														v-if="$vuetify.breakpoint.lgAndUp"
+														v-model="listingStyle"
+													/>
+												</td>
+											</tr>
+										</table>
+									</td>
 								</tr>
 							</table>
 						</v-flex>
@@ -126,8 +138,10 @@
 			v-for="item in characters"
 			:key="item.id"
 			sm12
-			lg6
-			xl4
+			:lg6="isGrid"
+			:lg12="isList"
+			:xl4="isGrid"
+			:xl12="isList"
 			pb-1
 			pt-1
 			pl-1
@@ -182,6 +196,7 @@ import LibraryUtility from '@thzero/library_common/utility';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue/components/VDirectionButton';
+import VGameSystemListingSyleButton from '@/components/gameSystems/VGameSystemListingSyleButton';
 import VNumberField from '@/library_vue/components/form/VNumberField';
 import VSelect2 from '@/library_vue/components/form/VSelect';
 import VText2 from '@/library_vue/components/form/VTextField';
@@ -195,6 +210,7 @@ export default {
 		CharacterNameSnippet,
 		CharacterSnippet,
 		VDirectionButton,
+		VGameSystemListingSyleButton,
 		VNumberField,
 		VSelect2,
 		VText2
@@ -290,6 +306,22 @@ export default {
 				this.forceRecomputeCounter++;
 			}
 		},
+		isGrid() {
+			return this.listingStyle === SharedConstants.ListingTypes.Grid;
+		},
+		isList() {
+			return this.listingStyle === SharedConstants.ListingTypes.List;
+		},
+		listingStyle: {
+			get: function () {
+				let value = this.getSettingsUser(this.correlationId(), this.$store.state.user.user, (settings) => settings.listingSytleFilter);
+				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
+				return value;
+			},
+			set: function (newVal) {
+				this.updateSettingsUserCharacter(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+			}
+		},
 		sortBy: {
 			get: function () {
 				const result = this.getSettingsUser(this.correlationId(), this.$store.state.user.user, (settings) => settings.sortBy);
@@ -306,14 +338,18 @@ export default {
 			set: function (newVal) {
 				this.updateSettingsUserCharacter(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
-		}
-	},
-	created() {
-		this.sortKeys = [
+		},
+		sortKeys: {
+			get: function() {
+				return  [
 			{ id: SharedConstants.SortBy.Characters.CharacterName, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.name') },
 			{ id: SharedConstants.SortBy.Characters.Level, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.level') }
 			// { id: 'faction', name: this.$trans.t('forms.factions.name') },
 		];
+			}
+		}
+	},
+	created() {
 	},
 	methods: {
 		characterLevel(level) {

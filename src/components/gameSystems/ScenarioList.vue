@@ -85,9 +85,9 @@
 								<tr>
 									<td>
 										<VSelect2
-											ref="scenariosNotPlayedFilter"
-											v-model="scenariosNotPlayedFilter"
-											:items="scenariosNotPlayedList"
+											ref="scenariosListingTypeFilter"
+											v-model="scenariosListingTypeFilter"
+											:items="scenariosListingTypeFilterList"
 											:flat="true"
 											:hide-details="true"
 											:solo-inverted="true"
@@ -176,9 +176,9 @@
 								<tr>
 									<td>
 										<VSelect2
-											ref="scenariosNotPlayedFilter"
-											v-model="scenariosNotPlayedFilter"
-											:items="scenariosNotPlayedList"
+											ref="scenariosListingTypeFilter"
+											v-model="scenariosListingTypeFilter"
+											:items="scenariosListingTypeFilterList"
 											:flat="true"
 											:hide-details="true"
 											:solo-inverted="true"
@@ -264,6 +264,7 @@
 										/>
 									</td>
 									<td
+										style="padding-right: 4px;"
 										v-if="gameSystemFilter"
 										align="right"
 									>
@@ -276,6 +277,12 @@
 										>
 											<v-icon>mdi-filter-variant-remove</v-icon>
 										</v-btn>
+									</td>
+									<td>
+										<VGameSystemListingSyleButton 
+											v-if="$vuetify.breakpoint.lgAndUp"
+											v-model="listingStyle"
+										/>
 									</td>
 								</tr>
 							</table>
@@ -296,8 +303,10 @@
 			v-for="item in scenarios"
 			:key="item.id"
 			sm12
-			lg6
-			xl4
+			:lg6="isGrid"
+			:lg12="isList"
+			:xl4="isGrid"
+			:xl12="isList"
 			pb-1
 			pt-1
 			pl-1
@@ -323,6 +332,7 @@ import VueUtility from '@/library_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue/components/VDirectionButton';
+import VGameSystemListingSyleButton from '@/components/gameSystems/VGameSystemListingSyleButton';
 import VNumber from '@/library_vue/components/form/VNumberField';
 import VSelect2 from '@/library_vue/components/form/VSelect';
 import VText2 from '@/library_vue/components/form/VTextField';
@@ -345,6 +355,7 @@ export default {
 		ScenarioSnippet,
 		ShareDialog,
 		VDirectionButton,
+		VGameSystemListingSyleButton,
 		VNumber,
 		VSelect2,
 		VText2
@@ -365,8 +376,8 @@ export default {
 		forceRecomputeCounter: 0,
 		scenarioNameValue: null,
 		scenarioNumberValue: null,
-		scenariosNotPlayed: false,
 		scenariosCache: {},
+		scenariosListingTypeValue: SharedConstants.ScenarioListingTypes.Played,
 		sortByOverride: null,
 		sortDirectionOverride: true,
 		userIdFilterValue: null,
@@ -388,6 +399,22 @@ export default {
 				return results ? results.name : '';
 			},
 			set() {}
+		},
+		isGrid() {
+			return this.listingStyle === SharedConstants.ListingTypes.Grid;
+		},
+		isList() {
+			return this.listingStyle === SharedConstants.ListingTypes.List;
+		},
+		listingStyle: {
+			get: function () {
+				let value = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.listingSytleFilter);
+				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
+				return value;
+			},
+			set: function (newVal) {
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+			}
 		},
 		seasonFilter: {
 			get: function () {
@@ -414,9 +441,18 @@ export default {
 				this.forceRecomputeCounter++;
 			}
 		},
-		scenariosNotPlayedFilter: {
+		scenarioNumberFilter: {
 			get: function () {
-				return this.scenariosNotPlayed;
+				return this.scenarioNumberValue;
+			},
+			set: function (newVal) {
+				this.scenarioNumberValue = newVal;
+				this.forceRecomputeCounter++;
+			}
+		},
+		scenariosListingTypeFilter: {
+			get: function () {
+				return this.scenariosListingTypeValue;
 			},
 			set: function (newVal) {
 				if (newVal) {
@@ -426,16 +462,7 @@ export default {
 					)
 						this.sortBy = SharedConstants.SortBy.Scenarios.Season;
 				}
-				this.scenariosNotPlayed = newVal;
-				this.forceRecomputeCounter++;
-			}
-		},
-		scenarioNumberFilter: {
-			get: function () {
-				return this.scenarioNumberValue;
-			},
-			set: function (newVal) {
-				this.scenarioNumberValue = newVal;
+				this.scenariosListingTypeValue = newVal;
 				this.forceRecomputeCounter++;
 			}
 		},
@@ -486,8 +513,37 @@ export default {
 			},
 			cache: false
 		},
-		scenariosNotPlayedList() {
-			return VueUtility.selectBlank([ { id: true, name: this.$trans.t('strings.no') }, { id: false, name: this.$trans.t('strings.yes') } ], this.$trans.t('forms.scenarios.namePlural') + ' ' + this.$trans.t('forms.scenarios.played'));
+		scenariosListingTypeFilterList() {
+			return VueUtility.selectBlank([ { 
+					id: SharedConstants.ScenarioListingTypes.Played, 
+					name: this.$trans.t('forms.scenarios.played') 
+				}, 
+				{ 
+					id: SharedConstants.ScenarioListingTypes.NotPlayed, 
+					name: this.$trans.t('forms.not') + ' ' + this.$trans.t('forms.scenarios.played') 
+				}, 
+				{ 
+					id: SharedConstants.ScenarioListingTypes.All, 
+					name: this.$trans.t('forms.scenarios.all') 
+				} 
+			], this.$trans.t('forms.scenarios.namePlural') + ' ' + this.$trans.t('forms.scenarios.played'));
+		},
+		sortKeys: {
+			get: function () {
+
+				let sortKeys = [];
+
+				if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.Played) {
+					sortKeys.push({ id: SharedConstants.SortBy.Scenarios.CharacterName, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.name') });
+					sortKeys.push({ id: SharedConstants.SortBy.Scenarios.DatePlayed, name: this.$trans.t('forms.scenarios.datePlayed') });
+				}
+					
+				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.ScenarioName, name: this.$trans.t('forms.scenarios.name') + ' ' + this.$trans.t('forms.name') });
+				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.ScenarioNumber, name: this.$trans.t('forms.scenarios.name') + ' ' + this.$trans.t('forms.number') });
+				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.Season, name: this.$trans.t('forms.season') });
+				
+				return sortKeys;
+			}
 		},
 		userIdFilter: {
 			get: function () {
@@ -503,13 +559,6 @@ export default {
 		}
 	},
 	created() {
-		this.sortKeys = [
-			{ id: SharedConstants.SortBy.Scenarios.CharacterName, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.name') },
-			{ id: SharedConstants.SortBy.Scenarios.DatePlayed, name: this.$trans.t('forms.scenarios.datePlayed') },
-			{ id: SharedConstants.SortBy.Scenarios.ScenarioName, name: this.$trans.t('forms.scenarios.name') + ' ' + this.$trans.t('forms.name') },
-			{ id: SharedConstants.SortBy.Scenarios.ScenarioNumber, name: this.$trans.t('forms.scenarios.name') + ' ' + this.$trans.t('forms.number') },
-			{ id: SharedConstants.SortBy.Scenarios.Season, name: this.$trans.t('forms.season') }
-		];
 		this.sortByOverride = SharedConstants.SortBy.Scenarios.ScenarioName;
 		this.scenariosCache = {};
 	},
@@ -599,7 +648,7 @@ export default {
 			let found;
 			let scenarioT;
 
-			if (this.scenariosNotPlayed) {
+			if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.NotPlayed) {
 				let scenarioIds = [];
 				for (const character of characters) {
 					for (const scenario of character.scenarios) {
@@ -622,7 +671,7 @@ export default {
 					results.push(scenarioT);
 				}
 			}
-			else {
+			else if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.Played) {
 				// spin through the characters and gather up all the scenarios...
 				for (const character of characters) {
 					if (!character.scenarios)
@@ -656,6 +705,18 @@ export default {
 					}
 				}
 			}
+			else if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.All) {
+				for (const scenario of scenarios) {
+					found = this.filter(scenario);
+					if (!found)
+						continue;
+
+					scenarioT = this.clone(scenario);
+					scenarioT.scenario = scenario;
+					scenarioT.user = this.user;
+					results.push(scenarioT);
+				}
+			}
 
 			if (!results || results.length <= 0)
 				return [];
@@ -669,7 +730,7 @@ export default {
 			else if (this.sortBy === SharedConstants.SortBy.Scenarios.Season)
 				results = this.sortBySeason(results, this.sortDirection);
 
-			if (!this.scenariosNotPlayed) {
+			if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.Played) {
 				// TODO: need to incorporation direction...
 				if (this.sortBy === SharedConstants.SortBy.Scenarios.CharacterName)
 					results = this.sortByCharacterName(results, this.sortDirection);

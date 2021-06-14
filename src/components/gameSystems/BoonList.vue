@@ -150,12 +150,8 @@
 											:label="$t('forms.sorting.nameShort')"
 										/>
 									</td>
-									<td>
-										<VDirectionButton
-											v-model="sortDirection"
-										/>
-									</td>
 									<td
+										style="padding-right: 4px;"
 										v-if="gameSystemFilter"
 										align="right"
 									>
@@ -169,6 +165,19 @@
 											<v-icon>mdi-filter-variant-remove</v-icon>
 										</v-btn>
 									</td>
+									<td
+										style="padding-right: 4px;"
+									>
+										<VDirectionButton
+											v-model="sortDirection"
+										/>
+									</td>
+									<td>
+										<VGameSystemListingSyleButton 
+											v-if="$vuetify.breakpoint.lgAndUp"
+											v-model="listingStyle"
+										/>
+									</td>
 								</tr>
 							</table>
 						</v-flex>
@@ -180,8 +189,10 @@
 			v-for="item in boons"
 			:key="item.id"
 			sm12
-			lg6
-			xl4
+			:lg6="isGrid"
+			:lg12="isList"
+			:xl4="isGrid"
+			:xl12="isList"
 			pb-1
 			pt-1
 			pl-1
@@ -204,6 +215,7 @@ import VueUtility from '@/library_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue/components/VDirectionButton';
+import VGameSystemListingSyleButton from '@/components/gameSystems/VGameSystemListingSyleButton';
 import VSelect2 from '@/library_vue/components/form/VSelect';
 import VText2 from '@/library_vue/components/form/VTextField';
 
@@ -221,6 +233,7 @@ export default {
 		ScenarioListFilterStarfinder1e,
 		BoonSnippet,
 		VDirectionButton,
+		VGameSystemListingSyleButton,
 		VSelect2,
 		VText2
 	},
@@ -272,6 +285,22 @@ export default {
 			},
 			set() {}
 		},
+		isGrid() {
+			return this.listingStyle === SharedConstants.ListingTypes.Grid;
+		},
+		isList() {
+			return this.listingStyle === SharedConstants.ListingTypes.List;
+		},
+		listingStyle: {
+			get: function () {
+				let value = AppUtility.settings().getSettingsUserBoons(this.correlationId(), this.user, (settings) => settings.listingSytleFilter);
+				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
+				return value;
+			},
+			set: function (newVal) {
+				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+			}
+		},
 		scenarioNameFilter: {
 			get: function () {
 				return this.scenarioNameValue;
@@ -318,6 +347,13 @@ export default {
 			},
 			cache: false
 		},
+		sortKeys: {
+			get: function() {
+				return [
+					{ id: SharedConstants.SortBy.Boons.BoonName, name: this.$trans.t('forms.boons.name') + ' ' + this.$trans.t('forms.name') }
+				];
+			}
+		},
 		userIdFilter: {
 			get: function () {
 				return this.userIdFilterValue;
@@ -332,9 +368,6 @@ export default {
 		}
 	},
 	created() {
-		this.sortKeys = [
-			{ id: SharedConstants.SortBy.Boons.BoonName, name: this.$trans.t('forms.boons.name') + ' ' + this.$trans.t('forms.name') }
-		];
 		this.sortByOverride = SharedConstants.SortBy.Boons.BoonName;
 		this.scenariosCache = {};
 	},
