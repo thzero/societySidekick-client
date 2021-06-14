@@ -441,6 +441,7 @@
 	   "id": "Id",
 	   "level": "Level",
 	   "link": "Link",
+	   "listing": "Listing",
 	   "minAbbr": "Min.",
 	   "maxAbbr": "Max.",
 	   "name": "Name",
