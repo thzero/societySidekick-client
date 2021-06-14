@@ -264,6 +264,7 @@
 										/>
 									</td>
 									<td
+										style="padding-right: 4px;"
 										v-if="gameSystemFilter"
 										align="right"
 									>
@@ -276,6 +277,12 @@
 										>
 											<v-icon>mdi-filter-variant-remove</v-icon>
 										</v-btn>
+									</td>
+									<td>
+										<VGameSystemListingSyleButton 
+											v-if="$vuetify.breakpoint.lgAndUp"
+											v-model="listingStyle"
+										/>
 									</td>
 								</tr>
 							</table>
@@ -296,8 +303,10 @@
 			v-for="item in scenarios"
 			:key="item.id"
 			sm12
-			lg6
-			xl4
+			:lg6="isGrid"
+			:lg12="isList"
+			:xl4="isGrid"
+			:xl12="isList"
 			pb-1
 			pt-1
 			pl-1
@@ -323,6 +332,7 @@ import VueUtility from '@/library_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue/components/VDirectionButton';
+import VGameSystemListingSyleButton from '@/components/gameSystems/VGameSystemListingSyleButton';
 import VNumber from '@/library_vue/components/form/VNumberField';
 import VSelect2 from '@/library_vue/components/form/VSelect';
 import VText2 from '@/library_vue/components/form/VTextField';
@@ -345,6 +355,7 @@ export default {
 		ScenarioSnippet,
 		ShareDialog,
 		VDirectionButton,
+		VGameSystemListingSyleButton,
 		VNumber,
 		VSelect2,
 		VText2
@@ -388,6 +399,22 @@ export default {
 				return results ? results.name : '';
 			},
 			set() {}
+		},
+		isGrid() {
+			return this.listingStyle === SharedConstants.ListingTypes.Grid;
+		},
+		isList() {
+			return this.listingStyle === SharedConstants.ListingTypes.List;
+		},
+		listingStyle: {
+			get: function () {
+				let value = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.listingSytleFilter);
+				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
+				return value;
+			},
+			set: function (newVal) {
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+			}
 		},
 		seasonFilter: {
 			get: function () {
