@@ -347,6 +347,13 @@ export default {
 			},
 			cache: false
 		},
+		sortKeys: {
+			get: function() {
+				return [
+					{ id: SharedConstants.SortBy.Boons.BoonName, name: this.$trans.t('forms.boons.name') + ' ' + this.$trans.t('forms.name') }
+				];
+			}
+		},
 		userIdFilter: {
 			get: function () {
 				return this.userIdFilterValue;
@@ -361,9 +368,6 @@ export default {
 		}
 	},
 	created() {
-		this.sortKeys = [
-			{ id: SharedConstants.SortBy.Boons.BoonName, name: this.$trans.t('forms.boons.name') + ' ' + this.$trans.t('forms.name') }
-		];
 		this.sortByOverride = SharedConstants.SortBy.Boons.BoonName;
 		this.scenariosCache = {};
 	},

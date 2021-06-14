@@ -456,6 +456,7 @@
 	   "role": "Role",
 	   "roles": "Roles",
 	   "scenarios": {
+		  "all": "All",
 		  "datePlayed": "Date Played",
 		  "description": "Description",
 		  "gameSystem": "Game System",

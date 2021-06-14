@@ -338,14 +338,18 @@ export default {
 			set: function (newVal) {
 				this.updateSettingsUserCharacter(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
-		}
-	},
-	created() {
-		this.sortKeys = [
+		},
+		sortKeys: {
+			get: function() {
+				return  [
 			{ id: SharedConstants.SortBy.Characters.CharacterName, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.name') },
 			{ id: SharedConstants.SortBy.Characters.Level, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.level') }
 			// { id: 'faction', name: this.$trans.t('forms.factions.name') },
 		];
+			}
+		}
+	},
+	created() {
 	},
 	methods: {
 		characterLevel(level) {

@@ -20,8 +20,7 @@ export default {
 		}
 	},
 	data: () => ({
-		seasonFilterOverride: null,
-		sortKeys: []
+		seasonFilterOverride: null
 	}),
 	computed: {
 		gameSystemFilter: {
