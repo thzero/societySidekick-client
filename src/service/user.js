@@ -23,7 +23,7 @@ class UserService extends BaseUserService {
 
 		this._logger.debug('UserService', 'fetchFavoritesByGamerId', 'userId', user.id, correlationId);
 		try {
-			const response = await this._serviceCommunicationRest.getById(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'user/favorites', user.id);
+			const response = await this._serviceCommunicationRest.getById(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'users/favorites', user.id);
 			this._logger.debug('UserService', 'fetchFavoritesByGamerId', 'response', response, correlationId);
 			if (response && response.success)
 				return response;
@@ -41,7 +41,7 @@ class UserService extends BaseUserService {
 
 		this._logger.debug('UserService', 'fetchByGamerId', 'gamerId', gamerId, correlationId);
 		try {
-			const response = await this._serviceCommunicationRest.getById(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'user/gamerId', gamerId);
+			const response = await this._serviceCommunicationRest.getById(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'users/gamerId', gamerId);
 			this._logger.debug('UserService', 'fetchByGamerId', 'response', response, correlationId);
 			if (response && response.success)
 				return response;
@@ -59,7 +59,7 @@ class UserService extends BaseUserService {
 
 		this._logger.debug('UserService', 'fetchByGamerTag', 'gamerTag', gamerTag, correlationId);
 		try {
-			const response = await this._serviceCommunicationRest.getById(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'user/gamerTag', gamerTag);
+			const response = await this._serviceCommunicationRest.getById(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'users/gamerTag', gamerTag);
 			this._logger.debug('UserService', 'fetchByGamerTag', 'response', response, correlationId);
 			if (response && response.success)
 				return response;
