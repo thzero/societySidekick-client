@@ -36,9 +36,11 @@
 </template>
 
 <script>
-import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
+import GlobalUtility from '@thzero/library_client/utility/global';
+
+import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
 
 import baseInventoryGearSetDialog from '@/components/gameSystems/baseInventoryGearSetDialog';
 
@@ -66,7 +68,7 @@ export default {
 			this.$emit('ok');
 		},
 		async preComplete(correlationId) {
-			const character = this.$store.getters.getCharacter(this.characterId);
+			const character = GlobalUtility.$store.getters.getCharacter(this.characterId);
 			if (character) {
 				if (character.inventory && character.inventory.length > 0) {
 					this.dialogConfirmSignal.open(correlationId);
@@ -77,7 +79,7 @@ export default {
 			return this.preCompleteConfirm();
 		},
 		async preCompleteConfirm(correlationId) {
-			const response = await this.$store.dispatcher.characters.loadCharacterInventory(correlationId, this.characterId, this.gearSetId);
+			const response = await GlobalUtility.$store.dispatcher.characters.loadCharacterInventory(correlationId, this.characterId, this.gearSetId);
 			this.logger.debug('InventoryGearSetLoadDialog', 'preCompleteConfirm', 'response', response, correlationId);
 			return response;
 		}

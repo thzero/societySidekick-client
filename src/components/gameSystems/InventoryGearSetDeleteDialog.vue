@@ -36,10 +36,11 @@
 
 <script>
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 
-import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
+import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
 
 import baseInventoryGearSetDialog from '@/components/gameSystems/baseInventoryGearSetDialog';
 
@@ -65,9 +66,9 @@ export default {
 			return this.error('InventoryGearSetDeleteDialog', 'preCompleted', null, null, null, null, correlationId);
 		},
 		async preCompleteConfirm(correlationId) {
-			const response = await AppUtility.settings().updateSettingsUserGameSystem(correlationId, this.$store, this.$store.state.user.user, this.gameSystemId, this.gearSetId, (settings, newVal) => {
+			const response = await AppUtility.settings().updateSettingsUserGameSystem(correlationId, GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.gameSystemId, this.gearSetId, (settings, newVal) => {
 				if (!newVal && !this.gameSystemId)
-					return this.error('InventoryGearSetDeleteDialog', 'preCompleteConfirm', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.eitherGearSetOrName'));
+					return this.error('InventoryGearSetDeleteDialog', 'preCompleteConfirm', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.inventories.eitherGearSetOrName'));
 
 				settings.gearSets = settings.gearSets.filter(l => l.id !== newVal);
 			});

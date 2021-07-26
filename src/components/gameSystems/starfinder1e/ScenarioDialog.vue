@@ -371,6 +371,8 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseScenarioDialog from '@/components/gameSystems/baseScenarioDialog';
 
 import ScenarioLookupDialog from '@/components/gameSystems/starfinder1e/ScenarioLookupDialog';
@@ -391,7 +393,7 @@ export default {
 			return this.rulesGameSystem.calculateCharacterScenarioCanSelectClass(this.correlationId(), this.character, this.innerValue, this.innerValue.experiencePointsEarned);
 		},
 		classes() {
-			return this.serviceGameSystem.classes(this.$store, true);
+			return this.serviceGameSystem.classes(GlobalUtility.$store, true);
 		}
 	},
 	methods: {
@@ -402,7 +404,7 @@ export default {
 		getScenarioAdventure(id) {
 			if (!id)
 				return null;
-			const results = this.$store.getters.getScenario(this.innerValue.scenarioId);
+			const results = GlobalUtility.$store.getters.getScenario(this.innerValue.scenarioId);
 			return results ? results.type : null;
 		},
 		gameSystemId() {
@@ -425,8 +427,8 @@ export default {
 			return new CharacterScenario();
 		},
 		initializeServices() {
-			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+			this.rulesGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		},
 		// eslint-disable-next-line
 		onChangeI(correlationId, newValue, recalculateScenario) {
@@ -436,7 +438,7 @@ export default {
 		},
 		async resetDialogI(correlationId, value) {
 			value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : this.character.factionId;
-			await this.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, this.character ? this.character.id : null);
+			await GlobalUtility.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, this.character ? this.character.id : null);
 			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenario ? value.scenario.type : null, this.lookups);
 		}
 	}

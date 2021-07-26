@@ -300,15 +300,15 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
 import LibraryConstants from '@thzero/library_client/constants';
+
+import GlobalUtility from '@thzero/library_client/utility/global';
 
 import baseMainLayout from '@/library_vue/layouts/baseMainLayout';
 
 import CharacterNewDialog from '@/components/gameSystems/CharacterNewDialog';
-import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
-import VDisplayDialog from '@/library_vue/components/VDisplayDialog';
+import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
+import VDisplayDialog from '@/library_vue_vuetify/components/VDisplayDialog';
 
 import DialogSupport from '@/library_vue/components/support/dialog';
 
@@ -328,9 +328,9 @@ export default {
 		dialogNewCharacter: new DialogSupport()
 	}),
 	created() {
-		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
+		this._serviceMarkup = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 
-		this.$EventBus.$on('display-markup', (value) => {
+		GlobalUtility.$EventBus.on('display-markup', (value) => {
 			this.markup(this.correlationId(), value);
 			this.dialogDisplayMarkupSignal.open();
 		});
@@ -341,7 +341,7 @@ export default {
 		},
 		clickFavorites() {
 			// window.open(`/#/favorites`, '_blank')
-			this.$navRouter.push('/favorites');
+			GlobalUtility.$navRouter.push('/favorites');
 		},
 		async dialogDisplayMarkupCancel() {
 			this.dialogDisplayMarkupSignal.cancel();

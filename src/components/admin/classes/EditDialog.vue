@@ -51,9 +51,9 @@
 
 <script>
 import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
-import VMarkdownEditor from '@/library_vue/components/markup/VMarkdownEditor';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VMarkdownEditor from '@/library_vue_vuetify/components/markup/VMarkdownEditor';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 export default {
 	name: 'AdminClassesEditDialog',

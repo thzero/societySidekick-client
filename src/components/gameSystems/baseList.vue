@@ -2,6 +2,8 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import base from '@/components/base';
 
 import AppUtility from '@/utility/app';
@@ -32,7 +34,7 @@ export default {
 					return this.gameSystemFilterOverride;
 				}
 
-				return AppUtility.settings().getSettingsUserGameSystemFilter(this.correlationId(), this.$store.state.user.user, (settings) => settings.gameSystemFilter);
+				return AppUtility.settings().getSettingsUserGameSystemFilter(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.gameSystemFilter);
 			},
 			set: function (newVal) {
 				if (this.isExternalListScenarios) {
@@ -40,11 +42,11 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserGameSystemFilter(this.correlationId(), this.$store, this.$store.state.user.user, newVal, (settings) => { return settings.gameSystemFilter = newVal; });
+				AppUtility.settings().updateSettingsUserGameSystemFilter(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, newVal, (settings) => { return settings.gameSystemFilter = newVal; });
 			}
 		},
 		gameSystems() {
-			const results = this.$store.state.gameSystems;
+			const results = GlobalUtility.$store.state.gameSystems;
 			return results ? results.filter(l => l.active) : [];
 		},
 		isExternalList() {

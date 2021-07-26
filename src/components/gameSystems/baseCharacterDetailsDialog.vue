@@ -1,8 +1,10 @@
 <script>
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VNumberFieldWithValidation from '@/library_vue/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import GlobalUtility from '@thzero/library_client/utility/global';
+
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 export default {
 	name: 'Pathfinder2eCharacterDetailsDialog',
@@ -29,7 +31,7 @@ export default {
 	computed: {
 		boons() {
 			const correlationId = this.correlationId();
-			const results = this.serviceGameSystem.boons(correlationId, this.$store, false);
+			const results = this.serviceGameSystem.boons(correlationId, GlobalUtility.$store, false);
 
 			const boons = [];
 			// for (const item of this.innerValue.scenarios) {
@@ -50,7 +52,7 @@ export default {
 			return boons;
 		},
 		factions() {
-			return this.serviceGameSystem.factions(this.correlationId(), this.$store, true);
+			return this.serviceGameSystem.factions(this.correlationId(), GlobalUtility.$store, true);
 		},
 		hasScenarios() {
 			return this.innerValue.scenarios ? true : false;
@@ -85,7 +87,7 @@ export default {
 			}
 		},
 		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
+			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
 		},
 		initResponse() {
 			const details = {
@@ -115,7 +117,7 @@ export default {
 			details.number = String.trim(this.innerValue.number);
 			details.tagLine = String.trim(this.innerValue.tagLine);
 			details.updatedTimestamp = this.innerValue.updatedTimestamp;
-			const response = await this.$store.dispatcher.characters.updateCharacterDetails(correlationId, details);
+			const response = await GlobalUtility.$store.dispatcher.characters.updateCharacterDetails(correlationId, details);
 			this.logger.debug('Pathfinder2eCharacterDetailsDialog', 'preComplete', 'response', response, correlationId);
 			return response;
 		},

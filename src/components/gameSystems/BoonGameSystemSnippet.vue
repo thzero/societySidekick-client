@@ -90,10 +90,9 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
 import LibraryConstants from '@thzero/library_client/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import baseGameSystemSnippet from '@/components/gameSystems/baseGameSystemSnippet';
@@ -107,7 +106,7 @@ export default {
 		}
 	},
 	created() {
-		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
+		this._serviceMarkup = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 	},
 	methods: {
 		boonDescription() {

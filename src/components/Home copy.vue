@@ -234,12 +234,11 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import GameSystemsUtility from '@/utility/gameSystems';
 
@@ -250,7 +249,7 @@ import CharacterList from '@/components/gameSystems/CharacterList';
 import News from '@/components/News';
 import ScenarioList from '@/components/gameSystems/ScenarioList';
 import Statistics from '@/components/gameSystems/Statistics';
-import VLoadingOverlay from '@/library_vue/components/VLoadingOverlay';
+import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
 
 // GameSystems Update
 import Pathfinder2eSnippet from '@/components/gameSystems/pathfinder2e/MainSnippet';
@@ -288,13 +287,13 @@ export default {
 			return Constants.Features.Statistics;
 		},
 		gameSystemFilter() {
-			return AppUtility.settings().getSettingsUserGameSystemFilter(this.correlationId(), this.$store.state.user.user, (settings) => settings.gameSystemFilter);
+			return AppUtility.settings().getSettingsUserGameSystemFilter(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.gameSystemFilter);
 		},
 		gameSystemNumber() {
-			return GameSystemsUtility.gameSystemNumber(this.correlationId(), this.$store.state.user.user, this.gameSystemFilter);
+			return GameSystemsUtility.gameSystemNumber(this.correlationId(), GlobalUtility.$store.state.user.user, this.gameSystemFilter);
 		},
 		isLoggedIn() {
-			return this.$store.state.user && this.$store.state.user.isLoggedIn;
+			return GlobalUtility.$store.state.user && GlobalUtility.$store.state.user.isLoggedIn;
 		},
 		// GameSystems Update
 		isGameSystemDungeonsAndDragons5e() {
@@ -307,25 +306,25 @@ export default {
 			return this.gameSystemFilter === SharedConstants.GameSystems.Starfinder1e.id;
 		},
 		newsCount() {
-			if (!this.$store.state.news.latest)
+			if (!GlobalUtility.$store.state.news.latest)
 				return 0;
 
-			const news = this.$store.state.news.latest.slice(0);
+			const news = GlobalUtility.$store.state.news.latest.slice(0);
 			return news.length;
 		},
 		tab: {
 			get: function () {
-				return this.getSettingsUserTab(this.correlationId(), this.$store.state.user.user, (settings) => settings.tab);
+				return this.getSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.tab);
 			},
 			set: function (newVal) {
-				this.updateSettingsUserTab(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
+				this.updateSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
 			}
 		},
 		user() {
-			return this.$store.state.user.user;
+			return GlobalUtility.$store.state.user.user;
 		},
 		userDisplayName() {
-			const user = this.$store.state.user.user;
+			const user = GlobalUtility.$store.state.user.user;
 			const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
 			const userName = settings && settings.gamerTag ? settings.gamerTag : user.external && user.external.name ? user.external.name : '******';
 			return userName;
@@ -333,7 +332,7 @@ export default {
 	},
 	created() {
 		const self = this;
-		this.$EventBus.$on('initialize-completed', (value) => {
+		GlobalUtility.$EventBus.on('initialize-completed', (value) => {
 			self.initializeCompleted = value;
 		});
 	},
@@ -349,7 +348,7 @@ export default {
 			const correlationId = this.correlationId();
 			const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
 			func(settings.home, newVal);
-			this.$store.dispatcher.user.setUserSettings(correlationId, settings);
+			GlobalUtility.$store.dispatcher.user.setUserSettings(correlationId, settings);
 		}
 	},
 	// eslint-disable-next-line
@@ -359,18 +358,18 @@ export default {
 		// because it has not been created yet when this guard is called!
 		(async () => {
 			try {
-				Vue.prototype.$EventBus.$emit('initialize-completed', false);
+				GlobalUtility.$EventBus.emit('initialize-completed', false);
 
 				const correlationId = LibraryUtility.generateId();
 
 				await Promise.all([
-					Vue.prototype.$store.dispatcher.news.getLatest(correlationId),
-					Vue.prototype.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
+					GlobalUtility.$store.dispatcher.news.getLatest(correlationId),
+					GlobalUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
 				]);
 			}
 			finally {
 				const timeout = setTimeout(function () {
-					Vue.prototype.$EventBus.$emit('initialize-completed', true);
+					GlobalUtility.$EventBus.emit('initialize-completed', true);
 					clearTimeout(timeout);
 				}, DelayMs);
 			}
@@ -396,8 +395,8 @@ export default {
 				const correlationId = this.correlationId();
 
 				await Promise.all([
-					this.$store.dispatcher.news.getLatest(correlationId),
-					this.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
+					GlobalUtility.$store.dispatcher.news.getLatest(correlationId),
+					GlobalUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
 				]);
 			}
 			finally {

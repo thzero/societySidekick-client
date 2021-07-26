@@ -1,6 +1,8 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import ScenarioGameSystemSnippet from '@/components/gameSystems/ScenarioGameSystemSnippet';
 import CharacterNameSnippet from '@/components/gameSystems/pathfinder2e/CharacterNameSnippet';
 
@@ -12,7 +14,7 @@ export default {
 	extends: ScenarioGameSystemSnippet,
 	methods: {
 		initializeServices() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		},
 		scenarioLookupAdventureName(value) {
 			return this.serviceGameSystem.scenarioLookupAdventureName(this.correlationId(), value, this.lookups);

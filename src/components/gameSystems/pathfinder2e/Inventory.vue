@@ -1,6 +1,8 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import Inventory from '@/components/gameSystems/Inventory';
 
 export default {
@@ -14,7 +16,7 @@ export default {
 	},
 	methods: {
 		initService() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		}
 	}
 };

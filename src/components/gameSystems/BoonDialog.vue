@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import baseBoonDialog from '@/components/gameSystems/baseBoonDialog';
@@ -93,7 +94,7 @@ export default {
 	methods: {
 		async resetDialogI(value) {
 			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
-			this.boonName = this.serviceGameSystem.boonNameById(this.correlationId(), value.boonId, this.$store);
+			this.boonName = this.serviceGameSystem.boonNameById(this.correlationId(), value.boonId, GlobalUtility.$store);
 		}
 	}
 };

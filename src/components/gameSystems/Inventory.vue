@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseInventory from '@/components/gameSystems/baseInventory';
 
 export default {
@@ -55,7 +57,7 @@ export default {
 	extends: baseInventory,
 	methods: {
 		scenarioNameById(id) {
-			return id ? this.serviceGameSystem.determineScenarioNameById(this.correlationId(), id, this.$store) : '';
+			return id ? this.serviceGameSystem.determineScenarioNameById(this.correlationId(), id, GlobalUtility.$store) : '';
 		}
 	}
 };

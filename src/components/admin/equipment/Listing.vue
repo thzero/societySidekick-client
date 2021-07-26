@@ -78,6 +78,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseList from '@/components/admin/baseList';
 import EditDialog from '@/components/admin/equipment/EditDialog';
 
@@ -91,12 +93,12 @@ export default {
 	extends: baseList,
 	computed: {
 		equipment() {
-			const equipment = this.$store.state.adminEquipment.equipment;
+			const equipment = GlobalUtility.$store.state.adminEquipment.equipment;
 			return equipment ? equipment.slice(0) : [];
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminEquipment.searchEquipment(this.correlationId(), {});
+		await GlobalUtility.$store.dispatcher.adminEquipment.searchEquipment(this.correlationId(), {});
 	},
 	methods: {
 		defaultItem() {
@@ -111,10 +113,10 @@ export default {
 		},
 		initializeHeaders() {
 			return [
-				{ text: this.$trans.t('equipment.name'), align: 'left', value: 'name', },
-				{ text: this.$trans.t('equipment.category'), align: 'left', value: 'category' },
-				{ text: this.$trans.t('equipment.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: this.$trans.t('equipment.actions'), align: 'right', value: 'action', sortable: false }
+				{ text: GlobalUtility.$trans.t('equipment.name'), align: 'left', value: 'name', },
+				{ text: GlobalUtility.$trans.t('equipment.category'), align: 'left', value: 'category' },
+				{ text: GlobalUtility.$trans.t('equipment.gameSystem'), align: 'left', value: 'gameSystemId' },
+				{ text: GlobalUtility.$trans.t('equipment.actions'), align: 'right', value: 'action', sortable: false }
 			];
 		}
 	}

@@ -1,7 +1,7 @@
-import Vue from 'vue';
-
 import LibraryConstants from '@thzero/library_client/constants';
 import SharedConstants from '@/common/constants';
+
+import GlobalUtility from '@thzero/library_client/utility/global';
 
 import SettingsUser from '@/common/data/settingsUser';
 
@@ -36,7 +36,7 @@ class AppUtility {
 	}
 
 	static settings() {
-		return Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_SETTINGS);
+		return GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_SETTINGS);
 	}
 
 	static validateSettingsUserGameSystems(settings) {

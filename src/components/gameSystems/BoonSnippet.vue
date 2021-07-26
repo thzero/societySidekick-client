@@ -15,11 +15,10 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
 import LibraryConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 
 import baseSnippet from '@/components/gameSystems/baseSnippet';
 
@@ -56,32 +55,32 @@ export default {
 		},
 	},
 	created() {
-		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
+		this._serviceMarkup = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 	},
 	methods: {
 		boonDescription(id) {
 			const correlationId = this.correlationId();
-			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, this.serviceGameSystem.boonDescriptionById(correlationId, id, this.$store)));
+			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, this.serviceGameSystem.boonDescriptionById(correlationId, id, GlobalUtility.$store)));
 		},
 		boonName(id) {
-			return this.serviceGameSystem.boonNameById(this.correlationId(), id, this.$store);
+			return this.serviceGameSystem.boonNameById(this.correlationId(), id, GlobalUtility.$store);
 		},
 		boonUses(id) {
-			return this.serviceGameSystem.boonUsesById(this.correlationId(), id, this.$store);
+			return this.serviceGameSystem.boonUsesById(this.correlationId(), id, GlobalUtility.$store);
 		},
 		dialogBoonOpen() {
 			this.$emit('dialog-edit', this.value);
 		},
 		getGameSystemName(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		locationName(id, at) {
-			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), this.$store.state.user.user, id);
+			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), GlobalUtility.$store.state.user.user, id);
 			return location ? (at ? '@ ' : '') + location.name : '';
 		},
 		scenarioName(value) {
-			return this.serviceGameSystem.determineScenarioName(this.correlationId(), value, this.$store);
+			return this.serviceGameSystem.determineScenarioName(this.correlationId(), value, GlobalUtility.$store);
 		}
 	}
 };

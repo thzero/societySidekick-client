@@ -36,10 +36,11 @@
 
 <script>
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 export default {
 	name: 'LocationDialog',
@@ -64,7 +65,7 @@ export default {
 			return true;
 		},
 		async preCompleteResponseOk(correlationId) {
-			const response = AppUtility.settings().updateSettingsUserLocation(correlationId, this.$store, this.$store.state.user.user, this.id, { name: this.name, location: this.location }, (settings, newVal) => {
+			const response = AppUtility.settings().updateSettingsUserLocation(correlationId, GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.id, { name: this.name, location: this.location }, (settings, newVal) => {
 				settings.name = newVal.name;
 				settings.location = newVal.location;
 			});

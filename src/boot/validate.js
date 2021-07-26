@@ -1,4 +1,4 @@
-import BaseValidation from '@/library_vue/boot/baseValidation';
+import BaseValidation from '@/library_vue_vuetify/boot/baseValidation';
 
 class Validation extends BaseValidation {
 	_initialize(extend) {

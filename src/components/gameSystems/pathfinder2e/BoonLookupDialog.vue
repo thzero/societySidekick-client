@@ -1,6 +1,8 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import BoonLookupDialog from '@/components/gameSystems/BoonLookupDialog';
 
 export default {
@@ -8,7 +10,7 @@ export default {
 	extends: BoonLookupDialog,
 	methods: {
 		initializeServices() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		}
 	}
 };

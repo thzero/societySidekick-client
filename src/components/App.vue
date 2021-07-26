@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseApp from '@/library_vue/components/baseApp';
 
 export default {
@@ -13,8 +15,8 @@ export default {
 	methods: {
 		initialize(correlationId) {
 			return [
-				this.$store.dispatcher.root.initialize(correlationId),
-				this.$store.dispatcher.characters.initializeCharacters(correlationId)
+				GlobalUtility.$store.dispatcher.root.initialize(correlationId),
+				GlobalUtility.$store.dispatcher.characters.initializeCharacters(correlationId)
 			];
 		}
 	}

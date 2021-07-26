@@ -106,14 +106,15 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
-import VMarkdownEditor from '@/library_vue/components/markup/VMarkdownEditor';
-import VNumberFieldWithValidation from '@/library_vue/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VMarkdownEditor from '@/library_vue_vuetify/components/markup/VMarkdownEditor';
+import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 // GameSystems Update
 import Pathfinder2eScenarioLookupDialog from '@/components/gameSystems/pathfinder2e/ScenarioLookupDialog';
@@ -140,16 +141,16 @@ export default {
 	}),
 	computed: {
 		factions() {
-			if (!this.$store.state.adminFactions.factions)
+			if (!GlobalUtility.$store.state.adminFactions.factions)
 				return null;
-			let factions = this.$store.state.adminFactions.factions.filter(l => l.gameSystemId === this.gameSystemId);
+			let factions = GlobalUtility.$store.state.adminFactions.factions.filter(l => l.gameSystemId === this.gameSystemId);
 			factions = factions ? factions.slice(0) : [];
 			return VueUtility.selectBlank(factions.sort((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.name; })));
 		},
 		scenarios() {
-			if (!this.$store.state.adminScenarios.scenarios)
+			if (!GlobalUtility.$store.state.adminScenarios.scenarios)
 				return [];
-			const scenarios = this.$store.state.adminScenarios.scenarios.filter(l => l.gameSystemId === this.gameSystemId);
+			const scenarios = GlobalUtility.$store.state.adminScenarios.scenarios.filter(l => l.gameSystemId === this.gameSystemId);
 			return scenarios ? scenarios.slice(0) : [];
 		},
 		types: {
@@ -163,7 +164,7 @@ export default {
 	watch: {
 		// eslint-disable-next-line
 		async gameSystemId(newVal) {
-			await this.$store.dispatcher.adminScenarios.searchAdminScenarios(this.correlationId(), { gameSystemId: this.gameSystemId });
+			await GlobalUtility.$store.dispatcher.adminScenarios.searchAdminScenarios(this.correlationId(), { gameSystemId: this.gameSystemId });
 		}
 	},
 	methods: {
@@ -182,7 +183,7 @@ export default {
 		},
 		getScenarioNameById(id) {
 			const service = this.serviceGameSystem;
-			const results = this.$store.getters.getAdminScenario(id);
+			const results = GlobalUtility.$store.getters.getAdminScenario(id);
 			return service ? results ? service.scenarioName(this.correlationId(), results) : null : null;
 		},
 		// eslint-disable-next-line
@@ -198,7 +199,7 @@ export default {
 		// eslint-disable-next-line
 		async resetDialogI(correlationId, value) {
 			this.innerValue = value;
-			await this.$store.dispatcher.adminScenarios.searchAdminScenarios({ gameSystemId: value.gameSystemId });
+			await GlobalUtility.$store.dispatcher.adminScenarios.searchAdminScenarios({ gameSystemId: value.gameSystemId });
 			this.scenarioName = this.getScenarioNameById(value.scenarioId);
 		}
 	}

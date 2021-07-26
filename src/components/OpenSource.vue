@@ -1,9 +1,9 @@
 <script>
-import baseOpenSource from '@/library_vue/components/baseOpenSource';
+import VOpenSource from '@/library_vue_vuetify/components/VOpenSource';
 
 export default {
 	name: 'OpenSource',
-	extends: baseOpenSource,
+	extends: VOpenSource,
 	methods: {
 		initializeDependenciesClient() {
 			return [

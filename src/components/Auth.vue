@@ -1,5 +1,5 @@
 <script>
-import baseAuth from '@/library_vue/components/baseAuth';
+import baseAuth from '@/library_vue_vuetify/components/baseAuth';
 
 export default {
 	name: 'Auth',

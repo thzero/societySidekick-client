@@ -2,9 +2,10 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import VueUtility from '@/library_vue/utility';
 
-import baseAdminFormDialog from '@/library_vue/components/admin/VAdminFormDialog';
+import baseAdminFormDialog from '@/library_vue_vuetify/components/admin/VAdminFormDialog';
 
 export default {
 	name: 'BaseAdminFormDialog',
@@ -15,7 +16,7 @@ export default {
 	}),
 	computed: {
 		gameSystems() {
-			return VueUtility.selectBlank(this.$store.state.gameSystems);
+			return VueUtility.selectBlank(GlobalUtility.$store.state.gameSystems);
 		},
 		// GameSystems Update
 		isGameSystemDungeonsAndDragons5e() {
@@ -44,11 +45,11 @@ export default {
 		},
 		initLookupsByGameSystemId(correlationId, gameSystemId) {
 			const service = this.getServiceByGameSystemId(correlationId, gameSystemId);
-			const lookups = service ? service.initializeLookups(correlationId, this.$injector) : null;
+			const lookups = service ? service.initializeLookups(correlationId, GlobalUtility.$injector) : null;
 			return lookups;
 		},
 		initializeServices() {
-			this.serviceGameSystemsUtility = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
+			this.serviceGameSystemsUtility = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
 		}
 	}
 };

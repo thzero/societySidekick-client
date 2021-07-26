@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -35,7 +37,7 @@ const router = new VueRouter({
 		},
 		{
 			path: '/cards',
-			component: () => import(/* webpackChunkName: "group-cards" */ './library_vue/layouts/BlankLayout.vue'),
+			component: () => import(/* webpackChunkName: "group-cards" */ '@/library_vue_vuetify/layouts/BlankLayout.vue'),
 			children: [
 				{
 					path: '',
@@ -49,7 +51,7 @@ const router = new VueRouter({
 		},
 		{
 			path: '/cards/:gamerTag/:key',
-			component: () => import(/* webpackChunkName: "group-cards" */ './library_vue/layouts/BlankLayout.vue'),
+			component: () => import(/* webpackChunkName: "group-cards" */ '@/library_vue_vuetify/layouts/BlankLayout.vue'),
 			children: [
 				{
 					path: '',
@@ -103,7 +105,7 @@ const router = new VueRouter({
 		},
 		{
 			path: '/admin',
-			component: () => import(/* webpackChunkName: "group-admin" */ './library_vue/layouts/AdminLayout.vue'),
+			component: () => import(/* webpackChunkName: "group-admin" */ '@/library_vue_vuetify/layouts/AdminLayout.vue'),
 			children: [
 				{
 					path: '',
@@ -173,7 +175,7 @@ const router = new VueRouter({
 		},
 		{
 			path: '/auth',
-			component: () => import(/* webpackChunkName: "group-auth" */ './library_vue/layouts/AuthLayout.vue'),
+			component: () => import(/* webpackChunkName: "group-auth" */ '@/library_vue_vuetify/layouts/AuthLayout.vue'),
 			children: [
 				{
 					path: '',
@@ -187,7 +189,7 @@ const router = new VueRouter({
 		},
 		{
 			path: '/notFound',
-			component: () => import(/* webpackChunkName: "group-notFound" */ './library_vue/layouts/BlankLayout.vue'),
+			component: () => import(/* webpackChunkName: "group-notFound" */ '@/library_vue_vuetify/layouts/BlankLayout.vue'),
 			children: [
 				{
 					path: '',
@@ -201,7 +203,7 @@ const router = new VueRouter({
 		},
 		{
 			path: '*',
-			component: () => import(/* webpackChunkName: "group-blank" */ './library_vue/layouts/BlankLayout.vue'),
+			component: () => import(/* webpackChunkName: "group-blank" */ '@/library_vue_vuetify/layouts/BlankLayout.vue'),
 			meta: {
 				notFound: true,
 				requiresAuth: false
@@ -213,7 +215,7 @@ const router = new VueRouter({
 // eslint-disable-next-line
 router.beforeResolve((to, from, next) => {
 	if (to.matched.some(record => record.meta.notFound)) {
-		Vue.prototype.$navRouter.push('/notFound');
+		GlobalUtility.$navRouter.push('/notFound');
 		return;
 	}
 

@@ -327,15 +327,16 @@ import { firstBy } from 'thenby';
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
-import VDirectionButton from '@/library_vue/components/VDirectionButton';
+import VDirectionButton from '@/library_vue_vuetify/components/VDirectionButton';
 import VGameSystemListingSyleButton from '@/components/gameSystems/VGameSystemListingSyleButton';
-import VNumber from '@/library_vue/components/form/VNumberField';
-import VSelect2 from '@/library_vue/components/form/VSelect';
-import VText2 from '@/library_vue/components/form/VTextField';
+import VNumber from '@/library_vue_vuetify/components/form/VNumberField';
+import VSelect2 from '@/library_vue_vuetify/components/form/VSelect';
+import VText2 from '@/library_vue_vuetify/components/form/VTextField';
 
 import ScenarioSnippet from '@/components/gameSystems/ScenarioSnippet';
 import ShareDialog from '@/components/ShareDialog';
@@ -391,11 +392,11 @@ export default {
 	},
 	computed: {
 		characterList() {
-			return this.value ? this.value : this.$store.state.characters.characters;
+			return this.value ? this.value : GlobalUtility.$store.state.characters.characters;
 		},
 		gameSystemName: {
 			get() {
-				const results = this.$store.getters.getGameSystem(this.gameSystemFilter);
+				const results = GlobalUtility.$store.getters.getGameSystem(this.gameSystemFilter);
 				return results ? results.name : '';
 			},
 			set() {}
@@ -413,7 +414,7 @@ export default {
 				return value;
 			},
 			set: function (newVal) {
-				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
 			}
 		},
 		seasonFilter: {
@@ -429,7 +430,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
 			}
 		},
 		scenarioNameFilter: {
@@ -481,7 +482,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
 			}
 		},
 		sortDirection: {
@@ -498,7 +499,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
 		},
 		scenarioSeasons: {
@@ -509,24 +510,24 @@ export default {
 
 				let output = scenarios.filter(l => l.season != null).flatMap(l => l.season).filter(l => l !== null && l !== '');
 				output = [...new Set(output)];
-				return VueUtility.selectBlank(output, this.$trans.t('forms.scenarios.season'));
+				return VueUtility.selectBlank(output, GlobalUtility.$trans.t('forms.scenarios.season'));
 			},
 			cache: false
 		},
 		scenariosListingTypeFilterList() {
 			return VueUtility.selectBlank([ { 
 					id: SharedConstants.ScenarioListingTypes.Played, 
-					name: this.$trans.t('forms.scenarios.played') 
+					name: GlobalUtility.$trans.t('forms.scenarios.played') 
 				}, 
 				{ 
 					id: SharedConstants.ScenarioListingTypes.NotPlayed, 
-					name: this.$trans.t('forms.not') + ' ' + this.$trans.t('forms.scenarios.played') 
+					name: GlobalUtility.$trans.t('forms.not') + ' ' + GlobalUtility.$trans.t('forms.scenarios.played') 
 				}, 
 				{ 
 					id: SharedConstants.ScenarioListingTypes.All, 
-					name: this.$trans.t('forms.scenarios.all') 
+					name: GlobalUtility.$trans.t('forms.scenarios.all') 
 				} 
-			], this.$trans.t('forms.scenarios.name') + ' ' + this.$trans.t('forms.listing') + ' ' + this.$trans.t('forms.scenarios.type'));
+			], GlobalUtility.$trans.t('forms.scenarios.name') + ' ' + GlobalUtility.$trans.t('forms.listing') + ' ' + GlobalUtility.$trans.t('forms.scenarios.type'));
 		},
 		sortKeys: {
 			get: function () {
@@ -534,13 +535,13 @@ export default {
 				let sortKeys = [];
 
 				if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.Played) {
-					sortKeys.push({ id: SharedConstants.SortBy.Scenarios.CharacterName, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.name') });
-					sortKeys.push({ id: SharedConstants.SortBy.Scenarios.DatePlayed, name: this.$trans.t('forms.scenarios.datePlayed') });
+					sortKeys.push({ id: SharedConstants.SortBy.Scenarios.CharacterName, name: GlobalUtility.$trans.t('forms.characters.name') + ' ' + GlobalUtility.$trans.t('forms.name') });
+					sortKeys.push({ id: SharedConstants.SortBy.Scenarios.DatePlayed, name: GlobalUtility.$trans.t('forms.scenarios.datePlayed') });
 				}
 					
-				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.ScenarioName, name: this.$trans.t('forms.scenarios.name') + ' ' + this.$trans.t('forms.name') });
-				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.ScenarioNumber, name: this.$trans.t('forms.scenarios.name') + ' ' + this.$trans.t('forms.number') });
-				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.Season, name: this.$trans.t('forms.season') });
+				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.ScenarioName, name: GlobalUtility.$trans.t('forms.scenarios.name') + ' ' + GlobalUtility.$trans.t('forms.name') });
+				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.ScenarioNumber, name: GlobalUtility.$trans.t('forms.scenarios.name') + ' ' + GlobalUtility.$trans.t('forms.number') });
+				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.Season, name: GlobalUtility.$trans.t('forms.season') });
 				
 				return sortKeys;
 			}
@@ -555,7 +556,7 @@ export default {
 			}
 		},
 		userList() {
-			return VueUtility.selectBlank(this.users, this.$trans.t('players.name'));
+			return VueUtility.selectBlank(this.users, GlobalUtility.$trans.t('players.name'));
 		}
 	},
 	created() {
@@ -579,7 +580,7 @@ export default {
 				return;
 			}
 
-			AppUtility.settings().clearUser(this.$store, this.user, (settings) => {
+			AppUtility.settings().clearUser(GlobalUtility.$store, this.user, (settings) => {
 				this.scenarioNameValue = null;
 				this.scenarioNumberValue = null;
 				settings.scenarios.seasonFilter = null;

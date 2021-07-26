@@ -1,9 +1,10 @@
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 export default {
 	name: 'BaseBoonLookupDialog',
@@ -27,7 +28,7 @@ export default {
 	}),
 	computed: {
 		boons() {
-			let results = this.serviceGameSystem.boons(this.correlationId, this.$store);
+			let results = this.serviceGameSystem.boons(this.correlationId, GlobalUtility.$store);
 			results = results.filter(l => l.scenarioId == null);
 			if (this.boonNameFilter)
 				results = results.filter(l => l.name ? l.name.toLowerCase().indexOf(this.boonNameFilter.toLowerCase()) > -1 : false);
@@ -40,7 +41,7 @@ export default {
 	},
 	methods: {
 		boonName(item) {
-			return this.serviceGameSystem.boonName(this.correlationId(), item, this.$store);
+			return this.serviceGameSystem.boonName(this.correlationId(), item, GlobalUtility.$store);
 		},
 		async close() {
 		},
@@ -48,7 +49,7 @@ export default {
 			this.$emit('cancel');
 		},
 		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
+			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
 		},
 		initializeServices() {
 			this.notImplementedError();
@@ -57,7 +58,7 @@ export default {
 			const results = [];
 			for (const played of this.played) {
 				if (played.scenarioId === id) {
-					played.character = this.$store.getters.getCharacter(played.characterId);
+					played.character = GlobalUtility.$store.getters.getCharacter(played.characterId);
 					results.push(played);
 				}
 			}
@@ -66,7 +67,7 @@ export default {
 		hasPlayed(id) {
 			for (const played of this.played) {
 				if (played.scenarioId === id) {
-					played.character = this.$store.getters.getCharacter(played.characterId);
+					played.character = GlobalUtility.$store.getters.getCharacter(played.characterId);
 					return true;
 				}
 			}
@@ -79,7 +80,7 @@ export default {
 		playedCharacterName(item) {
 			if (!item)
 				return null;
-			const character = this.$store.getters.getCharacter(item.characterId);
+			const character = GlobalUtility.$store.getters.getCharacter(item.characterId);
 			if (!character)
 				return null;
 
@@ -88,7 +89,7 @@ export default {
 		playedCharacterNumber(item) {
 			if (!item)
 				return null;
-			const character = this.$store.getters.getCharacter(item.characterId);
+			const character = GlobalUtility.$store.getters.getCharacter(item.characterId);
 			if (!character)
 				return null;
 
@@ -98,7 +99,7 @@ export default {
 			return LibraryUtility.getDateHuman(item ? item.timestamp : 0);
 		},
 		async resetDialog(correlationId) {
-			this.played = this.$store.getters.getScenarioPlayed(this.characterId);
+			this.played = GlobalUtility.$store.getters.getScenarioPlayed(this.characterId);
 			this.boonNameFilter = null;
 			await this.resetDialogI(correlationId);
 		},

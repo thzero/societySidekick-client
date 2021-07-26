@@ -1,9 +1,8 @@
 <script>
-import Vue from 'vue';
-
 import LibraryConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 
 import baseEdit from '@/components/baseEdit';
 
@@ -42,30 +41,30 @@ export default {
 	created() {
 		this.initializeServices();
 		this.lookups = this.initializeLookups(this.correlationId());
-		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
+		this._serviceMarkup = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 	},
 	methods: {
 		boonName(id) {
-			return this.serviceGameSystem.boonNameById(this.correlationId(), id, this.$store);
+			return this.serviceGameSystem.boonNameById(this.correlationId(), id, GlobalUtility.$store);
 		},
 		factionName(id) {
-			return this.serviceGameSystem.factionNameById(this.correlationId(), id, this.$store);
+			return this.serviceGameSystem.factionNameById(this.correlationId(), id, GlobalUtility.$store);
 		},
 		dialogScenarioOpen() {
 			this.$emit('dialog-edit', this.value);
 		},
 		getGameSystemName(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
+			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
 		},
 		initializeServices() {
 			this.notImplementedError();
 		},
 		locationName(id) {
-			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), this.$store.state.user.user, id);
+			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), GlobalUtility.$store.state.user.user, id);
 			return location ? '@ ' + location.name : '';
 		},
 		markup(correlationId, value) {
@@ -74,10 +73,10 @@ export default {
 			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, value));
 		},
 		scenarioDescription(value) {
-			return this.markup(this.correlationId(), this.serviceGameSystem.determineScenarioDescription(this.correlationId(), value, this.$store));
+			return this.markup(this.correlationId(), this.serviceGameSystem.determineScenarioDescription(this.correlationId(), value, GlobalUtility.$store));
 		},
 		scenarioName(value) {
-			return this.serviceGameSystem.determineScenarioName(this.correlationId(), value, this.$store);
+			return this.serviceGameSystem.determineScenarioName(this.correlationId(), value, GlobalUtility.$store);
 		},
 		scenarioParticipantName(id) {
 			return this.serviceGameSystem.scenarioLookupParticipantName(this.correlationId(), id, this.lookups);

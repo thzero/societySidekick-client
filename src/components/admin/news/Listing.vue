@@ -88,11 +88,12 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import baseListing from '@/library_vue/components/admin/news/baseListing';
 import EditDialog from '@/components/admin/news/EditDialog';
-import VMarkdown from '@/library_vue/components/markup/VMarkdown';
+import VMarkdown from '@/library_vue_vuetify/components/markup/VMarkdown';
 
 import NewsData from '@/common/data/news';
 
@@ -108,19 +109,19 @@ export default {
 			return LibraryUtility.instantiate(new NewsData());
 		},
 		getGameSystemName(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		initializeHeaders() {
 			return [
-				{ text: this.$trans.t('news.name'), align: 'left', value: 'title', },
-				{ text: this.$trans.t('news.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: this.$trans.t('news.article'), align: 'left', sortable: false, value: 'article' },
-				{ text: this.$trans.t('news.sticky'), align: 'left', value: 'sticky' },
-				{ text: this.$trans.t('news.requiresAuth'), align: 'left', value: 'requiresAuth' },
-				{ text: this.$trans.t('news.publishDate'), align: 'left', value: 'timestamp' },
-				{ text: this.$trans.t('news.statusName'), align: 'left', value: 'status' },
-				{ text: this.$trans.t('news.actions'), align: 'right', value: 'action', sortable: false }
+				{ text: GlobalUtility.$trans.t('news.name'), align: 'left', value: 'title', },
+				{ text: GlobalUtility.$trans.t('news.gameSystem'), align: 'left', value: 'gameSystemId' },
+				{ text: GlobalUtility.$trans.t('news.article'), align: 'left', sortable: false, value: 'article' },
+				{ text: GlobalUtility.$trans.t('news.sticky'), align: 'left', value: 'sticky' },
+				{ text: GlobalUtility.$trans.t('news.requiresAuth'), align: 'left', value: 'requiresAuth' },
+				{ text: GlobalUtility.$trans.t('news.publishDate'), align: 'left', value: 'timestamp' },
+				{ text: GlobalUtility.$trans.t('news.statusName'), align: 'left', value: 'status' },
+				{ text: GlobalUtility.$trans.t('news.actions'), align: 'right', value: 'action', sortable: false }
 			];
 		}
 	}

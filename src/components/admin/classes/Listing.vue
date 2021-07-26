@@ -78,6 +78,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseList from '@/components/admin/baseList';
 import EditDialog from '@/components/admin/classes/EditDialog';
 
@@ -91,12 +93,12 @@ export default {
 	extends: baseList,
 	computed: {
 		classes() {
-			const classes = this.$store.state.adminClasses.classes;
+			const classes = GlobalUtility.$store.state.adminClasses.classes;
 			return classes ? classes.slice(0) : [];
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminClasses.searchAdminClasses(this.correlationId(), {});
+		await GlobalUtility.$store.dispatcher.adminClasses.searchAdminClasses(this.correlationId(), {});
 	},
 	methods: {
 		defaultItem() {
@@ -111,10 +113,10 @@ export default {
 		},
 		initializeHeaders() {
 			return [
-				{ text: this.$trans.t('classes.name'), align: 'left', value: 'name', },
-				{ text: this.$trans.t('classes.type'), align: 'left', value: 'type' },
-				{ text: this.$trans.t('classes.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: this.$trans.t('classes.actions'), align: 'right', value: 'action', sortable: false }
+				{ text: GlobalUtility.$trans.t('classes.name'), align: 'left', value: 'name', },
+				{ text: GlobalUtility.$trans.t('classes.type'), align: 'left', value: 'type' },
+				{ text: GlobalUtility.$trans.t('classes.gameSystem'), align: 'left', value: 'gameSystemId' },
+				{ text: GlobalUtility.$trans.t('classes.actions'), align: 'right', value: 'action', sortable: false }
 			];
 		}
 	}

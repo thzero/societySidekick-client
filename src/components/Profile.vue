@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import base from '@/library_vue/components/base';
 
 export default {
@@ -31,7 +33,7 @@ export default {
 			return (this.user != null && this.user.external.picture != null ? this.user.external.picture : null);
 		},
 		user() {
-			return this.$store.state.user.user;
+			return GlobalUtility.$store.state.user.user;
 		}
 	}
 };

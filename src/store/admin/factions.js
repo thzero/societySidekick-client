@@ -1,7 +1,6 @@
-import Vue from 'vue';
-
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
@@ -11,7 +10,7 @@ const store = {
 	},
 	actions: {
 		async createAdminFaction({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
 			const response = await service.create(params.correlationId, params.item);
 			this.$logger.debug('store.admin.factions', 'createAdminFaction', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -19,7 +18,7 @@ const store = {
 			return response;
 		},
 		async deleteAdminFaction({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
 			const response = await service.delete(params.correlationId, params.id);
 			this.$logger.debug('store.admin.factions', 'deleteAdminFaction', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -27,13 +26,13 @@ const store = {
 			return response;
 		},
 		async searchAdminFactions({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
 			const response = await service.search(params.correlationId, params.params);
 			this.$logger.debug('store.admin.factions', 'searchAdminFactions', 'response', response, params.correlationId);
 			commit('setAdminFactionsListing', { correlationId: params.correlationId, list: response.success && response.results ? response.results.data : null });
 		},
 		async updateAdminFaction({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);
 			const response = await service.update(params.correlationId, params.item);
 			this.$logger.debug('store.admin.factions', 'updateAdminFaction', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -60,16 +59,16 @@ const store = {
 	},
 	dispatcher: {
 		async createAdminFaction(correlationId, item) {
-			return await Vue.prototype.$store.dispatch('createAdminFaction', { correlationId: correlationId, item: item });
+			return await GlobalUtility.$store.dispatch('createAdminFaction', { correlationId: correlationId, item: item });
 		},
 		async deleteAdminFaction(correlationId, id) {
-			return await Vue.prototype.$store.dispatch('deleteAdminFaction', { correlationId: correlationId, id: id });
+			return await GlobalUtility.$store.dispatch('deleteAdminFaction', { correlationId: correlationId, id: id });
 		},
 		async searchAdminFactions(correlationId, params) {
-			await Vue.prototype.$store.dispatch('searchAdminFactions', { correlationId: correlationId, params: params });
+			await GlobalUtility.$store.dispatch('searchAdminFactions', { correlationId: correlationId, params: params });
 		},
 		async updateAdminFaction(correlationId, item) {
-			return await Vue.prototype.$store.dispatch('updateAdminFaction', { correlationId: correlationId, item: item });
+			return await GlobalUtility.$store.dispatch('updateAdminFaction', { correlationId: correlationId, item: item });
 		}
 	}
 };

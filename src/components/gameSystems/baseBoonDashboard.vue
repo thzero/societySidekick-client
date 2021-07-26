@@ -1,4 +1,5 @@
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import baseDashboard from '@/components/baseDashboard';
@@ -26,7 +27,7 @@ export default {
 	},
 	methods: {
 		boonName(id) {
-			return this.serviceGameSystem.boonNameById(this.correlationId(), id, this.$store);
+			return this.serviceGameSystem.boonNameById(this.correlationId(), id, GlobalUtility.$store);
 		},
 		async dialogBoonEdit(value) {
 			if (!value)

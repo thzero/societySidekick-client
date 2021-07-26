@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseAdmin from '@/library_vue/components/baseAdmin';
 
 // Admin Update
@@ -103,13 +105,13 @@ export default {
 		initializeTabs() {
 			// TODO: Depending on security results, only some of these should be displayed...
 			// Admin Update
-			this.tabSupport.add(this.tabNews, 'new_releases', this.$trans.t('admin.news'));
-			this.tabSupport.add(this.tabBoons, 'new_releases', this.$trans.t('admin.boons'));
-			this.tabSupport.add(this.tabClasses, 'new_releases', this.$trans.t('admin.classes'));
-			this.tabSupport.add(this.tabEquipment, 'new_releases', this.$trans.t('admin.equipment'));
-			this.tabSupport.add(this.tabFactions, 'new_releases', this.$trans.t('admin.factions'));
-			this.tabSupport.add(this.tabScenarios, 'new_releases', this.$trans.t('admin.scenarios'));
-			this.tabSupport.add(this.tabUsers, 'new_releases', this.$trans.t('admin.users'));
+			this.tabSupport.add(this.tabNews, 'new_releases', GlobalUtility.$trans.t('admin.news'));
+			this.tabSupport.add(this.tabBoons, 'new_releases', GlobalUtility.$trans.t('admin.boons'));
+			this.tabSupport.add(this.tabClasses, 'new_releases', GlobalUtility.$trans.t('admin.classes'));
+			this.tabSupport.add(this.tabEquipment, 'new_releases', GlobalUtility.$trans.t('admin.equipment'));
+			this.tabSupport.add(this.tabFactions, 'new_releases', GlobalUtility.$trans.t('admin.factions'));
+			this.tabSupport.add(this.tabScenarios, 'new_releases', GlobalUtility.$trans.t('admin.scenarios'));
+			this.tabSupport.add(this.tabUsers, 'new_releases', GlobalUtility.$trans.t('admin.users'));
 		}
 	}
 };

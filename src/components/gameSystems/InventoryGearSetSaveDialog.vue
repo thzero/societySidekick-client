@@ -53,13 +53,14 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import AppUtility from '@/utility/app';
 
-import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 import baseInventoryGearSetDialog from '@/components/gameSystems/baseInventoryGearSetDialog';
 
@@ -97,7 +98,7 @@ export default {
 		},
 		async preComplete(correlationId) {
 			if (!this.gearSetId && !this.name)
-				return this.error('InventoryGearSetSaveDialog', 'preComplete', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.eitherGearSetOrName'));
+				return this.error('InventoryGearSetSaveDialog', 'preComplete', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.inventories.eitherGearSetOrName'));
 
 			if (!String.isNullOrEmpty(this.name) && this.gearSetId)
 				return await this.rename(correlationId);
@@ -114,14 +115,14 @@ export default {
 			return this.success(correlationId);
 		},
 		async rename(correlationId) {
-			const response = await AppUtility.settings().updateSettingsUserGameSystem(this.$store, this.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name }, (settings, newVal) => {
+			const response = await AppUtility.settings().updateSettingsUserGameSystem(GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name }, (settings, newVal) => {
 				if (!newVal && !this.gameSystemId)
-					return this.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.invalidRequest'));
+					return this.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.invalidRequest'));
 
 				const name = String.trim(newVal.name);
 				const gearSet = settings.gearSets.find(l => l.id === newVal.gearSetId);
 				if (!gearSet)
-					return this.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.renameInvalidGearSet'));
+					return this.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.inventories.renameInvalidGearSet'));
 
 				gearSet.name = name;
 
@@ -131,12 +132,12 @@ export default {
 			return response;
 		},
 		async save(correlationId) {
-			const response = await AppUtility.settings().updateSettingsUserGameSystem(correlationId, this.$store, this.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name, inventory: this.inventory }, (settings, newVal) => {
+			const response = await AppUtility.settings().updateSettingsUserGameSystem(correlationId, GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name, inventory: this.inventory }, (settings, newVal) => {
 				if (!newVal && !this.gameSystemId)
-					return this.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.invalidRequest'));
+					return this.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.invalidRequest'));
 
 				if (newVal.name && newVal.gearSetId)
-					return this.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(this.$trans.t('errors.inventories.eitherGearSetOrName'));
+					return this.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.inventories.eitherGearSetOrName'));
 
 				let gearSet;
 				if (newVal.name) {

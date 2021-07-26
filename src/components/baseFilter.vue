@@ -2,6 +2,7 @@
 import base from '@/library_vue/components/base';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 
 export default {
 	name: 'BaseFilter',
@@ -32,7 +33,7 @@ export default {
 					return this.gameSystemFilterOverride;
 				}
 
-				return AppUtility.settings().getSettingsUserGameSystemFilter(this.correlationId(), this.$store.state.user.user, (settings) => settings.gameSystemFilter);
+				return AppUtility.settings().getSettingsUserGameSystemFilter(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.gameSystemFilter);
 			},
 			set: function (newVal) {
 				if (this.externalList) {
@@ -40,7 +41,7 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserGameSystemFilter(this.correlationId(), this.$store, this.$store.state.user.user, newVal, (settings) => { return settings.gameSystemFilter = newVal; });
+				AppUtility.settings().updateSettingsUserGameSystemFilter(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, newVal, (settings) => { return settings.gameSystemFilter = newVal; });
 			}
 		}
 	},
@@ -50,7 +51,7 @@ export default {
 	},
 	methods: {
 		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
+			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
 		},
 		initializeServices() {
 			this.notImplementedError();

@@ -1,14 +1,13 @@
 <script>
-import Vue from 'vue';
-
 import LibraryConstants from '@thzero/library_client/constants';
 
 import LibraryUtility from '@thzero/library_common/utility';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import VueUtility from '@/library_vue/utility';
 
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 export default {
 	name: 'BaseScenarioLookupDialog',
@@ -42,14 +41,14 @@ export default {
 	}),
 	computed: {
 		scenarios() {
-			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.correlationId(), this.$store);
+			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.correlationId(), thiGlobalUtilitys.$store);
 			results = this.scenarioListFilter(results);
 			if (this.scenarioNameFilter)
 				results = results.filter(l => l.name ? l.name.toLowerCase().indexOf(this.scenarioNameFilter.toLowerCase()) > -1 : false);
 			return results;
 		},
 		scenariosSeasons() {
-			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.correlationId(), this.$store).filter(l => l.season && !String.isNullOrEmpty(l.season));
+			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.correlationId(), GlobalUtility.$store).filter(l => l.season && !String.isNullOrEmpty(l.season));
 			results = [...new Set(results.map(item => item.season))].map(item => { return { id: item, name: item }; });
 			return VueUtility.selectBlank(results);
 		}
@@ -57,7 +56,7 @@ export default {
 	created() {
 		this.initializeServices();
 		this.lookups = this.initializeLookups(this.correlationId());
-		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
+		this._serviceMarkup = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 	},
 	methods: {
 		async close() {
@@ -69,7 +68,7 @@ export default {
 			return this.serviceGameSystemOverride ? this.serviceGameSystemOverride : this.serviceGameSystem;
 		},
 		initializeLookups(correlationId) {
-			return this.getServiceGameSystem().initializeLookups(correlationId, this.$injector);
+			return this.getServiceGameSystem().initializeLookups(correlationId, GlobalUtility.$injector);
 		},
 		initializeServices() {
 			this.notImplementedError();
@@ -78,7 +77,7 @@ export default {
 			const results = [];
 			for (const played of this.played) {
 				if (played.scenarioId === id) {
-					played.character = this.$store.getters.getCharacter(played.characterId);
+					played.character = GlobalUtility.$store.getters.getCharacter(played.characterId);
 					results.push(played);
 				}
 			}
@@ -87,7 +86,7 @@ export default {
 		hasPlayed(id) {
 			for (const played of this.played) {
 				if (played.scenarioId === id) {
-					played.character = this.$store.getters.getCharacter(played.characterId);
+					played.character = GlobalUtility.$store.getters.getCharacter(played.characterId);
 					return true;
 				}
 			}
@@ -105,7 +104,7 @@ export default {
 		playedCharacterName(item) {
 			if (!item)
 				return null;
-			const character = this.$store.getters.getCharacter(item.characterId);
+			const character = GlobalUtility.$store.getters.getCharacter(item.characterId);
 			if (!character)
 				return null;
 
@@ -114,7 +113,7 @@ export default {
 		playedCharacterNumber(item) {
 			if (!item)
 				return null;
-			const character = this.$store.getters.getCharacter(item.characterId);
+			const character = GlobalUtility.$store.getters.getCharacter(item.characterId);
 			if (!character)
 				return null;
 
@@ -125,7 +124,7 @@ export default {
 		},
 		// eslint-disable-next-line
 		async resetDialog(correlationId) {
-			this.played = this.$store.getters.getScenarioPlayed(this.characterId);
+			this.played = GlobalUtility.$store.getters.getScenarioPlayed(this.characterId);
 			this.scenarioAdventureFilter = null;
 			this.scenarioNameFilter = null;
 			this.scenarioSeasonFilter = null;

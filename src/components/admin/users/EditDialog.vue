@@ -1,7 +1,7 @@
 <script>
 import SharedConstants from '@/common/constants';
 
-import VUsersAdminFormDialog from '@/library_vue/components/admin/users/VUsersAdminFormDialog';
+import VUsersAdminFormDialog from '@/library_vue_vuetify/components/admin/users/VUsersAdminFormDialog';
 
 export default {
 	name: 'AdminUsersEditDialog',

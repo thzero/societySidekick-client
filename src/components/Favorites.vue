@@ -23,10 +23,11 @@ import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 
 import base from '@/library_vue/components/base';
 import ScenarioList from '@/components/gameSystems/ScenarioList';
-import VLoadingOverlay from '@/library_vue/components/VLoadingOverlay';
+import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
 
 const DelayMs = 0; // 250
 
@@ -45,28 +46,28 @@ export default {
 	}),
 	computed: {
 		isAuthUserUser() {
-			const authUserId = this.$store.state.user.user ? this.$store.state.user.user.id : null;
+			const authUserId = GlobalUtility.$store.state.user.user ? GlobalUtility.$store.state.user.user.id : null;
 			const userId = this.user ? this.user.id : null;
 			return authUserId === userId;
 		},
 		tab: {
 			get: function () {
-				return this.getSettingsUserTab(this.correlationId(), this.$store.state.user.user, (settings) => settings.tab);
+				return this.getSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.tab);
 			},
 			set: function (newVal) {
-				this.updateSettingsUserTab(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
+				this.updateSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
 			}
 		},
 		user() {
-			return this.$store.state.user.user;
+			return GlobalUtility.$store.state.user.user;
 		},
 		userDisplayName() {
 			return AppUtility.userDisplayName(this.user);
 		}
 	},
 	created() {
-		this.serviceCharacters = this.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-		this.serviceUsers = this.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
+		this.serviceCharacters = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+		this.serviceUsers = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
 	},
 	async mounted() {
 		this.initializeCompleted = false;
@@ -86,11 +87,11 @@ export default {
 				if (!responseFavorites || !responseFavorites.success)
 					return;
 
-				const user = this.$store.state.user.user;
+				const user = GlobalUtility.$store.state.user.user;
 				const characters = responseFavorites.results.data;
-				await this.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true });
+				await GlobalUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true });
 				this.logger.debug('Favorites', 'fetch', 'characters', characters, correlationId);
-				for (const char of this.$store.state.characters.characters) {
+				for (const char of GlobalUtility.$store.state.characters.characters) {
 					char.user = user;
 					characters.push(char);
 				}

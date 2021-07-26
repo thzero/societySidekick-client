@@ -34,11 +34,12 @@
 
 <script>
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VCheckboxWithValidation from '@/library_vue/components/form/VCheckboxWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VCheckboxWithValidation from '@/library_vue_vuetify/components/form/VCheckboxWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 export default {
 	name: 'FavoriteDialog',
@@ -68,7 +69,7 @@ export default {
 		},
 		// eslint-disable-next-line
 		async preCompleteResponseOk(correlationId) {
-			return AppUtility.settings().updateSettingsUserFavorite(correlationId, this.$store, this.$store.state.user.user, this.id, this.favorite);
+			return AppUtility.settings().updateSettingsUserFavorite(correlationId, GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.id, this.favorite);
 		},
 		// eslint-disable-next-line
 		async resetDialog(correlationId, value) {

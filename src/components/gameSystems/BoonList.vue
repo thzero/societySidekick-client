@@ -210,14 +210,15 @@
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
-import VDirectionButton from '@/library_vue/components/VDirectionButton';
+import VDirectionButton from '@/library_vue_vuetify/components/VDirectionButton';
 import VGameSystemListingSyleButton from '@/components/gameSystems/VGameSystemListingSyleButton';
-import VSelect2 from '@/library_vue/components/form/VSelect';
-import VText2 from '@/library_vue/components/form/VTextField';
+import VSelect2 from '@/library_vue_vuetify/components/form/VSelect';
+import VText2 from '@/library_vue_vuetify/components/form/VTextField';
 
 import BoonSnippet from '@/components/gameSystems/BoonSnippet';
 
@@ -276,11 +277,11 @@ export default {
 			}
 		},
 		characterList() {
-			return this.value ? this.value : this.$store.state.characters.characters;
+			return this.value ? this.value : GlobalUtility.$store.state.characters.characters;
 		},
 		gameSystemName: {
 			get() {
-				const results = this.$store.getters.getGameSystem(this.gameSystemFilter);
+				const results = GlobalUtility.$store.getters.getGameSystem(this.gameSystemFilter);
 				return results ? results.name : '';
 			},
 			set() {}
@@ -298,7 +299,7 @@ export default {
 				return value;
 			},
 			set: function (newVal) {
-				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
 			}
 		},
 		scenarioNameFilter: {
@@ -315,7 +316,7 @@ export default {
 				return AppUtility.settings().getSettingsUserBoons(this.correlationId(), this.user, (settings) => settings.seasonFilter);
 			},
 			set: function (newVal) {
-				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
+				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
 			}
 		},
 		sortBy: {
@@ -324,7 +325,7 @@ export default {
 				return result ? result : SharedConstants.SortBy.Boons.BoonName;
 			},
 			set: function (newVal) {
-				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
+				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
 			}
 		},
 		sortDirection: {
@@ -332,7 +333,7 @@ export default {
 				return AppUtility.settings().getSettingsUserBoons(this.correlationId(), this.user, (settings) => settings.sortDirection);
 			},
 			set: function (newVal) {
-				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), this.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
+				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
 		},
 		scenarioSeasons: {
@@ -343,14 +344,14 @@ export default {
 
 				let output = scenarios.filter(l => l.season != null).flatMap(l => l.season).filter(l => l !== null && l !== '');
 				output = [...new Set(output)];
-				return VueUtility.selectBlank(output, this.$trans.t('forms.scenarios.season'));
+				return VueUtility.selectBlank(output, GlobalUtility.$trans.t('forms.scenarios.season'));
 			},
 			cache: false
 		},
 		sortKeys: {
 			get: function() {
 				return [
-					{ id: SharedConstants.SortBy.Boons.BoonName, name: this.$trans.t('forms.boons.name') + ' ' + this.$trans.t('forms.name') }
+					{ id: SharedConstants.SortBy.Boons.BoonName, name: GlobalUtility.$trans.t('forms.boons.name') + ' ' + GlobalUtility.$trans.t('forms.name') }
 				];
 			}
 		},
@@ -364,7 +365,7 @@ export default {
 			}
 		},
 		userList() {
-			return VueUtility.selectBlank(this.users, this.$trans.t('players.name'));
+			return VueUtility.selectBlank(this.users, GlobalUtility.$trans.t('players.name'));
 		}
 	},
 	created() {
@@ -376,7 +377,7 @@ export default {
 	},
 	methods: {
 		clickClear() {
-			AppUtility.settings().clearUser(this.$store, this.user, (settings) => {
+			AppUtility.settings().clearUser(GlobalUtility.$store, this.user, (settings) => {
 				this.boonNameValue = null;
 				this.scenarioNameValue = null;
 				settings.scenarios.seasonFilter = null;

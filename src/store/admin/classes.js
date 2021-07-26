@@ -1,7 +1,6 @@
-import Vue from 'vue';
-
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
@@ -11,7 +10,7 @@ const store = {
 	},
 	actions: {
 		async createAdminClass({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
 			const response = await service.create(params.correlationId, params.item);
 			this.$logger.debug('store.admin.classes', 'createAdminClass', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -19,7 +18,7 @@ const store = {
 			return response;
 		},
 		async deleteAdminClass({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
 			const response = await service.delete(params.correlationId, params.id);
 			this.$logger.debug('store.admin.classes', 'deleteAdminClass', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -27,13 +26,13 @@ const store = {
 			return response;
 		},
 		async searchAdminClasses({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
 			const response = await service.search(params.correlationId, params.params);
 			this.$logger.debug('store.admin.classes', 'searchAdminClasses', 'response', response, params.correlationId);
 			commit('setAdminClassesListing', { correlationId: params.correlationId, list: response.success && response.results ? response.results.data : null });
 		},
 		async updateAdminClass({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
 			const response = await service.update(params.correlationId, params.item);
 			this.$logger.debug('store.admin.classes', 'updateAdminClass', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -60,16 +59,16 @@ const store = {
 	},
 	dispatcher: {
 		async createAdminClass(correlationId, item) {
-			return await Vue.prototype.$store.dispatch('createAdminClass', { correlationId: correlationId, item: item });
+			return await GlobalUtility.$store.dispatch('createAdminClass', { correlationId: correlationId, item: item });
 		},
 		async deleteAdminClass(correlationId, id) {
-			return await Vue.prototype.$store.dispatch('deleteAdminClass', { correlationId: correlationId, id: id });
+			return await GlobalUtility.$store.dispatch('deleteAdminClass', { correlationId: correlationId, id: id });
 		},
 		async searchAdminClasses(correlationId, params) {
-			await Vue.prototype.$store.dispatch('searchAdminClasses', { correlationId: correlationId, params: params });
+			await GlobalUtility.$store.dispatch('searchAdminClasses', { correlationId: correlationId, params: params });
 		},
 		async updateAdminClass(correlationId, item) {
-			return await Vue.prototype.$store.dispatch('updateAdminClass', { correlationId: correlationId, item: item });
+			return await GlobalUtility.$store.dispatch('updateAdminClass', { correlationId: correlationId, item: item });
 		}
 	}
 };

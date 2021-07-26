@@ -39,12 +39,13 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VNumberFieldWithValidation from '@/library_vue/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 export default {
 	name: 'CharacterNewDialog',
@@ -63,7 +64,7 @@ export default {
 	}),
 	computed: {
 		gameSystems() {
-			const results = this.$store.state.gameSystems;
+			const results = GlobalUtility.$store.state.gameSystems;
 			return results ? results.filter(l => l.active) : [];
 		}
 	},
@@ -79,7 +80,7 @@ export default {
 		}
 	},
 	created() {
-		this.serviceCharacters = this.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+		this.serviceCharacters = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 	},
 	methods: {
 		async close() {
@@ -98,10 +99,10 @@ export default {
 		async preComplete(correlationId) {
 			const name = String.trim(this.name);
 			const number = String.trim(this.number + '');
-			const response = await this.$store.dispatcher.characters.createCharacter(correlationId, { gameSystemId: this.gameSystemId, name: name, number: number });
+			const response = await GlobalUtility.$store.dispatcher.characters.createCharacter(correlationId, { gameSystemId: this.gameSystemId, name: name, number: number });
 			this.logger.debug('CharacterNewDialog', 'preComplete', 'response', response, correlationId);
 			if (response && response.success) {
-				this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ response.results.id ]}));
+				GlobalUtility.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ response.results.id ]}));
 				return response;
 			}
 

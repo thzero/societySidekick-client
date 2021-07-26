@@ -1,8 +1,7 @@
-import Vue from 'vue';
-
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
@@ -13,10 +12,10 @@ const store = {
 	},
 	actions: {
 		async getScenarioListing({ commit }, params) {
-			const crypto = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
+			const crypto = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
 			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'scenarios', params.gameSystemId))
 				return;
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
 			const response = await service.listing(params.correlationId, params.gameSystemId);
 			this.$logger.debug('store.scenarios', 'getScenarioListing', 'response', response, params.correlationId);
 			if (response.success) {
@@ -27,7 +26,7 @@ const store = {
 			}
 		},
 		async getScenarioListingPlayed({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
 			const response = await service.played(params.correlationId, params.characterId);
 			this.$logger.debug('store.scenarios', 'getScenarioListingPlayed', 'response', response, params.correlationId);
 			commit('setScenarioListingPlayed', { correlationId: params.correlationId, played: response.success && response.results ? response.results : null, characterId: params.characterId });
@@ -71,10 +70,10 @@ const store = {
 	},
 	dispatcher: {
 		async getScenarioListing(correlationId, gameSystemId) {
-			await Vue.prototype.$store.dispatch('getScenarioListing', { correlationId: correlationId, gameSystemId: gameSystemId });
+			await GlobalUtility.$store.dispatch('getScenarioListing', { correlationId: correlationId, gameSystemId: gameSystemId });
 		},
 		async getScenarioListingPlayed(correlationId, characterId) {
-			return await Vue.prototype.$store.dispatch('getScenarioListingPlayed', { correlationId: correlationId, characterId: characterId });
+			return await GlobalUtility.$store.dispatch('getScenarioListingPlayed', { correlationId: correlationId, characterId: characterId });
 		}
 	}
 };

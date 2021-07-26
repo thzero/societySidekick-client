@@ -54,9 +54,10 @@
 
 <script>
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VTextField from '@/library_vue/components/form/VTextField';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VTextField from '@/library_vue_vuetify/components/form/VTextField';
 
 export default {
 	name: 'ScenarioShareDialog',
@@ -104,10 +105,10 @@ export default {
 			this.shareUrl = null;
 		},
 		hasGamerTag() {
-			return this.isLoggedIn && AppUtility.settings().getSettingsUserGamerTag(this.correlationId(), this.$store.user.user);
+			return this.isLoggedIn && AppUtility.settings().getSettingsUserGamerTag(this.correlationId(), GlobalUtility.$store.user.user);
 		},
 		isLoggedIn() {
-			return this.$store.state.user && this.$store.state.user.isLoggedIn;
+			return GlobalUtility.$store.state.user && GlobalUtility.$store.state.user.isLoggedIn;
 		},
 		async ok() {
 			this.$emit('ok');
@@ -121,7 +122,7 @@ export default {
 				return;
 
 			let url = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' : ''}${window.location.port}/#/${this.url}/`;
-			url += AppUtility.generateShareKeyForUser(this.$store.state.user.user, gameSystem.friendlyId);
+			url += AppUtility.generateShareKeyForUser(GlobalUtility.$store.state.user.user, gameSystem.friendlyId);
 			this.shareUrl = url;
 		}
 	}
