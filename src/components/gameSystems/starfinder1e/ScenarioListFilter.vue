@@ -18,11 +18,12 @@ import SharedConstants from '@/common/constants';
 import Starfinder1eSharedConstants from '@/common/gameSystems/starfinder1e/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import VueUtility from '@/library_vue/utility';
 
 import baseFilter from '@/components/baseFilter';
 
-import VSelect2 from '@/library_vue/components/form/VSelect';
+import VSelect2 from '@/library_vue_vuetify/components/form/VSelect';
 
 export default {
 	name: 'Starfinder1eScenarioListFiltering',
@@ -45,7 +46,7 @@ export default {
 				if (this.externalList)
 					return this.scenarioAdventureFilterOverride;
 
-				return AppUtility.settings().getSettingsUserScenariosGameSystem(this.correlationId(), this.$store.state.user.user, SharedConstants.GameSystems.Starfinder1e.id, (settings) => settings.scenarioAdventureFilter);
+				return AppUtility.settings().getSettingsUserScenariosGameSystem(this.correlationId(), GlobalUtility.$store.state.user.user, SharedConstants.GameSystems.Starfinder1e.id, (settings) => settings.scenarioAdventureFilter);
 			},
 			set: function (newVal) {
 				if (this.externalList) {
@@ -54,12 +55,12 @@ export default {
 					return;
 				}
 
-				AppUtility.settings().updateSettingsUserScenariosGameSystem(this.correlationId(), this.$store, this.$store.state.user.user, SharedConstants.GameSystems.Starfinder1e.id, newVal, (settings) => { return settings.scenarioAdventureFilter = newVal; });
+				AppUtility.settings().updateSettingsUserScenariosGameSystem(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, SharedConstants.GameSystems.Starfinder1e.id, newVal, (settings) => { return settings.scenarioAdventureFilter = newVal; });
 			}
 		},
 		scenarioAdventures() {
 			const adventures = this.lookups.scenarioAdventures.filter(l => l.id !== Starfinder1eSharedConstants.ScenarioAdventures.INITIAL);
-			return VueUtility.selectBlank(adventures, this.$trans.t('characters.gameSystems.starfinder1e.scenarios.adventure'));
+			return VueUtility.selectBlank(adventures, GlobalUtility.$trans.t('characters.gameSystems.starfinder1e.scenarios.adventure'));
 		}
 	},
 	methods: {
@@ -83,7 +84,7 @@ export default {
 			return scenarioName.toLowerCase().indexOf(filter.toLowerCase()) == -1;
 		},
 		initializeServices() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		}
 	}
 };

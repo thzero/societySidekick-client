@@ -499,6 +499,7 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import baseScenarioDialog from '@/components/gameSystems/baseScenarioDialog';
@@ -507,7 +508,7 @@ import ScenarioLookupDialog from '@/components/gameSystems/pathfinder2e/Scenario
 
 import CharacterScenario from '@/common/gameSystems/pathfinder2e/data/characterScenario';
 
-import VCheckboxWithValidation from '@/library_vue/components/form/VCheckboxWithValidation';
+import VCheckboxWithValidation from '@/library_vue_vuetify/components/form/VCheckboxWithValidation';
 
 export default {
 	name: 'Pathfinder2eScenarioDialog',
@@ -552,7 +553,7 @@ export default {
 	},
 	methods: {
 		dialogScenariosOkI(correlationId, id) {
-			this.$set(this.innerValue, 'scenario', this.$store.getters.getScenario(this.innerValue.scenarioId));
+			this.$set(this.innerValue, 'scenario', GlobalUtility.$store.getters.getScenario(this.innerValue.scenarioId));
 			this.achievementPointsEarned = this.rulesGameSystem.calculateScenarioAchievementPointsEarned(correlationId, this.innerValue);
 			this.downtimePointsEarned = this.rulesGameSystem.calculateScenarioDowntimePointsEarned(correlationId, this.innerValue);
 			this.fameEarned = this.rulesGameSystem.calculateScenarioFameEarned(correlationId, this.innerValue);
@@ -613,8 +614,8 @@ export default {
 			return new CharacterScenario();
 		},
 		initializeServices() {
-			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			this.rulesGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		},
 		// eslint-disable-next-line
 		onChangeI(correlationId, newValue, recalculateScenario) {
@@ -633,8 +634,8 @@ export default {
 			return recalculateScenario;
 		},
 		async resetDialogI(correlationId, value) {
-			await this.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, this.character ? this.character.id : null);
-			// this.$set(value, 'scenario', this.$store.getters.getScenario(value.scenarioId));
+			await GlobalUtility.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, this.character ? this.character.id : null);
+			// GlobalUtility.$set(value, 'scenario', GlobalUtility.$store.getters.getScenario(value.scenarioId));
 			this.achievementPointsEarned = value && value.achievementPointsEarned ? value.achievementPointsEarned : 0;
 			this.downtimePointsEarned = value && value.downtimePointsEarned ? value.downtimePointsEarned : 0;
 			this.fameEarned = value && value.fameEarned ? value.fameEarned : 0;

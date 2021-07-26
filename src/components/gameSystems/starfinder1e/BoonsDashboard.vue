@@ -106,6 +106,8 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseBoonDashboard from '@/components/gameSystems/baseBoonDashboard';
 import CharacterDetails from '@/components/gameSystems/starfinder1e/CharacterDetails';
 import Boon from '@/components/gameSystems/starfinder1e/Boon';
@@ -128,7 +130,7 @@ export default {
 				results.push(this.initializeCharacterBoon2(correlationId, scenario.boon2Id, scenario));
 		},
 		initializeServices() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		}
 	}
 };

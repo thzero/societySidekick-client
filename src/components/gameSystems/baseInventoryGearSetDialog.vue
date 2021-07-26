@@ -1,8 +1,10 @@
 <script>
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import VueUtility from '@/library_vue/utility';
 
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
 
 export default {
 	name: 'BaseInventoryGearSetDialog',
@@ -19,10 +21,10 @@ export default {
 	}),
 	computed: {
 		gearSets() {
-			return AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), this.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets);
+			return AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), GlobalUtility.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets);
 		},
 		gearSetsBlank() {
-			return VueUtility.selectBlank(AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), this.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets));
+			return VueUtility.selectBlank(AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), GlobalUtility.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets));
 		}
 	},
 	methods: {

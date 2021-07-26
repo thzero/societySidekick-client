@@ -192,14 +192,15 @@
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import baseList from '@/components/gameSystems/baseList';
-import VDirectionButton from '@/library_vue/components/VDirectionButton';
+import VDirectionButton from '@/library_vue_vuetify/components/VDirectionButton';
 import VGameSystemListingSyleButton from '@/components/gameSystems/VGameSystemListingSyleButton';
-import VNumberField from '@/library_vue/components/form/VNumberField';
-import VSelect2 from '@/library_vue/components/form/VSelect';
-import VText2 from '@/library_vue/components/form/VTextField';
+import VNumberField from '@/library_vue_vuetify/components/form/VNumberField';
+import VSelect2 from '@/library_vue_vuetify/components/form/VSelect';
+import VText2 from '@/library_vue_vuetify/components/form/VTextField';
 
 import CharacterNameSnippet from '@/components/gameSystems/CharacterNameSnippet';
 import CharacterSnippet from '@/components/gameSystems/CharacterSnippet';
@@ -233,7 +234,7 @@ export default {
 
 			const correlationId = this.correlationId();
 
-			let results = this.$store.state.characters.characters.slice(0);
+			let results = GlobalUtility.$store.state.characters.characters.slice(0);
 			results = results.filter(l => l.gameSystemId === this.gameSystemFilter);
 
 			if (this.characterLevelMaxFilter && this.characterLevelMinFilter)
@@ -248,9 +249,9 @@ export default {
 
 			let classes = this.classCache[this.gameSystemFilter];
 			if (!classes) {
-				await this.$store.dispatcher.classes.getClassListing(correlationId, this.gameSystemFilter);
+				await GlobalUtility.$store.dispatcher.classes.getClassListing(correlationId, this.gameSystemFilter);
 				// await this.initialize(correlationId, this.gameSystemFilter)
-				classes = this.$store.state.classes.listing;
+				classes = GlobalUtility.$store.state.classes.listing;
 				if (classes) {
 					classes = classes.filter(l => l.gameSystemId == this.gameSystemFilter);
 					this.classCache[this.gameSystemFilter] = classes;
@@ -260,9 +261,9 @@ export default {
 
 			let factions = this.factionsCache[this.gameSystemFilter];
 			if (!factions) {
-				await this.$store.dispatcher.factions.getFactionListing(correlationId, this.gameSystemFilter);
+				await GlobalUtility.$store.dispatcher.factions.getFactionListing(correlationId, this.gameSystemFilter);
 				// await this.initialize(correlationId, this.gameSystemFilter)
-				factions = this.$store.state.factions.listing;
+				factions = GlobalUtility.$store.state.factions.listing;
 				if (factions) {
 					factions = factions.filter(l => l.gameSystemId == this.gameSystemFilter);
 					this.factionsCache[this.gameSystemFilter] = factions;
@@ -314,37 +315,37 @@ export default {
 		},
 		listingStyle: {
 			get: function () {
-				let value = this.getSettingsUser(this.correlationId(), this.$store.state.user.user, (settings) => settings.listingSytleFilter);
+				let value = this.getSettingsUser(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.listingSytleFilter);
 				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
 				return value;
 			},
 			set: function (newVal) {
-				this.updateSettingsUserCharacter(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+				this.updateSettingsUserCharacter(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
 			}
 		},
 		sortBy: {
 			get: function () {
-				const result = this.getSettingsUser(this.correlationId(), this.$store.state.user.user, (settings) => settings.sortBy);
+				const result = this.getSettingsUser(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.sortBy);
 				return result ? result : SharedConstants.SortBy.Characters.CharacterName;
 			},
 			set: function (newVal) {
-				this.updateSettingsUserCharacter(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { settings.sortBy = newVal; });
+				this.updateSettingsUserCharacter(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { settings.sortBy = newVal; });
 			}
 		},
 		sortDirection: {
 			get: function () {
-				return this.getSettingsUser(this.correlationId(), this.$store.state.user.user, (settings) => settings.sortDirection);
+				return this.getSettingsUser(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.sortDirection);
 			},
 			set: function (newVal) {
-				this.updateSettingsUserCharacter(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { settings.sortDirection = newVal; });
+				this.updateSettingsUserCharacter(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
 		},
 		sortKeys: {
 			get: function() {
 				return  [
-			{ id: SharedConstants.SortBy.Characters.CharacterName, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.name') },
-			{ id: SharedConstants.SortBy.Characters.Level, name: this.$trans.t('forms.characters.name') + ' ' + this.$trans.t('forms.level') }
-			// { id: 'faction', name: this.$trans.t('forms.factions.name') },
+			{ id: SharedConstants.SortBy.Characters.CharacterName, name: GlobalUtility.$trans.t('forms.characters.name') + ' ' + GlobalUtility.$trans.t('forms.name') },
+			{ id: SharedConstants.SortBy.Characters.Level, name: GlobalUtility.$trans.t('forms.characters.name') + ' ' + GlobalUtility.$trans.t('forms.level') }
+			// { id: 'faction', name: GlobalUtility.$trans.t('forms.factions.name') },
 		];
 			}
 		}
@@ -356,10 +357,10 @@ export default {
 			return level ? level : 0;
 		},
 		clickCharacter(id) {
-			this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ id ]}));
+			GlobalUtility.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ id ]}));
 		},
 		clickClear() {
-			AppUtility.settings().clearUser(this.$store, this.$store.state.user.user, (settings) => {
+			AppUtility.settings().clearUser(GlobalUtility.$store, GlobalUtility.$store.state.user.user, (settings) => {
 				this.characterNameValue = null;
 				this.characterLevelMaxFilter = null;
 				this.characterLevelMinFilter = null;
@@ -376,7 +377,7 @@ export default {
 		updateSettingsUserCharacter(correlationId, user, newVal, func) {
 			const settings = AppUtility.settings().mergeUser(correlationId, user.settings);
 			func(settings.characters, newVal);
-			this.$store.dispatcher.user.setUserSettings(correlationId, settings);
+			GlobalUtility.$store.dispatcher.user.setUserSettings(correlationId, settings);
 		}
 	}
 };

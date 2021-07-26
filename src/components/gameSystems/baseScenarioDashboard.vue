@@ -1,4 +1,6 @@
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseDashboard from '@/components/baseDashboard';
 
 import DialogSupport from '@/library_vue/components/support/dialog';
@@ -12,7 +14,7 @@ export default {
 	}),
 	methods: {
 		boonName(id) {
-			return this.serviceGameSystem.boonNameById(this.correlationId(), id, this.$store);
+			return this.serviceGameSystem.boonNameById(this.correlationId(), id, GlobalUtility.$store);
 		},
 		async dialogScenarioEdit(value) {
 			if (!value)

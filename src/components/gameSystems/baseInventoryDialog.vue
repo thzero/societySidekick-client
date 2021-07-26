@@ -1,13 +1,15 @@
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VAutoCompleteWithValidation from '@/library_vue/components/form/VAutoCompleteWithValidation';
-import VNumberField from '@/library_vue/components/form/VNumberField';
-import VNumberFieldWithValidation from '@/library_vue/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VAutoCompleteWithValidation from '@/library_vue_vuetify/components/form/VAutoCompleteWithValidation';
+import VNumberField from '@/library_vue_vuetify/components/form/VNumberField';
+import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 export default {
 	name: 'BaseInventoryDialog',
@@ -108,7 +110,7 @@ export default {
 				return;
 			}
 
-			this.item = this.$store.state.equipment.listing.find(l => l.id === newValue);
+			this.item = GlobalUtility.$store.state.equipment.listing.find(l => l.id === newValue);
 		},
 		innerValue: {
 			// eslint-disable-next-line
@@ -132,7 +134,7 @@ export default {
 			return this.rulesGameSystem.gameSystemId();
 		},
 		async initScenarios() {
-			return this.serviceGameSystem.scenarios(this.correlationId(), this.$store);
+			return this.serviceGameSystem.scenarios(this.correlationId(), GlobalUtility.$store);
 		},
 		initializeServices() {
 			this.notImplementedError();
@@ -155,7 +157,7 @@ export default {
 			});
 		},
 		async preCompleteResponseDelete(correlationId) {
-			return await this.$store.dispatcher.characters.deleteCharacterInventory(correlationId, this.character.id, this.innerValue.id);
+			return await GlobalUtility.$store.dispatcher.characters.deleteCharacterInventory(correlationId, this.character.id, this.innerValue.id);
 		},
 		async preCompleteResponseOk(correlationId) {
 			const inventory = {
@@ -174,10 +176,10 @@ export default {
 			};
 			if (!this.innerValue.item && !this.itemId) {
 				const response = this.error('BaseInventoryDialog', 'preCompleteResponseOk', null, null, null, null, correlationId);
-				response.addGeneric(this.$trans.t('errors.inventories.eitherItemOrName'));
+				response.addGeneric(GlobalUtility.$trans.t('errors.inventories.eitherItemOrName'));
 				return response;
 			}
-			const response = await this.$store.dispatcher.characters.updateCharacterInventory(correlationId, this.character.id, inventory);
+			const response = await GlobalUtility.$store.dispatcher.characters.updateCharacterInventory(correlationId, this.character.id, inventory);
 			this.logger.debug('BaseInventoryDialog', 'preCompleteResponseOk', 'response', response, correlationId);
 			return response;
 		},
@@ -185,7 +187,7 @@ export default {
 			let results = [];
 			newVal = newVal ? String.trim(newVal) : newVal;
 			if (newVal &&newVal.length >= 3)
-				results = await this.$store.dispatcher.equipment.equipmentSearch(this.correlationId(), this.gameSystemId(), { name: newVal });
+				results = await GlobalUtility.$store.dispatcher.equipment.equipmentSearch(this.correlationId(), this.gameSystemId(), { name: newVal });
 			return VueUtility.selectBlank(results);
 		},
 		async resetDialog(correlationId, value) {
@@ -201,7 +203,7 @@ export default {
 
 			this.watch = this.$watch('itemId', async (newVal) => {
 				if (newVal) {
-					const item = this.$store.getters.getEquipment(newVal);
+					const item = GlobalUtility.$store.getters.getEquipment(newVal);
 					if (item) {
 						this.innerValue.item = item.name;
 						this.innerValue.value = item.cost;

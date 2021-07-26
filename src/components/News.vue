@@ -36,10 +36,11 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import base from '@/library_vue/components/base';
-import VMarkdown from '@/library_vue/components/markup/VMarkdown';
+import VMarkdown from '@/library_vue_vuetify/components/markup/VMarkdown';
 
 export default {
 	name: 'News',
@@ -49,10 +50,10 @@ export default {
 	extends: base,
 	computed: {
 		news() {
-			if (!this.$store.state.news.latest)
+			if (!GlobalUtility.$store.state.news.latest)
 				return [];
-			const newsS = LibraryUtility.sortByTimestamp(this.$store.state.news.latest.filter(l => l.sticky));
-			let news = LibraryUtility.sortByTimestamp(this.$store.state.news.latest.filter(l => !l.sticky));
+			const newsS = LibraryUtility.sortByTimestamp(GlobalUtility.$store.state.news.latest.filter(l => l.sticky));
+			let news = LibraryUtility.sortByTimestamp(GlobalUtility.$store.state.news.latest.filter(l => !l.sticky));
 			return newsS.concat(news);
 		}
 	}

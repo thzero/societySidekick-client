@@ -262,16 +262,14 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
-// GameSystems Update
+import GlobalUtility from '@thzero/library_client/utility/global';
 import VueUtility from '@/library_vue/utility/index';
 
 import base from '@/components/base';
-import VLoadingOverlay from '@/library_vue/components/VLoadingOverlay';
+import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
 
 // GameSystems Update
 import BoonsDashboardPathfinder2e from '@/components/gameSystems/pathfinder2e/BoonsDashboard';
@@ -314,7 +312,7 @@ export default {
 		//	 vm.character = vm.$store.getters.getCharacter(vm.$route.params.id)
 		// })
 		const results = VueUtility.checkId(to);
-		await Vue.prototype.$store.dispatcher.characters.getCharacterListing({ basics: true });
+		await GlobalUtility.$store.dispatcher.characters.getCharacterListing({ basics: true });
 		if (results) {
 			next(async vm => {
 				// access to component instance via `vm`
@@ -332,8 +330,8 @@ export default {
 		this.logger.debug('Character', 'beforeRouteUpdate', null, null, correlationId);
 		const results = VueUtility.checkId(to);
 		this.determineActiveTab();
-		await this.$store.dispatcher.characters.getCharacterListing(correlationId, { basics: true });
-		// this.character = this.$store.getters.getCharacter(this.getId())
+		await GlobalUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { basics: true });
+		// this.character = GlobalUtility.$store.getters.getCharacter(this.getId())
 		if (results)
 			next();
 	},
@@ -351,7 +349,7 @@ export default {
 	computed: {
 		character() {
 			this.logger.debug('Character', 'character', 'id', this.getId(), this.correlationId());
-			const results = this.$store.getters.getCharacter(this.getId());
+			const results = GlobalUtility.$store.getters.getCharacter(this.getId());
 			return results ? results : {};
 		},
 		// GameSystems Update
@@ -365,13 +363,13 @@ export default {
 			return this.character.gameSystemId === SharedConstants.GameSystems.Starfinder1e.id;
 		},
 		user() {
-			return this.$store.state.user.user;
+			return GlobalUtility.$store.state.user.user;
 		}
 	},
 	created() {
 		// GameSystems Update
-		this.servicePathfinder2e = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
-		this.serviceStarfinder1e = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+		this.servicePathfinder2e = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+		this.serviceStarfinder1e = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 	},
 	async mounted() {
 		VueUtility.checkId(this.$route);
@@ -382,7 +380,7 @@ export default {
 		this.determineActiveTab();
 
 		const self = this;
-		this.$EventBus.$on('toggle-drawer', () => {
+		GlobalUtility.$EventBus.on('toggle-drawer', () => {
 			self.drawer = !self.drawer;
 		});
 
@@ -411,13 +409,13 @@ export default {
 			return this.$route.params.id;
 		},
 		getGameSystemName(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		async initializeCharacter(correlationId) {
 			const self = this;
 			// try and fetch an update from the api
-			this.$store.dispatcher.characters.getCharacter(correlationId, this.getId())
+			GlobalUtility.$store.dispatcher.characters.getCharacter(correlationId, this.getId())
 				.then(async (response) => {
 					try {
 						self.logger.debug('Character', 'initializeCharacter', 'response', response);
@@ -431,9 +429,9 @@ export default {
 						await self.initializeGameSystem(correlationId);
 
 						try {
-							let scenarios = this.$store.state.scenarios.listing;
+							let scenarios = GlobalUtility.$store.state.scenarios.listing;
 							if (!scenarios || (scenarios.length <= 0))
-								await this.$store.dispatcher.scenarios.getScenarioListing(correlationId, response.results.gameSystemId);
+								await GlobalUtility.$store.dispatcher.scenarios.getScenarioListing(correlationId, response.results.gameSystemId);
 						}
 						catch(err) {
 							self.logger.error('Character', 'initializeCharacter', null, err, null, null, correlationId);
@@ -456,15 +454,15 @@ export default {
 		async initializeGameSystem(correlationId) {
 			// GameSystems Update
 			if (this.isGameSystemPathfinder2e)
-				this.servicePathfinder2e.initializeFetches(correlationId, this.$store);
+				this.servicePathfinder2e.initializeFetches(correlationId, GlobalUtility.$store);
 			if (this.isGameSystemStarfinder1e)
-				this.serviceStarfinder1e.initializeFetches(correlationId, this.$store);
+				this.serviceStarfinder1e.initializeFetches(correlationId, GlobalUtility.$store);
 		},
 		initializeTabs() {
 			// TODO: Depending on security results, only some of these should be displayed...
-			this.tabSupport.add(this.tabDashboard, 'dashboard', this.$trans.t('characters.dashboard'));
-			this.tabSupport.add(this.tabBoons, 'list_alt', this.$trans.t('characters.boons.namePlural'));
-			this.tabSupport.add(this.tabInventory, 'list_alt', this.$trans.t('characters.inventory'));
+			this.tabSupport.add(this.tabDashboard, 'dashboard', GlobalUtility.$trans.t('characters.dashboard'));
+			this.tabSupport.add(this.tabBoons, 'list_alt', GlobalUtility.$trans.t('characters.boons.namePlural'));
+			this.tabSupport.add(this.tabInventory, 'list_alt', GlobalUtility.$trans.t('characters.inventory'));
 		}
 	}
 };

@@ -1,8 +1,7 @@
-import Vue from 'vue';
-
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
@@ -12,10 +11,10 @@ const store = {
 	},
 	actions: {
 		async getBoonListing({ commit }, params) {
-			const crypto = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
+			const crypto = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
 			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'boons', params.gameSystemId))
 				return;
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_BOONS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_BOONS);
 			const response = await service.listing(params.correlationId, params.gameSystemId);
 			this.$logger.debug('store.boons', 'setBoonListing', 'response', response, params.correlationId);
 			if (response.success) {
@@ -47,7 +46,7 @@ const store = {
 	},
 	dispatcher: {
 		async getBoonListing(correlationId, gameSystemId) {
-			await Vue.prototype.$store.dispatch('getBoonListing', { correlationId: correlationId, gameSystemId: gameSystemId });
+			await GlobalUtility.$store.dispatch('getBoonListing', { correlationId: correlationId, gameSystemId: gameSystemId });
 		}
 	}
 };

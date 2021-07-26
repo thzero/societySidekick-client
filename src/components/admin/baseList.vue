@@ -2,8 +2,10 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseList from '@/library_vue/components/admin/baseList';
-import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
+import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
 
 export default {
 	name: 'BaseAdminList',
@@ -16,7 +18,7 @@ export default {
 	}),
 	methods: {
 		getGameSystemName(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		getLookupByGameSystemId(gameSystemId) {
@@ -38,7 +40,7 @@ export default {
 			return response.results;
 		},
 		initializeServices() {
-			this.serviceGameSystemsUtility = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
+			this.serviceGameSystemsUtility = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
 		},
 		initialize() {
 			const correlationId = this.correlationId();
@@ -49,7 +51,7 @@ export default {
 			const service = this.getServiceByGameSystemId(correlationId, gameSystemId);
 			if (!service)
 				return;
-			const lookups = service ? service.initializeLookups(correlationId, this.$injector) : null;
+			const lookups = service ? service.initializeLookups(correlationId, GlobalUtility.$injector) : null;
 			this.lookups.push({ gameSystemId: gameSystemId, lookups: lookups });
 		}
 	}

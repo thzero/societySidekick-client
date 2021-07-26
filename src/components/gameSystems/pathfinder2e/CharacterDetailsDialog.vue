@@ -214,6 +214,7 @@
 import Constants from '@/constants';
 import PatfinderSharedConstants from '@/common/gameSystems/pathfinder2e/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import VueUtility from '@/library_vue/utility';
 
 import baseCharacterDetailsDialog from '@/components/gameSystems/baseCharacterDetailsDialog';
@@ -228,7 +229,7 @@ export default {
 	}),
 	computed: {
 		archetypes() {
-			return this.serviceGameSystem.archetypes(this.correlationId(), this.$store, true);
+			return this.serviceGameSystem.archetypes(this.correlationId(), GlobalUtility.$store, true);
 		},
 		boonsAdvanced() {
 			const boons = this.boons.filter(l => l.type == PatfinderSharedConstants.BoonTypes.ADVANCED);
@@ -243,7 +244,7 @@ export default {
 			return VueUtility.selectBlank(boons);
 		},
 		classes() {
-			return this.serviceGameSystem.classes(this.correlationId(), this.$store, true);
+			return this.serviceGameSystem.classes(this.correlationId(), GlobalUtility.$store, true);
 		}
 	},
 	methods: {
@@ -264,7 +265,7 @@ export default {
 			return details;
 		},
 		initializeServices() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		},
 		// eslint-disable-next-line
 		async resetDialogI(correlationId) {

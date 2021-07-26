@@ -84,6 +84,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseList from '@/components/admin/baseList';
 import EditDialog from '@/components/admin/boons/EditDialog';
 
@@ -97,15 +99,15 @@ export default {
 	extends: baseList,
 	computed: {
 		boons() {
-			const boons = this.$store.state.adminBoons.boons;
+			const boons = GlobalUtility.$store.state.adminBoons.boons;
 			return boons ? boons.slice(0) : [];
 		}
 	},
 	async mounted() {
 		const correlationId = this.correlationId();
-		await this.$store.dispatcher.adminFactions.searchAdminFactions(correlationId, {});
-		await this.$store.dispatcher.adminScenarios.searchAdminScenarios(correlationId, {});
-		await this.$store.dispatcher.adminBoons.searchAdminBoons(correlationId, {});
+		await GlobalUtility.$store.dispatcher.adminFactions.searchAdminFactions(correlationId, {});
+		await GlobalUtility.$store.dispatcher.adminScenarios.searchAdminScenarios(correlationId, {});
+		await GlobalUtility.$store.dispatcher.adminBoons.searchAdminBoons(correlationId, {});
 	},
 	methods: {
 		defaultItem() {
@@ -120,24 +122,24 @@ export default {
 		},
 		initializeHeaders() {
 			return [
-				{ text: this.$trans.t('boons.name'), align: 'left', value: 'name', },
-				{ text: this.$trans.t('boons.type'), align: 'left', value: 'type' },
-				{ text: this.$trans.t('boons.scenario'), align: 'left', value: 'scenario' },
-				{ text: this.$trans.t('boons.faction'), align: 'left', value: 'factionId' },
-				{ text: this.$trans.t('boons.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: this.$trans.t('boons.actions'), align: 'right', value: 'action', sortable: false }
+				{ text: GlobalUtility.$trans.t('boons.name'), align: 'left', value: 'name', },
+				{ text: GlobalUtility.$trans.t('boons.type'), align: 'left', value: 'type' },
+				{ text: GlobalUtility.$trans.t('boons.scenario'), align: 'left', value: 'scenario' },
+				{ text: GlobalUtility.$trans.t('boons.faction'), align: 'left', value: 'factionId' },
+				{ text: GlobalUtility.$trans.t('boons.gameSystem'), align: 'left', value: 'gameSystemId' },
+				{ text: GlobalUtility.$trans.t('boons.actions'), align: 'right', value: 'action', sortable: false }
 			];
 		},
 		getFactionName(factionId) {
-			if (!this.$store.state.adminFactions.factions)
+			if (!GlobalUtility.$store.state.adminFactions.factions)
 				return null;
-			const faction = this.$store.state.adminFactions.factions.find(l => l.id === factionId);
+			const faction = GlobalUtility.$store.state.adminFactions.factions.find(l => l.id === factionId);
 			return faction ? faction.name : null;
 		},
 		scenarioName(item) {
 			if (!item)
 				return '';
-			const scenario = this.$store.getters.getAdminScenario(item.scenarioId);
+			const scenario = GlobalUtility.$store.getters.getAdminScenario(item.scenarioId);
 			if (!scenario)
 				return '';
 			return scenario.name;

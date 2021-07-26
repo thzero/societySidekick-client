@@ -2,6 +2,8 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import BoonDialog from '@/components/gameSystems/BoonDialog';
 
 import BoonLookupDialog from '@/components/gameSystems/pathfinder2e/BoonLookupDialog';
@@ -25,8 +27,8 @@ export default {
 			return new CharacterBoon();
 		},
 		initializeServices() {
-			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			this.rulesGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		}
 	}
 };

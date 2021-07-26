@@ -120,6 +120,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseGameSystemSnippet from '@/components/gameSystems/baseGameSystemSnippet';
 
 import ExperienceColorizeValue from '@/components/gameSystems/ExperienceColorizeValue';
@@ -134,7 +136,7 @@ export default {
 	extends: baseGameSystemSnippet,
 	computed: {
 		className() {
-			return (this.serviceGameSystem ? this.serviceGameSystem.classNamesAndLevels(this.correlationId(), this.value, this.$store) : '');
+			return (this.serviceGameSystem ? this.serviceGameSystem.classNamesAndLevels(this.correlationId(), this.value, GlobalUtility.$store) : '');
 		},
 		statusColor() {
 			return 'color: ' + (this.value.status === 'dead' ? 'red' : 'green');

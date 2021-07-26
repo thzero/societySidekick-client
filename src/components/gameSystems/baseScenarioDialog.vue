@@ -1,13 +1,14 @@
 <script>
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
-import VDateTimeFieldWithValidation from '@/library_vue/components/form/VDateTimeFieldWithValidation';
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VNumberFieldWithValidation from '@/library_vue/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VDateTimeFieldWithValidation from '@/library_vue_vuetify/components/form/VDateTimeFieldWithValidation';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 import DialogSupport from '@/library_vue/components/support/dialog';
 
@@ -50,7 +51,7 @@ export default {
 	computed: {
 		boons: {
 			get: function () {
-				const results = this.serviceGameSystem.boons(this.correlationId(), this.$store, true);
+				const results = this.serviceGameSystem.boons(this.correlationId(), GlobalUtility.$store, true);
 				const scenarioId = this.innerValue ? this.innerValue.scenarioId : null;
 				const results2 = results ? results.filter(l => l.scenarioId == scenarioId) : [];
 				return VueUtility.selectBlank(results2);
@@ -58,10 +59,10 @@ export default {
 			cache: false
 		},
 		factions() {
-			return this.serviceGameSystem.factions(this.correlationId(), this.$store, true);
+			return this.serviceGameSystem.factions(this.correlationId(), GlobalUtility.$store, true);
 		},
 		locations() {
-			return VueUtility.selectBlank(LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.correlationId(), this.$store.state.user.user), true));
+			return VueUtility.selectBlank(LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.correlationId(), GlobalUtility.$store.state.user.user), true));
 		},
 		outputType() {
 			return 'timestamp';
@@ -94,10 +95,10 @@ export default {
 		dialogScenariosOk(id) {
 			const correlationId = this.correlationId();
 			this.$set(this.innerValue, 'scenarioId', id);
-			this.$set(this.innerValue, 'scenario', this.$store.getters.getScenario(id));
+			this.$set(this.innerValue, 'scenario', GlobalUtility.$store.getters.getScenario(id));
 
 			this.rulesGameSystem.calculateScenario(correlationId, this.innerValue);
-			this.scenarioName = this.serviceGameSystem.determineScenarioName(correlationId, this.innerValue, this.$store);
+			this.scenarioName = this.serviceGameSystem.determineScenarioName(correlationId, this.innerValue, GlobalUtility.$store);
 
 			this.dialogScenariosOkI(this.correlationId(), id);
 
@@ -114,7 +115,7 @@ export default {
 			this.notImplementedError();
 		},
 		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
+			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
 		},
 		initResponse() {
 			const details = {
@@ -168,21 +169,21 @@ export default {
 			scenario.status = this.innerValue.status;
 			scenario.timestamp = this.innerValue.timestamp;
 			scenario.updatedTimestamp = this.character.updatedTimestamp;
-			const response = await this.$store.dispatcher.characters.updateCharacterScenario(correlationId, this.character.id, scenario);
+			const response = await GlobalUtility.$store.dispatcher.characters.updateCharacterScenario(correlationId, this.character.id, scenario);
 			this.logger.debug('BaseScenarioDialog', 'preComplete', 'response', response, correlationId);
 			return response;
 		},
 		async preCompleteResponseDelete(correlationId) {
-			return await this.$store.dispatcher.characters.deleteCharacterScenario(correlationId, this.character.id, this.innerValue.id);
+			return await GlobalUtility.$store.dispatcher.characters.deleteCharacterScenario(correlationId, this.character.id, this.innerValue.id);
 		},
 		async resetDialog(correlationId, value) {
 			this.steps = 1;
 			value.timestamp = value.timestamp ? LibraryUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
-			this.scenarioName = this.serviceGameSystem.determineScenarioName(correlationId, value, this.$store);
+			this.scenarioName = this.serviceGameSystem.determineScenarioName(correlationId, value, GlobalUtility.$store);
 
-			// let scenarios = this.$store.state.scenarios.listing;
+			// let scenarios = GlobalUtility.$store.state.scenarios.listing;
 			// value.scenario = scenarios.find(l => l.id === value.scenarioId);
-			value.scenario = this.$store.getters.getScenario(value.scenarioId);
+			value.scenario = GlobalUtility.$store.getters.getScenario(value.scenarioId);
 			// this.rulesGameSystem.calculateScenario(correlationId, value);
 
 			await this.resetDialogI(correlationId, value);

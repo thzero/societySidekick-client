@@ -1,6 +1,8 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseEdit from '@/library_vue/components/baseEdit';
 
 export default {
@@ -29,7 +31,7 @@ export default {
 		}
 	},
 	created() {
-		this.serviceCharacter = this.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+		this.serviceCharacter = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 		this.initializeServices();
 	},
 	async mounted() {
@@ -51,11 +53,11 @@ export default {
 			if (this.observerIsNull(value))
 				return;
 
-			this.editable = await this.serviceCharacter.validateEdit(this.value, this.$store.state.user.user, 'edit');
+			this.editable = await this.serviceCharacter.validateEdit(this.value, GlobalUtility.$store.state.user.user, 'edit');
 			this.editable = true; // TOOD: Uh why is this still editable?
 		},
 		getGameSystemName(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		initializeServices() {

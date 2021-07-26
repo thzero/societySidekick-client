@@ -239,10 +239,10 @@ export default {
 			return VueUtility.selectBlank(boons);
 		},
 		classes() {
-			return this.serviceGameSystem.classes(this.correlationId(), this.$store, true);
+			return this.serviceGameSystem.classes(this.correlationId(), GlobalUtility.$store, true);
 		},
 		themes() {
-			return this.serviceGameSystem.themes(this.correlationId(), this.$store, true);
+			return this.serviceGameSystem.themes(this.correlationId(), GlobalUtility.$store, true);
 		}
 	},
 	methods: {
@@ -259,7 +259,7 @@ export default {
 			return details;
 		},
 		initializeServices() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		}
 	}
 };

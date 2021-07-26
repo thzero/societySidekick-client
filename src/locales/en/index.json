@@ -586,7 +586,8 @@
 	   "signIn": "Sign In",
 	   "signOut": "Sign Out",
 	   "statistics": "Stats",
-	   "support": "Support"
+	   "support": "Support",
+	   "users": "Users"
 	},
 	"users": {
 	   "actions": "Actions",

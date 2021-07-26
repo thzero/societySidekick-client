@@ -2,6 +2,8 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import InventoryDialog from '@/components/gameSystems/InventoryDialog';
 
 export default {
@@ -31,11 +33,11 @@ export default {
 			return SharedConstants.GameSystems.Starfinder1e.id;
 		},
 		initializeServices() {
-			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+			this.rulesGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		},
 		transCurrency() {
-			return this.$trans.t('characters.gameSystems.starfinder1e.currency');
+			return GlobalUtility.$trans.t('characters.gameSystems.starfinder1e.currency');
 		}
 	}
 };

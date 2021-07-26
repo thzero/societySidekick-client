@@ -939,6 +939,8 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseCharacterDetails from '@/components/gameSystems/baseCharacterDetails';
 import CharacterDetailsDialog from '@/components/gameSystems/starfinder1e/CharacterDetailsDialog';
 
@@ -965,10 +967,10 @@ export default {
 	},
 	methods: {
 		classNamesAndLevels(value) {
-			return this.serviceGameSystem.classNamesAndLevels(this.correlationId(), value, this.$store);
+			return this.serviceGameSystem.classNamesAndLevels(this.correlationId(), value, GlobalUtility.$store);
 		},
 		initializeServices() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		}
 	}
 };

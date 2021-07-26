@@ -104,6 +104,7 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import baseScenarioDashboard from '@/components/gameSystems/baseScenarioDashboard';
@@ -128,7 +129,7 @@ export default {
 	},
 	methods: {
 		initializeServices() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		}
 	}
 };

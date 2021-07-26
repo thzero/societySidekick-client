@@ -1,10 +1,10 @@
-import Vue from 'vue';
 import VuexPersist from 'vuex-persist';
 
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
 // Admin Update
@@ -36,25 +36,25 @@ class AppStore extends BaseStore {
 			},
 			actions: {
 				async getGameSystems({ commit }, correlationId) {
-					const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_API);
+					const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_API);
 					const response = await service.gameSystems(correlationId);
 					this.$logger.debug('store', 'getGameSystems', 'response', response, correlationId);
 					commit('setGameSystems', { correlationId : correlationId, gameSystems: response.success && response.results ? response.results.data : [] });
 				},
 				async getPlans({ commit }, correlationId) {
-					const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_PLANS);
+					const service = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_PLANS);
 					const response = await service.plans(correlationId);
 					this.$logger.debug('store', 'getPlans', 'response', response, correlationId);
 					commit('setPlans', { correlationId : correlationId, plans: response.success && response.results ? response.results.data : [] });
 				},
 				async getVersion({ commit }, correlationId) {
-					const service = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_VERSION);
+					const service = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_VERSION);
 					const version = await service.version(correlationId);
 					this.$logger.debug('store', 'getVersion', 'version', version, correlationId);
 					commit('setVersion', { correlationId : correlationId, version: version });
 				},
 				async initialize({ commit }, correlationId) {
-					const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_API);
+					const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_API);
 					const response = await service.initialize(correlationId);
 					this.$logger.debug('store', 'initialize', 'response', response);
 					if (response && response.success) {
@@ -105,19 +105,19 @@ class AppStore extends BaseStore {
 			},
 			dispatcher: {
 				async getGameSystems(correlationId) {
-					await Vue.prototype.$store.dispatch('getGameSystems', correlationId);
+					await GlobalUtility.$store.dispatch('getGameSystems', correlationId);
 				},
 				async getPlans(correlationId) {
-					await Vue.prototype.$store.dispatch('getPlans', correlationId);
+					await GlobalUtility.$store.dispatch('getPlans', correlationId);
 				},
 				async getVersion(correlationId) {
-					await Vue.prototype.$store.dispatch('getVersion', correlationId);
+					await GlobalUtility.$store.dispatch('getVersion', correlationId);
 				},
 				async initialize(correlationId) {
-					await Vue.prototype.$store.dispatch('initialize', correlationId);
+					await GlobalUtility.$store.dispatch('initialize', correlationId);
 				},
 				async setSettings(correlationId, settings) {
-					await Vue.prototype.$store.dispatch('setSettings', { correlationId: correlationId, settings: settings });
+					await GlobalUtility.$store.dispatch('setSettings', { correlationId: correlationId, settings: settings });
 				}
 			}
 		};

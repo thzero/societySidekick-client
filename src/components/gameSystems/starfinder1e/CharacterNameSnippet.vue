@@ -26,6 +26,8 @@ import Constants from '@/constants';
 
 import SharedConstants from '@/common/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseCharacterNameSnippet from '@/components/gameSystems/baseCharacterNameSnippet';
 
 export default {
@@ -51,7 +53,7 @@ export default {
 			return SharedConstants.GameSystems.Starfinder1e.id;
 		},
 		initializeServices() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		},
 		secondaryFormat(number) {
 			return `7${number.padStart(2, '0')}`;

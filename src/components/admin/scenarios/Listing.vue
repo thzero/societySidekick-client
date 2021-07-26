@@ -80,6 +80,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseList from '@/components/admin/baseList';
 import EditDialog from '@/components/admin/scenarios/EditDialog';
 
@@ -93,12 +95,12 @@ export default {
 	extends: baseList,
 	computed: {
 		scenarios() {
-			const scenarios = this.$store.state.adminScenarios.scenarios;
+			const scenarios = GlobalUtility.$store.state.adminScenarios.scenarios;
 			return scenarios ? scenarios.slice(0) : [];
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminScenarios.searchAdminScenarios(this.correlationId(), {});
+		await GlobalUtility.$store.dispatcher.adminScenarios.searchAdminScenarios(this.correlationId(), {});
 	},
 	methods: {
 		defaultItem() {
@@ -116,13 +118,13 @@ export default {
 		},
 		initializeHeaders() {
 			return [
-				{ text: this.$trans.t('scenarios.name'), align: 'left', value: 'name', },
-				{ text: this.$trans.t('scenarios.season'), align: 'left', value: 'season' },
-				{ text: this.$trans.t('scenarios.identifier'), align: 'left', value: 'scenario' },
-				{ text: this.$trans.t('scenarios.type'), align: 'left', value: 'type' },
-				{ text: this.$trans.t('scenarios.repeatable'), align: 'left', value: 'repeatable' },
-				{ text: this.$trans.t('scenarios.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: this.$trans.t('scenarios.actions'), align: 'right', value: 'action', sortable: false }
+				{ text: GlobalUtility.$trans.t('scenarios.name'), align: 'left', value: 'name', },
+				{ text: GlobalUtility.$trans.t('scenarios.season'), align: 'left', value: 'season' },
+				{ text: GlobalUtility.$trans.t('scenarios.identifier'), align: 'left', value: 'scenario' },
+				{ text: GlobalUtility.$trans.t('scenarios.type'), align: 'left', value: 'type' },
+				{ text: GlobalUtility.$trans.t('scenarios.repeatable'), align: 'left', value: 'repeatable' },
+				{ text: GlobalUtility.$trans.t('scenarios.gameSystem'), align: 'left', value: 'gameSystemId' },
+				{ text: GlobalUtility.$trans.t('scenarios.actions'), align: 'right', value: 'action', sortable: false }
 			];
 		}
 	}

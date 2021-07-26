@@ -93,6 +93,8 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseBoon from '@/components/gameSystems/baseBoon';
 
 export default {
@@ -108,8 +110,8 @@ export default {
 	},
 	methods: {
 		initializeServices() {
-			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			this.rulesGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		}
 	}
 };

@@ -1,6 +1,8 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import InventoryDashboard from '@/components/gameSystems/InventoryDashboard';
 
 import CharacterDetails from '@/components/gameSystems/starfinder1e/CharacterDetails';
@@ -22,7 +24,7 @@ export default {
 			return new InventoryItem();
 		},
 		initializeServices() {
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		}
 	}
 };

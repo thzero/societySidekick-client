@@ -1,13 +1,13 @@
 <script>
-import Vue from 'vue';
-
 import LibraryConstants from '@thzero/library_client/constants';
+
+import GlobalUtility from '@thzero/library_client/utility/global';
 
 import base from '@/components/base';
 
 import VueUtility from '@/library_vue/utility/index';
 
-import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
+import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
 
 import DialogSupport from '@/library_vue/components/support/dialog';
 
@@ -39,28 +39,28 @@ export default {
 	created() {
 		this.initializeServices();
 		this.lookups = this.initializeLookups(this.correlationId());
-		this._serviceMarkup = Vue.prototype.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
+		this._serviceMarkup = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
 	},
 	methods: {
 		boonDescription(id) {
 			const correlationId = this.correlationId();
-			const description = this.serviceGameSystem.boonDescriptionById(correlationId, id, this.$store);
+			const description = this.serviceGameSystem.boonDescriptionById(correlationId, id, GlobalUtility.$store);
 			if (!description)
 				return null;
 			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, description));
 		},
 		boonName(id) {
-			return this.serviceGameSystem.boonNameById(this.correlationId(), id, this.$store);
+			return this.serviceGameSystem.boonNameById(this.correlationId(), id, GlobalUtility.$store);
 		},
 		factionDescription(id) {
 			const correlationId = this.correlationId();
-			const description = this.serviceGameSystem.factionDescriptionById(correlationId, id, this.$store);
+			const description = this.serviceGameSystem.factionDescriptionById(correlationId, id, GlobalUtility.$store);
 			if (!description)
 				return null;
 			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, description));
 		},
 		factionName(id) {
-			return this.serviceGameSystem.factionNameById(this.correlationId(), id, this.$store);
+			return this.serviceGameSystem.factionNameById(this.correlationId(), id, GlobalUtility.$store);
 		},
 		async dialogConfirmDeleteOk() {
 			VueUtility.invalid();
@@ -73,10 +73,10 @@ export default {
 			this.dialogConfirmDeleteSignal.open();
 		},
 		async dialogPreCompleteOkDelete(correlationId) {
-			return await this.$store.dispatcher.characters.deleteCharacter(correlationId, this.value.id);
+			return await GlobalUtility.$store.dispatcher.characters.deleteCharacter(correlationId, this.value.id);
 		},
 		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
+			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
 		},
 		initializeServices() {
 			this.notImplementedError();

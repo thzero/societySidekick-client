@@ -2,6 +2,8 @@
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import base from '@/components/base';
 
 export default {
@@ -52,13 +54,13 @@ export default {
 	},
 	methods: {
 		getGameSystemName(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		initializeLookups(correlationId) {
 			if (!this.serviceGameSystem)
 				return [];
-			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
+			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
 		},
 		initializeServices() {
 		}

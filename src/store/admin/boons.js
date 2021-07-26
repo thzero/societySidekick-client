@@ -1,7 +1,6 @@
-import Vue from 'vue';
-
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
@@ -11,7 +10,7 @@ const store = {
 	},
 	actions: {
 		async createAdminBoon({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
 			const response = await service.create(params.correlationId, params.item);
 			this.$logger.debug('store.admin.boons', 'createAdminBoon', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -19,7 +18,7 @@ const store = {
 			return response;
 		},
 		async deleteAdminBoon({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
 			const response = await service.delete(params.correlationId, params.id);
 			this.$logger.debug('store.admin.boons', 'deleteAdminBoon', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -27,13 +26,13 @@ const store = {
 			return response;
 		},
 		async searchAdminBoons({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
 			const response = await service.search(params.correlationId, params.params);
 			this.$logger.debug('store.admin.boons', 'searchAdminBoons', 'response', response, params.correlationId);
 			commit('setAdminBoonsListing', { correlationId: params.correlationId, list: response.success && response.results ? response.results.data : null });
 		},
 		async updateAdminBoon({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
 			const response = await service.update(params.correlationId, params.item);
 			this.$logger.debug('store.admin.boons', 'updateAdminBoon', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -60,16 +59,16 @@ const store = {
 	},
 	dispatcher: {
 		async createAdminBoon(correlationId, item) {
-			return await Vue.prototype.$store.dispatch('createAdminBoon', { correlationId: correlationId, item: item });
+			return await GlobalUtility.$store.dispatch('createAdminBoon', { correlationId: correlationId, item: item });
 		},
 		async deleteAdminBoon(correlationId, id) {
-			return await Vue.prototype.$store.dispatch('deleteAdminBoon', { correlationId: correlationId, id: id });
+			return await GlobalUtility.$store.dispatch('deleteAdminBoon', { correlationId: correlationId, id: id });
 		},
 		async searchAdminBoons(correlationId, params) {
-			await Vue.prototype.$store.dispatch('searchAdminBoons', { correlationId: correlationId, params: params });
+			await GlobalUtility.$store.dispatch('searchAdminBoons', { correlationId: correlationId, params: params });
 		},
 		async updateAdminBoon(correlationId, item) {
-			return await Vue.prototype.$store.dispatch('updateAdminBoon', { correlationId: correlationId, item: item });
+			return await GlobalUtility.$store.dispatch('updateAdminBoon', { correlationId: correlationId, item: item });
 		}
 	}
 };

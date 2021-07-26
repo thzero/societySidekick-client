@@ -282,6 +282,7 @@
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import GameSystemsUtility from '@/utility/gameSystems';
 
@@ -289,8 +290,8 @@ import Favorite from '@/components/favorites/Favorite';
 import FavoriteDialog from '@/components/favorites/FavoriteDialog';
 import Location from '@/components/locations/Location';
 import LocationDialog from '@/components/locations/LocationDialog';
-import VConfirmationDialog from '@/library_vue/components/VConfirmationDialog';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 import DialogSupport from '@/library_vue/components/support/dialog';
 
@@ -321,7 +322,7 @@ export default {
 	asyncComputed: {
 		async favorites() {
 			// return LibraryUtility.sortByName(AppUtility.settings().getSettingsUserFavorites(this.correlationId(), this.user), true)
-			const response = await this.$store.dispatcher.user.getUserFavorites(this.correlationId());
+			const response = await GlobalUtility.$store.dispatcher.user.getUserFavorites(this.correlationId());
 			return response && response.success ? response.results : [];
 		}
 	},
@@ -360,7 +361,7 @@ export default {
 			this.dialogFavoriteDeleteItemId = null;
 		},
 		async dialogFavoriteDeletePreCompleteOk() {
-			const response = AppUtility.settings().deleteSettingsUserFavorite(this.correlationId(), this.$store, this.$store.state.user.user, this.dialogFavoriteDeleteItemId);
+			const response = AppUtility.settings().deleteSettingsUserFavorite(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.dialogFavoriteDeleteItemId);
 			return response;
 		},
 		async dialogFavoriteEdit(value) {
@@ -387,7 +388,7 @@ export default {
 			this.dialogLocationDeleteItemId = null;
 		},
 		async dialogLocationDeletePreCompleteOk() {
-			const response = AppUtility.settings().deleteSettingsUserLocation(this.correlationId(), this.$store, this.$store.state.user.user, this.dialogLocationDeleteItemId);
+			const response = AppUtility.settings().deleteSettingsUserLocation(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.dialogLocationDeleteItemId);
 			return response;
 		},
 		async dialogLocationEdit(value) {
@@ -399,25 +400,25 @@ export default {
 			this.dialogLocationSignal.open();
 		},
 		getGameSystemActive(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.active : false;
 		},
 		getGameSystemName(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		getGameSystemNumberName(id) {
-			return GameSystemsUtility.numberName(id, this.$trans);
+			return GameSystemsUtility.numberName(id, GlobalUtility.$trans);
 		},
 		// eslint-disable-next-line
 		async preCompleteI(correlationId, responses) {
 			// GameSystems Update
 			if (this.isGameSystemDungeonsAndDragons5e)
-				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(correlationId, this.$store, this.user, SharedConstants.GameSystems.DungeonsAndDragons5e.id, this.gameSystemNumberDungeonsAndDragons5e, (settings, newVal) => { settings.number = String.trim(newVal); }));
+				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(correlationId, GlobalUtility.$store, this.user, SharedConstants.GameSystems.DungeonsAndDragons5e.id, this.gameSystemNumberDungeonsAndDragons5e, (settings, newVal) => { settings.number = String.trim(newVal); }));
 			if (this.isGameSystemPathfinder2e)
-				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(correlationId, this.$store, this.user, SharedConstants.GameSystems.Pathfinder2e.id, this.gameSystemNumberPathfinder2e, (settings, newVal) => { settings.number = String.trim(newVal); }));
+				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(correlationId, GlobalUtility.$store, this.user, SharedConstants.GameSystems.Pathfinder2e.id, this.gameSystemNumberPathfinder2e, (settings, newVal) => { settings.number = String.trim(newVal); }));
 			if (this.isGameSystemStarfinder1e)
-				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(correlationId, this.$store, this.user, SharedConstants.GameSystems.Starfinder1e.id, this.gameSystemNumberStarfinder1e, (settings, newVal) => { settings.number = String.trim(newVal); }));
+				responses.push(await AppUtility.settings().updateSettingsUserGameSystem(correlationId, GlobalUtility.$store, this.user, SharedConstants.GameSystems.Starfinder1e.id, this.gameSystemNumberStarfinder1e, (settings, newVal) => { settings.number = String.trim(newVal); }));
 		},
 		// eslint-disable-next-line
 		resetI(correlationId) {

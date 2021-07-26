@@ -1,5 +1,7 @@
 <script>
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import LibraryUtility from '@thzero/library_common/utility';
 
 import baseDashboard from '@/components/baseDashboard';
@@ -89,7 +91,7 @@ export default {
 			if (!this.value)
 				return false;
 
-			const gearSets = AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), this.$store.state.user.user, this.value.gameSystemId, (settings) => { return settings.gearSets; });
+			const gearSets = AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), GlobalUtility.$store.state.user.user, this.value.gameSystemId, (settings) => { return settings.gearSets; });
 			return gearSets && gearSets.length > 0;
 		},
 		hasInventory() {
@@ -128,24 +130,24 @@ export default {
 			this.dialogInventoryGearSetSaveSupport.open();
 		},
 		dialogInventorOk() {
-			this.snackbarText = this.$trans.t('messages.inventories.successInventory');
+			this.snackbarText = GlobalUtility.$trans.t('messages.inventories.successInventory');
 			this.snackbar = true;
 			this.dialogInventory.ok();
 		},
 		dialogInventoryGearSetDeleteOk() {
-			this.snackbarText = this.$trans.t('messages.inventories.successGearSetDelete');
+			this.snackbarText = GlobalUtility.$trans.t('messages.inventories.successGearSetDelete');
 			this.snackbar = true;
 			this.dialogInventoryGearSetDeleteSupport.ok();
 
 		},
 		dialogInventoryGearSetLoadOk() {
-			this.snackbarText = this.$trans.t('messages.inventories.successGearSetLoad');
+			this.snackbarText = GlobalUtility.$trans.t('messages.inventories.successGearSetLoad');
 			this.snackbar = true;
 			this.dialogInventoryGearSetLoadSupport.ok();
 
 		},
 		dialogInventoryGearSetSaveOk() {
-			this.snackbarText = this.$trans.t('messages.inventories.successGearSetSave');
+			this.snackbarText = GlobalUtility.$trans.t('messages.inventories.successGearSetSave');
 			this.snackbar = true;
 			this.dialogInventoryGearSetSaveSupport.ok();
 		},
@@ -177,10 +179,10 @@ export default {
 			if (!scenario)
 				return '';
 
-			return this.scenarioNameById(scenario.scenarioId, this.$store);
+			return this.scenarioNameById(scenario.scenarioId, GlobalUtility.$store);
 		},
 		scenarioNameById(id) {
-			return id ? this.serviceGameSystem.determineScenarioNameById(this.correlationId(), id, this.$store) : '';
+			return id ? this.serviceGameSystem.determineScenarioNameById(this.correlationId(), id, GlobalUtility.$store) : '';
 		}
 	}
 };

@@ -97,10 +97,10 @@
 
 <script>
 import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
-import VMarkdownEditor from '@/library_vue/components/markup/VMarkdownEditor';
-import VNumberFieldWithValidation from '@/library_vue/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VMarkdownEditor from '@/library_vue_vuetify/components/markup/VMarkdownEditor';
+import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 import Pathfinder2eEquipmentSnippet from '@/components/admin/gameSystems/pathfinder2e/equipmentEditSnippet';
 import Starfinder1eEquipmentSnippet from '@/components/admin/gameSystems/starfinder1e/equipmentEditSnippet';

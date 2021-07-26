@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseEdit from '@/library_vue/components/baseEdit';
 
 import DialogSupport from '@/library_vue/components/support/dialog';
@@ -78,7 +80,7 @@ export default {
 			this.$emit('dialog-edit', this.value);
 		},
 		getGameSystemName(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		initService() {
@@ -95,10 +97,10 @@ export default {
 			if (!scenario)
 				return '';
 
-			return this.scenarioNameById(scenario.scenarioId, this.$store);
+			return this.scenarioNameById(scenario.scenarioId, GlobalUtility.$store);
 		},
 		scenarioNameById(id) {
-			return id ? this.serviceGameSystem.determineScenarioNameById(this.correlationId(), id, this.$store) : '';
+			return id ? this.serviceGameSystem.determineScenarioNameById(this.correlationId(), id, GlobalUtility.$store) : '';
 		},
 		scenarioOrder(id) {
 			if (!this.character || !this.character.inventory)

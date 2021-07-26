@@ -1,7 +1,6 @@
-import Vue from 'vue';
-
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
@@ -11,7 +10,7 @@ const store = {
 	},
 	actions: {
 		async createAdminScenario({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
 			const response = await service.create(params.correlationId, params.item);
 			this.$logger.debug('store.admin', 'createAdminScenario', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -19,7 +18,7 @@ const store = {
 			return response;
 		},
 		async deleteAdminScenario({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
 			const response = await service.delete(params.correlationId, params.id);
 			this.$logger.debug('store.admin', 'deleteAdminScenario', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -27,13 +26,13 @@ const store = {
 			return response;
 		},
 		async searchAdminScenarios({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
 			const response = await service.search(params.correlationId, params.params);
 			this.$logger.debug('store.admin', 'searchAdminScenarios', 'response', response, params.correlationId);
 			commit('setAdminScenariosListing', { correlationId: params.correlationId, list: response.success && response.results ? response.results.data : null });
 		},
 		async updateAdminScenario({ commit }, params) {
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
 			const response = await service.update(params.correlationId, params.item);
 			this.$logger.debug('store.admin', 'updateAdminScenario', 'response', response, params.correlationId);
 			if (response && response.success)
@@ -67,16 +66,16 @@ const store = {
 	},
 	dispatcher: {
 		async createAdminScenario(correlationId, item) {
-			return await Vue.prototype.$store.dispatch('createAdminScenario', { correlationId: correlationId, item: item });
+			return await GlobalUtility.$store.dispatch('createAdminScenario', { correlationId: correlationId, item: item });
 		},
 		async deleteAdminScenario(correlationId, id) {
-			return await Vue.prototype.$store.dispatch('deleteAdminScenario', { correlationId: correlationId, id: id });
+			return await GlobalUtility.$store.dispatch('deleteAdminScenario', { correlationId: correlationId, id: id });
 		},
 		async searchAdminScenarios(correlationId, params) {
-			await Vue.prototype.$store.dispatch('searchAdminScenarios', { correlationId: correlationId, params: params });
+			await GlobalUtility.$store.dispatch('searchAdminScenarios', { correlationId: correlationId, params: params });
 		},
 		async updateAdminScenario(correlationId, item) {
-			return await Vue.prototype.$store.dispatch('updateAdminScenario', { correlationId: correlationId, item: item });
+			return await GlobalUtility.$store.dispatch('updateAdminScenario', { correlationId: correlationId, item: item });
 		}
 	}
 };

@@ -60,7 +60,9 @@
 </template>
 
 <script>
-import VNewsAdminFormDialog from '@/library_vue/components/admin/news/VNewsAdminFormDialog';
+import GlobalUtility from '@thzero/library_client/utility/global';
+
+import VNewsAdminFormDialog from '@/library_vue_vuetify/components/admin/news/VNewsAdminFormDialog';
 
 export default {
 	name: 'AdminNewsEditDialog',
@@ -70,7 +72,7 @@ export default {
 	extends: VNewsAdminFormDialog,
 	computed: {
 		gameSystems() {
-			return this.$store.state.gameSystems.slice(0);
+			return GlobalUtility.$store.state.gameSystems.slice(0);
 		}
 	}
 };

@@ -2,6 +2,8 @@
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import LibraryUtility from '@thzero/library_common/utility';
 
 import baseSnippet from '@/components/gameSystems/baseSnippet';
@@ -29,17 +31,17 @@ export default {
 			this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ id ]}));
 		},
 		getGameSystemName(id) {
-			const results = this.$store.getters.getGameSystem(id);
+			const results = GlobalUtility.$store.getters.getGameSystem(id);
 			return results ? results.name : '';
 		},
 		initLookup(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
+			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
 		},
 		isParticipantGamemaster(participant) {
 			return participant == SharedConstants.ScenarioParticipants.GAMEMASTER;
 		},
 		locationName(id) {
-			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), this.$store.state.user.user, id);
+			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), GlobalUtility.$store.state.user.user, id);
 			return location ? '@ ' + location.name : '';
 		}
 	}

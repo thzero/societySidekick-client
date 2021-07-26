@@ -432,6 +432,8 @@
 <script>
 import Constants from '@/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseScenario from '@/components/gameSystems/baseScenario';
 
 import StatusColorizeValue from '@/components/gameSystems/StatusColorizeValue';
@@ -455,11 +457,11 @@ export default {
 	},
 	methods: {
 		className(id) {
-			return this.serviceGameSystem.classNameById(this.correlationId(), id, this.$store);
+			return this.serviceGameSystem.classNameById(this.correlationId(), id, GlobalUtility.$store);
 		},
 		initializeServices() {
-			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+			this.rulesGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 		},
 		scenarioAdvancementSpeedName(id) {
 			return this.serviceGameSystem.scenarioLookupAdvancementSpeedName(this.correlationId(), id, this.lookups);

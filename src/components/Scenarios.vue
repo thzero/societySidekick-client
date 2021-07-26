@@ -160,12 +160,13 @@ import LibraryConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
 import GameSystemsUtility from '@/utility/gameSystems';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import VueUtility from '@/library_vue/utility/index';
 
 import base from '@/library_vue/components/base';
 import ScenarioList from '@/components/gameSystems/ScenarioList';
-import VFavoriteButton from '@/library_vue/components/VFavoriteButton';
-import VLoadingOverlay from '@/library_vue/components/VLoadingOverlay';
+import VFavoriteButton from '@/library_vue_vuetify/components/VFavoriteButton';
+import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
 
 const check = (to) => {
 	return VueUtility.checkHasParams(to, null, null, [ 'gamerTag', 'key' ]);
@@ -191,14 +192,14 @@ export default {
 	}),
 	computed: {
 		gameSystemName() {
-			const results = this.$store.getters.getGameSystem(this.gameSystemId);
+			const results = GlobalUtility.$store.getters.getGameSystem(this.gameSystemId);
 			return results ? results.name : '';
 		},
 		gameSystemNumber() {
 			return GameSystemsUtility.gameSystemNumber(this.correlationId(), this.user, this.gameSystemId);
 		},
 		hasFavorite() {
-			return this.$store.state.user.user != null;
+			return GlobalUtility.$store.state.user.user != null;
 		},
 		isFavorite: {
 			get: function () {
@@ -208,7 +209,7 @@ export default {
 				if (this.isAuthUserUser)
 					return true;
 
-				return AppUtility.settings().getSettingsUserFavorite(this.correlationId(), this.$store.state.user.user, this.user ? this.user.id : null);
+				return AppUtility.settings().getSettingsUserFavorite(this.correlationId(), GlobalUtility.$store.state.user.user, this.user ? this.user.id : null);
 			},
 			set: function (newVal) {
 				if (!this.hasFavorite)
@@ -216,20 +217,20 @@ export default {
 				if (this.isAuthUserUser)
 					return;
 
-				AppUtility.settings().updateSettingsUserFavorite(this.correlationId(), this.$store, this.$store.state.user.user, this.user ? this.user.id : null, newVal);
+				AppUtility.settings().updateSettingsUserFavorite(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.user ? this.user.id : null, newVal);
 			}
 		},
 		isAuthUserUser() {
-			const authUserId = this.$store.state.user.user ? this.$store.state.user.user.id : null;
+			const authUserId = GlobalUtility.$store.state.user.user ? GlobalUtility.$store.state.user.user.id : null;
 			const userId = this.user ? this.user.id : null;
 			return authUserId === userId;
 		},
 		tab: {
 			get: function () {
-				return this.getSettingsUserTab(this.correlationId(), this.$store.state.user.user, (settings) => settings.tab);
+				return this.getSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.tab);
 			},
 			set: function (newVal) {
-				this.updateSettingsUserTab(this.correlationId(), this.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
+				this.updateSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
 			}
 		},
 		userDisplayName() {
@@ -237,8 +238,8 @@ export default {
 		}
 	},
 	created() {
-		this.serviceCharacters = this.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-		this.serviceUsers = this.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
+		this.serviceCharacters = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+		this.serviceUsers = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
 	},
 	async mounted() {
 		check(this.$route);

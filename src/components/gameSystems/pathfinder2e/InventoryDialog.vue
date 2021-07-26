@@ -3,6 +3,8 @@ import Constants from '@/constants';
 
 import SharedConstants from '@/common/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import InventoryDialog from '@/components/gameSystems/InventoryDialog';
 
 export default {
@@ -32,11 +34,11 @@ export default {
 			return SharedConstants.GameSystems.Pathfinder2e.id;
 		},
 		initializeServices() {
-			this.rulesGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
-			this.serviceGameSystem = this.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			this.rulesGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
+			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 		},
 		transCurrency() {
-			return this.$trans.t('characters.gameSystems.pathfinder2e.currency');
+			return GlobalUtility.$trans.t('characters.gameSystems.pathfinder2e.currency');
 		}
 	}
 };

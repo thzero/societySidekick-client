@@ -1,12 +1,13 @@
 <script>
 import AppUtility from '@/utility/app';
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility';
 
-import VDateTimeFieldWithValidation from '@/library_vue/components/form/VDateTimeFieldWithValidation';
-import VFormDialog from '@/library_vue/components/form/VFormDialog';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VDateTimeFieldWithValidation from '@/library_vue_vuetify/components/form/VDateTimeFieldWithValidation';
+import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 import DialogSupport from '@/library_vue/components/support/dialog';
 
@@ -43,7 +44,7 @@ export default {
 	}),
 	computed: {
 		locations() {
-			return VueUtility.selectBlank(LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.correlationId(), this.$store.state.user.user), true));
+			return VueUtility.selectBlank(LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.correlationId(), GlobalUtility.$store.state.user.user), true));
 		},
 		outputType() {
 			return 'timestamp';
@@ -75,7 +76,7 @@ export default {
 		dialogBoonsOk(id) {
 			const correlationId = this.correlationId();
 			this.$set(this.innerValue, 'boonId', id);
-			this.boonName = this.serviceGameSystem.boonNameById(correlationId, id, this.$store);
+			this.boonName = this.serviceGameSystem.boonNameById(correlationId, id, GlobalUtility.$store);
 			this.dialogBoonsOkI(correlationId, id);
 			this.dialogBoons.ok(correlationId);
 		},
@@ -94,7 +95,7 @@ export default {
 			this.notImplementedError();
 		},
 		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, this.$injector);
+			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
 		},
 		initResponse() {
 			const details = {
@@ -124,12 +125,12 @@ export default {
 			boon.boonId = this.innerValue.boonId;
 			boon.timestamp = this.innerValue.timestamp;
 			boon.updatedTimestamp = this.character.updatedTimestamp;
-			const response = await this.$store.dispatcher.characters.updateCharacterBoon(correlationId, this.character.id, boon);
+			const response = await GlobalUtility.$store.dispatcher.characters.updateCharacterBoon(correlationId, this.character.id, boon);
 			this.logger.debug('BaseBoonDialog', 'preComplete', 'response', response, correlationId);
 			return response;
 		},
 		async preCompleteResponseDelete(correlationId) {
-			return await this.$store.dispatcher.characters.deleteCharacterBoon(correlationId, this.character.id, this.innerValue.id);
+			return await GlobalUtility.$store.dispatcher.characters.deleteCharacterBoon(correlationId, this.character.id, this.innerValue.id);
 		},
 		async resetDialog(correlationId, value) {
 			this.steps = 1;

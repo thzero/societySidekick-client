@@ -178,11 +178,11 @@
 import LibraryUtility from '@thzero/library_common/utility';
 
 import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
-import VCheckboxWithValidation from '@/library_vue/components/form/VCheckboxWithValidation';
-import VMarkdownEditor from '@/library_vue/components/markup/VMarkdownEditor';
-import VNumberFieldWithValidation from '@/library_vue/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue/components/form/VTextFieldWithValidation';
+import VCheckboxWithValidation from '@/library_vue_vuetify/components/form/VCheckboxWithValidation';
+import VMarkdownEditor from '@/library_vue_vuetify/components/markup/VMarkdownEditor';
+import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
+import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 export default {
 	name: 'AdminScenariosEditDialog',

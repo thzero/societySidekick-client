@@ -27,7 +27,7 @@
 
 <script>
 import baseEdit from '@/library_vue/components/baseEdit';
-import VNumberFieldWithValidation from '@/library_vue/components/form/VNumberFieldWithValidation';
+import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
 
 export default {
 	name: 'Pathfinder2eAdminEquipmentEditSnippet',

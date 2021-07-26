@@ -74,6 +74,8 @@
 </template>
 
 <script>
+import GlobalUtility from '@thzero/library_client/utility/global';
+
 import baseList from '@/components/admin/baseList';
 import EditDialog from '@/components/admin/factions/EditDialog';
 
@@ -87,12 +89,12 @@ export default {
 	extends: baseList,
 	computed: {
 		factions() {
-			const factions = this.$store.state.adminFactions.factions;
+			const factions = GlobalUtility.$store.state.adminFactions.factions;
 			return factions ? factions.slice(0) : [];
 		}
 	},
 	async mounted() {
-		await this.$store.dispatcher.adminFactions.searchAdminFactions(this.correlationId(), {});
+		await GlobalUtility.$store.dispatcher.adminFactions.searchAdminFactions(this.correlationId(), {});
 	},
 	methods: {
 		defaultItem() {
@@ -103,9 +105,9 @@ export default {
 		},
 		initializeHeaders() {
 			return [
-				{ text: this.$trans.t('factions.name'), align: 'left', value: 'name', },
-				{ text: this.$trans.t('factions.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: this.$trans.t('factions.actions'), align: 'right', value: 'action', sortable: false }
+				{ text: GlobalUtility.$trans.t('factions.name'), align: 'left', value: 'name', },
+				{ text: GlobalUtility.$trans.t('factions.gameSystem'), align: 'left', value: 'gameSystemId' },
+				{ text: GlobalUtility.$trans.t('factions.actions'), align: 'right', value: 'action', sortable: false }
 			];
 		}
 	}

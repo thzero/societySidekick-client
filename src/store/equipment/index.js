@@ -1,8 +1,7 @@
-import Vue from 'vue';
-
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 import VueUtility from '@/library_vue/utility/index';
 
@@ -12,10 +11,10 @@ const store = {
 	},
 	actions: {
 		async equipmentSearch({ commit }, params) {
-			const crypto = this._vm.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
+			const crypto = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
 			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'equipment', params.params))
 				return;
-			const service = this._vm.$injector.getService(Constants.InjectorKeys.SERVICE_EQUIPMENT);
+			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_EQUIPMENT);
 			const response = await service.search(params.correlationId, params.gameSystemId, params.params);
 			this.$logger.debug('store.equipment', 'equipmentSearch', 'response', response, params.correlationId);
 			if (response.success && response.results && response.results.data) {
@@ -48,7 +47,7 @@ const store = {
 	},
 	dispatcher: {
 		async equipmentSearch(correlationId, gameSystemId, params) {
-			return await Vue.prototype.$store.dispatch('equipmentSearch', { correlationId: correlationId, gameSystemId: gameSystemId, params: params });
+			return await GlobalUtility.$store.dispatch('equipmentSearch', { correlationId: correlationId, gameSystemId: gameSystemId, params: params });
 		}
 	}
 };
