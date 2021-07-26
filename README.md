@@ -76,6 +76,16 @@ Install the NPM dependencies for the client.
 npm install
 ```
 
+#### Submodules
+
+Install the submodule dependencies for the client.
+
+```
+git submodule add https://github.com/thzero/societySidekick-common "src/common" 
+git submodule add https://github.com/thzero/library_client_vue "src/library_vue" 
+git submodule add https://github.com/thzero/library_client_vue_vuetify "src/library_vue_vuetify" 
+```
+
 ### Compiles and hot-reloads for development
 
 Run the application locally using the VueJs development server; requires the server component.
