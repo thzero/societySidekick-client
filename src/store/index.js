@@ -30,6 +30,7 @@ class AppStore extends BaseStore {
 			state: {
 				checksumLastUpdate: [],
 				gameSystems: [],
+				organizedPlay: [],
 				plans: [],
 				settings: AppUtility.initializeSettingsUser(),
 				version: null
@@ -40,6 +41,12 @@ class AppStore extends BaseStore {
 					const response = await service.gameSystems(correlationId);
 					this.$logger.debug('store', 'getGameSystems', 'response', response, correlationId);
 					commit('setGameSystems', { correlationId : correlationId, gameSystems: response.success && response.results ? response.results.data : [] });
+				},
+				async getOrganizedPlay({ commit }, correlationId) {
+					const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_API);
+					const response = await service.gameSystems(correlationId);
+					this.$logger.debug('store', 'getOrganizedPlay', 'response', response, correlationId);
+					commit('setOrganizedPlay', { correlationId : correlationId, organizedPlay: response.success && response.results ? response.results.data : [] });
 				},
 				async getPlans({ commit }, correlationId) {
 					const service = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_PLANS);
@@ -59,6 +66,7 @@ class AppStore extends BaseStore {
 					this.$logger.debug('store', 'initialize', 'response', response);
 					if (response && response.success) {
 						commit('setGameSystems', { correlationId : correlationId, gameSystems: response.results.gameSystems.data });
+						commit('setOrganizedPlay', { correlationId : correlationId, organizedPlay: response.results.gameSystems.data });
 						commit('setPlans', { correlationId : correlationId, plans: response.results.plans });
 						commit('setVersion', { correlationId : correlationId, version: response.results.version });
 					}
@@ -72,6 +80,11 @@ class AppStore extends BaseStore {
 					if (state.gameSystems == null)
 						return null;
 					return state.gameSystems.find(gameSystem => gameSystem.id === id);
+				},
+				getOrganizedPlay: (state) => (id) => {
+					if (state.organizedPlay == null)
+						return null;
+					return state.organizedPlay.find(gameSystem => gameSystem.id === id);
 				},
 				getPlan: (state) => (id) => {
 					if (state.plans == null)
@@ -88,6 +101,12 @@ class AppStore extends BaseStore {
 					this.$logger.debug('store', 'setGameSystems', 'gameSystems.b', state.gameSystems, params.correlationId);
 					state.gameSystems = params.gameSystems;
 					this.$logger.debug('store', 'setGameSystems', 'gameSystems.c', state.gameSystems, params.correlationId);
+				},
+				setOrganizedPlay(state, params) {
+					this.$logger.debug('store', 'setOrganizedPlay', 'organizedPlay.a', params.organizedPlay, params.correlationId);
+					this.$logger.debug('store', 'setOrganizedPlay', 'organizedPlay.b', state.organizedPlay, params.correlationId);
+					state.organizedPlay = params.organizedPlay;
+					this.$logger.debug('store', 'setOrganizedPlay', 'organizedPlay.c', state.organizedPlay, params.correlationId);
 				},
 				setPlans(state, params) {
 					this.$logger.debug('store', 'setPlans', 'plans.a', params.plans, params.correlationId);
@@ -106,6 +125,9 @@ class AppStore extends BaseStore {
 			dispatcher: {
 				async getGameSystems(correlationId) {
 					await GlobalUtility.$store.dispatch('getGameSystems', correlationId);
+				},
+				async getOrganizedPlay(correlationId) {
+					await GlobalUtility.$store.dispatch('getOrganizedPlay', correlationId);
 				},
 				async getPlans(correlationId) {
 					await GlobalUtility.$store.dispatch('getPlans', correlationId);
