@@ -15,6 +15,7 @@ import charactersService from '@/service/characters';
 import equipmentService from '@/service/equipment';
 import factionsService from '@/service/factions';
 import gameSystemsService from '@/service/gameSystems';
+import organizedPlayService from '@/service/organizedPlay';
 import restCommunicationService from '@thzero/library_client_service_rest_axios';
 import scenariosService from '@/service/scenarios';
 import settingsService from '@/service/settings';
@@ -44,6 +45,7 @@ class Services extends BaseServices {
 		this._inject(Constants.InjectorKeys.SERVICE_CHARACTERS, new charactersService());
 		this._inject(Constants.InjectorKeys.SERVICE_EQUIPMENT, new equipmentService());
 		this._inject(Constants.InjectorKeys.SERVICE_FACTIONS, new factionsService());
+		this._inject(Constants.InjectorKeys.SERVICE_ORGANIZEDPLAY, new organizedPlayService());
 		this._inject(Constants.InjectorKeys.SERVICE_SCENARIOS, new scenariosService());
 
 		// GameSystems Update

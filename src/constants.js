@@ -28,6 +28,7 @@ const Constants = {
 		SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E: BaseKeys.SERVICE_GAMESYSTEMS_RULES + SharedConstants.GameSystems.Pathfinder2e.id,
 		SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E: BaseKeys.SERVICE_GAMESYSTEMS_RULES + SharedConstants.GameSystems.Starfinder1e.id,
 
+		SERVICE_ORGANIZEDPLAY: 'serviceOrganizedPlay',
 		SERVICE_SCENARIOS: 'serviceScenarios'
 	},
 	ErrorCodes: {
