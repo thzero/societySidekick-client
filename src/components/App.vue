@@ -38,6 +38,11 @@ export default {
 			background-attachment: fixed;
 	} */
 
+	.displayLink {
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
 	.gameSystemHeaderSpacer {
 		padding-right: 4px;
 	}
