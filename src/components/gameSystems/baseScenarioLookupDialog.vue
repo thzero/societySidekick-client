@@ -41,7 +41,7 @@ export default {
 	}),
 	computed: {
 		scenarios() {
-			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.correlationId(), this.GlobalUtility.$store);
+			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.correlationId(), GlobalUtility.$store);
 			results = this.scenarioListFilter(results);
 			if (this.scenarioNameFilter)
 				results = results.filter(l => l.name ? l.name.toLowerCase().indexOf(this.scenarioNameFilter.toLowerCase()) > -1 : false);
