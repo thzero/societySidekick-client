@@ -16,6 +16,8 @@ class GameSystemsUtility {
 			return trans.t('forms.gameSystems.dungeonsAndDragons5e.number');
 		if (id === SharedConstants.GameSystems.Pathfinder2e.id)
 			return trans.t('forms.gameSystems.pathfinder2e.number');
+		if (id === SharedConstants.GameSystems.Starfinder1e.id)
+			return trans.t('forms.gameSystems.starfinder1e.number');
 		return '';
 	}
 }

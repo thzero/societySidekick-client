@@ -436,6 +436,9 @@
 		  },
 		  "pathfinder2e": {
 			 "number": "PFS Number"
+		  },
+		  "starfinder1e": {
+			 "number": "PFS Number"
 		  }
 	   },
 	   "id": "Id",

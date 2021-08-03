@@ -4,7 +4,7 @@
 	>
 		<v-flex
 			xs12
-			pb-2
+			class="mx-auto mb-2"
 		>
 			<v-card>
 				<v-card-text>
@@ -14,10 +14,9 @@
 		</v-flex>
 		<v-flex
 			xs12
+			class="mx-auto mb-2"
 		>
-			<v-card
-				class="mx-auto mb-4"
-			>
+			<v-card>
 				<v-card-text>
 					<v-layout
 						wrap
@@ -64,8 +63,11 @@
 		</v-flex>
 		<v-flex
 			xs12
+			class="mx-auto mb-2"
 		>
 			<VFormControl
+				ref="form"
+				:auto-save="true"
 				:pre-complete-ok="preComplete"
 				@close="close"
 				@cancel="cancel"
@@ -89,6 +91,7 @@
 									vid="gamerTag"
 									:label="$t('forms.gamerTag')"
 									:counter="30"
+									:blur="submitForm"
 								/>
 							</v-card-text>
 						</v-card>
@@ -113,6 +116,7 @@
 									:label="getGameSystemNumberName(gameSystemIds.DungeonsAndDragons5e.id)"
 									step="1"
 									:counter="10"
+									:blur="submitForm"
 								/>
 							</v-card-text>
 						</v-card>
@@ -136,6 +140,7 @@
 									:label="getGameSystemNumberName(gameSystemIds.Pathfinder2e.id)"
 									step="1"
 									:counter="10"
+									:blur="submitForm"
 								/>
 							</v-card-text>
 						</v-card>
@@ -162,6 +167,7 @@
 									:label="getGameSystemNumberName(gameSystemIds.Starfinder1e.id)"
 									step="1"
 									:counter="10"
+									:blur="submitForm"
 								/>
 							</v-card-text>
 						</v-card>
@@ -171,10 +177,9 @@
 		</v-flex>
 		<v-flex
 			xs12
+			class="mx-auto mb-2"
 		>
-			<v-card
-				class="mt-8"
-			>
+			<v-card>
 				<v-card-title class="headline">
 					{{ $t('favorites.namePlural') }}
 				</v-card-title>
@@ -204,10 +209,9 @@
 		</v-flex>
 		<v-flex
 			xs12
+			class="mx-auto mb-2 mt-4"
 		>
-			<v-card
-				class="mt-8"
-			>
+			<v-card>
 				<v-card-title class="headline">
 					{{ $t('locations.namePlural') }}
 				</v-card-title>
@@ -423,12 +427,12 @@ export default {
 		// eslint-disable-next-line
 		resetI(correlationId) {
 			// GameSystems Update
-			if (this.isGameSystemDungeonsAndDragons5e)
-				this.gameSystemNumberDungeonsAndDragons5e = this.clone(AppUtility.settings().getSettingsUserGameSystem(correlationId, this.user, SharedConstants.GameSystems.DungeonsAndDragons5e.id, (settings) => { return settings.number; }));
-			if (this.isGameSystemPathfinder2e)
-				this.gameSystemNumberPathfinder2e = this.clone(AppUtility.settings().getSettingsUserGameSystem(correlationId, this.user, SharedConstants.GameSystems.Pathfinder2e.id, (settings) => { return settings.number; }));
-			if (this.isGameSystemStarfinder1e)
-				this.gameSystemNumberStarfinder1e = this.clone(AppUtility.settings().getSettingsUserGameSystem(correlationId, this.user, SharedConstants.GameSystems.Starfinder1e.id, (settings) => { return settings.number; }));
+			this.gameSystemNumberDungeonsAndDragons5e = this.clone(AppUtility.settings().getSettingsUserGameSystem(correlationId, this.user, SharedConstants.GameSystems.DungeonsAndDragons5e.id, (settings) => { return settings.number; }));
+			this.gameSystemNumberPathfinder2e = this.clone(AppUtility.settings().getSettingsUserGameSystem(correlationId, this.user, SharedConstants.GameSystems.Pathfinder2e.id, (settings) => { return settings.number; }));
+			this.gameSystemNumberStarfinder1e = this.clone(AppUtility.settings().getSettingsUserGameSystem(correlationId, this.user, SharedConstants.GameSystems.Starfinder1e.id, (settings) => { return settings.number; }));
+		},
+		async submitForm() {
+			await this.$refs.form.submit();
 		}
 	}
 };
