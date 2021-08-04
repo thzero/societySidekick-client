@@ -32,12 +32,9 @@
 							>
 								<v-flex
 									xs9
+									class="title mb-1 pt-1"
 								>
-									<v-card-title
-										class="title mb-1 pt-1"
-									>
-										{{ name }}
-									</v-card-title>
+									{{ name }}
 								</v-flex>
 								<v-flex
 									xs3
