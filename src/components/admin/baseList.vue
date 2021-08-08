@@ -14,7 +14,7 @@ export default {
 	},
 	extends: baseList,
 	data: () => ({
-		serviceGameSystemsUtility: null
+		serviceGameSystems: null
 	}),
 	methods: {
 		getGameSystemName(id) {
@@ -34,13 +34,13 @@ export default {
 		getServiceByGameSystemId(correlationId, gameSystemId) {
 			if (!gameSystemId)
 				return null;
-			const response = this.serviceGameSystemsUtility.getServiceByGameSystemId(correlationId, gameSystemId);
+			const response = this.serviceGameSystems.getServiceByGameSystemId(correlationId, gameSystemId);
 			if (!response || !response.success)
 				return null;
 			return response.results;
 		},
 		initializeServices() {
-			this.serviceGameSystemsUtility = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
+			this.serviceGameSystems = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
 		},
 		initialize() {
 			const correlationId = this.correlationId();
