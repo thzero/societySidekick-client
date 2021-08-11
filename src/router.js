@@ -77,6 +77,19 @@ const router = new VueRouter({
 			]
 		},
 		{
+			path: '/characters/:gamerTag/:key',
+			component: () => import(/* webpackPrefetch: true */ /* webpackChunkName: "group-characters" */ './layouts/MainLayout.vue'),
+			children: [
+				{
+					path: '',
+					component: () => import(/* webpackPrefetch: true */ /* webpackChunkName: "group-characters" */ './components/Characters.vue'),
+					meta: {
+						requiresAuth: false
+					}
+				}
+			]
+		},
+		{
 			path: '/scenarios/:gamerTag/:key',
 			component: () => import(/* webpackPrefetch: true */ /* webpackChunkName: "group-scenarios" */ './layouts/MainLayout.vue'),
 			children: [

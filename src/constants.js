@@ -37,6 +37,7 @@ const Constants = {
 		Default: 'error'
 	},
 	ExternalListTypes: {
+		Characters: 'characters',
 		Favorites: 'favorites',
 		Scenarios: 'scenarios'
 	},

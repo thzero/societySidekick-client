@@ -134,7 +134,9 @@
 						transition="fade-transition"
 						reverse-transition="fade-transition"
 					>
-						<CharacterList />
+						<CharacterList
+							:user="user"
+						/>
 					</v-tab-item>
 					<v-tab-item
 						transition="fade-transition"

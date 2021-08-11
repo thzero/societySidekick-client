@@ -127,7 +127,7 @@
 									</td>
 									<td
 										v-if="$vuetify.breakpoint.mdAndDown"
-										style="vertical-align:top"
+										style="vertical-align: top;"
 									>
 										<table
 											border="0"
@@ -306,7 +306,7 @@
 										</table>
 									</td>
 									<td
-										style="vertical-align:top"
+										style="vertical-align: top;"
 									>
 										<table
 											border="0"
@@ -436,7 +436,6 @@ import VSelect2 from '@/library_vue_vuetify/components/form/VSelect';
 import VText2 from '@/library_vue_vuetify/components/form/VTextField';
 
 import ScenarioSnippet from '@/components/gameSystems/ScenarioSnippet';
-import ShareDialog from '@/components/ShareDialog';
 
 import DialogSupport from '@/library_vue/components/support/dialog';
 
@@ -451,7 +450,6 @@ export default {
 		ScenarioListFilterPathfinder2e,
 		ScenarioListFilterStarfinder1e,
 		ScenarioSnippet,
-		ShareDialog,
 		VDirectionButton,
 		VGameSystemListingSyleButton,
 		VNumber,
@@ -470,8 +468,8 @@ export default {
 		}
 	},
 	data: () => ({
-		dialogShare: new DialogSupport(),
 		forceRecomputeCounter: 0,
+		listingStyleOverride: SharedConstants.ListingTypes.Grid,
 		scenarioNameValue: null,
 		scenarioNumberValue: null,
 		scenariosCache: {},
@@ -491,13 +489,6 @@ export default {
 		characterList() {
 			return this.value ? this.value : GlobalUtility.$store.state.characters.characters;
 		},
-		gameSystemName: {
-			get() {
-				const results = GlobalUtility.$store.getters.getGameSystem(this.gameSystemFilter);
-				return results ? results.name : '';
-			},
-			set() {}
-		},
 		isGrid() {
 			return this.listingStyle === SharedConstants.ListingTypes.Grid;
 		},
@@ -507,7 +498,10 @@ export default {
 		listingStyle: {
 			get: function () {
 				if (!this.user)
-					return null;
+					return this.listingStyleOverride;
+				if (this.isExternalList)
+					return this.listingStyleOverride;
+
 				let value = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.listingStyleFilter);
 				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
 				return value;
@@ -515,6 +509,9 @@ export default {
 			set: function (newVal) {
 				if (!this.user)
 					return;
+				if (this.isExternalList)
+					this.listingStyleOverride = newVal;
+
 				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.listingStyleFilter = newVal; });
 			}
 		},
@@ -709,10 +706,6 @@ export default {
 				this.$refs.scenarioListFilterPathfinder2e.clear(this.gameSystemFilter);
 			if (this.isGameSystemStarfinder1e && this.$refs.scenarioListFilterStarfinder1e)
 				this.$refs.scenarioListFilterStarfinder1e.clear(this.gameSystemFilter);
-		},
-		dialogShareOpen() {
-			this.$refs.shareDialog.openDialog(this.gameSystemFilter);
-			this.dialogShare.open();
 		},
 		async execute() {
 			this.users = [];
