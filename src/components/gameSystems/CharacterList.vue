@@ -114,7 +114,23 @@
 													align="right"
 													class="pb-1"
 												>
-													<v-btn
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="dialogShareOpen()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-share-variant</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.share') }}</span>
+													</v-tooltip>
+													<!-- <v-btn
 														v-if="gameSystemFilter && !isExternalList"
 														depressed
 														large
@@ -122,7 +138,7 @@
 														@click="dialogShareOpen()"
 													>
 														<v-icon>mdi-share-variant</v-icon>
-													</v-btn>
+													</v-btn> -->
 												</td>
 											</tr>
 											<tr>
@@ -144,14 +160,30 @@
 													align="right"
 													class="pb-1"
 												>
-													<v-btn
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="clickClear()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-filter-variant-remove</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.clear') }}</span>
+													</v-tooltip>
+													<!-- <v-btn
 														depressed
 														large
 														style="min-width: 0px;"
 														@click="clickClear()"
 													>
 														<v-icon>mdi-filter-variant-remove</v-icon>
-													</v-btn>
+													</v-btn> -->
 												</td>
 											</tr>
 										</table>
@@ -266,7 +298,23 @@
 													align="right"
 													class="pb-1"
 												>
-													<v-btn
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="dialogShareOpen()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-share-variant</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.share') }}</span>
+													</v-tooltip>
+													<!-- <v-btn
 														v-if="gameSystemFilter && !isExternalList"
 														depressed
 														large
@@ -274,21 +322,37 @@
 														@click="dialogShareOpen()"
 													>
 														<v-icon>mdi-share-variant</v-icon>
-													</v-btn>
+													</v-btn> -->
 												</td>
 												<td
 													style="padding-right: 4px;"
 													align="right"
 													class="pb-1"
 												>
-													<v-btn
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="clickClear()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-filter-variant-remove</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.clear') }}</span>
+													</v-tooltip>
+													<!-- <v-btn
 														depressed
 														large
 														style="min-width: 0px;"
 														@click="clickClear()"
 													>
 														<v-icon>mdi-filter-variant-remove</v-icon>
-													</v-btn>
+													</v-btn> -->
 												</td>
 											</tr>
 										</table>

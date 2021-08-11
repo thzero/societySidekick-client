@@ -4,6 +4,8 @@
 		large
 		style="min-width: 0px"
 		@click="click()"
+		v-bind="attrs"
+		v-on="on"
 	>
 		<v-icon
 			v-if="isGrid"
@@ -15,6 +17,7 @@
 		>
 			mdi-format-list-bulleted
 		</v-icon>
+		{{ attrs }}
 	</v-btn>
 </template>
 
@@ -29,6 +32,14 @@ export default {
 	name: 'GameSystemListingSyleButton',
 	extends: baseControlEdit,
 	props: {
+		attrs: {
+			type: null,
+			default: null
+		},
+		on: {
+			type: null,
+			default: null
+		},
 		// must be included in props
 		value: {
 			type: null,

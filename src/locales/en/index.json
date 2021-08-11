@@ -594,6 +594,10 @@
 	   "support": "Support",
 	   "users": "Users"
 	},
+	"tooltips": {
+	   "clear": "Clear filters",
+	   "share": "Share the list"
+	},
 	"users": {
 	   "actions": "Actions",
 	   "externalId": "External Id",
