@@ -59,10 +59,7 @@ class Settings extends BaseSettings {
 			return null;
 
 		const settings = this.mergeUser(correlationId, user.settings);
-		if (!settings.locations)
-			return null;
-		const location = settings.locations.find(l => l.id === id);
-		return location;
+		return settings.locations ? settings.locations.find(l => l.id === id) : null;
 	}
 
 	getSettingsUserLocations(correlationId, user) {
@@ -84,9 +81,7 @@ class Settings extends BaseSettings {
 			return null;
 
 		const settings = this.mergeUser(correlationId, user.settings);
-		if (!settings.gameSystems)
-			return null;
-		let gameSystem = settings.gameSystems.find(l => l.id === gameSystemFilter);
+		let gameSystem = settings.gameSystems ? settings.gameSystems.find(l => l.id === gameSystemFilter) : null;
 		if (!gameSystem)
 			gameSystem = new SettingsGameSystem();
 		return funcAttribute(gameSystem);
@@ -111,9 +106,7 @@ class Settings extends BaseSettings {
 			return null;
 
 		const settings = this.mergeUser(correlationId, user.settings);
-		if (!settings.scenarios)
-			return null;
-		let gameSystem = settings.scenarios.additional.find(l => l.id === gameSystemFilter);
+		let gameSystem = settings.scenarios ? settings.scenarios.additional.find(l => l.id === gameSystemFilter) : null;
 		if (!gameSystem)
 			gameSystem = new SettingsScenario();
 		return funcAttribute(gameSystem);

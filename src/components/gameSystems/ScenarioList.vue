@@ -508,14 +508,14 @@ export default {
 			get: function () {
 				if (!this.user)
 					return null;
-				let value = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.listingSytleFilter);
+				let value = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.listingStyleFilter);
 				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
 				return value;
 			},
 			set: function (newVal) {
 				if (!this.user)
 					return;
-				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.listingStyleFilter = newVal; });
 			}
 		},
 		seasonFilter: {

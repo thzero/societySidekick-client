@@ -403,12 +403,12 @@ export default {
 		},
 		listingStyle: {
 			get: function () {
-				let value = this.getSettingsUser(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.listingSytleFilter);
+				let value = this.getSettingsUser(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.listingStyleFilter);
 				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
 				return value;
 			},
 			set: function (newVal) {
-				this.updateSettingsUserCharacter(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+				this.updateSettingsUserCharacter(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { settings.listingStyleFilter = newVal; });
 			}
 		},
 		sortBy: {

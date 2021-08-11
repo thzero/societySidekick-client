@@ -383,12 +383,12 @@ export default {
 		},
 		listingStyle: {
 			get: function () {
-				let value = AppUtility.settings().getSettingsUserBoons(this.correlationId(), this.user, (settings) => settings.listingSytleFilter);
+				let value = AppUtility.settings().getSettingsUserBoons(this.correlationId(), this.user, (settings) => settings.listingStyleFilter);
 				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
 				return value;
 			},
 			set: function (newVal) {
-				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+				AppUtility.settings().updateSettingsUserBoons(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.listingStyleFilter = newVal; });
 			}
 		},
 		scenarioNameFilter: {
