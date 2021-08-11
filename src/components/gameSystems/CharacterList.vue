@@ -19,110 +19,198 @@
 							mb-1
 							:pr-2="$vuetify.breakpoint.lgAndUp"
 						>
-							<VSelect2
-								ref="gameSystems"
-								v-model="gameSystemFilter"
-								vid="gameSystems"
-								:items="gameSystems"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.gameSystem')"
-								class="pb-1"
-							/>
-							<VText2
-								ref="characterNameFilter"
-								v-model="characterNameFilter"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.characters.name') + ' ' + $t('forms.name')"
-								class="pb-1"
-							/>
+							<table
+								border="0"
+								cellspacing="0"
+								cellpadding="0"
+								style="width: 100%;"
+							>
+								<tr>
+									<td
+										style="width: 100%;"
+									>
+										<VSelect2
+											ref="gameSystems"
+											v-model="gameSystemFilter"
+											vid="gameSystems"
+											:items="gameSystems"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.gameSystem')"
+											class="pb-1"
+										/>
+										<VText2
+											ref="characterNameFilter"
+											v-model="characterNameFilter"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.characters.name') + ' ' + $t('forms.name')"
+											class="pb-1"
+										/>
+									</td>
+									<td
+										style="vertical-align:top"
+										v-if="$vuetify.breakpoint.mdAndDown"
+									>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1 ml-2"
+											style="margin-left: auto; margin-right: 0px;"
+										>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<VGameSystemListingSyleButton 
+														v-model="listingStyle"
+													/>
+												</td>
+											</tr>
+											<tr
+												v-if="gameSystemFilter"
+											>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-btn
+														depressed
+														large
+														style="min-width: 0px;"
+														@click="clickClear()"
+													>
+														<v-icon>mdi-filter-variant-remove</v-icon>
+													</v-btn>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
 						</v-flex>
 						<v-flex
 							xs12
 							lg6
 							mb-1
 						>
+							
 							<table
+								v-if="$vuetify.breakpoint.lgAndUp"
 								border="0"
 								cellspacing="0"
 								cellpadding="0"
-								style="width: 100%;"
-							>
-								<tr>
-									<td>
-										<VNumberField
-											ref="characterLevelMinFilter"
-											v-model="characterLevelMinFilter"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.minAbbr')"
-											class="pb-1 pr-2"
-										/>
-									</td>
-									<td>
-										<VNumberField
-											ref="characterLevelMaxFilter"
-											v-model="characterLevelMaxFilter"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.maxAbbr')"
-											class="pb-1"
-										/>
-									</td>
-								</tr>
-							</table>
-							<table
-								border="0"
-								cellspacing="0"
-								cellpadding="0"
+								class="mb-1"
 								style="width: 100%;"
 							>
 								<tr>
 									<td
-										style="padding-right: 4px"
+										style="width: 100%;"
 									>
-										<VSelect2
-											ref="sortBy"
-											v-model="sortBy"
-											vid="sortBy"
-											:items="sortKeys"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('forms.sorting.nameShort')"
-										/>
-									</td>
-									<td>
-										<VDirectionButton
-											v-model="sortDirection"
-										/>
-									</td>
-									<td
-										v-if="gameSystemFilter"
-										align="right"
-									>
-										<v-btn
-											depressed
-											large
-											style="min-width: 0px"
-											@click="clickClear()"
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1"
+											style="width: 100%;"
 										>
-											<v-icon>mdi-filter-variant-remove</v-icon>
-										</v-btn>
-									</td>
-									<td>
-										<table style="margin-left: auto; margin-right: 0px;">
 											<tr>
 												<td>
+													<VNumberField
+														ref="characterLevelMinFilter"
+														v-model="characterLevelMinFilter"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.minAbbr')"
+														class="pb-1 pr-2"
+													/>
+												</td>
+												<td>
+													<VNumberField
+														ref="characterLevelMaxFilter"
+														v-model="characterLevelMaxFilter"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.maxAbbr')"
+														class="pb-1"
+													/>
+												</td>
+											</tr>
+										</table>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											style="width: 100%;"
+										>
+											<tr>
+												<td
+													style="padding-right: 4px"
+												>
+													<VSelect2
+														ref="sortBy"
+														v-model="sortBy"
+														vid="sortBy"
+														:items="sortKeys"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.sorting.nameShort')"
+													/>
+												</td>
+												<td>
+													<VDirectionButton
+														v-model="sortDirection"
+													/>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td
+										style="vertical-align:top"
+									>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1 ml-2"
+											style="margin-left: auto; margin-right: 0px;"
+										>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
 													<VGameSystemListingSyleButton 
-														v-if="$vuetify.breakpoint.lgAndUp"
 														v-model="listingStyle"
 													/>
+												</td>
+											</tr>
+											<tr
+												v-if="gameSystemFilter"
+											>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-btn
+														depressed
+														large
+														style="min-width: 0px;"
+														@click="clickClear()"
+													>
+														<v-icon>mdi-filter-variant-remove</v-icon>
+													</v-btn>
 												</td>
 											</tr>
 										</table>
@@ -360,7 +448,7 @@ export default {
 			GlobalUtility.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ id ]}));
 		},
 		clickClear() {
-			AppUtility.settings().clearUser(GlobalUtility.$store, GlobalUtility.$store.state.user.user, (settings) => {
+			AppUtility.settings().clearUser(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, (correlationId, settings) => {
 				this.characterNameValue = null;
 				this.characterLevelMaxFilter = null;
 				this.characterLevelMinFilter = null;

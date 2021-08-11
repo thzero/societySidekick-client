@@ -66,9 +66,9 @@
 									#{{ gameSystemNumber }}
 								</v-chip>
 								<VFavoriteButton
-									v-if="hasFavorite"
+									v-if="hasFavorite && isAuthUserUser"
 									v-model="isFavorite"
-									:disabled="isAuthUserUser"
+									:disabled="!isAuthUserUser"
 									class="ml-2"
 									style="min-width: 0px"
 								/>
@@ -250,12 +250,10 @@ export default {
 	},
 	methods: {
 		async fetch(correlationId) {
-			const self = this;
-
+			if (!this.serviceCharacters || !this.serviceUsers)
+				return;
+		
 			try {
-				if (!this.serviceCharacters || !this.serviceUsers)
-					return;
-
 				const gamerTag = this.$route.params.gamerTag;
 				if (!gamerTag) {
 					VueUtility.invalid();
@@ -295,6 +293,7 @@ export default {
 				// this.$refs.scenarioList.execute()
 			}
 			finally {
+				const self = this;
 				const timeout = setTimeout(function () {
 					self.initializeCompleted = true;
 					clearTimeout(timeout);

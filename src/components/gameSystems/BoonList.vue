@@ -19,70 +19,125 @@
 							mb-1
 							:pr-2="$vuetify.breakpoint.lgAndUp"
 						>
-							<VSelect2
-								ref="gameSystems"
-								v-model="gameSystemFilter"
-								:items="gameSystems"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.gameSystem')"
-								class="pb-1"
-							/>
-							<VText2
-								ref="scenarioNameFilter"
-								v-model="scenarioNameFilter"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.scenarios.name') + ' ' + $t('forms.name')"
-								class="pb-1"
-							/>
-							<VSelect2
-								ref="scenarioSeasons"
-								v-model="seasonFilter"
-								:items="scenarioSeasons"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.scenarios.season')"
-							/>
 							<table
-								v-if="$vuetify.breakpoint.mdAndDown"
 								border="0"
 								cellspacing="0"
 								cellpadding="0"
 								style="width: 100%;"
-								class="pt-1"
 							>
 								<tr>
-									<td>
-										<!-- // GameSystems Update -->
-										<ScenarioListFilterPathfinder2e
-											v-show="isGameSystemPathfinder2e"
-											ref="scenarioListFilterPathfinder2e"
-											v-model="forceRecomputeCounter"
-											:external-list="false"
-										/>
-										<ScenarioListFilterStarfinder1e
-											v-show="isGameSystemStarfinder1e"
-											ref="scenarioListFilterStarfinder1e"
-											v-model="forceRecomputeCounter"
-											:external-list="false"
-										/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<VText2
-											ref="boonNameFilter"
-											v-model="boonNameFilter"
+									<td
+										style="width: 100%;"
+									>
+										<VSelect2
+											ref="gameSystems"
+											v-model="gameSystemFilter"
+											:items="gameSystems"
 											:flat="true"
 											:hide-details="true"
 											:solo-inverted="true"
-											:label="$t('forms.boons.name') + ' ' + $t('forms.name')"
+											:label="$t('forms.gameSystem')"
 											class="pb-1"
 										/>
+										<VText2
+											ref="scenarioNameFilter"
+											v-model="scenarioNameFilter"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.scenarios.name') + ' ' + $t('forms.name')"
+											class="pb-1"
+										/>
+										<VSelect2
+											ref="scenarioSeasons"
+											v-model="seasonFilter"
+											:items="scenarioSeasons"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.scenarios.season')"
+										/>
+										<table
+											v-if="$vuetify.breakpoint.mdAndDown"
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											style="width: 100%;"
+											class="pt-1"
+										>
+											<tr>
+												<td>
+													<!-- // GameSystems Update -->
+													<ScenarioListFilterPathfinder2e
+														v-show="isGameSystemPathfinder2e"
+														ref="scenarioListFilterPathfinder2e"
+														v-model="forceRecomputeCounter"
+														:external-list="false"
+													/>
+													<ScenarioListFilterStarfinder1e
+														v-show="isGameSystemStarfinder1e"
+														ref="scenarioListFilterStarfinder1e"
+														v-model="forceRecomputeCounter"
+														:external-list="false"
+													/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<VText2
+														ref="boonNameFilter"
+														v-model="boonNameFilter"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.boons.name') + ' ' + $t('forms.name')"
+														class="pt-1 pb-1"
+													/>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td
+										style="vertical-align:top"
+										v-if="$vuetify.breakpoint.mdAndDown"
+									>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1 ml-2"
+											style="margin-left: auto; margin-right: 0px;"
+										>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<VGameSystemListingSyleButton 
+														v-model="listingStyle"
+													/>
+												</td>
+											</tr>
+											<tr
+												v-if="gameSystemFilter"
+											>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-btn
+														depressed
+														large
+														style="min-width: 0px;"
+														@click="clickClear()"
+													>
+														<v-icon>mdi-filter-variant-remove</v-icon>
+													</v-btn>
+												</td>
+											</tr>
+										</table>
 									</td>
 								</tr>
 							</table>
@@ -100,83 +155,117 @@
 								style="width: 100%;"
 							>
 								<tr>
-									<td>
-										<!-- // GameSystems Update -->
-										<ScenarioListFilterPathfinder2e
-											v-show="isGameSystemPathfinder2e"
-											ref="scenarioListFilterPathfinder2e"
-											v-model="forceRecomputeCounter"
-											:external-list="false"
-										/>
-										<ScenarioListFilterStarfinder1e
-											v-show="isGameSystemStarfinder1e"
-											ref="scenarioListFilterStarfinder1e"
-											v-model="forceRecomputeCounter"
-											:external-list="false"
-										/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<VText2
-											ref="boonNameFilter"
-											v-model="boonNameFilter"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('forms.boons.name') + ' ' + $t('forms.name')"
-											class="pt-1"
-										/>
-									</td>
-								</tr>
-							</table>
-							<table
-								border="0"
-								cellspacing="0"
-								cellpadding="0"
-								style="width: 100%;"
-							>
-								<tr>
 									<td
-										style="padding-right: 4px; width: 99%;"
+										style="width: 100%;"
 									>
-										<VSelect2
-											ref="sortBy"
-											v-model="sortBy"
-											:items="sortKeys"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('forms.sorting.nameShort')"
-										/>
-									</td>
-									<td
-										style="padding-right: 4px;"
-										v-if="gameSystemFilter"
-										align="right"
-									>
-										<v-btn
-											depressed
-											large
-											style="min-width: 0px;"
-											class="ml-1"
-											@click="clickClear()"
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1"
+											style="width: 100%;"
 										>
-											<v-icon>mdi-filter-variant-remove</v-icon>
-										</v-btn>
+											<tr>
+												<td>
+													<!-- // GameSystems Update -->
+													<ScenarioListFilterPathfinder2e
+														v-show="isGameSystemPathfinder2e"
+														ref="scenarioListFilterPathfinder2e"
+														v-model="forceRecomputeCounter"
+														:external-list="false"
+													/>
+													<ScenarioListFilterStarfinder1e
+														v-show="isGameSystemStarfinder1e"
+														ref="scenarioListFilterStarfinder1e"
+														v-model="forceRecomputeCounter"
+														:external-list="false"
+													/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<VText2
+														ref="boonNameFilter"
+														v-model="boonNameFilter"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.boons.name') + ' ' + $t('forms.name')"
+														class="pt-1"
+													/>
+												</td>
+											</tr>
+										</table>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											style="width: 100%;"
+										>
+											<tr>
+												<td
+													style="padding-right: 4px; width: 99%;"
+												>
+													<VSelect2
+														ref="sortBy"
+														v-model="sortBy"
+														:items="sortKeys"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.sorting.nameShort')"
+													/>
+												</td>
+												<td
+													style="padding-right: 4px;"
+												>
+													<VDirectionButton
+														v-model="sortDirection"
+													/>
+												</td>
+											</tr>
+										</table>
 									</td>
 									<td
-										style="padding-right: 4px;"
+										style="vertical-align:top"
 									>
-										<VDirectionButton
-											v-model="sortDirection"
-										/>
-									</td>
-									<td>
-										<VGameSystemListingSyleButton 
-											v-if="$vuetify.breakpoint.lgAndUp"
-											v-model="listingStyle"
-										/>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1 ml-2"
+											style="margin-left: auto; margin-right: 0px;"
+										>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<VGameSystemListingSyleButton 
+														v-model="listingStyle"
+													/>
+												</td>
+											</tr>
+											<tr
+												v-if="gameSystemFilter"
+											>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-btn
+														depressed
+														large
+														style="min-width: 0px;"
+														@click="clickClear()"
+													>
+														<v-icon>mdi-filter-variant-remove</v-icon>
+													</v-btn>
+												</td>
+											</tr>
+										</table>
 									</td>
 								</tr>
 							</table>
@@ -377,7 +466,7 @@ export default {
 	},
 	methods: {
 		clickClear() {
-			AppUtility.settings().clearUser(GlobalUtility.$store, this.user, (settings) => {
+			AppUtility.settings().clearUser(this.correlationId(), GlobalUtility.$store, this.user, (correlationId, settings) => {
 				this.boonNameValue = null;
 				this.scenarioNameValue = null;
 				settings.scenarios.seasonFilter = null;
