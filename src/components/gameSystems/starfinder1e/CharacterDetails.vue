@@ -925,13 +925,16 @@
 			@cancel="dialogDetailsSignal.cancel()"
 			@ok="dialogDetailsSignal.ok()"
 		/>
+		<!-- using the completeOk property instead of the @ok event, as the delete of the
+		character in the store causes the components to no longer be available therefore
+		the event fails to fire -->
 		<VConfirmationDialog
 			ref="deleteConfirmDialog"
+			:complete-ok="dialogConfirmDeleteOk"
 			:non-recoverable="true"
 			:pre-complete-ok="dialogPreCompleteOkDelete"
 			:signal="dialogConfirmDeleteSignal.signal"
 			@cancel="dialogConfirmDeleteSignal.cancel()"
-			@ok="dialogConfirmDeleteOk"
 		/>
 	</vue-fragment>
 </template>
