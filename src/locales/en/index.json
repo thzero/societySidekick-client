@@ -375,6 +375,10 @@
 	   "quotaExceeded": "You have reached your quota of {quota} \\'{quotaType}\\'.",
 	   "type": "Type is required."
 	},
+	"extracts": {
+	   "csv": "CSV",
+	   "text": "Text"
+	},
 	"factions": {
 	   "actions": "Actions",
 	   "description": "Description",
@@ -557,6 +561,7 @@
 	},
 	"strings": {
 	   "add": "Add",
+	   "clear": "Clear",
 	   "copyright": "Copyright",
 	   "copyToClipboard": "Copied to the clipboard!",
 	   "delete": "Delete",
@@ -565,6 +570,7 @@
 	   "new": "New",
 	   "no": "No",
 	   "save": "Save",
+	   "share": "Share",
 	   "yes": "Yes"
 	},
 	"tagLine": {
@@ -591,6 +597,11 @@
 	   "statistics": "Stats",
 	   "support": "Support",
 	   "users": "Users"
+	},
+	"tooltips": {
+	   "clear": "Clear filters",
+	   "extract": "Extract list",
+	   "share": "Share the list"
 	},
 	"users": {
 	   "actions": "Actions",

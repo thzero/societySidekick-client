@@ -138,8 +138,8 @@
 			<v-flex
 				xs12
 			>
-				<ScenarioList
-					ref="scenarioList"
+				<CharacterList
+					ref="characterList"
 					:value="characters"
 					:user="user"
 					:game-system-filter-override="gameSystemId"
@@ -164,7 +164,7 @@ import GlobalUtility from '@thzero/library_client/utility/global';
 import VueUtility from '@/library_vue/utility/index';
 
 import base from '@/library_vue/components/base';
-import ScenarioList from '@/components/gameSystems/ScenarioList';
+import CharacterList from '@/components/gameSystems/CharacterList';
 import VFavoriteButton from '@/library_vue_vuetify/components/VFavoriteButton';
 import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
 
@@ -175,9 +175,9 @@ const check = (to) => {
 const DelayMs = 0; // 250
 
 export default {
-	name: 'Scenarios',
+	name: 'Characters',
 	components: {
-		ScenarioList,
+		CharacterList,
 		VFavoriteButton,
 		VLoadingOverlay
 	},
@@ -185,7 +185,7 @@ export default {
 	data: () => ({
 		characters: [],
 		gameSystemId: null,
-		externalListType: Constants.ExternalListTypes.Scenarios,
+		externalListType: Constants.ExternalListTypes.Characters,
 		initializeCompleted: false,
 		service: null,
 		user: null
@@ -268,17 +268,17 @@ export default {
 				this.gameSystemId = gameSystem.id;
 
 				const responseUser = await this.serviceUsers.fetchByGamerId(correlationId, gamerTag);
-				this.logger.debug('Scenarios', 'fetch', 'response', responseUser, correlationId);
+				this.logger.debug('Characters', 'fetch', 'response', responseUser, correlationId);
 				if (!responseUser || !responseUser.success) {
 					VueUtility.invalid();
 					return;
 				}
 
 				this.user = responseUser.results;
-				this.logger.debug('Scenarios', 'fetch', 'user', this.user);
+				this.logger.debug('Characters', 'fetch', 'user', this.user);
 
 				const responseCharacter = await this.serviceCharacters.listingByShortId(correlationId, gamerTag, this.gameSystemId);
-				this.logger.debug('Scenarios', 'fetch', 'response', responseCharacter, correlationId);
+				this.logger.debug('Characters', 'fetch', 'response', responseCharacter, correlationId);
 				if (!responseCharacter || !responseCharacter.success) {
 					//VueUtility.invalid()
 					return;
@@ -287,10 +287,10 @@ export default {
 				const characters = responseCharacter.results.data;
 				for (const character of characters)
 					character.user = this.user;
-				this.logger.debug('Scenarios', 'fetch', 'characters', characters, correlationId);
+				this.logger.debug('Characters', 'fetch', 'characters', characters, correlationId);
 				this.characters = characters;
 
-				// this.$refs.scenarioList.execute()
+				// this.$refs.CharacterList.execute()
 			}
 			finally {
 				const self = this;

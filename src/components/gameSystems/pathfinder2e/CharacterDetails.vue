@@ -9,7 +9,7 @@
 				<v-expansion-panel-header>
 					<div class="mt-2">
 						<span class="title pr-2">{{ $t('characters.class') }}/{{ $t('characters.level') }}</span>
-						<span class="title font-weight-regular">{{ classNamesAndLevels(value) }} / {{ value.level }}</span>
+						<span class="title font-weight-regular">{{ classNamesAndLevels(value) }}</span>
 					</div>
 				</v-expansion-panel-header>
 				<v-expansion-panel-content>

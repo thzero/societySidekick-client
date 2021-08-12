@@ -19,104 +19,186 @@
 							mb-1
 							:pr-2="$vuetify.breakpoint.lgAndUp"
 						>
-							<VSelect2
-								v-if="!isExternalListScenarios"
-								ref="gameSystems"
-								v-model="gameSystemFilter"
-								:items="gameSystems"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.gameSystem')"
-								class="pb-1"
-							/>
-							<VText2
-								v-if="isExternalListScenarios"
-								ref="gameSystem"
-								v-model="gameSystemName"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.gameSystem')"
-								:readonly="true"
-								class="pb-1"
-							/>
-							<VSelect2
-								ref="scenarioSeasons"
-								v-model="seasonFilter"
-								:items="scenarioSeasons"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.scenarios.season')"
-								class="pb-1"
-							/>
-							<VNumber
-								ref="uses"
-								v-model="scenarioNumberFilter"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.scenarios.name')+' '+$t('forms.scenarios.number')"
-								step="1"
-								class="pb-1"
-							/>
 							<table
-								v-if="$vuetify.breakpoint.mdAndDown"
 								border="0"
 								cellspacing="0"
 								cellpadding="0"
 								style="width: 100%;"
-								class="pt-1"
 							>
 								<tr>
-									<td>
-										<VText2
-											ref="scenarioNameFilter"
-											v-model="scenarioNameFilter"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('forms.scenarios.name') + ' ' + $t('forms.name')"
-											class="pb-1"
-										/>
-									</td>
-								</tr>
-								<tr>
-									<td>
+									<td
+										style="width: 100%;"
+									>
 										<VSelect2
-											ref="scenariosListingTypeFilter"
-											v-model="scenariosListingTypeFilter"
-											:items="scenariosListingTypeFilterList"
+											v-if="!isExternalListScenarios"
+											ref="gameSystems"
+											v-model="gameSystemFilter"
+											:items="gameSystems"
 											:flat="true"
 											:hide-details="true"
 											:solo-inverted="true"
-											:label="$t('sdfsdf')"
+											:label="$t('forms.gameSystem')"
 											class="pb-1"
 										/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<!-- // GameSystems Update -->
-										<ScenarioListFilterPathfinder2e
-											v-show="isGameSystemPathfinder2e"
-											ref="scenarioListFilterPathfinder2e"
-											v-model="forceRecomputeCounter"
-											:external-list="isExternalList"
+										<VText2
+											v-if="isExternalListScenarios"
+											ref="gameSystem"
+											v-model="gameSystemName"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.gameSystem')"
+											:readonly="true"
+											class="pb-1"
 										/>
-										<ScenarioListFilterStarfinder1e
-											v-show="isGameSystemStarfinder1e"
-											ref="scenarioListFilterStarfinder1e"
-											v-model="forceRecomputeCounter"
-											:external-list="isExternalList"
+										<VSelect2
+											ref="scenarioSeasons"
+											v-model="seasonFilter"
+											:items="scenarioSeasons"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.scenarios.season')"
+											class="pb-1"
 										/>
-									</td>
-									<td>
-										<table style="margin-left: auto; margin-right: 0px;">
+										<VNumber
+											ref="uses"
+											v-model="scenarioNumberFilter"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.scenarios.name')+' '+$t('forms.scenarios.number')"
+											step="1"
+											class="pb-1"
+										/>
+										<table
+											v-if="$vuetify.breakpoint.mdAndDown"
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											style="width: 100%;"
+											class="pt-1"
+										>
 											<tr>
 												<td>
-													<v-btn
+													<VText2
+														ref="scenarioNameFilter"
+														v-model="scenarioNameFilter"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.scenarios.name') + ' ' + $t('forms.name')"
+														class="pb-1"
+													/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<VSelect2
+														ref="scenariosListingTypeFilter"
+														v-model="scenariosListingTypeFilter"
+														:items="scenariosListingTypeFilterList"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('sdfsdf')"
+														class="pb-1"
+													/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<!-- // GameSystems Update -->
+													<ScenarioListFilterPathfinder2e
+														v-show="isGameSystemPathfinder2e"
+														ref="scenarioListFilterPathfinder2e"
+														v-model="forceRecomputeCounter"
+														:external-list="isExternalList"
+													/>
+													<ScenarioListFilterStarfinder1e
+														v-show="isGameSystemStarfinder1e"
+														ref="scenarioListFilterStarfinder1e"
+														v-model="forceRecomputeCounter"
+														:external-list="isExternalList"
+													/>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td
+										v-if="$vuetify.breakpoint.mdAndDown"
+										style="vertical-align: top;"
+									>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1 ml-2"
+											style="margin-left: auto; margin-right: 0px;"
+										>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-menu>
+														<template #activator="{ on: onMenu }">
+															<v-tooltip 
+																left
+															>
+																<template #activator="{ on: onTooltip }">
+																	<v-btn
+																		v-if="gameSystemFilter"
+																		depressed
+																		large
+																		style="min-width: 0px;"
+																		v-on="{ ...onMenu, ...onTooltip }"
+																	>
+																		<v-icon>mdi-file-download</v-icon>
+																	</v-btn>
+																</template>
+																<span>{{ $t('tooltips.extract') }}</span>
+															</v-tooltip>
+														</template>
+														<v-list>
+															<v-list-item
+																@click="clickExtract(extractTypes.Csv)"
+															>
+																<v-list-item-title>{{ $t('extracts.csv') }}</v-list-item-title>
+															</v-list-item>
+															<v-list-item
+																@click="clickExtract(extractTypes.Text)"
+															>
+																<v-list-item-title>{{ $t('extracts.text') }}</v-list-item-title>
+															</v-list-item>
+														</v-list>
+													</v-menu>
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="dialogShareOpen()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-share-variant</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.share') }}</span>
+													</v-tooltip>
+													<!-- <v-btn
 														v-if="gameSystemFilter && !isExternalList"
 														depressed
 														large
@@ -124,26 +206,74 @@
 														@click="dialogShareOpen()"
 													>
 														<v-icon>mdi-share-variant</v-icon>
-													</v-btn>
+													</v-btn> -->
+													
+												</td>
+											</tr>
+											<tr>
+												<td
+													v-show="isExternalListFavorites"
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<VSelect2
+														ref="user"
+														v-model="userIdFilter"
+														:items="userList"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('players.name')"
+													/>
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<VGameSystemListingSyleButton 
+														v-model="listingStyle"
+													/>
+												</td>
+											</tr>
+											<tr
+												v-if="gameSystemFilter"
+											>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="clickClear()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-filter-variant-remove</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.clear') }}</span>
+													</v-tooltip>
+													<!-- <v-btn
+														depressed
+														large
+														style="min-width: 0px;"
+														@click="clickClear()"
+													>
+														<v-icon>mdi-filter-variant-remove</v-icon>
+													</v-btn> -->
 												</td>
 											</tr>
 										</table>
-									</td>
-								</tr>
-								<tr
-									v-show="isExternalListFavorites"
-								>
-									<td>
-										<VSelect2
-											ref="user"
-											v-model="userIdFilter"
-											:items="userList"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('players.name')"
-											class="pt-1"
-										/>
 									</td>
 								</tr>
 							</table>
@@ -161,128 +291,223 @@
 								style="width: 100%;"
 							>
 								<tr>
-									<td>
-										<VText2
-											ref="scenarioNameFilter"
-											v-model="scenarioNameFilter"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('forms.scenarios.name') + ' ' + $t('forms.name')"
-											class="pb-1"
-										/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<VSelect2
-											ref="scenariosListingTypeFilter"
-											v-model="scenariosListingTypeFilter"
-											:items="scenariosListingTypeFilterList"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('sdfsdf')"
-											class="pb-1"
-										/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<!-- // GameSystems Update -->
-										<ScenarioListFilterPathfinder2e
-											v-show="isGameSystemPathfinder2e"
-											ref="scenarioListFilterPathfinder2e"
-											v-model="forceRecomputeCounter"
-											:external-list="isExternalList"
-										/>
-										<ScenarioListFilterStarfinder1e
-											v-show="isGameSystemStarfinder1e"
-											ref="scenarioListFilterStarfinder1e"
-											v-model="forceRecomputeCounter"
-											:external-list="isExternalList"
-										/>
-									</td>
-									<td>
-										<table style="margin-left: auto; margin-right: 0px;">
+									<td
+										style="width: 100%;"
+									>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1"
+											style="width: 100%;"
+										>
 											<tr>
 												<td>
-													<v-btn
-														v-if="gameSystemFilter && !isExternalList"
-														depressed
-														large
-														style="min-width: 0px;"
-														@click="dialogShareOpen()"
-													>
-														<v-icon>mdi-share-variant</v-icon>
-													</v-btn>
+													<VText2
+														ref="scenarioNameFilter"
+														v-model="scenarioNameFilter"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.scenarios.name') + ' ' + $t('forms.name')"
+														class="pb-1"
+													/>
 												</td>
+											</tr>
+											<tr>
+												<td>
+													<VSelect2
+														ref="scenariosListingTypeFilter"
+														v-model="scenariosListingTypeFilter"
+														:items="scenariosListingTypeFilterList"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('sdfsdf')"
+														class="pb-1"
+													/>
+												</td>
+											</tr>
+											<tr>
+												<td
+													class="pb-1"
+												>
+													<!-- // GameSystems Update -->
+													<ScenarioListFilterPathfinder2e
+														v-show="isGameSystemPathfinder2e"
+														ref="scenarioListFilterPathfinder2e"
+														v-model="forceRecomputeCounter"
+														:external-list="isExternalList"
+													/>
+													<ScenarioListFilterStarfinder1e
+														v-show="isGameSystemStarfinder1e"
+														ref="scenarioListFilterStarfinder1e"
+														v-model="forceRecomputeCounter"
+														:external-list="isExternalList"
+													/>
+												</td>
+											</tr>
+											<tr>
+												<table
+													border="0"
+													cellspacing="0"
+													cellpadding="0"
+													style="width: 100%;"
+												>
+													<tr>
+														<td
+															style="padding-right: 4px;"
+														>
+															<VSelect2
+																ref="sortBy"
+																v-model="sortBy"
+																:items="sortKeys"
+																:flat="true"
+																:hide-details="true"
+																:solo-inverted="true"
+																:label="$t('forms.sorting.nameShort')"
+															/>
+														</td>
+														<td>
+															<VDirectionButton
+																v-model="sortDirection"
+															/>
+														</td>
+													</tr>
+												</table>
 											</tr>
 										</table>
 									</td>
-								</tr>
-								<tr
-									v-show="isExternalListFavorites"
-								>
-									<td>
-										<VSelect2
-											ref="user"
-											v-model="userIdFilter"
-											:items="userList"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('players.name')"
-											class="pt-1"
-										/>
-									</td>
-								</tr>
-							</table>
-							<table
-								border="0"
-								cellspacing="0"
-								cellpadding="0"
-								style="width: 100%;"
-							>
-								<tr>
 									<td
-										style="padding-right: 4px; width: 99%;"
+										style="vertical-align: top;"
 									>
-										<VSelect2
-											ref="sortBy"
-											v-model="sortBy"
-											:items="sortKeys"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('forms.sorting.nameShort')"
-										/>
-									</td>
-									<td>
-										<VDirectionButton
-											v-model="sortDirection"
-										/>
-									</td>
-									<td
-										style="padding-right: 4px;"
-										v-if="gameSystemFilter"
-										align="right"
-									>
-										<v-btn
-											depressed
-											large
-											style="min-width: 0px;"
-											class="ml-1"
-											@click="clickClear()"
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1 ml-2"
+											style="margin-left: auto; margin-right: 0px;"
 										>
-											<v-icon>mdi-filter-variant-remove</v-icon>
-										</v-btn>
-									</td>
-									<td>
-										<VGameSystemListingSyleButton 
-											v-if="$vuetify.breakpoint.lgAndUp"
-											v-model="listingStyle"
-										/>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-menu>
+														<template #activator="{ on: onMenu }">
+															<v-tooltip 
+																left
+															>
+																<template #activator="{ on: onTooltip }">
+																	<v-btn
+																		v-if="gameSystemFilter"
+																		depressed
+																		large
+																		style="min-width: 0px;"
+																		v-on="{ ...onMenu, ...onTooltip }"
+																	>
+																		<v-icon>mdi-file-download</v-icon>
+																	</v-btn>
+																</template>
+																<span>{{ $t('tooltips.extract') }}</span>
+															</v-tooltip>
+														</template>
+														<v-list>
+															<v-list-item
+																@click="clickExtract(extractTypes.Csv)"
+															>
+																<v-list-item-title>{{ $t('extracts.csv') }}</v-list-item-title>
+															</v-list-item>
+															<v-list-item
+																@click="clickExtract(extractTypes.Text)"
+															>
+																<v-list-item-title>{{ $t('extracts.text') }}</v-list-item-title>
+															</v-list-item>
+														</v-list>
+													</v-menu>
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="dialogShareOpen()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-share-variant</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.share') }}</span>
+													</v-tooltip>
+												</td>
+											</tr>
+											<tr>
+												<td
+													v-show="isExternalListFavorites"
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<VSelect2
+														ref="user"
+														v-model="userIdFilter"
+														:items="userList"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('players.name')"
+													/>
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<VGameSystemListingSyleButton 
+														v-model="listingStyle"
+													/>
+												</td>
+											</tr>
+											<tr
+												v-if="gameSystemFilter"
+											>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="clickClear()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-filter-variant-remove</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.clear') }}</span>
+													</v-tooltip>
+												</td>
+											</tr>
+										</table>
 									</td>
 								</tr>
 							</table>
@@ -324,6 +549,7 @@
 <script>
 import { firstBy } from 'thenby';
 
+import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
@@ -339,9 +565,6 @@ import VSelect2 from '@/library_vue_vuetify/components/form/VSelect';
 import VText2 from '@/library_vue_vuetify/components/form/VTextField';
 
 import ScenarioSnippet from '@/components/gameSystems/ScenarioSnippet';
-import ShareDialog from '@/components/ShareDialog';
-
-import DialogSupport from '@/library_vue/components/support/dialog';
 
 // GameSystems Update
 import ScenarioListFilterPathfinder2e from '@/components/gameSystems/pathfinder2e/ScenarioListFilter';
@@ -354,7 +577,6 @@ export default {
 		ScenarioListFilterPathfinder2e,
 		ScenarioListFilterStarfinder1e,
 		ScenarioSnippet,
-		ShareDialog,
 		VDirectionButton,
 		VGameSystemListingSyleButton,
 		VNumber,
@@ -373,8 +595,8 @@ export default {
 		}
 	},
 	data: () => ({
-		dialogShare: new DialogSupport(),
 		forceRecomputeCounter: 0,
+		listingStyleOverride: SharedConstants.ListingTypes.Grid,
 		scenarioNameValue: null,
 		scenarioNumberValue: null,
 		scenariosCache: {},
@@ -394,13 +616,6 @@ export default {
 		characterList() {
 			return this.value ? this.value : GlobalUtility.$store.state.characters.characters;
 		},
-		gameSystemName: {
-			get() {
-				const results = GlobalUtility.$store.getters.getGameSystem(this.gameSystemFilter);
-				return results ? results.name : '';
-			},
-			set() {}
-		},
 		isGrid() {
 			return this.listingStyle === SharedConstants.ListingTypes.Grid;
 		},
@@ -409,18 +624,31 @@ export default {
 		},
 		listingStyle: {
 			get: function () {
-				let value = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.listingSytleFilter);
+				if (!this.user)
+					return this.listingStyleOverride;
+				if (this.isExternalList)
+					return this.listingStyleOverride;
+
+				let value = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.listingStyleFilter);
 				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
 				return value;
 			},
 			set: function (newVal) {
-				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+				if (!this.user)
+					return;
+				if (this.isExternalList)
+					this.listingStyleOverride = newVal;
+
+				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.listingStyleFilter = newVal; });
 			}
 		},
 		seasonFilter: {
 			get: function () {
 				if (this.isExternalList)
 					return this.seasonFilterOverride;
+
+				if (!this.user)
+					return null;
 
 				return AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.seasonFilter);
 			},
@@ -429,6 +657,9 @@ export default {
 					this.seasonFilterOverride = newVal;
 					return;
 				}
+
+				if (!this.user)
+					return;
 
 				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
 			}
@@ -580,7 +811,7 @@ export default {
 				return;
 			}
 
-			AppUtility.settings().clearUser(GlobalUtility.$store, this.user, (settings) => {
+			AppUtility.settings().clearUser(this.correlationId(), GlobalUtility.$store, this.user, (correlationId, settings) => {
 				this.scenarioNameValue = null;
 				this.scenarioNumberValue = null;
 				settings.scenarios.seasonFilter = null;
@@ -602,10 +833,6 @@ export default {
 				this.$refs.scenarioListFilterPathfinder2e.clear(this.gameSystemFilter);
 			if (this.isGameSystemStarfinder1e && this.$refs.scenarioListFilterStarfinder1e)
 				this.$refs.scenarioListFilterStarfinder1e.clear(this.gameSystemFilter);
-		},
-		dialogShareOpen() {
-			this.$refs.shareDialog.openDialog(this.gameSystemFilter);
-			this.dialogShare.open();
 		},
 		async execute() {
 			this.users = [];
@@ -740,6 +967,46 @@ export default {
 			}
 
 			return results;
+		},
+		extract(correlationId, type) {
+			// GameSystems Update
+			let serviceGameSystem;
+			if (this.isGameSystemPathfinder2e)
+				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			else if (this.isGameSystemStarfinder1e)
+				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STGARFINDER_2E);
+			if (!serviceGameSystem)
+				return;
+				
+			let id;
+			const ids = [];
+			let output = '';
+			if (type == Constants.ExtractTypes.Csv)
+				output = 'Season,Scenario,Name,Repeatable\n';
+				
+			for (let item of this.scenarios) {
+				id = ids.find(l => l === item.scenario.id);
+				if (id)
+					continue;
+				if (!item.scenario)
+					continue;
+
+				if (type == Constants.ExtractTypes.Csv) {
+					// TODO put in the scenario snippet?
+					output += (item.scenario.season ? item.scenario.season : '') + ',';
+					output += item.scenario.scenario + ',';
+					output += '"' + item.scenario.name + '",';
+					output += (item.scenario.repeatable ? 'Y' : 'N') + '\n';
+				}
+				else if (type == Constants.ExtractTypes.Text) {
+					output += serviceGameSystem.scenarioName(correlationId, item.scenario) + '\n';
+					output += 'Repeatable: ' + (item.scenario.repeatable ? 'Y' : 'N') + '\n\n';
+				}
+
+				ids.push(item.scenario.id);
+			}
+
+			this.download(output, type, this.user, 'scenarios');
 		},
 		filter(temp) {
 			if (this.scenarioNameValue) {

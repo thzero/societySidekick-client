@@ -37,8 +37,13 @@ const Constants = {
 		Default: 'error'
 	},
 	ExternalListTypes: {
+		Characters: 'characters',
 		Favorites: 'favorites',
 		Scenarios: 'scenarios'
+	},
+	ExtractTypes: {
+		Csv: 'csv',
+		Text: 'text'
 	},
 	Features: {
 		Favorites: true,

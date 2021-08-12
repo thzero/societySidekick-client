@@ -19,63 +19,6 @@
 							mb-1
 							:pr-2="$vuetify.breakpoint.lgAndUp"
 						>
-							<VSelect2
-								ref="gameSystems"
-								v-model="gameSystemFilter"
-								vid="gameSystems"
-								:items="gameSystems"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.gameSystem')"
-								class="pb-1"
-							/>
-							<VText2
-								ref="characterNameFilter"
-								v-model="characterNameFilter"
-								:flat="true"
-								:hide-details="true"
-								:solo-inverted="true"
-								:label="$t('forms.characters.name') + ' ' + $t('forms.name')"
-								class="pb-1"
-							/>
-						</v-flex>
-						<v-flex
-							xs12
-							lg6
-							mb-1
-						>
-							<table
-								border="0"
-								cellspacing="0"
-								cellpadding="0"
-								style="width: 100%;"
-							>
-								<tr>
-									<td>
-										<VNumberField
-											ref="characterLevelMinFilter"
-											v-model="characterLevelMinFilter"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.minAbbr')"
-											class="pb-1 pr-2"
-										/>
-									</td>
-									<td>
-										<VNumberField
-											ref="characterLevelMaxFilter"
-											v-model="characterLevelMaxFilter"
-											:flat="true"
-											:hide-details="true"
-											:solo-inverted="true"
-											:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.maxAbbr')"
-											class="pb-1"
-										/>
-									</td>
-								</tr>
-							</table>
 							<table
 								border="0"
 								cellspacing="0"
@@ -84,45 +27,203 @@
 							>
 								<tr>
 									<td
-										style="padding-right: 4px"
+										style="width: 100%;"
 									>
 										<VSelect2
-											ref="sortBy"
-											v-model="sortBy"
-											vid="sortBy"
-											:items="sortKeys"
+											v-if="!isExternalListCharacters"
+											ref="gameSystems"
+											v-model="gameSystemFilter"
+											vid="gameSystems"
+											:items="gameSystems"
 											:flat="true"
 											:hide-details="true"
 											:solo-inverted="true"
-											:label="$t('forms.sorting.nameShort')"
+											:label="$t('forms.gameSystem')"
+											class="pb-1"
 										/>
-									</td>
-									<td>
-										<VDirectionButton
-											v-model="sortDirection"
+										<VText2
+											v-if="isExternalListCharacters"
+											ref="gameSystem"
+											v-model="gameSystemName"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.gameSystem')"
+											:readonly="true"
+											class="pb-1"
 										/>
-									</td>
-									<td
-										v-if="gameSystemFilter"
-										align="right"
-									>
-										<v-btn
-											depressed
-											large
-											style="min-width: 0px"
-											@click="clickClear()"
+										<VText2
+											ref="characterNameFilter"
+											v-model="characterNameFilter"
+											:flat="true"
+											:hide-details="true"
+											:solo-inverted="true"
+											:label="$t('forms.characters.name') + ' ' + $t('forms.name')"
+											class="pb-1"
+										/>
+										<table
+											v-if="$vuetify.breakpoint.mdAndDown"
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											style="width: 100%;"
+											class="pt-1"
 										>
-											<v-icon>mdi-filter-variant-remove</v-icon>
-										</v-btn>
-									</td>
-									<td>
-										<table style="margin-left: auto; margin-right: 0px;">
 											<tr>
 												<td>
+													<VNumberField
+														ref="characterLevelMinFilter"
+														v-model="characterLevelMinFilter"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.minAbbr')"
+														class="pb-1"
+													/>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<VNumberField
+														ref="characterLevelMaxFilter"
+														v-model="characterLevelMaxFilter"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.maxAbbr')"
+														class="pb-1"
+													/>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td
+										style="vertical-align: top;"
+										v-if="$vuetify.breakpoint.mdAndDown"
+									>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1 ml-2"
+											style="margin-left: auto; margin-right: 0px;"
+										>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-menu>
+														<template #activator="{ on: onMenu }">
+															<v-tooltip 
+																left
+															>
+																<template #activator="{ on: onTooltip }">
+																	<v-btn
+																		v-if="gameSystemFilter"
+																		depressed
+																		large
+																		style="min-width: 0px;"
+																		v-on="{ ...onMenu, ...onTooltip }"
+																	>
+																		<v-icon>mdi-file-download</v-icon>
+																	</v-btn>
+																</template>
+																<span>{{ $t('tooltips.extract') }}</span>
+															</v-tooltip>
+														</template>
+														<v-list>
+															<v-list-item
+																@click="clickExtract(extractTypes.Csv)"
+															>
+																<v-list-item-title>{{ $t('extracts.csv') }}</v-list-item-title>
+															</v-list-item>
+															<v-list-item
+																@click="clickExtract(extractTypes.Text)"
+															>
+																<v-list-item-title>{{ $t('extracts.text') }}</v-list-item-title>
+															</v-list-item>
+														</v-list>
+													</v-menu>
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="dialogShareOpen()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-share-variant</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.share') }}</span>
+													</v-tooltip>
+													<!-- <v-btn
+														v-if="gameSystemFilter && !isExternalList"
+														depressed
+														large
+														style="min-width: 0px;"
+														@click="dialogShareOpen()"
+													>
+														<v-icon>mdi-share-variant</v-icon>
+													</v-btn> -->
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
 													<VGameSystemListingSyleButton 
-														v-if="$vuetify.breakpoint.lgAndUp"
 														v-model="listingStyle"
 													/>
+												</td>
+											</tr>
+											<tr
+												v-if="gameSystemFilter"
+											>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="clickClear()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-filter-variant-remove</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.clear') }}</span>
+													</v-tooltip>
+													<!-- <v-btn
+														depressed
+														large
+														style="min-width: 0px;"
+														@click="clickClear()"
+													>
+														<v-icon>mdi-filter-variant-remove</v-icon>
+													</v-btn> -->
 												</td>
 											</tr>
 										</table>
@@ -130,6 +231,220 @@
 								</tr>
 							</table>
 						</v-flex>
+						<v-flex
+							xs12
+							lg6
+							mb-1
+						>
+							
+							<table
+								v-if="$vuetify.breakpoint.lgAndUp"
+								border="0"
+								cellspacing="0"
+								cellpadding="0"
+								class="mb-1"
+								style="width: 100%;"
+							>
+								<tr>
+									<td
+										style="width: 100%; vertical-align: top;"
+									>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1"
+											style="width: 100%;"
+										>
+											<tr>
+												<td>
+													<VNumberField
+														ref="characterLevelMinFilter"
+														v-model="characterLevelMinFilter"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.minAbbr')"
+														class="pb-1 pr-2"
+													/>
+												</td>
+												<td>
+													<VNumberField
+														ref="characterLevelMaxFilter"
+														v-model="characterLevelMaxFilter"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.characters.name') + ' ' + $t('forms.level') + ' ' + $t('forms.maxAbbr')"
+														class="pb-1"
+													/>
+												</td>
+											</tr>
+										</table>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											style="width: 100%;"
+										>
+											<tr>
+												<td
+													style="padding-right: 4px"
+												>
+													<VSelect2
+														ref="sortBy"
+														v-model="sortBy"
+														vid="sortBy"
+														:items="sortKeys"
+														:flat="true"
+														:hide-details="true"
+														:solo-inverted="true"
+														:label="$t('forms.sorting.nameShort')"
+													/>
+												</td>
+												<td>
+													<VDirectionButton
+														v-model="sortDirection"
+													/>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td
+										style="vertical-align: top;"
+									>
+										<table
+											border="0"
+											cellspacing="0"
+											cellpadding="0"
+											class="mb-1 ml-2"
+											style="margin-left: auto; margin-right: 0px;"
+										>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-menu>
+														<template #activator="{ on: onMenu }">
+															<v-tooltip 
+																left
+															>
+																<template #activator="{ on: onTooltip }">
+																	<v-btn
+																		v-if="gameSystemFilter"
+																		depressed
+																		large
+																		style="min-width: 0px;"
+																		v-on="{ ...onMenu, ...onTooltip }"
+																	>
+																		<v-icon>mdi-file-download</v-icon>
+																	</v-btn>
+																</template>
+																<span>{{ $t('tooltips.extract') }}</span>
+															</v-tooltip>
+														</template>
+														<v-list>
+															<v-list-item
+																@click="clickExtract(extractTypes.Csv)"
+															>
+																<v-list-item-title>{{ $t('extracts.csv') }}</v-list-item-title>
+															</v-list-item>
+															<v-list-item
+																@click="clickExtract(extractTypes.Text)"
+															>
+																<v-list-item-title>{{ $t('extracts.text') }}</v-list-item-title>
+															</v-list-item>
+														</v-list>
+													</v-menu>
+												</td>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<VGameSystemListingSyleButton 
+														v-model="listingStyle"
+													/>
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="dialogShareOpen()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-share-variant</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.share') }}</span>
+													</v-tooltip>
+													<!-- <v-btn
+														v-if="gameSystemFilter && !isExternalList"
+														depressed
+														large
+														style="min-width: 0px;"
+														@click="dialogShareOpen()"
+													>
+														<v-icon>mdi-share-variant</v-icon>
+													</v-btn> -->
+												</td>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-tooltip left>
+														<template v-slot:activator="{ on, attrs }">
+															<v-btn
+																v-if="gameSystemFilter && !isExternalList"
+																depressed
+																large
+																style="min-width: 0px;"
+																@click="clickClear()"
+																v-bind="attrs"
+																v-on="on"
+															>
+																<v-icon>mdi-filter-variant-remove</v-icon>
+															</v-btn>
+														</template>
+														<span>{{ $t('tooltips.clear') }}</span>
+													</v-tooltip>
+													<!-- <v-btn
+														depressed
+														large
+														style="min-width: 0px;"
+														@click="clickClear()"
+													>
+														<v-icon>mdi-filter-variant-remove</v-icon>
+													</v-btn> -->
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</v-flex>
+						<ShareDialog
+							ref="shareDialog"
+							:label="$t('characters.share') + ' ' +$t('characters.namePlural')"
+							:signal="dialogShare.signal"
+							url="characters"
+							@cancel="dialogShare.cancel()"
+							@ok="dialogShare.ok()"
+						/>
 					</v-layout>
 				</v-card-text>
 			</v-card>
@@ -181,6 +496,7 @@
 				<v-card-text class="body-1">
 					<CharacterSnippet
 						:value="item"
+						:external-list-type="externalListType"
 					/>
 				</v-card-text>
 			</v-card>
@@ -189,6 +505,7 @@
 </template>
 
 <script>
+import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
@@ -217,13 +534,27 @@ export default {
 		VText2
 	},
 	extends: baseList,
+	props: {
+		user: {
+			type: Object,
+			default: null
+		},
+		value: {
+			type: Array,
+			default: null
+		}
+	},
 	data: () => ({
 		classCache: {},
 		characterNameValue: null,
 		characterLevelMaxFilter: null,
 		characterLevelMinFilter: null,
 		factionsCache: {},
-		forceRecomputeCounter: 0
+		forceRecomputeCounter: 0,
+		listingStyleOverride: SharedConstants.ListingTypes.Grid,
+		sortByOverride: null,
+		sortDirectionOverride: true,
+		userIdFilterValue: null
 	}),
 	asyncComputed: {
 		async characters() {
@@ -234,7 +565,7 @@ export default {
 
 			const correlationId = this.correlationId();
 
-			let results = GlobalUtility.$store.state.characters.characters.slice(0);
+			let results = this.value ? this.value : GlobalUtility.$store.state.characters.characters.slice(0);
 			results = results.filter(l => l.gameSystemId === this.gameSystemFilter);
 
 			if (this.characterLevelMaxFilter && this.characterLevelMinFilter)
@@ -295,7 +626,7 @@ export default {
 					this.sortDirection);
 
 			return results;
-		},
+		}
 	},
 	computed: {
 		characterNameFilter: {
@@ -315,42 +646,77 @@ export default {
 		},
 		listingStyle: {
 			get: function () {
-				let value = this.getSettingsUser(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.listingSytleFilter);
+				if (!this.user)
+					return this.listingStyleOverride;
+				if (this.isExternalList)
+					return this.listingStyleOverride;
+
+				let value = this.getSettingsUser(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.listingStyleFilter);
 				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
 				return value;
 			},
 			set: function (newVal) {
-				this.updateSettingsUserCharacter(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { settings.listingSytleFilter = newVal; });
+				if (!this.user)
+					return;
+				if (this.isExternalList)
+					this.listingStyleOverride = newVal;
+
+				this.updateSettingsUserCharacter(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { settings.listingStyleFilter = newVal; });
 			}
 		},
 		sortBy: {
 			get: function () {
+				if (this.isExternalList)
+					return this.sortByOverride;
+
 				const result = this.getSettingsUser(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.sortBy);
 				return result ? result : SharedConstants.SortBy.Characters.CharacterName;
 			},
 			set: function (newVal) {
+				if (this.isExternalList) {
+					this.sortByOverride = newVal;
+					this.forceRecomputeCounter++;
+					return;
+				}
+
 				this.updateSettingsUserCharacter(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { settings.sortBy = newVal; });
 			}
 		},
 		sortDirection: {
 			get: function () {
+				if (this.isExternalList)
+					return this.sortDirectionOverride;
+
 				return this.getSettingsUser(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.sortDirection);
 			},
 			set: function (newVal) {
+				if (this.isExternalList) {
+					this.sortDirectionOverride = newVal;
+					this.forceRecomputeCounter++;
+					return;
+				}
+
 				this.updateSettingsUserCharacter(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
 		},
 		sortKeys: {
 			get: function() {
 				return  [
-			{ id: SharedConstants.SortBy.Characters.CharacterName, name: GlobalUtility.$trans.t('forms.characters.name') + ' ' + GlobalUtility.$trans.t('forms.name') },
-			{ id: SharedConstants.SortBy.Characters.Level, name: GlobalUtility.$trans.t('forms.characters.name') + ' ' + GlobalUtility.$trans.t('forms.level') }
-			// { id: 'faction', name: GlobalUtility.$trans.t('forms.factions.name') },
-		];
+					{ id: SharedConstants.SortBy.Characters.CharacterName, name: GlobalUtility.$trans.t('forms.characters.name') + ' ' + GlobalUtility.$trans.t('forms.name') },
+					{ id: SharedConstants.SortBy.Characters.Level, name: GlobalUtility.$trans.t('forms.characters.name') + ' ' + GlobalUtility.$trans.t('forms.level') }
+					// { id: 'faction', name: GlobalUtility.$trans.t('forms.factions.name') },
+				];
+			}
+		},
+		userIdFilter: {
+			get: function () {
+				return this.userIdFilterValue;
+			},
+			set: function (newVal) {
+				this.userIdFilterValue = newVal;
+				this.forceRecomputeCounter++;
 			}
 		}
-	},
-	created() {
 	},
 	methods: {
 		characterLevel(level) {
@@ -360,13 +726,66 @@ export default {
 			GlobalUtility.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ id ]}));
 		},
 		clickClear() {
-			AppUtility.settings().clearUser(GlobalUtility.$store, GlobalUtility.$store.state.user.user, (settings) => {
+			if (this.isExternalList) {
+				this.characterNameValue = null;
+				this.characterLevelMinFilter = null;
+				this.characterLevelMinFilter = null;
+				this.sortByOverride = SharedConstants.SortBy.Characters.CharacterName;
+				this.sortDirectionOverride = true;
+
+				this.forceRecomputeCounter = 0;
+				return;
+			}
+
+			AppUtility.settings().clearUser(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, (correlationId, settings) => {
 				this.characterNameValue = null;
 				this.characterLevelMaxFilter = null;
 				this.characterLevelMinFilter = null;
 				settings.characters.sortBy = SharedConstants.SortBy.Characters.CharacterName;
 				settings.characters.sortDirection = true;
 			});
+		},
+		extract(correlationId, type) {
+			// GameSystems Update
+			let serviceGameSystem;
+			if (this.isGameSystemPathfinder2e)
+				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			else if (this.isGameSystemStarfinder1e)
+				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STGARFINDER_2E);
+			if (!serviceGameSystem)
+				return;
+				
+			let id;
+			const ids = [];
+			let output = '';
+			if (type == Constants.ExtractTypes.Csv)
+				output = 'Number,Name,Faction,Class,Level\n';
+				
+			for (let item of this.characters) {
+				id = ids.find(l => l === item.id);
+				if (id)
+					continue;
+
+				if (type == Constants.ExtractTypes.Csv) {
+					// TODO put in the character snippet?
+					output += item.number + ',';
+					output += '"' + item.name + '",';
+					output += '"' + item.factionName + '",';
+					output += '"' + serviceGameSystem.classNamesAndLevels(correlationId, item, GlobalUtility.$store) + '",';
+					output += item.level + ',';
+					output += '\n';
+				}
+				else if (type == Constants.ExtractTypes.Text) {
+					output += item.name + ' - ' + serviceGameSystem.classNamesAndLevels(correlationId, item, GlobalUtility.$store) + '\n';
+					output += 'Number: ' + item.number + '\n';
+					output += 'Faction: ' + item.factionName + '\n';
+					output += '\n';
+				}
+
+				ids.push(item.id);
+			}
+
+			this.download(output, type, this.user, 'characters');
 		},
 		getSettingsUser(correlationId, user, funcAttribute) {
 			if (!user || !user.settings)

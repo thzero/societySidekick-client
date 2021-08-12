@@ -50,6 +50,8 @@ export default {
 		this.lookups = this.initializeLookups(this.correlationId());
 	},
 	methods: {
+		clear() {
+		},
 		initializeLookups(correlationId) {
 			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
 		},

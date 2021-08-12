@@ -28,7 +28,7 @@ class Settings extends BaseSettings {
 	}
 
 	getSettingsUserBoons(correlationId, user, funcAttribute) {
-		if (!user || !user.settings)
+		if (!user || !user.settings || !user.settings.boons)
 			return null;
 
 		return funcAttribute(user.settings.boons);
@@ -39,6 +39,8 @@ class Settings extends BaseSettings {
 			return null;
 
 		const settings = this.mergeUser(correlationId, user.settings);
+		if (!settings.favorites)
+			return null;
 		let favorite = settings.favorites.find(l => l.id === userId);
 		if (!favorite)
 			favorite = new SettingsFavorite();
@@ -57,8 +59,7 @@ class Settings extends BaseSettings {
 			return null;
 
 		const settings = this.mergeUser(correlationId, user.settings);
-		const location = settings.locations.find(l => l.id === id);
-		return location;
+		return settings.locations ? settings.locations.find(l => l.id === id) : null;
 	}
 
 	getSettingsUserLocations(correlationId, user) {
@@ -80,7 +81,7 @@ class Settings extends BaseSettings {
 			return null;
 
 		const settings = this.mergeUser(correlationId, user.settings);
-		let gameSystem = settings.gameSystems.find(l => l.id === gameSystemFilter);
+		let gameSystem = settings.gameSystems ? settings.gameSystems.find(l => l.id === gameSystemFilter) : null;
 		if (!gameSystem)
 			gameSystem = new SettingsGameSystem();
 		return funcAttribute(gameSystem);
@@ -95,7 +96,7 @@ class Settings extends BaseSettings {
 	}
 
 	getSettingsUserScenarios(correlationId, user, funcAttribute) {
-		if (!user || !user.settings)
+		if (!user || !user.settings || !user.settings.scenarios)
 			return null;
 		return funcAttribute(user.settings.scenarios);
 	}
@@ -105,7 +106,7 @@ class Settings extends BaseSettings {
 			return null;
 
 		const settings = this.mergeUser(correlationId, user.settings);
-		let gameSystem = settings.scenarios.additional.find(l => l.id === gameSystemFilter);
+		let gameSystem = settings.scenarios ? settings.scenarios.additional.find(l => l.id === gameSystemFilter) : null;
 		if (!gameSystem)
 			gameSystem = new SettingsScenario();
 		return funcAttribute(gameSystem);

@@ -65,11 +65,24 @@ const router = new VueRouter({
 		},
 		{
 			path: '/favorites',
-			component: () => import(/* webpackPrefetch: true */ /* webpackChunkName: "group-cards" */ './layouts/MainLayout.vue'),
+			component: () => import(/* webpackPrefetch: true */ /* webpackChunkName: "group-favorites" */ './layouts/MainLayout.vue'),
 			children: [
 				{
 					path: '',
-					component: () => import(/* webpackPrefetch: true */ /* webpackChunkName: "group-cards" */ './components/Favorites.vue'),
+					component: () => import(/* webpackPrefetch: true */ /* webpackChunkName: "group-favorites" */ './components/Favorites.vue'),
+					meta: {
+						requiresAuth: false
+					}
+				}
+			]
+		},
+		{
+			path: '/characters/:gamerTag/:key',
+			component: () => import(/* webpackPrefetch: true */ /* webpackChunkName: "group-characters" */ './layouts/MainLayout.vue'),
+			children: [
+				{
+					path: '',
+					component: () => import(/* webpackPrefetch: true */ /* webpackChunkName: "group-characters" */ './components/Characters.vue'),
 					meta: {
 						requiresAuth: false
 					}
