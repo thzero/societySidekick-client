@@ -974,7 +974,7 @@ export default {
 			if (this.isGameSystemPathfinder2e)
 				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 			else if (this.isGameSystemStarfinder1e)
-				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STGARFINDER_2E);
+				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 			if (!serviceGameSystem)
 				return;
 				
