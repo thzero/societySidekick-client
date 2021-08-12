@@ -142,6 +142,46 @@
 													align="right"
 													class="pb-1"
 												>
+													<v-menu>
+														<template #activator="{ on: onMenu }">
+															<v-tooltip 
+																left
+															>
+																<template #activator="{ on: onTooltip }">
+																	<v-btn
+																		v-if="gameSystemFilter"
+																		depressed
+																		large
+																		style="min-width: 0px;"
+																		v-on="{ ...onMenu, ...onTooltip }"
+																	>
+																		<v-icon>mdi-file-download</v-icon>
+																	</v-btn>
+																</template>
+																<span>{{ $t('tooltips.extract') }}</span>
+															</v-tooltip>
+														</template>
+														<v-list>
+															<v-list-item
+																@click="clickExtract(extractTypes.Csv)"
+															>
+																<v-list-item-title>{{ $t('extracts.csv') }}</v-list-item-title>
+															</v-list-item>
+															<v-list-item
+																@click="clickExtract(extractTypes.Text)"
+															>
+																<v-list-item-title>{{ $t('extracts.text') }}</v-list-item-title>
+															</v-list-item>
+														</v-list>
+													</v-menu>
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
 													<v-tooltip left>
 														<template v-slot:activator="{ on, attrs }">
 															<v-btn
@@ -354,6 +394,46 @@
 													align="right"
 													class="pb-1"
 												>
+													<v-menu>
+														<template #activator="{ on: onMenu }">
+															<v-tooltip 
+																left
+															>
+																<template #activator="{ on: onTooltip }">
+																	<v-btn
+																		v-if="gameSystemFilter"
+																		depressed
+																		large
+																		style="min-width: 0px;"
+																		v-on="{ ...onMenu, ...onTooltip }"
+																	>
+																		<v-icon>mdi-file-download</v-icon>
+																	</v-btn>
+																</template>
+																<span>{{ $t('tooltips.extract') }}</span>
+															</v-tooltip>
+														</template>
+														<v-list>
+															<v-list-item
+																@click="clickExtract(extractTypes.Csv)"
+															>
+																<v-list-item-title>{{ $t('extracts.csv') }}</v-list-item-title>
+															</v-list-item>
+															<v-list-item
+																@click="clickExtract(extractTypes.Text)"
+															>
+																<v-list-item-title>{{ $t('extracts.text') }}</v-list-item-title>
+															</v-list-item>
+														</v-list>
+													</v-menu>
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
 													<v-tooltip left>
 														<template v-slot:activator="{ on, attrs }">
 															<v-btn
@@ -370,15 +450,6 @@
 														</template>
 														<span>{{ $t('tooltips.share') }}</span>
 													</v-tooltip>
-													<!-- <v-btn
-														v-if="gameSystemFilter && !isExternalList"
-														depressed
-														large
-														style="min-width: 0px;"
-														@click="dialogShareOpen()"
-													>
-														<v-icon>mdi-share-variant</v-icon>
-													</v-btn> -->
 												</td>
 											</tr>
 											<tr>
@@ -434,15 +505,6 @@
 														</template>
 														<span>{{ $t('tooltips.clear') }}</span>
 													</v-tooltip>
-													<!-- <v-btn
-														v-if="gameSystemFilter && !isExternalList"
-														depressed
-														large
-														style="min-width: 0px;"
-														@click="dialogShareOpen()"
-													>
-														<v-icon>mdi-share-variant</v-icon>
-													</v-btn> -->
 												</td>
 											</tr>
 										</table>
@@ -487,6 +549,7 @@
 <script>
 import { firstBy } from 'thenby';
 
+import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
@@ -502,8 +565,6 @@ import VSelect2 from '@/library_vue_vuetify/components/form/VSelect';
 import VText2 from '@/library_vue_vuetify/components/form/VTextField';
 
 import ScenarioSnippet from '@/components/gameSystems/ScenarioSnippet';
-
-import DialogSupport from '@/library_vue/components/support/dialog';
 
 // GameSystems Update
 import ScenarioListFilterPathfinder2e from '@/components/gameSystems/pathfinder2e/ScenarioListFilter';
@@ -906,6 +967,46 @@ export default {
 			}
 
 			return results;
+		},
+		extract(correlationId, type) {
+			// GameSystems Update
+			let serviceGameSystem;
+			if (this.isGameSystemPathfinder2e)
+				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			else if (this.isGameSystemStarfinder1e)
+				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STGARFINDER_2E);
+			if (!serviceGameSystem)
+				return;
+				
+			let id;
+			const ids = [];
+			let output = '';
+			if (type == Constants.ExtractTypes.Csv)
+				output = 'Season,Scenario,Name,Repeatable\n';
+				
+			for (let item of this.scenarios) {
+				id = ids.find(l => l === item.scenario.id);
+				if (id)
+					continue;
+				if (!item.scenario)
+					continue;
+
+				if (type == Constants.ExtractTypes.Csv) {
+					// TODO put in the scenario snippet?
+					output += (item.scenario.season ? item.scenario.season : '') + ',';
+					output += item.scenario.scenario + ',';
+					output += '"' + item.scenario.name + '",';
+					output += (item.scenario.repeatable ? 'Y' : 'N') + '\n';
+				}
+				else if (type == Constants.ExtractTypes.Text) {
+					output += serviceGameSystem.scenarioName(correlationId, item.scenario) + '\n';
+					output += 'Repeatable: ' + (item.scenario.repeatable ? 'Y' : 'N') + '\n\n';
+				}
+
+				ids.push(item.scenario.id);
+			}
+
+			this.download(output, type, this.user, 'scenarios');
 		},
 		filter(temp) {
 			if (this.scenarioNameValue) {

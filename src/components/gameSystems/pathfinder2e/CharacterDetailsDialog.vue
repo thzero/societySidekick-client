@@ -252,9 +252,9 @@ export default {
 			details.archetypeIds = [];
 			if (!String.isNullOrEmpty(this.archetypeId1))
 				details.archetypeIds.push(this.archetypeId1);
-			if (!String.isNullOrEmpty(this.archetypeId1))
+			if (!String.isNullOrEmpty(this.archetypeId2))
 				details.archetypeIds.push(this.archetypeId2);
-			if (!String.isNullOrEmpty(this.archetypeId1))
+			if (!String.isNullOrEmpty(this.archetypeId3))
 				details.archetypeIds.push(this.archetypeId3);
 			details.boonAdvancedId = this.innerValue.boonAdvancedId;
 			details.boonFactionId = this.innerValue.boonFactionId;

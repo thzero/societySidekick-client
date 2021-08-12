@@ -375,6 +375,10 @@
 	   "quotaExceeded": "You have reached your quota of {quota} \\'{quotaType}\\'.",
 	   "type": "Type is required."
 	},
+	"extracts": {
+	   "csv": "CSV",
+	   "text": "Text"
+	},
 	"factions": {
 	   "actions": "Actions",
 	   "description": "Description",
@@ -596,6 +600,7 @@
 	},
 	"tooltips": {
 	   "clear": "Clear filters",
+	   "extract": "Extract list",
 	   "share": "Share the list"
 	},
 	"users": {

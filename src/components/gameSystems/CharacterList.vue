@@ -114,6 +114,46 @@
 													align="right"
 													class="pb-1"
 												>
+													<v-menu>
+														<template #activator="{ on: onMenu }">
+															<v-tooltip 
+																left
+															>
+																<template #activator="{ on: onTooltip }">
+																	<v-btn
+																		v-if="gameSystemFilter"
+																		depressed
+																		large
+																		style="min-width: 0px;"
+																		v-on="{ ...onMenu, ...onTooltip }"
+																	>
+																		<v-icon>mdi-file-download</v-icon>
+																	</v-btn>
+																</template>
+																<span>{{ $t('tooltips.extract') }}</span>
+															</v-tooltip>
+														</template>
+														<v-list>
+															<v-list-item
+																@click="clickExtract(extractTypes.Csv)"
+															>
+																<v-list-item-title>{{ $t('extracts.csv') }}</v-list-item-title>
+															</v-list-item>
+															<v-list-item
+																@click="clickExtract(extractTypes.Text)"
+															>
+																<v-list-item-title>{{ $t('extracts.text') }}</v-list-item-title>
+															</v-list-item>
+														</v-list>
+													</v-menu>
+												</td>
+											</tr>
+											<tr>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
 													<v-tooltip left>
 														<template v-slot:activator="{ on, attrs }">
 															<v-btn
@@ -281,7 +321,44 @@
 											style="margin-left: auto; margin-right: 0px;"
 										>
 											<tr>
-												<td></td>
+												<td
+													style="padding-right: 4px;"
+													align="right"
+													class="pb-1"
+												>
+													<v-menu>
+														<template #activator="{ on: onMenu }">
+															<v-tooltip 
+																left
+															>
+																<template #activator="{ on: onTooltip }">
+																	<v-btn
+																		v-if="gameSystemFilter"
+																		depressed
+																		large
+																		style="min-width: 0px;"
+																		v-on="{ ...onMenu, ...onTooltip }"
+																	>
+																		<v-icon>mdi-file-download</v-icon>
+																	</v-btn>
+																</template>
+																<span>{{ $t('tooltips.extract') }}</span>
+															</v-tooltip>
+														</template>
+														<v-list>
+															<v-list-item
+																@click="clickExtract(extractTypes.Csv)"
+															>
+																<v-list-item-title>{{ $t('extracts.csv') }}</v-list-item-title>
+															</v-list-item>
+															<v-list-item
+																@click="clickExtract(extractTypes.Text)"
+															>
+																<v-list-item-title>{{ $t('extracts.text') }}</v-list-item-title>
+															</v-list-item>
+														</v-list>
+													</v-menu>
+												</td>
 												<td
 													style="padding-right: 4px;"
 													align="right"
@@ -428,6 +505,7 @@
 </template>
 
 <script>
+import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
@@ -640,8 +718,6 @@ export default {
 			}
 		}
 	},
-	created() {
-	},
 	methods: {
 		characterLevel(level) {
 			return level ? level : 0;
@@ -668,6 +744,48 @@ export default {
 				settings.characters.sortBy = SharedConstants.SortBy.Characters.CharacterName;
 				settings.characters.sortDirection = true;
 			});
+		},
+		extract(correlationId, type) {
+			// GameSystems Update
+			let serviceGameSystem;
+			if (this.isGameSystemPathfinder2e)
+				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			else if (this.isGameSystemStarfinder1e)
+				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STGARFINDER_2E);
+			if (!serviceGameSystem)
+				return;
+				
+			let id;
+			const ids = [];
+			let output = '';
+			if (type == Constants.ExtractTypes.Csv)
+				output = 'Number,Name,Faction,Class,Level\n';
+				
+			for (let item of this.characters) {
+				id = ids.find(l => l === item.id);
+				if (id)
+					continue;
+
+				if (type == Constants.ExtractTypes.Csv) {
+					// TODO put in the character snippet?
+					output += item.number + ',';
+					output += '"' + item.name + '",';
+					output += '"' + item.factionName + '",';
+					output += '"' + serviceGameSystem.classNamesAndLevels(correlationId, item, GlobalUtility.$store) + '",';
+					output += item.level + ',';
+					output += '\n';
+				}
+				else if (type == Constants.ExtractTypes.Text) {
+					output += item.name + ' - ' + serviceGameSystem.classNamesAndLevels(correlationId, item, GlobalUtility.$store) + '\n';
+					output += 'Number: ' + item.number + '\n';
+					output += 'Faction: ' + item.factionName + '\n';
+					output += '\n';
+				}
+
+				ids.push(item.id);
+			}
+
+			this.download(output, type, this.user, 'characters');
 		},
 		getSettingsUser(correlationId, user, funcAttribute) {
 			if (!user || !user.settings)

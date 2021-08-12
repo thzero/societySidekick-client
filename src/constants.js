@@ -41,6 +41,10 @@ const Constants = {
 		Favorites: 'favorites',
 		Scenarios: 'scenarios'
 	},
+	ExtractTypes: {
+		Csv: 'csv',
+		Text: 'text'
+	},
 	Features: {
 		Favorites: true,
 		RememberMe: false,
