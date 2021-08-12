@@ -206,6 +206,7 @@
 import Constants from '@/constants';
 import Starfinder1eSharedConstants from '@/common/gameSystems/starfinder1e/constants';
 
+import GlobalUtility from '@thzero/library_client/utility/global';
 import VueUtility from '@/library_vue/utility';
 
 import baseCharacterDetailsDialog from '@/components/gameSystems/baseCharacterDetailsDialog';
