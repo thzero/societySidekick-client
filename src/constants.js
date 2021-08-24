@@ -31,6 +31,10 @@ const Constants = {
 		SERVICE_ORGANIZEDPLAY: 'serviceOrganizedPlay',
 		SERVICE_SCENARIOS: 'serviceScenarios'
 	},
+	DateTime: {
+		DEFAULT_DATE_FORMAT: 'MM/DD/YYYY',
+		DEFAULT_TIME_FORMAT: 'HH:mm'
+	},
 	ErrorCodes: {
 		Suffix: 'errors',
 		SuffixParams: 'errors.params',
