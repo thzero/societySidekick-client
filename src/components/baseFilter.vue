@@ -1,5 +1,5 @@
 <script>
-import base from '@/library_vue/components/base';
+import base from '@/library_vue_components/base';
 
 import AppUtility from '@/utility/app';
 import GlobalUtility from '@thzero/library_client/utility/global';

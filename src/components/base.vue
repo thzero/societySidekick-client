@@ -1,7 +1,7 @@
 <script>
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import base from '@/library_vue/components/base';
+import base from '@/library_vue_components/base';
 
 export default {
 	extends: base,

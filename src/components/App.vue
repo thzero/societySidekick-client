@@ -7,7 +7,7 @@
 <script>
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import baseApp from '@/library_vue/components/baseApp';
+import baseApp from '@/library_vue_components/baseApp';
 
 export default {
 	name: 'App',

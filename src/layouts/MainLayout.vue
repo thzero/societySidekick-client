@@ -312,7 +312,7 @@ import VDisplayDialog from '@/library_vue_vuetify/components/VDisplayDialog';
 import VLayoutFooter from '@/library_vue_vuetify/components/VLayoutFooter';
 import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import DialogSupport from '@/library_vue_components/support/dialog';
 
 export default {
 	name: 'MainLayout',

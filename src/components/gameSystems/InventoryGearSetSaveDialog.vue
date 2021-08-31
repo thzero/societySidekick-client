@@ -64,7 +64,7 @@ import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTex
 
 import baseInventoryGearSetDialog from '@/components/gameSystems/baseInventoryGearSetDialog';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import DialogSupport from '@/library_vue_components/support/dialog';
 
 export default {
 	name: 'InventoryGearSetSaveDialog',

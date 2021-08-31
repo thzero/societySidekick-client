@@ -9,7 +9,7 @@ import base from '@/components/base';
 
 import ShareDialog from '@/components/ShareDialog';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import DialogSupport from '@/library_vue_components/support/dialog';
 
 export default {
 	name: 'BaseList',

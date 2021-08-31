@@ -39,7 +39,7 @@
 import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
-import base from '@/library_vue/components/base';
+import base from '@/library_vue_components/base';
 import VMarkdown from '@/library_vue_vuetify/components/markup/VMarkdown';
 
 export default {

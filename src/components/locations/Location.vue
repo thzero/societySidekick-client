@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import base from '@/library_vue/components/base';
+import base from '@/library_vue_components/base';
 
 export default {
 	name: 'Location',

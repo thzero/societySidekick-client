@@ -9,7 +9,7 @@ import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
 import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
 import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import DialogSupport from '@/library_vue_components/support/dialog';
 
 const DEFAULT_DATE_FORMAT = 'MM/DD/YYYY';
 const DEFAULT_TIME_FORMAT = 'HH:mm';

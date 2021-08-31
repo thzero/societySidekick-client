@@ -26,7 +26,7 @@ import SharedConstants from '@/common/constants';
 
 import LibraryUtility from '@thzero/library_common/utility';
 
-import baseControlEdit from '@/library_vue/components/baseControlEdit';
+import baseControlEdit from '@/library_vue_components/baseControlEdit';
 
 export default {
 	name: 'GameSystemListingSyleButton',

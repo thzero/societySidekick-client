@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import baseAdminUsersList from '@/library_vue/components/admin/users/baseListing';
+import baseAdminUsersList from '@/library_vue_components/admin/users/baseListing';
 import EditDialog from '@/components/admin/users/EditDialog';
 
 import UserData from '@/common/data/user';

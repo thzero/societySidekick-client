@@ -4,7 +4,7 @@ import SharedConstants from '@/common/constants';
 
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import baseList from '@/library_vue/components/admin/baseList';
+import baseList from '@/library_vue_components/admin/baseList';
 import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
 
 export default {

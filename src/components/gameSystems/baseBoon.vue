@@ -6,7 +6,7 @@ import GlobalUtility from '@thzero/library_client/utility/global';
 
 import baseEdit from '@/components/baseEdit';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import DialogSupport from '@/library_vue_components/support/dialog';
 
 export default {
 	name: 'BaseCharacterBoon',

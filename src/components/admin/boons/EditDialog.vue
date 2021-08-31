@@ -120,7 +120,7 @@ import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTex
 import Pathfinder2eScenarioLookupDialog from '@/components/gameSystems/pathfinder2e/ScenarioLookupDialog';
 import Starfinder1eScenarioLookupDialog from '@/components/gameSystems/starfinder1e/ScenarioLookupDialog';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import DialogSupport from '@/library_vue_components/support/dialog';
 
 export default {
 	name: 'AdminBoonsEditDialog',
