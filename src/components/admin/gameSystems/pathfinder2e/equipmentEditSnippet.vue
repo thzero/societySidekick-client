@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import baseEdit from '@/library_vue_components/baseEdit';
+import baseEdit from '@/library_vue_components/components/baseEdit';
 import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
 
 export default {

@@ -2,7 +2,7 @@
 import GlobalUtility from '@thzero/library_client/utility/global';
 
 import LibraryUtility from '@thzero/library_common/utility';
-import VueUtility from '@/library_vue/utility';
+import VueUtility from '@thzero/library_client_vue/utility';
 
 import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
 import VAutoCompleteWithValidation from '@/library_vue_vuetify/components/form/VAutoCompleteWithValidation';

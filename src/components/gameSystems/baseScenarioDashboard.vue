@@ -3,7 +3,7 @@ import GlobalUtility from '@thzero/library_client/utility/global';
 
 import baseDashboard from '@/components/baseDashboard';
 
-import DialogSupport from '@/library_vue_components/support/dialog';
+import DialogSupport from '@/library_vue_components/components/support/dialog';
 
 export default {
 	name: 'BaseScenarioDashboard',

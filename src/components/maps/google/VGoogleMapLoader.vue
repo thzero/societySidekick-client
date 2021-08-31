@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import base from '@/library_vue_components/base';
+import base from '@/library_vue_components/components/base';
 
 export default {
 	name: 'GoogleMap',

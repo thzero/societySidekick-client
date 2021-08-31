@@ -161,9 +161,9 @@ import LibraryConstants from '@thzero/library_client/constants';
 import AppUtility from '@/utility/app';
 import GameSystemsUtility from '@/utility/gameSystems';
 import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@/library_vue/utility/index';
+import VueUtility from '@thzero/library_client_vue/utility/index';
 
-import base from '@/library_vue_components/base';
+import base from '@/library_vue_components/components/base';
 import CharacterList from '@/components/gameSystems/CharacterList';
 import VFavoriteButton from '@/library_vue_vuetify/components/VFavoriteButton';
 import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';

@@ -20,7 +20,7 @@ import equipment from '@/store/equipment';
 import factions from '@/store/factions';
 import scenarios from '@/store/scenarios';
 
-import BaseStore from '@/library_vue/store';
+import BaseStore from '@thzero/library_client_vue/store';
 
 class AppStore extends BaseStore {
 	_init() {

@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import baseSupport from '@/library_vue_components/baseSupport';
+import baseSupport from '@/library_vue_components/components/baseSupport';
 
 export default {
 	name: 'Support',

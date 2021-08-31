@@ -5,11 +5,11 @@ import GlobalUtility from '@thzero/library_client/utility/global';
 
 import base from '@/components/base';
 
-import VueUtility from '@/library_vue/utility/index';
+import VueUtility from '@thzero/library_client_vue/utility/index';
 
 import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
 
-import DialogSupport from '@/library_vue_components/support/dialog';
+import DialogSupport from '@/library_vue_components/components/support/dialog';
 
 export default {
 	name: 'BaseCharacterDetails',

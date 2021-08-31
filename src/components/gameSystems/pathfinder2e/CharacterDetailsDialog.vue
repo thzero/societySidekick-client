@@ -215,7 +215,7 @@ import Constants from '@/constants';
 import PatfinderSharedConstants from '@/common/gameSystems/pathfinder2e/constants';
 
 import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@/library_vue/utility';
+import VueUtility from '@thzero/library_client_vue/utility';
 
 import baseCharacterDetailsDialog from '@/components/gameSystems/baseCharacterDetailsDialog';
 

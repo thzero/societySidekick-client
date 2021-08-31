@@ -28,7 +28,7 @@ import gameSystemsStarfinder1eService from '@/common/gameSystems/starfinder1e/se
 import gameSystemsRulesPathfinder2eService from '@/common/gameSystems/pathfinder2e/service/rules';
 import gameSystemsRulesStarfinder1eService from '@/common/gameSystems/starfinder1e/service/rules';
 
-import BaseServices from '@/library_vue/boot/baseServices';
+import BaseServices from '@thzero/library_client_vue/boot/baseServices';
 
 class Services extends BaseServices {
 	_initialize() {

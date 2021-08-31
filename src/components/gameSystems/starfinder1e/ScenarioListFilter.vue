@@ -19,7 +19,7 @@ import Starfinder1eSharedConstants from '@/common/gameSystems/starfinder1e/const
 
 import AppUtility from '@/utility/app';
 import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@/library_vue/utility';
+import VueUtility from '@thzero/library_client_vue/utility';
 
 import baseFilter from '@/components/baseFilter';
 

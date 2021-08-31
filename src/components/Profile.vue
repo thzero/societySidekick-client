@@ -14,7 +14,7 @@
 <script>
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import base from '@/library_vue_components/base';
+import base from '@/library_vue_components/components/base';
 
 export default {
 	name: 'Profile',

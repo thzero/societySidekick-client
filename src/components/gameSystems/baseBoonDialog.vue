@@ -2,14 +2,14 @@
 import AppUtility from '@/utility/app';
 import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
-import VueUtility from '@/library_vue/utility';
+import VueUtility from '@thzero/library_client_vue/utility';
 
 import VDateTimeFieldWithValidation from '@/library_vue_vuetify/components/form/VDateTimeFieldWithValidation';
 import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
 import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
 import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
-import DialogSupport from '@/library_vue_components/support/dialog';
+import DialogSupport from '@/library_vue_components/components/support/dialog';
 
 const DEFAULT_DATE_FORMAT = 'MM/DD/YYYY';
 const DEFAULT_TIME_FORMAT = 'HH:mm';

@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import baseNotFound from '@/library_vue_components/baseNotFound';
+import baseNotFound from '@/library_vue_components/components/baseNotFound';
 
 export default {
 	name: 'NotFound',

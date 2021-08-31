@@ -108,7 +108,7 @@
 <script>
 import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
-import VueUtility from '@/library_vue/utility';
+import VueUtility from '@thzero/library_client_vue/utility';
 
 import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
 import VMarkdownEditor from '@/library_vue_vuetify/components/markup/VMarkdownEditor';
@@ -120,7 +120,7 @@ import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTex
 import Pathfinder2eScenarioLookupDialog from '@/components/gameSystems/pathfinder2e/ScenarioLookupDialog';
 import Starfinder1eScenarioLookupDialog from '@/components/gameSystems/starfinder1e/ScenarioLookupDialog';
 
-import DialogSupport from '@/library_vue_components/support/dialog';
+import DialogSupport from '@/library_vue_components/components/support/dialog';
 
 export default {
 	name: 'AdminBoonsEditDialog',

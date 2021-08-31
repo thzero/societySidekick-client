@@ -3,7 +3,7 @@ import Constants from '@/constants';
 import Pathfinder2eSharedConstants from '@/common/gameSystems/pathfinder2e/constants';
 
 import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@/library_vue/utility';
+import VueUtility from '@thzero/library_client_vue/utility';
 
 import ScenarioLookupDialog from '@/components/gameSystems/ScenarioLookupDialog';
 

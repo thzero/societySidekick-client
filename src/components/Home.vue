@@ -205,7 +205,7 @@ import LibraryUtility from '@thzero/library_common/utility';
 import GameSystemsUtility from '@/utility/gameSystems';
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import base from '@/library_vue_components/base';
+import base from '@/library_vue_components/components/base';
 
 import BoonList from '@/components/gameSystems/BoonList';
 import CharacterList from '@/components/gameSystems/CharacterList';

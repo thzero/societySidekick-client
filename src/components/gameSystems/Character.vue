@@ -266,7 +266,7 @@ import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
 import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@/library_vue/utility/index';
+import VueUtility from '@thzero/library_client_vue/utility/index';
 
 import base from '@/components/base';
 import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
@@ -281,7 +281,7 @@ import CharacterNameSnippetStarfinder1e from '@/components/gameSystems/starfinde
 import InventoryDashboardStarfinder1e from '@/components/gameSystems/starfinder1e/InventoryDashboard';
 import ScenariosDashboardStarfinder1e from '@/components/gameSystems/starfinder1e/ScenariosDashboard';
 
-import TabSupport from '@/library_vue_components/support/tab';
+import TabSupport from '@/library_vue_components/components/support/tab';
 
 const DelayMs = 0; // 250
 
