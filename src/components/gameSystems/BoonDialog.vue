@@ -83,7 +83,7 @@ import LibraryUtility from '@thzero/library_common/utility';
 
 import baseBoonDialog from '@/components/gameSystems/baseBoonDialog';
 
-import DialogSupport from '@/library_vue_components/components/support/dialog';
+import DialogSupport from '@/library_vue/components/support/dialog';
 
 export default {
 	name: 'BoonDialog',

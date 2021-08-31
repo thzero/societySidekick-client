@@ -9,7 +9,7 @@ import VueUtility from '@thzero/library_client_vue/utility/index';
 
 import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
 
-import DialogSupport from '@/library_vue_components/components/support/dialog';
+import DialogSupport from '@/library_vue/components/support/dialog';
 
 export default {
 	name: 'BaseCharacterDetails',

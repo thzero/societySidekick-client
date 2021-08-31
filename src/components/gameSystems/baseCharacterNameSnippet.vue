@@ -1,6 +1,6 @@
 
 <script>
-import base from '@/library_vue_components/components/base';
+import base from '@/library_vue/components/base';
 
 import GameSystemsUtility from '@/utility/gameSystems';
 

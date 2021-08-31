@@ -4,7 +4,7 @@ import LibraryUtility from '@thzero/library_common/utility';
 
 import baseDashboard from '@/components/baseDashboard';
 
-import DialogSupport from '@/library_vue_components/components/support/dialog';
+import DialogSupport from '@/library_vue/components/support/dialog';
 
 export default {
 	name: 'BaseBoonDashboard',

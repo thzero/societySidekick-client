@@ -294,9 +294,9 @@ import LocationDialog from '@/components/locations/LocationDialog';
 import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
 import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
-import DialogSupport from '@/library_vue_components/components/support/dialog';
+import DialogSupport from '@/library_vue/components/support/dialog';
 
-import baseSettings from '@/library_vue_components/components/baseSettings';
+import baseSettings from '@/library_vue/components/baseSettings';
 
 export default {
 	name: 'Settings',

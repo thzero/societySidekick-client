@@ -44,7 +44,7 @@ import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelect
 
 import baseInventoryGearSetDialog from '@/components/gameSystems/baseInventoryGearSetDialog';
 
-import DialogSupport from '@/library_vue_components/components/support/dialog';
+import DialogSupport from '@/library_vue/components/support/dialog';
 
 export default {
 	name: 'InventoryGearSetDeleteDialog',

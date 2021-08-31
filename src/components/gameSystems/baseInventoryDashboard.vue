@@ -9,7 +9,7 @@ import InventoryGearSetDeleteDialog from '@/components/gameSystems/InventoryGear
 import InventoryGearSetLoadDialog from '@/components/gameSystems/InventoryGearSetLoadDialog';
 import InventoryGearSetSaveDialog from '@/components/gameSystems/InventoryGearSetSaveDialog';
 
-import DialogSupport from '@/library_vue_components/components/support/dialog';
+import DialogSupport from '@/library_vue/components/support/dialog';
 
 export default {
 	name: 'BaseInventoryDashboard',

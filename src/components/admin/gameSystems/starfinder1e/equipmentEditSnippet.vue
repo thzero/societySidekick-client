@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import baseEdit from '@/library_vue_components/components/baseEdit';
+import baseEdit from '@/library_vue/components/baseEdit';
 
 export default {
 	name: 'Starfinder1eeAdminEquipmentEditSnippet',

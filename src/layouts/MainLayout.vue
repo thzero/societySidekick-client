@@ -304,7 +304,7 @@ import LibraryConstants from '@thzero/library_client/constants';
 
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import baseMainLayout from '@/library_vue_components/layouts/baseMainLayout';
+import baseMainLayout from '@/library_vue/layouts/baseMainLayout';
 
 import CharacterNewDialog from '@/components/gameSystems/CharacterNewDialog';
 import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
@@ -312,7 +312,7 @@ import VDisplayDialog from '@/library_vue_vuetify/components/VDisplayDialog';
 import VLayoutFooter from '@/library_vue_vuetify/components/VLayoutFooter';
 import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
 
-import DialogSupport from '@/library_vue_components/components/support/dialog';
+import DialogSupport from '@/library_vue/components/support/dialog';
 
 export default {
 	name: 'MainLayout',

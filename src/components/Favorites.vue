@@ -25,7 +25,7 @@ import LibraryConstants from '@thzero/library_client/constants';
 import AppUtility from '@/utility/app';
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import base from '@/library_vue_components/components/base';
+import base from '@/library_vue/components/base';
 import ScenarioList from '@/components/gameSystems/ScenarioList';
 import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
 

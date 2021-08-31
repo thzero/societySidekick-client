@@ -67,7 +67,7 @@
 <script>
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import baseAdmin from '@/library_vue_components/components/baseAdmin';
+import baseAdmin from '@/library_vue/components/baseAdmin';
 
 // Admin Update
 import BoonsListing from '@/components/admin/boons/Listing';
