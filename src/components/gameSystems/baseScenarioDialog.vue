@@ -2,7 +2,7 @@
 import AppUtility from '@/utility/app';
 import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
-import VueUtility from '@/library_vue/utility';
+import VueUtility from '@thzero/library_client_vue/utility';
 
 import VDateTimeFieldWithValidation from '@/library_vue_vuetify/components/form/VDateTimeFieldWithValidation';
 import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';

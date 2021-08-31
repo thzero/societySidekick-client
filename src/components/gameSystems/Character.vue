@@ -266,7 +266,7 @@ import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
 import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@/library_vue/utility/index';
+import VueUtility from '@thzero/library_client_vue/utility/index';
 
 import base from '@/components/base';
 import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';

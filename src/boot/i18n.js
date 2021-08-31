@@ -1,4 +1,4 @@
-import VueBasei18n from '@/library_vue/boot/basei18n';
+import VueBasei18n from '@thzero/library_client_vue/boot/basei18n';
 
 import resources from '@/locales';
 

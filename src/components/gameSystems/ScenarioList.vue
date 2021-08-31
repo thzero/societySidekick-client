@@ -555,7 +555,7 @@ import SharedConstants from '@/common/constants';
 import AppUtility from '@/utility/app';
 import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
-import VueUtility from '@/library_vue/utility';
+import VueUtility from '@thzero/library_client_vue/utility';
 
 import baseList from '@/components/gameSystems/baseList';
 import VDirectionButton from '@/library_vue_vuetify/components/VDirectionButton';

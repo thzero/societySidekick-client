@@ -161,7 +161,7 @@ import LibraryConstants from '@thzero/library_client/constants';
 import AppUtility from '@/utility/app';
 import GameSystemsUtility from '@/utility/gameSystems';
 import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@/library_vue/utility/index';
+import VueUtility from '@thzero/library_client_vue/utility/index';
 
 import base from '@/library_vue/components/base';
 import CharacterList from '@/components/gameSystems/CharacterList';
