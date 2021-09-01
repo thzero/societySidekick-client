@@ -32,6 +32,8 @@ import BaseServices from '@thzero/library_client_vue/boot/baseServices';
 
 class Services extends BaseServices {
 	_initialize() {
+		super._initialize();
+		
 		// Admin Update
 		this._inject(Constants.InjectorKeys.SERVICE_ADMIN_BOONS, new adminBoonsService());
 		this._inject(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES, new adminClassesService());

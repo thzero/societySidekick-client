@@ -26,10 +26,10 @@
     "cli-update": ".\\node_modules\\.bin\\library-cli --updateversion --pi"
   },
   "dependencies": {
-    "@thzero/library_client": "^0.14.3",
-    "@thzero/library_client_firebase": "^0.14.2",
-    "@thzero/library_client_service_rest_axios": "^0.14.2",
-    "@thzero/library_client_vue": "^0.14.2",
+    "@thzero/library_client": "^0.14.9",
+    "@thzero/library_client_firebase": "^0.14.6",
+    "@thzero/library_client_service_rest_axios": "^0.14.4",
+    "@thzero/library_client_vue": "^0.14.8",
     "@thzero/library_common": "^0.13.18",
     "core-js": "^3.16.4",
     "decimal.js-light": "^2.5.1",
