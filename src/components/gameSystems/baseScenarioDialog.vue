@@ -2,7 +2,6 @@
 import AppUtility from '@/utility/app';
 import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
-import VueUtility from '@thzero/library_client_vue/utility';
 
 import VDateTimeFieldWithValidation from '@/library_vue_vuetify/components/form/VDateTimeFieldWithValidation';
 import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
@@ -54,7 +53,7 @@ export default {
 				const results = this.serviceGameSystem.boons(this.correlationId(), GlobalUtility.$store, true);
 				const scenarioId = this.innerValue ? this.innerValue.scenarioId : null;
 				const results2 = results ? results.filter(l => l.scenarioId == scenarioId) : [];
-				return VueUtility.selectBlank(results2);
+				return LibraryUtility.selectBlank(results2);
 			},
 			cache: false
 		},
@@ -62,7 +61,7 @@ export default {
 			return this.serviceGameSystem.factions(this.correlationId(), GlobalUtility.$store, true);
 		},
 		locations() {
-			return VueUtility.selectBlank(LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.correlationId(), GlobalUtility.$store.state.user.user), true));
+			return LibraryUtility.selectBlank(LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.correlationId(), GlobalUtility.$store.state.user.user), true));
 		},
 		outputType() {
 			return 'timestamp';

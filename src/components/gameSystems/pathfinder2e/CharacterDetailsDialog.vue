@@ -215,7 +215,7 @@ import Constants from '@/constants';
 import PatfinderSharedConstants from '@/common/gameSystems/pathfinder2e/constants';
 
 import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@thzero/library_client_vue/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseCharacterDetailsDialog from '@/components/gameSystems/baseCharacterDetailsDialog';
 
@@ -233,15 +233,15 @@ export default {
 		},
 		boonsAdvanced() {
 			const boons = this.boons.filter(l => l.type == PatfinderSharedConstants.BoonTypes.ADVANCED);
-			return VueUtility.selectBlank(boons);
+			return LibraryUtility.selectBlank(boons);
 		},
 		boonsFaction() {
 			const boons = this.boons.filter(l => l.type == PatfinderSharedConstants.BoonTypes.FACTION);
-			return VueUtility.selectBlank(boons);
+			return LibraryUtility.selectBlank(boons);
 		},
 		boonsGeneral() {
 			const boons = this.boons.filter(l => l.type != PatfinderSharedConstants.BoonTypes.ADVANCED || l.type != PatfinderSharedConstants.BoonTypes.FACTION);
-			return VueUtility.selectBlank(boons);
+			return LibraryUtility.selectBlank(boons);
 		},
 		classes() {
 			return this.serviceGameSystem.classes(this.correlationId(), GlobalUtility.$store, true);

@@ -2,7 +2,6 @@
 import GlobalUtility from '@thzero/library_client/utility/global';
 
 import LibraryUtility from '@thzero/library_common/utility';
-import VueUtility from '@thzero/library_client_vue/utility';
 
 import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
 import VAutoCompleteWithValidation from '@/library_vue_vuetify/components/form/VAutoCompleteWithValidation';
@@ -70,7 +69,7 @@ export default {
 			return LibraryUtility.sortByOrder(scenarios, true);
 		},
 		characterScenariosBlank() {
-			return VueUtility.selectBlank(this.characterScenarios.slice(0));
+			return LibraryUtility.selectBlank(this.characterScenarios.slice(0));
 		},
 		isItemOrItemId() {
 			const hasItem = this.innerValue.item && this.innerValue.item !== '';
@@ -188,7 +187,7 @@ export default {
 			newVal = newVal ? String.trim(newVal) : newVal;
 			if (newVal &&newVal.length >= 3)
 				results = await GlobalUtility.$store.dispatcher.equipment.equipmentSearch(this.correlationId(), this.gameSystemId(), { name: newVal });
-			return VueUtility.selectBlank(results);
+			return LibraryUtility.selectBlank(results);
 		},
 		async resetDialog(correlationId, value) {
 			this.itemId = null;
