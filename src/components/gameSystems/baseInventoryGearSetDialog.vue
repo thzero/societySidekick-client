@@ -1,8 +1,7 @@
 <script>
 import AppUtility from '@/utility/app';
 import GlobalUtility from '@thzero/library_client/utility/global';
-
-import VueUtility from '@thzero/library_client_vue/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
 
@@ -24,7 +23,7 @@ export default {
 			return AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), GlobalUtility.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets);
 		},
 		gearSetsBlank() {
-			return VueUtility.selectBlank(AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), GlobalUtility.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets));
+			return LibraryUtility.selectBlank(AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), GlobalUtility.$store.state.user.user, this.gameSystemId, (settings) => settings.gearSets));
 		}
 	},
 	methods: {

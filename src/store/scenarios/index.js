@@ -53,7 +53,7 @@ const store = {
 				return;
 
 				params.listing.forEach((item) => {
-				state.listing = VueUtility.updateArrayById(state.listing, item);
+				state.listing = LibraryUtility.updateArrayByObject(state.listing, item);
 			});
 			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.c', state.listing, params.correlationId);
 		},

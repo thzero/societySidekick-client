@@ -19,7 +19,7 @@ import Pathfinder2eSharedConstants from '@/common/gameSystems/pathfinder2e/const
 
 import AppUtility from '@/utility/app';
 import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@thzero/library_client_vue/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import baseFilter from '@/components/baseFilter';
 
@@ -60,7 +60,7 @@ export default {
 		},
 		scenarioAdventures() {
 			const adventures = this.lookups.scenarioAdventures.filter(l => l.id !== Pathfinder2eSharedConstants.ScenarioAdventures.INITIAL);
-			return VueUtility.selectBlank(adventures, GlobalUtility.$trans.t('characters.gameSystems.pathfinder2e.scenarios.adventure'));
+			return LibraryUtility.selectBlank(adventures, GlobalUtility.$trans.t('characters.gameSystems.pathfinder2e.scenarios.adventure'));
 		}
 	},
 	methods: {

@@ -47,7 +47,7 @@ const store = {
 		setAdminBoons(state, params) {
 			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.a', params.item, params.correlationId);
 			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.b', state.boons, params.correlationId);
-			state.boons = VueUtility.updateArrayById(state.boons, params.item);
+			state.boons = LibraryUtility.updateArrayByObject(state.boons, params.item);
 			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.c', state.boons, params.correlationId);
 		},
 		setAdminBoonsListing(state, params) {

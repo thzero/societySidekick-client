@@ -47,7 +47,7 @@ const store = {
 		setAdminClasses(state, params) {
 			this.$logger.debug('store.admin.classes', 'setAdminClasses', 'item.a', params.item, params.correlationId);
 			this.$logger.debug('store.admin.classes', 'setAdminClasses', 'item.b', state.classes, params.correlationId);
-			state.classes = VueUtility.updateArrayById(state.classes, params.item);
+			state.classes = LibraryUtility.updateArrayByObject(state.classes, params.item);
 			this.$logger.debug('store.admin.classes', 'setAdminClasses', 'item.c', state.classes, params.correlationId);
 		},
 		setAdminClassesListing(state, params) {

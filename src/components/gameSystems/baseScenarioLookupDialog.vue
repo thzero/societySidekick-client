@@ -1,9 +1,8 @@
 <script>
 import LibraryConstants from '@thzero/library_client/constants';
 
-import LibraryUtility from '@thzero/library_common/utility';
 import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@thzero/library_client_vue/utility';
+import LibraryUtility from '@thzero/library_common/utility';
 
 import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
 import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
@@ -50,7 +49,7 @@ export default {
 		scenariosSeasons() {
 			let results = this.scenarioOverride ? this.scenarioOverride : this.getServiceGameSystem().scenarios(this.correlationId(), GlobalUtility.$store).filter(l => l.season && !String.isNullOrEmpty(l.season));
 			results = [...new Set(results.map(item => item.season))].map(item => { return { id: item, name: item }; });
-			return VueUtility.selectBlank(results);
+			return LibraryUtility.selectBlank(results);
 		}
 	},
 	created() {

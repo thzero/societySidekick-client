@@ -152,7 +152,7 @@ const store = {
 		setCharacter(state, params) {
 			this.$logger.debug('store.characters', 'setCharacter', 'item.a', params.character, params.correlationId);
 			this.$logger.debug('store.characters', 'setCharacter', 'item.b', state.characters, params.correlationId);
-			state.characters = VueUtility.updateArrayById(state.characters, params.character, params.correlationId);
+			state.characters = LibraryUtility.updateArrayByObject(state.characters, params.character, params.correlationId);
 			this.$logger.debug('store.characters', 'setCharacter', 'item.c', state.characters, params.correlationId);
 		},
 		setCharacterListing(state, params) {
@@ -168,7 +168,7 @@ const store = {
 						character = LibraryUtility.merge2(character, item);
 					else
 						character = item;
-					state.characters = VueUtility.updateArrayById(state.characters, character);
+					state.characters = LibraryUtility.updateArrayByObject(state.characters, character);
 				});
 			}
 			else
