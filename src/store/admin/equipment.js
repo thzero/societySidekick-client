@@ -47,7 +47,7 @@ const store = {
 		setAdminEquipment(state, params) {
 			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.a', params.item, params.correlationId);
 			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.b', state.equipment, params.correlationId);
-			state.equipment = LibraryUtility.updateArrayByObject(state.equipment, params.item);
+			state.equipment = LibraryUtility.updateArrayByObject(state.equipment, params.item, true);
 			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.c', state.equipment, params.correlationId);
 		},
 		setAdminEquipmentListing(state, params) {

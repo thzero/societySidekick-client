@@ -287,6 +287,8 @@ export default {
 		},
 		userDisplayName() {
 			const user = GlobalUtility.$store.state.user.user;
+			if (!user)
+				return '';
 			const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
 			const userName = settings && settings.gamerTag ? settings.gamerTag : user.external && user.external.name ? user.external.name : '******';
 			return userName;

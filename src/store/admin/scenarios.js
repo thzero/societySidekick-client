@@ -54,7 +54,7 @@ const store = {
 		setAdminScenarios(state, params) {
 			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.a', params.item, params.correlationId);
 			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.b', state.scenarios, params.correlationId);
-			state.scenarios = LibraryUtility.updateArrayByObject(state.scenarios, params.item);
+			state.scenarios = LibraryUtility.updateArrayByObject(state.scenarios, params.item, true);
 			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.c', state.scenarios, params.correlationId);
 		},
 		setAdminScenariosListing(state, params) {

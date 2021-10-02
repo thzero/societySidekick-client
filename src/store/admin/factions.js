@@ -47,7 +47,7 @@ const store = {
 		setAdminFactions(state, params) {
 			this.$logger.debug('store.admin.factions', 'setAdminFactions', 'item.a', params.item, params.correlationId);
 			this.$logger.debug('store.admin.factions', 'setAdminFactions', 'item.b', state.factions, params.correlationId);
-			state.factions = LibraryUtility.updateArrayByObject(state.factions, params.item);
+			state.factions = LibraryUtility.updateArrayByObject(state.factions, params.item, true);
 			this.$logger.debug('store.admin.factions', 'setAdminFactions.c', state.factions, params.correlationId);
 		},
 		setAdminFactionsListing(state, params) {
