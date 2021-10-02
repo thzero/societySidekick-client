@@ -25,6 +25,7 @@ const store = {
 				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'scenarios', params.gameSystemId);
 				return listing;
 			}
+			return [];
 		},
 		async getScenarioListingPlayed({ commit }, params) {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
@@ -32,6 +33,7 @@ const store = {
 			this.$logger.debug('store.scenarios', 'getScenarioListingPlayed', 'response', response, params.correlationId);
 			if (Response.hasSucceeded(response))
 				commit('setScenarioListingPlayed', { correlationId: params.correlationId, played: response.results ? response.results : null, characterId: params.characterId });
+			return response;
 		}
 	},
 	getters: {

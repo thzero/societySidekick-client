@@ -32,6 +32,7 @@ const store = {
 			this.$logger.debug('store.admin.boons', 'searchAdminBoons', 'response', response, params.correlationId);
 			if (Response.hasSucceeded(response))
 				commit('setAdminBoonsListing', { correlationId: params.correlationId, list: response.results ? response.results.data : null });
+			return response;
 		},
 		async updateAdminBoon({ commit }, params) {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);

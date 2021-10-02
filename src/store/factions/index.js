@@ -24,6 +24,7 @@ const store = {
 				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'factions', params.gameSystemId);
 				return listing;
 			}
+			return [];
 		}
 	},
 	getters: {
