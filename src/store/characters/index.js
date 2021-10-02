@@ -19,7 +19,7 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.create(params.correlationId, params.details);
 			this.$logger.debug('store.characters', 'createCharacter', 'response', response, params.correlationId);
-			if (response && response.success)
+			if (Response.hasSucceeded(response))
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
@@ -27,7 +27,7 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.delete(params.correlationId, params.characterId);
 			this.$logger.debug('store.characters', 'deleteCharacter', 'response', response, params.correlationId);
-			if (response && response.success)
+			if (Response.hasSucceeded(response))
 				commit('deleteCharacter', { correlationId: params.correlationId, characterId: params.characterId });
 			return response;
 		},
@@ -35,7 +35,7 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.deleteBoon(params.correlationId, params.characterId, params.boonId);
 			this.$logger.debug('store.characters', 'deleteCharacterBoon', 'response', response, params.correlationId);
-			if (response && response.success && response.results)
+			if (Response.hasSucceeded(response) && response.results)
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
@@ -43,7 +43,7 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.deleteInventory(params.correlationId, params.characterId, params.inventoryId);
 			this.$logger.debug('store.characters', 'deleteCharacterInventory', 'response', response, params.correlationId);
-			if (response && response.success && response.results)
+			if (Response.hasSucceeded(response) && response.results)
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
@@ -51,7 +51,7 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.deleteScenario(params.correlationId, params.characterId, params.scenarioId);
 			this.$logger.debug('store.characters', 'deleteCharacterScenario', 'response', response, params.correlationId);
-			if (response && response.success && response.results)
+			if (Response.hasSucceeded(response) && response.results)
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
@@ -59,7 +59,7 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.fetch(params.correlationId, params.id);
 			this.$logger.debug('store.characters', 'getCharacter', 'response', response, params.correlationId);
-			if (response && response.success)
+			if (Response.hasSucceeded(response))
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results ? response.results : null });
 			return response;
 		},
@@ -69,21 +69,22 @@ const store = {
 				return;
 			const response = await service.listing(params.correlationId, params.sections);
 			this.$logger.debug('store.characters', 'getCharacterListing', 'response', response, params.correlationId);
-			if (response && response.success)
-				commit('setCharacterListing', { correlationId: params.correlationId, results: response.success && response.results ? response.results.data : null, sections: params.sections });
+			if (Response.hasSucceeded(response))
+				commit('setCharacterListing', { correlationId: params.correlationId, results: response.results ? response.results.data : null, sections: params.sections });
 		},
 		// eslint-disable-next-line
 		async initializeCharacters({ commit }, params) {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.initialize(params.correlationId);
 			this.$logger.debug('store.characters', 'initializeCharacters', 'response', response, params.correlationId);
-			commit('setCharacterLookups', { correlationId: params.correlationId, lookups: response.success && response.results ? response.results.lookups : null });
+			if (Response.hasSucceeded(response))
+				commit('setCharacterLookups', { correlationId: params.correlationId, lookups: response.results ? response.results.lookups : null });
 		},
 		async loadCharacterInventory({ commit }, params) {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.loadInventory(params.correlationId, params.characterId, params.gearSetId);
 			this.$logger.debug('store.characters', 'loadCharacterInventory', 'response', response, params.correlationId);
-			if (response && response.success && response.results)
+			if (Response.hasSucceeded(response) && response.results)
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 			return response;
 		},
@@ -91,14 +92,15 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.create(params.correlationId, params.character);
 			this.$logger.debug('store.characters', 'setCharacter', 'response', response, params.correlationId);
-			commit('setCharacter', { correlationId: params.correlationId, character: response.success && response.results ? response.results : null });
+			if (Response.hasSucceeded(response))
+				commit('setCharacter', { correlationId: params.correlationId, character: response.results ? response.results : null });
 			return response;
 		},
 		async updateCharacterBoon({ commit }, params) {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateBoon(params.correlationId, params.characterId, params.boon);
 			this.$logger.debug('store.characters', 'updateCharacterBoon', 'response', response, params.correlationId);
-			if (response && response.success && response.results) {
+			if (Response.hasSucceeded(response) && response.results) {
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 				this.dispatcher.user.refreshUserSettings(params.correlationId);
 			}
@@ -108,7 +110,7 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateDetails(params.correlationId, params.details);
 			this.$logger.debug('store.characters', 'updateCharacterDetails', 'response', response, params.correlationId);
-			if (response && response.success && response.results) {
+			if (Response.hasSucceeded(response) && response.results) {
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 				this.dispatcher.user.refreshUserSettings(params.correlationId);
 			}
@@ -118,7 +120,7 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateInventory(params.correlationId, params.characterId, params.inventory);
 			this.$logger.debug('store.characters', 'updateCharacterInventory', 'response', response, params.correlationId);
-			if (response && response.success && response.results) {
+			if (Response.hasSucceeded(response) && response.results) {
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 				this.dispatcher.user.refreshUserSettings(params.correlationId);
 			}
@@ -128,7 +130,7 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 			const response = await service.updateScenario(params.correlationId, params.characterId, params.scenario);
 			this.$logger.debug('store.characters', 'updateCharacterScenario', 'response', response, params.correlationId);
-			if (response && response.success && response.results) {
+			if (Response.hasSucceeded(response) && response.results) {
 				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
 				this.dispatcher.user.refreshUserSettings(params.correlationId);
 			}
@@ -152,7 +154,7 @@ const store = {
 		setCharacter(state, params) {
 			this.$logger.debug('store.characters', 'setCharacter', 'item.a', params.character, params.correlationId);
 			this.$logger.debug('store.characters', 'setCharacter', 'item.b', state.characters, params.correlationId);
-			state.characters = LibraryUtility.updateArrayByObject(state.characters, params.character, params.correlationId);
+			state.characters = LibraryUtility.updateArrayByObject(state.characters, params.character, params.correlationId, true);
 			this.$logger.debug('store.characters', 'setCharacter', 'item.c', state.characters, params.correlationId);
 		},
 		setCharacterListing(state, params) {
@@ -168,7 +170,7 @@ const store = {
 						character = LibraryUtility.merge2(character, item);
 					else
 						character = item;
-					state.characters = LibraryUtility.updateArrayByObject(state.characters, character);
+					state.characters = LibraryUtility.updateArrayByObject(state.characters, character, true);
 				});
 			}
 			else

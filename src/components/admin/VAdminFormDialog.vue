@@ -38,7 +38,7 @@ export default {
 				return null;
 
 			const response = this.serviceGameSystemsUtility.getServiceByGameSystemId(correlationId, gameSystemId);
-			if (!response || !response.success)
+			if (this.hasFailed(response))
 				return null;
 
 			return response.results;

@@ -3,7 +3,8 @@ import LibraryConstants from '@thzero/library_client/constants';
 
 import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
-import VueUtility from '@thzero/library_client_vue/utility/index';
+
+import Response from '@thzero/library_common/response';
 
 const store = {
 	state: {
@@ -17,8 +18,8 @@ const store = {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_FACTIONS);
 			const response = await service.listing(params.correlationId, params.gameSystemId);
 			this.$logger.debug('store.factions', 'getFactionListing', 'response', response, params.correlationId);
-			if (response.success) {
-				const listing = response.success && response.results ? response.results.data : null;
+			if (Response.hasSucceeded(response)) {
+				const listing = response.results ? response.results.data : null;
 				commit('setFactionListing', { correlationId: params.correlationId, listing: listing });
 				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'factions', params.gameSystemId);
 				return listing;
@@ -39,7 +40,7 @@ const store = {
 			if (!params.listing)
 				return;
 				params.listing.forEach((item) => {
-				state.listing = LibraryUtility.updateArrayByObject(state.listing, item);
+				state.listing = LibraryUtility.updateArrayByObject(state.listing, item, true);
 			});
 			this.$logger.debug('store.factions', 'setFactionListing', 'list.c', state.listing, params.correlationId);
 		}

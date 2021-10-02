@@ -20,6 +20,8 @@ import equipment from '@/store/equipment';
 import factions from '@/store/factions';
 import scenarios from '@/store/scenarios';
 
+import Response from '@thzero/library_common/response';
+
 import BaseStore from '@thzero/library_client_vue/store';
 
 class AppStore extends BaseStore {
@@ -40,19 +42,22 @@ class AppStore extends BaseStore {
 					const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_API);
 					const response = await service.gameSystems(correlationId);
 					this.$logger.debug('store', 'getGameSystems', 'response', response, correlationId);
-					commit('setGameSystems', { correlationId : correlationId, gameSystems: response.success && response.results ? response.results.data : [] });
+					if (Response.hasSucceeded(response))
+				commit('setGameSystems', { correlationId : correlationId, gameSystems: response.results ? response.results.data : [] });
 				},
 				async getOrganizedPlay({ commit }, correlationId) {
 					const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_API);
 					const response = await service.gameSystems(correlationId);
 					this.$logger.debug('store', 'getOrganizedPlay', 'response', response, correlationId);
-					commit('setOrganizedPlay', { correlationId : correlationId, organizedPlay: response.success && response.results ? response.results.data : [] });
+					if (Response.hasSucceeded(response))
+				commit('setOrganizedPlay', { correlationId : correlationId, organizedPlay: response.results ? response.results.data : [] });
 				},
 				async getPlans({ commit }, correlationId) {
 					const service = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_PLANS);
 					const response = await service.plans(correlationId);
 					this.$logger.debug('store', 'getPlans', 'response', response, correlationId);
-					commit('setPlans', { correlationId : correlationId, plans: response.success && response.results ? response.results.data : [] });
+					if (Response.hasSucceeded(response))
+				commit('setPlans', { correlationId : correlationId, plans: response.results ? response.results.data : [] });
 				},
 				async getVersion({ commit }, correlationId) {
 					const service = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_VERSION);
@@ -64,7 +69,7 @@ class AppStore extends BaseStore {
 					const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_API);
 					const response = await service.initialize(correlationId);
 					this.$logger.debug('store', 'initialize', 'response', response);
-					if (response && response.success) {
+					if (Response.hasSucceeded(response)) {
 						commit('setGameSystems', { correlationId : correlationId, gameSystems: response.results.gameSystems.data });
 						commit('setOrganizedPlay', { correlationId : correlationId, organizedPlay: response.results.gameSystems.data });
 						commit('setPlans', { correlationId : correlationId, plans: response.results.plans });

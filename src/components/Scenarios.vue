@@ -269,7 +269,7 @@ export default {
 
 				const responseUser = await this.serviceUsers.fetchByGamerId(correlationId, gamerTag);
 				this.logger.debug('Scenarios', 'fetch', 'response', responseUser, correlationId);
-				if (!responseUser || !responseUser.success) {
+				if (this._hasFailed(responseUser)) {
 					VueUtility.invalid();
 					return;
 				}
@@ -279,7 +279,7 @@ export default {
 
 				const responseCharacter = await this.serviceCharacters.listingByShortId(correlationId, gamerTag, this.gameSystemId);
 				this.logger.debug('Scenarios', 'fetch', 'response', responseCharacter, correlationId);
-				if (!responseCharacter || !responseCharacter.success) {
+				if (this._hasFailed(responseCharacter)) {
 					//VueUtility.invalid()
 					return;
 				}

@@ -419,7 +419,7 @@ export default {
 				.then(async (response) => {
 					try {
 						self.logger.debug('Character', 'initializeCharacter', 'response', response);
-						if (!response || !response.success) {
+						if (this.hasFailed(response)) {
 							VueUtility.invalid();
 							return;
 						}
