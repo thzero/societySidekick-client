@@ -32,6 +32,7 @@ const store = {
 			this.$logger.debug('store.admin.factions', 'searchAdminFactions', 'response', response, params.correlationId);
 			if (Response.hasSucceeded(response))
 				commit('setAdminFactionsListing', { correlationId: params.correlationId, list: response.results ? response.results.data : null });
+			return response;
 		},
 		async updateAdminFaction({ commit }, params) {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS);

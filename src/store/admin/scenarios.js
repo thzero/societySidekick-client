@@ -32,6 +32,7 @@ const store = {
 			this.$logger.debug('store.admin', 'searchAdminScenarios', 'response', response, params.correlationId);
 			if (Response.hasSucceeded(response))
 				commit('setAdminScenariosListing', { correlationId: params.correlationId, list: response.results ? response.results.data : null });
+			return response;
 		},
 		async updateAdminScenario({ commit }, params) {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);

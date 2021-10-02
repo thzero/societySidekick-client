@@ -71,6 +71,7 @@ const store = {
 			this.$logger.debug('store.characters', 'getCharacterListing', 'response', response, params.correlationId);
 			if (Response.hasSucceeded(response))
 				commit('setCharacterListing', { correlationId: params.correlationId, results: response.results ? response.results.data : null, sections: params.sections });
+			return response;
 		},
 		// eslint-disable-next-line
 		async initializeCharacters({ commit }, params) {
@@ -79,6 +80,7 @@ const store = {
 			this.$logger.debug('store.characters', 'initializeCharacters', 'response', response, params.correlationId);
 			if (Response.hasSucceeded(response))
 				commit('setCharacterLookups', { correlationId: params.correlationId, lookups: response.results ? response.results.lookups : null });
+			return response;
 		},
 		async loadCharacterInventory({ commit }, params) {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);

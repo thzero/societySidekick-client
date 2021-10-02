@@ -32,6 +32,7 @@ const store = {
 			this.$logger.debug('store.admin.equipment', 'searchAdminEquipment', 'response', response, params.correlationId);
 			if (Response.hasSucceeded(response))
 				commit('setAdminEquipmentListing', { correlationId: params.correlationId, list: response.results ? response.results.data : null });
+			return response;
 		},
 		async updateAdminEquipment({ commit }, params) {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);

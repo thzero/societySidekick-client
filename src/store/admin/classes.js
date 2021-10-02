@@ -32,6 +32,7 @@ const store = {
 			this.$logger.debug('store.admin.classes', 'searchAdminClasses', 'response', response, params.correlationId);
 			if (Response.hasSucceeded(response))
 				commit('setAdminClassesListing', { correlationId: params.correlationId, list: response.results ? response.results.data : null });
+			return response;
 		},
 		async updateAdminClass({ commit }, params) {
 			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES);
