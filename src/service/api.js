@@ -11,7 +11,7 @@ class ApiService extends RestExternalService {
 			};
 			const response = await this._serviceCommunicationRest.get(correlationId, LibraryConstants.ExternalKeys.BACKEND, 'initialize');
 			this._logger.debug('ApiService', 'initialize', 'response', response, correlationId);
-			if (response && response.success) {
+			if (this._hasSucceeded(response)) {
 				version.server = response.results.version;
 				response.results.version = version;
 			}

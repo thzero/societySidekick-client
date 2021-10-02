@@ -84,7 +84,7 @@ export default {
 
 				const responseFavorites = await this.serviceCharacters.listingByFavorites(correlationId);
 				this.logger.debug('Favorites', 'fetch', 'response', responseFavorites, correlationId);
-				if (!responseFavorites || !responseFavorites.success)
+				if (this._hasFailed(responseFavorites))
 					return;
 
 				const user = GlobalUtility.$store.state.user.user;

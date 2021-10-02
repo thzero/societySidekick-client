@@ -324,7 +324,7 @@ export default {
 		async favorites() {
 			// return LibraryUtility.sortByName(AppUtility.settings().getSettingsUserFavorites(this.correlationId(), this.user), true)
 			const response = await GlobalUtility.$store.dispatcher.user.getUserFavorites(this.correlationId());
-			return response && response.success ? response.results : [];
+			return this.hasSucceeded(response) ? response.results : [];
 		}
 	},
 	computed: {

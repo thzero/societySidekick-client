@@ -266,7 +266,7 @@ export default {
 
 			const responseUser = await this.serviceUsers.fetchByGamerId(correlationId, gamerTag);
 			this.logger.debug('Cards', 'fetch', 'response', responseUser, correlationId);
-			if (responseUser && responseUser.success) {
+			if (this._hasSucceeded(responseUser)) {
 				this.user = responseUser.results;
 				this.external = true;
 				this.logger.debug('Cards', 'fetch', 'user', this.user, correlationId);

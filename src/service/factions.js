@@ -6,7 +6,7 @@ class FactionsService extends RestExternalService {
 	async listing(correlationId, gameSystemId) {
 		try {
 			let response = this._enforceNotNullResponse('FactionsService', 'listing', gameSystemId, 'gameSystemId', correlationId);
-			if (!response.success)
+			if (this._hasFailed(response))
 				return response;
 
 			response = await this._serviceCommunicationRest.get(correlationId, LibraryConstants.ExternalKeys.BACKEND, { url: 'factions/listing', params: [ gameSystemId ] });
