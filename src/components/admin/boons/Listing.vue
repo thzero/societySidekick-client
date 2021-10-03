@@ -86,7 +86,7 @@
 <script>
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import baseList from '@/components/admin/baseList';
+import baseListing from '@/components/admin/baseListing';
 import EditDialog from '@/components/admin/boons/EditDialog';
 
 import BoonData from '@/common/data/boon';
@@ -96,7 +96,7 @@ export default {
 	components: {
 		EditDialog
 	},
-	extends: baseList,
+	extends: baseListing,
 	computed: {
 		boons() {
 			const boons = GlobalUtility.$store.state.adminBoons.boons;

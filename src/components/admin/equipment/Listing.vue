@@ -80,7 +80,7 @@
 <script>
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import baseList from '@/components/admin/baseList';
+import baseListing from '@/components/admin/baseListing';
 import EditDialog from '@/components/admin/equipment/EditDialog';
 
 import EquipmentData from '@/common/data/equipment';
@@ -90,7 +90,7 @@ export default {
 	components: {
 		EditDialog
 	},
-	extends: baseList,
+	extends: baseListing,
 	computed: {
 		equipment() {
 			const equipment = GlobalUtility.$store.state.adminEquipment.equipment;

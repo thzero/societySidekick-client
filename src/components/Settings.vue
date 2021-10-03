@@ -296,7 +296,7 @@ import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTex
 
 import DialogSupport from '@/library_vue/components/support/dialog';
 
-import baseSettings from '@/library_vue/components/baseSettings';
+import baseSettings from '@/library_vue_vuetify/components/baseSettings';
 
 export default {
 	name: 'Settings',

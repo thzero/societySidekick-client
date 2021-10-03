@@ -4,15 +4,11 @@ import SharedConstants from '@/common/constants';
 
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import baseList from '@/library_vue/components/admin/baseList';
-import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
+import baseListing from '@/library_vue/components/admin/baseListing';
 
 export default {
-	name: 'BaseAdminList',
-	components: {
-		VConfirmationDialog
-	},
-	extends: baseList,
+	name: 'VuetifyBaseAdminList',
+	extends: baseListing,
 	data: () => ({
 		serviceGameSystems: null
 	}),

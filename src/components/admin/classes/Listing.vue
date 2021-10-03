@@ -80,7 +80,7 @@
 <script>
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import baseList from '@/components/admin/baseList';
+import baseListing from '@/components/admin/baseListing';
 import EditDialog from '@/components/admin/classes/EditDialog';
 
 import ClassData from '@/common/data/class';
@@ -90,7 +90,7 @@ export default {
 	components: {
 		EditDialog
 	},
-	extends: baseList,
+	extends: baseListing,
 	computed: {
 		classes() {
 			const classes = GlobalUtility.$store.state.adminClasses.classes;

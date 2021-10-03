@@ -82,7 +82,7 @@
 <script>
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import baseList from '@/components/admin/baseList';
+import baseListing from '@/components/admin/baseListing';
 import EditDialog from '@/components/admin/scenarios/EditDialog';
 
 import ScenarioData from '@/common/data/scenario';
@@ -92,7 +92,7 @@ export default {
 	components: {
 		EditDialog
 	},
-	extends: baseList,
+	extends: baseListing,
 	computed: {
 		scenarios() {
 			const scenarios = GlobalUtility.$store.state.adminScenarios.scenarios;
