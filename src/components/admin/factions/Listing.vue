@@ -76,7 +76,7 @@
 <script>
 import GlobalUtility from '@thzero/library_client/utility/global';
 
-import baseList from '@/components/admin/baseList';
+import baseListing from '@/components/admin/baseListing';
 import EditDialog from '@/components/admin/factions/EditDialog';
 
 import FactionData from '@/common/data/faction';
@@ -86,7 +86,7 @@ export default {
 	components: {
 		EditDialog
 	},
-	extends: baseList,
+	extends: baseListing,
 	computed: {
 		factions() {
 			const factions = GlobalUtility.$store.state.adminFactions.factions;

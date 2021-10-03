@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import baseAdminUsersList from '@/library_vue/components/admin/users/baseListing';
+import baseListing from '@/library_vue_vuetify/components/admin/users/baseListing';
 import EditDialog from '@/components/admin/users/EditDialog';
 
 import UserData from '@/common/data/user';
@@ -87,7 +87,7 @@ export default {
 	components: {
 		EditDialog
 	},
-	extends: baseAdminUsersList,
+	extends: baseListing,
 	methods: {
 		defaultItem() {
 			return new UserData();

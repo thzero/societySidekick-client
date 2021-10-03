@@ -91,7 +91,7 @@
 import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
-import baseListing from '@/library_vue/components/admin/news/baseListing';
+import baseListing from '@/library_vue_vuetify/components/admin/news/baseListing';
 import EditDialog from '@/components/admin/news/EditDialog';
 import VMarkdown from '@/library_vue_vuetify/components/markup/VMarkdown';
 
