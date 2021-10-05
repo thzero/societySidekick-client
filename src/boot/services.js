@@ -35,27 +35,27 @@ class Services extends BaseServices {
 		super._initialize();
 		
 		// Admin Update
-		this._inject(Constants.InjectorKeys.SERVICE_ADMIN_BOONS, new adminBoonsService());
-		this._inject(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES, new adminClassesService());
-		this._inject(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT, new adminEquipmentService());
-		this._inject(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS, new adminFactionsService());
-		this._inject(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS, new adminScenariosService());
+		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS, new adminBoonsService());
+		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES, new adminClassesService());
+		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT, new adminEquipmentService());
+		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS, new adminFactionsService());
+		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS, new adminScenariosService());
 
-		this._inject(Constants.InjectorKeys.SERVICE_API, new apiService());
-		this._inject(Constants.InjectorKeys.SERVICE_BOONS, new boonsService());
-		this._inject(Constants.InjectorKeys.SERVICE_CLASSES, new classesService());
-		this._inject(Constants.InjectorKeys.SERVICE_CHARACTERS, new charactersService());
-		this._inject(Constants.InjectorKeys.SERVICE_EQUIPMENT, new equipmentService());
-		this._inject(Constants.InjectorKeys.SERVICE_FACTIONS, new factionsService());
-		this._inject(Constants.InjectorKeys.SERVICE_ORGANIZEDPLAY, new organizedPlayService());
-		this._inject(Constants.InjectorKeys.SERVICE_SCENARIOS, new scenariosService());
+		this._injectService(Constants.InjectorKeys.SERVICE_API, new apiService());
+		this._injectService(Constants.InjectorKeys.SERVICE_BOONS, new boonsService());
+		this._injectService(Constants.InjectorKeys.SERVICE_CLASSES, new classesService());
+		this._injectService(Constants.InjectorKeys.SERVICE_CHARACTERS, new charactersService());
+		this._injectService(Constants.InjectorKeys.SERVICE_EQUIPMENT, new equipmentService());
+		this._injectService(Constants.InjectorKeys.SERVICE_FACTIONS, new factionsService());
+		this._injectService(Constants.InjectorKeys.SERVICE_ORGANIZEDPLAY, new organizedPlayService());
+		this._injectService(Constants.InjectorKeys.SERVICE_SCENARIOS, new scenariosService());
 
 		// GameSystems Update
-		this._inject(Constants.InjectorKeys.SERVICE_GAMESYSTEMS, new gameSystemsService());
-		this._inject(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E, new gameSystemsPathfinder2eService());
-		this._inject(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E, new gameSystemsStarfinder1eService());
-		this._inject(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E, new gameSystemsRulesPathfinder2eService());
-		this._inject(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E, new gameSystemsRulesStarfinder1eService());
+		this._injectService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS, new gameSystemsService());
+		this._injectService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E, new gameSystemsPathfinder2eService());
+		this._injectService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E, new gameSystemsStarfinder1eService());
+		this._injectService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E, new gameSystemsRulesPathfinder2eService());
+		this._injectService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E, new gameSystemsRulesStarfinder1eService());
 	}
 
 	_initializeAuth() {

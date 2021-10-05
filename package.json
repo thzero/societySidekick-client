@@ -1,10 +1,10 @@
 {
   "name": "skick",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "version_major": 0,
   "version_minor": 15,
-  "version_patch": 2,
-  "version_date": "10/03/2021",
+  "version_patch": 3,
+  "version_date": "10/05/2021",
   "description": "A web application to manage society play characters.",
   "author": "thZero",
   "license": "MIT",
@@ -26,7 +26,7 @@
     "cli-update": ".\\node_modules\\.bin\\library-cli --updateversion --pi"
   },
   "dependencies": {
-    "@thzero/library_client": "^0.14.16",
+    "@thzero/library_client": "^0.14.18",
     "@thzero/library_client_firebase": "^0.14.14",
     "@thzero/library_client_service_rest_axios": "^0.14.8",
     "@thzero/library_client_vue": "^0.14.14",
