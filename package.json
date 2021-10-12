@@ -28,10 +28,10 @@
   "dependencies": {
     "@thzero/library_client": "^0.14.19",
     "@thzero/library_client_firebase": "^0.14.15",
-    "@thzero/library_client_service_rest_axios": "^0.14.9",
+    "@thzero/library_client_service_rest_axios": "^0.14.10",
     "@thzero/library_client_vue": "^0.14.16",
     "@thzero/library_common": "^0.14.3",
-    "core-js": "^3.18.2",
+    "core-js": "^3.18.3",
     "decimal.js-light": "^2.5.1",
     "firebase": "^9.1.2",
     "mitt": "^3.0.0",
