@@ -68,7 +68,7 @@
 							<VTextFieldWithValidation
 								ref="tagLine"
 								v-model="innerValue.tagLine"
-								rules="tagLine|min:3|max:30"
+								rules="min:3|max:30"
 								vid="tagLine"
 								:label="$t('forms.tagLine')"
 								:counter="30"
