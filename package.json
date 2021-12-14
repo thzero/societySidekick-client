@@ -23,7 +23,8 @@
     "gcloud-build": "cross-env gcloud builds submit --config ./cloudbuild.yaml ./ --substitutions=_CONFIG=\"${CONFIG}\",_FIREBASE_TOKEN=\"${FIREBASETOKEN}\"",
     "lint": "vue-cli-service lint",
     "cli-id": ".\\node_modules\\.bin\\library-cli --generate",
-    "cli-update": ".\\node_modules\\.bin\\library-cli --updateversion --pi"
+    "cli-update": "./node_modules/.bin/library-cli --updateversion --pi",
+    "cli-update-w": ".\\node_modules\\.bin\\library-cli --updateversion --pi"
   },
   "dependencies": {
     "@thzero/library_client": "^0.15.4",
