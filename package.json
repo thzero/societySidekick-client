@@ -1,9 +1,9 @@
 {
   "name": "skick",
-  "version": "0.15.13",
+  "version": "0.15.14",
   "version_major": 0,
   "version_minor": 15,
-  "version_patch": 13,
+  "version_patch": 14,
   "version_date": "02/05/2022",
   "description": "A web application to manage society play characters.",
   "author": "thZero",
