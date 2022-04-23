@@ -22,9 +22,8 @@
     "deploy": "firebase deploy",
     "gcloud-build": "cross-env gcloud builds submit --config ./cloudbuild.yaml ./ --substitutions=_CONFIG=\"${CONFIG}\",_FIREBASE_TOKEN=\"${FIREBASETOKEN}\"",
     "lint": "vue-cli-service lint",
-    "cli-id": ".\\node_modules\\.bin\\library-cli --generate",
-    "cli-update": "./node_modules/.bin/library-cli --updateversion --pi",
-    "cli-update-w": ".\\node_modules\\.bin\\library-cli --updateversion --pi"
+    "cli-id": "library-cli --generate",
+    "cli-update": "library-cli --updateversion --pi"
   },
   "dependencies": {
     "@thzero/library_client": "^0.15.12",
@@ -42,7 +41,6 @@
   "devDependencies": {
     "@alienfast/i18next-loader": "^1.1.4",
     "@mdi/font": "^6.6.96",
-    "@thzero/library_cli": "^0.15.8",
     "@vue/cli-plugin-babel": "~4.5.13",
     "@vue/cli-plugin-router": "~4.5.13",
     "@vue/cli-plugin-vuex": "~4.5.13",
