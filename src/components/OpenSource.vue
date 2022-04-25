@@ -212,28 +212,56 @@ export default {
 					name: 'joi',
 					url: 'https://github.com/sideway/joi',
 					licenseName: 'MIT',
-					licenseUrl: 'https://github.com/hapijs/joi/blob/master/LICENSE.md'
+					licenseUrl: 'https://github.com/sideway/joi/blob/master/LICENSE.md'
 				},
 				{
 					category: 'server',
 					name: '@joi/date',
 					url: 'https://github.com/sideway/joi-date',
 					licenseName: 'MIT',
-					licenseUrl: 'https://github.com/hapijs/joi-date/blob/master/LICENSE.md'
+					licenseUrl: 'https://github.com/sideway/joi-date/blob/master/LICENSE.md'
 				},
 				{
 					category: 'server',
-					name: '@koa/cors',
-					url: 'https://github.com/koajs/cors',
+					name: 'fastify',
+					url: 'https://github.com/fastify/fastify',
 					licenseName: 'MIT',
-					licenseUrl: 'https://github.com/koajs/cors/blob/master/LICENSE'
+					licenseUrl: 'https://github.com/fastify/fastify/blob/main/LICENSE'
 				},
 				{
 					category: 'server',
-					name: '@koa/router',
-					url: 'https://github.com/ZijianHe/koa-router',
+					name: 'fastify-auth',
+					url: 'https://github.com/fastify/fastify-auth',
 					licenseName: 'MIT',
-					licenseUrl: 'https://github.com/ZijianHe/koa-router/blob/master/LICENSE'
+					licenseUrl: 'https://github.com/fastify/fastify-auth/blob/master/LICENSE'
+				},
+				{
+					category: 'server',
+					name: 'fastify-cors',
+					url: 'https://github.com/fastify/fastify-cors',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/fastify/fastify-cors/blob/master/LICENSE'
+				},
+				{
+					category: 'server',
+					name: 'fastify-routes',
+					url: 'https://github.com/fastify/fastify-routes',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/fastify/fastify-routes/blob/master/LICENSE'
+				},
+				{
+					category: 'server',
+					name: 'fastify-static',
+					url: 'https://github.com/fastify/fastify-static',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/fastify/fastify-static/blob/master/LICENSE'
+				},
+				{
+					category: 'server',
+					name: 'fastify-helmet',
+					url: 'https://github.com/fastify/fastify-helmet',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/fastify/fastify-helmet/blob/master/LICENSE'
 				},
 				{
 					category: 'server',
@@ -248,6 +276,13 @@ export default {
 					url: 'https://github.com/thzero/library_server',
 					licenseName: 'MIT',
 					licenseUrl: 'https://github.com/thzero/library_server/blob/master/license.md'
+				},
+				{
+					category: 'server',
+					name: '@thzero/library_server_fastify',
+					url: 'https://github.com/thzero/library_server_fastify',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/thzero/library_server_fastify/blob/master/license.md'
 				},
 				{
 					category: 'server',
