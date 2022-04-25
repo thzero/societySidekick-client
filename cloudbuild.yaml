@@ -47,7 +47,7 @@ steps:
       echo "src/common..."
       ls -a ./src/common
   #- name: 'gcr.io/cloud-builders/npm:current'
-  - name: 'node:latest'
+  - name: 'node:lts'
     entrypoint: 'npm'
     args: ['install']
   # Test
