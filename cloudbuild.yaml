@@ -54,7 +54,7 @@ steps:
   #- name: 'gcr.io/cloud-builders/npm:current'
   - name: 'node:lts'
     entrypoint: 'node'
-    args: ['version']
+    args: ['--version']
   - name: 'node:lts'
     entrypoint: 'npm'
     args: ['install']
