@@ -32,7 +32,8 @@ steps:
       ls -a ./src/common
   # - name: 'docker:stable'
   #   args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase', '.' ]
-  - name: 'gcr.io/cloud-builders/docker'
+#   - name: 'gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/cloud-builders/npm:latest'
     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase:latest', '.' ]
 #   - name: 'node:lts'
 #     entrypoint: 'npm'
