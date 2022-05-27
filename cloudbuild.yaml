@@ -32,9 +32,11 @@ steps:
       ls -a ./src/common
   # - name: 'docker:stable'
   #   args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase', '.' ]
-  - name: 'node:lts'
-    entrypoint: 'npm'
-    args: ['install', '-g', 'firebase-tools']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase:latest', '.' ]
+#   - name: 'node:lts'
+#     entrypoint: 'npm'
+#     args: ['install', '-g', 'firebase-tools']
   # Install
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
@@ -50,6 +52,9 @@ steps:
       echo "src/common..."
       ls -a ./src/common
   #- name: 'gcr.io/cloud-builders/npm:current'
+  - name: 'node:lts'
+    entrypoint: 'node'
+    args: ['version']
   - name: 'node:lts'
     entrypoint: 'npm'
     args: ['install']
@@ -79,7 +84,5 @@ steps:
     env:
       - '_CONFIG=$_CONFIG'
   # Deploy
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase:latest', '.' ]
   - name: 'gcr.io/$PROJECT_ID/firebase'
     args: [ 'deploy', '--project', '$PROJECT_ID', '--token', '$_FIREBASE_TOKEN' ]
