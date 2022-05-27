@@ -1,5 +1,13 @@
 #https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-firebase
 steps:
+  - name: 'node:lts'
+    entrypoint: 'node'
+    args: ['--version']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase:latest', '.' ]
+  - name: 'node:lts'
+    entrypoint: 'node'
+    args: ['--version']
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
     args:
@@ -16,6 +24,9 @@ steps:
       ls -a ./src
       echo "src/common..."
       ls -a ./src/common
+  - name: 'node:lts'
+    entrypoint: 'node'
+    args: ['--version']
   # Firebase
 #   - name: 'gcr.io/cloud-builders/git'
 #     entrypoint: 'bash'
@@ -83,9 +94,6 @@ steps:
     args: ['run', 'build']
     env:
       - '_CONFIG=$_CONFIG'
-  - name: 'node:lts'
-    entrypoint: 'npm'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase:latest', '.' ]
   # Deploy
   - name: 'gcr.io/$PROJECT_ID/firebase'
     args: [ 'deploy', '--project', '$PROJECT_ID', '--token', '$_FIREBASE_TOKEN' ]
