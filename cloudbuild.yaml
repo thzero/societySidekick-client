@@ -1,8 +1,5 @@
 #https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-firebase
 steps:
-  - name: 'node:lts'
-    entrypoint: 'node'
-    args: ['--version']
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
     args:
@@ -20,41 +17,42 @@ steps:
       echo "src/common..."
       ls -a ./src/common
   # Firebase
-#   - name: 'gcr.io/cloud-builders/git'
-#     entrypoint: 'bash'
-#     args:
-#     - '-c'
-#     - |
-#       echo "one up..."
-#       ls -a ../
-#       echo "current..."
-#       ls -a
-#       echo "src..."
-#       ls -a ./src
-#       echo "src/common..."
-#       ls -a ./src/common
-  # - name: 'docker:stable'
-  #   args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase', '.' ]
-#   - name: 'gcr.io/cloud-builders/docker'
-#     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase:latest', '.' ]
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      echo "one up..."
+      ls -a ../
+      echo "current..."
+      ls -a
+      echo "src..."
+      ls -a ./src
+      echo "src/common..."
+      ls -a ./src/common
+  - name: 'docker:stable'
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase', '.' ]
 #   - name: 'node:lts'
 #     entrypoint: 'npm'
 #     args: ['install', '-g', 'firebase-tools']
   # Install
-#   - name: 'gcr.io/cloud-builders/git'
-#     entrypoint: 'bash'
-#     args:
-#     - '-c'
-#     - |
-#       echo "one up..."
-#       ls -a ../
-#       echo "current..."
-#       ls -a
-#       echo "src..."
-#       ls -a ./src
-#       echo "src/common..."
-#       ls -a ./src/common
+  - name: 'gcr.io/cloud-builders/git'
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      echo "one up..."
+      ls -a ../
+      echo "current..."
+      ls -a
+      echo "src..."
+      ls -a ./src
+      echo "src/common..."
+      ls -a ./src/common
   #- name: 'gcr.io/cloud-builders/npm:current'
+  - name: 'node:lts'
+    entrypoint: 'npm'
+    args: ['install']
   # Test
   #- name: 'gcr.io/cloud-builders/npm:current'
   #- name: 'node:lts'
@@ -80,8 +78,6 @@ steps:
     args: ['run', 'build']
     env:
       - '_CONFIG=$_CONFIG'
-  - name: 'gcr.io/cloud-builders/npm'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase:latest', '.' ]
   # Deploy
   - name: 'gcr.io/$PROJECT_ID/firebase'
     args: [ 'deploy', '--project', '$PROJECT_ID', '--token', '$_FIREBASE_TOKEN' ]
