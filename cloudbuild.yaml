@@ -78,7 +78,7 @@ steps:
     args: ['run', 'build']
     env:
       - '_CONFIG=$_CONFIG'
-  - name: 'docker:stable'
+  - name: 'docker:latest'
     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase', '.' ]
   # Deploy
   - name: 'gcr.io/$PROJECT_ID/firebase'
