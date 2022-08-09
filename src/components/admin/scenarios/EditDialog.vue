@@ -45,9 +45,9 @@
 								ref="name"
 								v-model="innerValue.name"
 								vid="name"
-								rules="required|min:3|max:50|"
+								rules="required|min:3|max:75|"
 								:label="$t('forms.name')"
-								:counter="50"
+								:counter="75"
 							/>
 
 							<table width="100%">
@@ -89,6 +89,7 @@
 										<VTextFieldWithValidation
 											ref="scenario"
 											v-model="innerValue.scenario"
+											rules="max:10|"
 											vid="scenario"
 											:label="$t('forms.scenarios.identifier')"
 										/>
