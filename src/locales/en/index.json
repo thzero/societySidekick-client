@@ -449,7 +449,7 @@
 	   "level": "Level",
 	   "link": "Link",
 	   "listing": "Listing",
-		"locations": {
+	   "locations": {
 			"name": "Location",
 			"namePlural": "Locations",
 			"online": "Online"
