@@ -61,7 +61,9 @@ export default {
 			return this.serviceGameSystem.factions(this.correlationId(), GlobalUtility.$store, true);
 		},
 		locations() {
-			return LibraryUtility.selectBlank(LibraryUtility.sortByName(AppUtility.settings().getSettingsUserLocations(this.correlationId(), GlobalUtility.$store.state.user.user), true));
+			const doh = AppUtility.settings().getSettingsUserLocations(this.correlationId(), GlobalUtility.$store.state.user.user);
+			const doh2 = doh.map(l => { return { id: l.id, name: l.name + (l.online ? ' (' + GlobalUtility.$trans.t('locations.online') + ')' : '')}; });
+			return LibraryUtility.selectBlank(LibraryUtility.sortByName(doh2, true));
 		},
 		outputType() {
 			return 'timestamp';

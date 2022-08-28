@@ -449,7 +449,12 @@
 	   "level": "Level",
 	   "link": "Link",
 	   "listing": "Listing",
-	   "minAbbr": "Min.",
+		"locations": {
+			"name": "Location",
+			"namePlural": "Locations",
+			"online": "Online"
+		},
+		"minAbbr": "Min.",
 	   "maxAbbr": "Max.",
 	   "name": "Name",
 	   "news": {
@@ -497,7 +502,8 @@
 	},
 	"locations": {
 	   "name": "Location",
-	   "namePlural": "Locations"
+	   "namePlural": "Locations",
+	   "online": "Online"
 	},
 	"messages": {
 	   "clickOrHover": {
