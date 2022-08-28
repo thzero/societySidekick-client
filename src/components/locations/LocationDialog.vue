@@ -16,18 +16,24 @@
 				<VTextFieldWithValidation
 					ref="name"
 					v-model="name"
-					rules="required|min:3|max:30|"
+					rules="required|min:3|max:50|"
 					vid="name"
 					:label="$t('forms.name')"
-					:counter="30"
+					:counter="50"
 				/>
 				<VTextFieldWithValidation
 					ref="location"
 					v-model="location"
-					rules="required|min:3|max:30|"
+					rules="required|min:3|max:50|"
 					vid="location"
-					:label="$t('locations.name')"
-					:counter="30"
+					:label="$t('forms.locations.name')"
+					:counter="50"
+				/>
+				<VCheckboxWithValidation
+					ref="online"
+					v-model="online"
+					vid="sticky"
+					:label="$t('forms.locations.online')"
 				/>
 			</v-card-text>
 		</v-card>
@@ -39,12 +45,14 @@ import AppUtility from '@/utility/app';
 import GlobalUtility from '@thzero/library_client/utility/global';
 import LibraryUtility from '@thzero/library_common/utility';
 
+import VCheckboxWithValidation from '@/library_vue_vuetify/components/form/VCheckboxWithValidation';
 import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
 import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
 
 export default {
 	name: 'LocationDialog',
 	components: {
+		VCheckboxWithValidation,
 		VFormDialog,
 		VTextFieldWithValidation
 	},
@@ -52,6 +60,7 @@ export default {
 	data: () => ({
 		id: null,
 		location: null,
+		online: false,
 		name: null
 	}),
 	methods: {
@@ -65,17 +74,20 @@ export default {
 			return true;
 		},
 		async preCompleteResponseOk(correlationId) {
-			const response = AppUtility.settings().updateSettingsUserLocation(correlationId, GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.id, { name: this.name, location: this.location }, (settings, newVal) => {
-				settings.name = newVal.name;
+			const location = { name: this.name, location: this.location, online: this.online };
+			const response = AppUtility.settings().updateSettingsUserLocation(correlationId, GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.id, location, (settings, newVal) => {
 				settings.location = newVal.location;
+				settings.name = newVal.name;
+				settings.online = newVal.online;
 			});
 			return response;
 		},
 		// eslint-disable-next-line
-		async resetDialog(value) {
+		async resetDialog(correlationId, value) {
 			this.id = value ? value.id : LibraryUtility.generateId();
 			this.location = value ? value.location : null;
 			this.name = value ? value.name : null;
+			this.online = value ? value.online : false;
 		}
 	}
 };

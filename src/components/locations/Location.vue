@@ -32,6 +32,18 @@
 						{{ value.location }}
 					</td>
 				</tr>
+				<tr>
+					<th
+						class="text-left subtitle-2 gameSystemHeaderSpacer"
+					>
+						{{ $t('locations.online' ) }}
+					</th>
+					<td
+						class="text-top body-2"
+					>
+						{{ value.online ? $t('strings.yes') : $t('strings.no') }}
+					</td>
+				</tr>
 			</table>
 		</v-card-text>
 		<v-card-actions>
