@@ -2,6 +2,6 @@
 # use latest Node LTS (Erbium)
 FROM node:latest
 # install Firebase CLI
-RUN npm install -g firebase-tools@10.9.2
+RUN npm install -g firebase-tools
 
 ENTRYPOINT ["/usr/local/bin/firebase"]
