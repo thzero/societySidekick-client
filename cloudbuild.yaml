@@ -78,8 +78,12 @@ steps:
     args: ['run', 'build']
     env:
       - '_CONFIG=$_CONFIG'
-  - name: 'docker:latest'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase', '.' ]
+#   - name: 'docker:latest'
+#     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase', '.' ]
+  - name: 'gcr.io/kaniko-project/executor:latest'
+    args:
+    - --destination=gcr.io/$PROJECT_ID/firebase
+    - --cache=true
   # Deploy
   - name: 'gcr.io/$PROJECT_ID/firebase'
     args: [ 'deploy', '--project', '$PROJECT_ID', '--token', '$_FIREBASE_TOKEN' ]
