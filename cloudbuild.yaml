@@ -82,4 +82,4 @@ steps:
     args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/firebase', '.' ]
   # Deploy
   - name: 'gcr.io/$PROJECT_ID/firebase'
-    args: [ 'deploy', '--project', '$PROJECT_ID', '--token', '$_FIREBASE_TOKEN', '--only=hosting' ]
+    args: [ 'deploy', '--project', '$PROJECT_ID', '--token', '$_FIREBASE_TOKEN' ]
