@@ -75,7 +75,7 @@ steps:
   #- name: 'gcr.io/cloud-builders/npm:current'
   - name: 'node:lts'
     entrypoint: 'npm'
-    args: ['run', 'build', 'NODE_OPTION=--openssl-legacy-provider']
+    args: ['run', 'build']
     env:
       - '_CONFIG=$_CONFIG'
 #   - name: 'docker:latest'
