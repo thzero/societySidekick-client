@@ -83,7 +83,7 @@ Install the submodule dependencies for the client.
 ```
 git submodule add https://github.com/thzero/societySidekick-common "src/common" 
 git submodule add https://github.com/thzero/library_client_vue "src/library_vue" 
-git submodule add https://github.com/thzero/library_client_vue_vuetify "src/library_vue_vuetify" 
+git submodule add https://github.com/thzero/library_client_vue_vuetify_components "src/library_vue_vuetify" 
 ```
 
 ### Compiles and hot-reloads for development
