@@ -3,7 +3,7 @@
 	url = https://github.com/thzero/societySidekick-common.git
 [submodule "src/library_vue_vuetify"]
 	path = src/library_vue_vuetify
-	url = https://github.com/thzero/library_client_vue_vuetify
+	url = https://github.com/thzero/library_client_vue_vuetify_components
 [submodule "src/library_vue"]
 	path = src/library_vue
 	url = https://github.com/thzero/library_client_vue_components.git
