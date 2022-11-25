@@ -83,7 +83,7 @@ Install the submodule dependencies for the client.
 ```
 git submodule add https://github.com/thzero/societySidekick-common "src/common" 
 git submodule add https://github.com/thzero/library_client_vue "src/library_vue" 
-git submodule add https://github.com/thzero/library_client_vue_vuetify "src/library_vue_vuetify" 
+git submodule add https://github.com/thzero/library_client_vue_vuetify_components "src/library_vue_vuetify" 
 ```
 
 ### Compiles and hot-reloads for development
@@ -101,6 +101,53 @@ Compiles the application for deployment to cloud provider.
 ```
 npm run build
 ```
+
+## Google Cloud Hosting
+
+Login to Google Cloud hosting, select the same account that was setup for Firebase.
+
+Enable the following APIs
+
+* Cloud Build API
+* Firebase Management API
+* Firebase Hosting API
+* Cloud Resource Manager API
+
+#### Cloud Build Trigger
+
+##### Event
+* Push to branch
+
+##### Source
+* Select the repository
+* Select "^master$" branch
+
+##### Configuration
+
+###### Type
+* Cloud Build configuration file (yaml or json)
+
+###### Location
+* Repository
+* Cloud Build configuration file location
+ * / cloudbuild.yaml
+
+##### Subsitution variables
+
+Add these variables:
+
+* _CONFIG - <application configuration JSON>
+
+##### Application Configuration
+
+Update the following from the above configuration JSON
+
+* apiKey - Set to same value from the server
+* baseUrl - Set the value to be the server api's Cloud Run URL.
+
+##### Deploy
+
+Run the trigger to kick of a deploy.
 
 ## Google Cloud Hosting
 
