@@ -349,6 +349,13 @@ export default {
 				},
 				{
 					category: 'server',
+					name: 'easy-rbac',
+					url: 'https://github.com/DeadAlready/easy-rbac',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/DeadAlready/easy-rbac/blob/master/LICENSE'
+				},
+				{
+					category: 'server',
 					name: 'esm',
 					url: 'https://github.com/standard-things/esm',
 					licenseName: 'MIT',
@@ -360,6 +367,13 @@ export default {
 					url: 'https://github.com/firebase/firebase-js-sdk',
 					licenseName: 'MIT',
 					licenseUrl: 'https://github.com/firebase/firebase-js-sdk/blob/master/LICENSE'
+				},
+				{
+					category: 'server',
+					name: 'ipaddr.js',
+					url: 'https://github.com/whitequark/ipaddr.js',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/whitequark/ipaddr.js/blob/master/LICENSE'
 				},
 				{
 					category: 'server',
@@ -409,6 +423,13 @@ export default {
 					url: 'https://github.com/pinojs/pino',
 					licenseName: 'MIT',
 					licenseUrl: 'https://github.com/pinojs/pino/blob/master/LICENSE'
+				},
+				{
+					category: 'server',
+					name: 'pino-pretty',
+					url: 'https://github.com/pinojs/pino-pretty',
+					licenseName: 'MIT',
+					licenseUrl: 'https://github.com/pinojs/pino-pretty/blob/master/LICENSE'
 				},
 				{
 					category: 'server',
