@@ -1,13 +1,13 @@
-#https://cloud.google.com/cloud-build/docs/deploying-builds/deploy-firebase
+#https://cloud.google.com/build/docs/deploying-builds/deploy-firebase
 steps:
   - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
     args:
     - '-c'
     - |
-      git config -f .gitmodules submodule."src/common".url https://source.developers.google.com/p/societysidekick/r/github_thzero_societysidekick-common
+      git config -f .gitmodules submodule."src/common".url https://source.developers.google.com/p/thzero-9570a/r/github_thzero_web-common
       git submodule init
-      git submodule update
+      git submodule update --remote
       echo "one up..."
       ls -a ../
       echo "current..."
@@ -16,6 +16,8 @@ steps:
       ls -a ./src
       echo "src/common..."
       ls -a ./src/common
+      echo "recursive"
+      ls -R
   # Firebase
 #   - name: 'gcr.io/cloud-builders/git'
 #     entrypoint: 'bash'
@@ -86,4 +88,5 @@ steps:
     - --cache=true
   # Deploy
   - name: 'gcr.io/$PROJECT_ID/firebase'
-    args: [ 'deploy', '--project', '$PROJECT_ID', '--token', '$_FIREBASE_TOKEN' ]
+    #args: [ 'deploy', '--project', '$PROJECT_ID', '--token', '$_FIREBASE_TOKEN' ]
+    args: [ 'deploy', '--project', '$PROJECT_ID' ]

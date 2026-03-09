@@ -1,0 +1,21 @@
+https://github.com/geckosio/snapshot-interpolation#readme
+
+https://www.blazemeter.com/blog/the-correct-way-to-import-lodash-libraries-a-benchmark/
+https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
+https://medium.com/js-dojo/how-to-reduce-your-vue-js-bundle-size-with-webpack-3145bf5019b7
+https://medium.com/wix-engineering/keep-your-bundle-size-under-control-with-import-cost-vscode-extension-5d476b3c5a76
+
+https://github.com/you-dont-need/You-Dont-Need-Momentjs
+
+https://cli.vuejs.org/guide/browser-compatibility.html#modern-mode
+
+https://www.watermark3d.com/
+
+
+QR Codes
+
+https://goqr.me/
+
+https://qr.io/dashboard/
+
+https://www.qrcode-monkey.com/#

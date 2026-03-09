@@ -1,0 +1,19 @@
+# General Privacy
+
+## Emails
+This site does not send emails.
+
+## Ads
+This site does not show ads.
+
+## Cookies
+Limited cookies for Google Analytics only.
+
+## Personal Information
+The site does not capture any personal information.
+
+## Authentication
+All authentication for the accounts will be through social providers; this site will keep and store no passwords.
+
+## Storage
+The thZero.com site does not store any information on backend servers.

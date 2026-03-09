@@ -1,30 +1,48 @@
 <template>
-	<v-layout
-		wrap
-	>
-		<v-flex
-			xs12
-			pb-2
-		>
+	<v-row>
+		<v-col cols="12">
 			<v-card>
+				<v-card-title>
+<p class="text-h6 text-center pb-4">{{ $t('titles.support') }}</p>
+				</v-card-title>
 				<v-card-text>
-					<div class="support">
-						<h1>Support</h1>
-						<br>
-						<h2>Lost? Need some help?</h2>
-					</div>
+Forthcoming
 				</v-card-text>
 			</v-card>
-		</v-flex>
-	</v-layout>
+		</v-col>
+	</v-row>
 </template>
 
 <script>
-import baseSupport from '@/library_vue/components/baseSupport';
+import { useBaseSupportComponent } from '@thzero/library_client_vue3/components/baseSupport';
 
 export default {
 	name: 'Support',
-	extends: baseSupport
+	setup(props, context) {
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success
+		} = useBaseSupportComponent(props, context);
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success
+		};
+	}
 };
 </script>
 

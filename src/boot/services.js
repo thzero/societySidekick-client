@@ -1,61 +1,24 @@
-import Constants from '@/constants';
-
-// Admin Update
-import adminBoonsService from '@/service/admin/boons';
-import adminClassesService from '@/service/admin/classes';
-import adminEquipmentService from '@/service/admin/equipment';
-import adminFactionsService from '@/service/admin/factions';
-import adminScenariosService from '@/service/admin/scenarios';
+import AppSharedConstants from '@/utility/constants';
 
 import apiService from '@/service/api';
 import authService from '@thzero/library_client_firebase/service';
-import boonsService from '@/service/boons';
-import classesService from '@/service/classes';
-import charactersService from '@/service/characters';
-import equipmentService from '@/service/equipment';
-import factionsService from '@/service/factions';
-import gameSystemsService from '@/service/gameSystems';
-import organizedPlayService from '@/service/organizedPlay';
-import restCommunicationService from '@thzero/library_client_service_rest_axios';
-import scenariosService from '@/service/scenarios';
+import featuresService from '@/service/features';
+import newsService from '@/service/news';
+import restCommunicationService from '@thzero/library_client_service_rest_fetch';
+import securityService from '@/service/security';
 import settingsService from '@/service/settings';
+import storeService from '@thzero/library_client_vue3_store_pinia/service/store/index';
 import userService from '@/service/user';
+import utilityService from '@/service/utility';
 import versionService from '@/service/version';
 
-// GameSystems Update
-import gameSystemsPathfinder2eService from '@/common/gameSystems/pathfinder2e/service/index';
-import gameSystemsStarfinder1eService from '@/common/gameSystems/starfinder1e/service/index';
-import gameSystemsRulesPathfinder2eService from '@/common/gameSystems/pathfinder2e/service/rules';
-import gameSystemsRulesStarfinder1eService from '@/common/gameSystems/starfinder1e/service/rules';
+import RootServicesBoot from '@thzero/library_client_vue3/boot/rootServices';
 
-import BaseServices from '@thzero/library_client_vue/boot/baseServices';
-
-class Services extends BaseServices {
+class ServiceBoot extends RootServicesBoot {
 	_initialize() {
 		super._initialize();
-		
-		// Admin Update
-		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS, new adminBoonsService());
-		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES, new adminClassesService());
-		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT, new adminEquipmentService());
-		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS, new adminFactionsService());
-		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS, new adminScenariosService());
 
-		this._injectService(Constants.InjectorKeys.SERVICE_API, new apiService());
-		this._injectService(Constants.InjectorKeys.SERVICE_BOONS, new boonsService());
-		this._injectService(Constants.InjectorKeys.SERVICE_CLASSES, new classesService());
-		this._injectService(Constants.InjectorKeys.SERVICE_CHARACTERS, new charactersService());
-		this._injectService(Constants.InjectorKeys.SERVICE_EQUIPMENT, new equipmentService());
-		this._injectService(Constants.InjectorKeys.SERVICE_FACTIONS, new factionsService());
-		this._injectService(Constants.InjectorKeys.SERVICE_ORGANIZEDPLAY, new organizedPlayService());
-		this._injectService(Constants.InjectorKeys.SERVICE_SCENARIOS, new scenariosService());
-
-		// GameSystems Update
-		this._injectService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS, new gameSystemsService());
-		this._injectService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E, new gameSystemsPathfinder2eService());
-		this._injectService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E, new gameSystemsStarfinder1eService());
-		this._injectService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E, new gameSystemsRulesPathfinder2eService());
-		this._injectService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E, new gameSystemsRulesStarfinder1eService());
+		this._injectService(AppSharedConstants.InjectorKeys.SERVICE_API, new apiService());
 	}
 
 	_initializeAuth() {
@@ -66,12 +29,32 @@ class Services extends BaseServices {
 		return new restCommunicationService();
 	}
 
+	_initializeFeatures() {
+		return new featuresService();
+	}
+
+	_initializeNews() {
+		return new newsService();
+	}
+
+	_initializeSecurity() {
+		return new securityService();
+	}
+
 	_initializeSettings() {
 		return new settingsService();
 	}
 
+	_initializeStore(injector) {
+		return new storeService(injector);
+	}
+
 	_initializeUser() {
 		return new userService();
+	}
+
+	_initializeUtility() {
+		return new utilityService();
 	}
 
 	_initializeVersion() {
@@ -79,4 +62,4 @@ class Services extends BaseServices {
 	}
 }
 
-export default Services;
+export default ServiceBoot;

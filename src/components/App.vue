@@ -1,24 +1,38 @@
 <template>
-	<div id="app">
-		<router-view />
-	</div>
+	<router-view />
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
-
-import baseApp from '@/library_vue/components/baseApp';
+import { useAppComponent } from '@/components/appBase';
 
 export default {
 	name: 'App',
-	extends: baseApp,
-	methods: {
-		initialize(correlationId) {
-			return [
-				GlobalUtility.$store.dispatcher.root.initialize(correlationId),
-				GlobalUtility.$store.dispatcher.characters.initializeCharacters(correlationId)
-			];
-		}
+	setup(props, context) {
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			serviceStore
+		} = useAppComponent();
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			serviceStore
+		};
 	}
 };
 </script>
@@ -38,112 +52,83 @@ export default {
 			background-attachment: fixed;
 	} */
 
+	.text-contrast {
+		color: rgb(var(--v-theme-contrast))
+	}
+
 	.displayLink {
 		cursor: pointer;
 		text-decoration: underline;
 	}
 
-	.gameSystemHeaderSpacer {
-		padding-right: 4px;
+	.measurementUnitExtraLong {
+		width: 140px;
+	}
+	.measurementUnitExtraExtraLong {
+		width: 160px;
+	}
+	.measurementUnitLong {
+		width: 125px;
+	}
+	.measurementUnitMedium {
+		width: 115px;
+	}
+	.measurementUnitsMedium {
+		width: 125px;
+	}
+	.v-expansion-panel-text__wrapper {
+		padding-bottom: 0px !important;
+		padding-left: 12px !important;
+		padding-right: 0px !important;
+	}
+	.v-expansion-panel--active > .v-expansion-panel-title {
+		min-height: 0px !important;
 	}
 
-	.pathfinder2eAchievementPoints {
-		background-color: #FABF8F;
+	.icons-grid-container { display: grid; }
+	#icons-grid-container-backdrop, #icons-grid-container-curtain { grid-area: 1/1; }
+	#icons-grid-container-curtain { z-index: 99 }
+	
+	.icons-attribution {
+		padding: 4px;
 	}
-	.pathfinder2eAchievementPoints2 {
-		background-color: rgba(250, 191, 143, 0.3);
-	}
-	.pathfinder2eBoons {
-		background-color: rgb(196, 215, 155);
-	}
-	.pathfinder2eBoons2 {
-		background-color: rgba(196, 215, 155, 0.6);
-	}
-	.pathfinder2eBoons3:nth-child(even) {
-		background-color: rgba(196, 215, 155, 0.6);
-	}
-	.pathfinder2eBoons3:nth-child(odd) {
-		background-color: rgba(196, 215, 155, 0.3);
-	}
-	.pathfinder2eCurrency {
-		background-color: rgba(196, 189, 151, 1.0)
-	}
-	.pathfinder2eCurrency2 {
-		background-color: rgba(196, 189, 151, 0.3)
-	}
-	.pathfinder2eDowntime {
-		background-color: #E26B0A;
-	}
-	.pathfinder2eDowntime2 {
-		background-color: rgba(226, 107, 10, 0.3);
-	}
-	.pathfinder2eExperiencePoints {
-		background-color: rgb(252, 213, 180);
-		padding-right: 4px;
-	}
-	.pathfinder2eExperiencePoints2 {
-		background-color: rgba(252, 213, 180, 0.3);
-	}
-	.pathfinder2eFame {
-		background-color: #B1A0C7;
-	}
-	.pathfinder2eFame2 {
-		background-color: rgba(177, 160, 199, 0.3);
-	}
-	.pathfinder2eReputation {
-		background-color: #CCC0DA;
-	}
-	.pathfinder2eReputation2 {
-		background-color: rgba(204, 192, 218, 0.3)
-	}
-	.pathfinder2eScenario {
-		background-color: #B7DEE8;
-	}
-	.pathfinder2eScenario2 {
-		background-color: rgba(183, 222, 232, 0.3);
+	.icons-gaming-download {
+		width: 75px;
+		height: 75px;
+		padding: 4px;
+		border-radius: 20%;
+		background-color: purple;
 	}
 
-	.starfinder1eBoons {
-		background-color: rgb(196, 215, 155);
+	.attribution-lower-end {
+		position: absolute; 
+		bottom: 25px; 
+		left: 0px; 
+		z-index: 500;
 	}
-	.starfinder1eBoons2 {
-		background-color: rgba(196, 215, 155, 0.6);
+
+	.button-buy-lower-end {
+		position: absolute; 
+		bottom: 25px; 
+		right: 25px; 
+		z-index: 500;
 	}
-	.starfinder1eBoons3:nth-child(even) {
-		background-color: rgba(196, 215, 155, 0.6);
+
+	.breadcrumb-title {
+		color: white;
 	}
-	.starfinder1eCurrency {
-		background-color: rgba(196, 189, 151, 1.0)
+
+	.router-link-title {
 	}
-	.starfinder1eCurrency2 {
-		background-color: rgba(196, 189, 151, 0.3)
+
+	.toolbar-button {
 	}
-	.starfinder1eBoons3:nth-child(odd) {
-		background-color: rgba(196, 215, 155, 0.3);
+
+	.toolbar-title {
+		text-decoration: none;
 	}
-	.starfinder1eExperiencePoints {
-		background-color: rgb(252, 213, 180);
-		padding-right: 4px;
-	}
-	.starfinder1eExperiencePoints2 {
-		background-color: rgba(252, 213, 180, 0.3);
-	}
-	.starfinder1eFame {
-		background-color: #B1A0C7;
-	}
-	.starfinder1eFame2 {
-		background-color: rgba(177, 160, 199, 0.3);
-	}
-	.starfinder1eReputation {
-		background-color: #CCC0DA;
-	}
-	.starfinder1eReputation2 {
-		background-color: rgba(204, 192, 218, 0.3)
-	}
-	.starfinder1eScenario {
-		background-color: #B7DEE8;
-	}
-	.starfinder1eScenario2 {
-		background-color: rgba(183, 222, 232, 0.3);
+
+	.v-breadcrumbs--density-compact {
+		margin: 0px
 	}
 </style>

@@ -1,147 +1,74 @@
 <template>
-	<v-container fluid>
-		<v-navigation-drawer
-			v-model="drawer"
-			absolute
-			temporary
-			style="z-index: 2"
-		>
-			<v-list
-				dense
-				class="pt-0"
+	<v-row dense>
+		<v-col cols="12">
+			<v-btn
+				v-if="canResetContent"
+				color="blue"
+				variant="flat"
+				@click="handleResetContent(item)"
+				class="mr-2"
 			>
-				<v-list-item @click="clickTab(0)">
-					<v-list-item-action>
-						<v-icon>new_releases</v-icon>
-					</v-list-item-action>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('admin.news') }}</v-list-item-title>
-					</v-list-item-content>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('admin.scenarios') }}</v-list-item-title>
-					</v-list-item-content>
-				</v-list-item>
-			</v-list>
-		</v-navigation-drawer>
-
-		<div class="flex-container">
-			<div
-				class="flex-item hidden-sm-and-down"
-				style="padding-top: 10px"
-			>
-				<v-tabs
-					v-model="tabSupport.currentTab"
-					vertical
-					@change="clickTab"
-				>
-					<v-tab
-						v-for="tab of tabSupport.tabs"
-						:key="tab.index"
-						style="justify-content: start; margin-left: 0px"
-						@click="clickTab(tab.index)"
-					>
-						<v-icon
-							v-if="tab.icon"
-							left
-						>
-							{{ tab.icon }}
-						</v-icon>
-						{{ tab.label }}
-					</v-tab>
-				</v-tabs>
-			</div>
-			<div class="flex-item2">
-				<!-- // Admin Update -->
-				<NewsListing v-if="tabSupport.currentTab === tabNews" />
-				<BoonsListing v-if="tabSupport.currentTab === tabBoons" />
-				<ClassesListing v-if="tabSupport.currentTab === tabClasses" />
-				<EquipmentListing v-if="tabSupport.currentTab === tabEquipment" />
-				<FactionsListing v-if="tabSupport.currentTab === tabFactions" />
-				<ScenariosListing v-if="tabSupport.currentTab === tabScenarios" />
-				<UsersListing v-if="tabSupport.currentTab === tabUsers" />
-			</div>
-		</div>
-	</v-container>
+				{{ $t('buttons.reset') }} {{ $t('titles.content.name') }}
+			</v-btn>
+		</v-col>
+	</v-row>
+	<v-snackbar
+		v-model="notifySignal"
+		:color="notifyColor"
+		:timeout="notifyTimeout"
+    >
+		{{ notifyMessage }}
+    </v-snackbar>
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
-
-import baseAdmin from '@/library_vue/components/baseAdmin';
-
-// Admin Update
-import BoonsListing from '@/components/admin/boons/Listing';
-import ClassesListing from '@/components/admin/classes/Listing';
-import EquipmentListing from '@/components/admin/equipment/Listing';
-import FactionsListing from '@/components/admin/factions/Listing';
-import NewsListing from '@/components/admin/news/Listing';
-import ScenariosListing from '@/components/admin/scenarios/Listing';
-import UsersListing from '@/components/admin/users/Listing';
+import { useAdminBaseComponent } from '@/components/admin/adminBase';
 
 export default {
 	name: 'Admin',
-	components: {
-		// Admin Update
-		BoonsListing,
-		ClassesListing,
-		EquipmentListing,
-		FactionsListing,
-		NewsListing,
-		ScenariosListing,
-		UsersListing
-	},
-	extends: baseAdmin,
-	data: () => ({
-		// Admin Update
-		tabNews: 0,
-		tabBoons: 1,
-		tabClasses: 2,
-		tabEquipment: 3,
-		tabFactions: 4,
-		tabScenarios: 5,
-		tabUsers: 6
-	}),
-	methods: {
-		initializeTabs() {
-			// TODO: Depending on security results, only some of these should be displayed...
-			// Admin Update
-			this.tabSupport.add(this.tabNews, 'new_releases', GlobalUtility.$trans.t('admin.news'));
-			this.tabSupport.add(this.tabBoons, 'new_releases', GlobalUtility.$trans.t('admin.boons'));
-			this.tabSupport.add(this.tabClasses, 'new_releases', GlobalUtility.$trans.t('admin.classes'));
-			this.tabSupport.add(this.tabEquipment, 'new_releases', GlobalUtility.$trans.t('admin.equipment'));
-			this.tabSupport.add(this.tabFactions, 'new_releases', GlobalUtility.$trans.t('admin.factions'));
-			this.tabSupport.add(this.tabScenarios, 'new_releases', GlobalUtility.$trans.t('admin.scenarios'));
-			this.tabSupport.add(this.tabUsers, 'new_releases', GlobalUtility.$trans.t('admin.users'));
-		}
+	setup (props, context) {
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			notifyColor,
+			notifyMessage,
+			notifySignal,
+			notifyTimeout,
+			setNotify,
+			canResetContent,
+			canResetParts,
+			handleResetContent
+		} = useAdminBaseComponent(props, context);
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			notifyColor,
+			notifyMessage,
+			notifySignal,
+			notifyTimeout,
+			setNotify,
+			canResetContent,
+			canResetParts,
+			handleResetContent
+		};
 	}
 };
 </script>
 
 <style scoped>
-.flex-container {
-	padding: 0;
-	margin: 0;
-	list-style: none;
-
-	display: -webkit-box;
-	display: -moz-box;
-	display: -ms-flexbox;
-	display: -webkit-flex;
-	display: flex;
-
-	height: 100%;
-}
-
-.flex-item {
-	flex-grow: 0;
-	margin-right: 10px;
-}
-
-.flex-item2 {
-	flex-grow: 1;
-}
-
-.v-navigation-drawer--temporary {
-	z-index: auto;
-}
 </style>

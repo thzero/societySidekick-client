@@ -1,61 +1,96 @@
 <template>
-	<v-container
-		grid-list-sm
-		pa-0
-	>
-		<v-layout
-			wrap
-		>
-			<v-flex
+	<v-container>
+		<v-row dense>
+			<v-col
 				v-for="item in news"
 				:key="item.id"
-				xs12
-				pl-1
-				pr-1
+				cols="12"
+				class="pl-1 pr-1"
 			>
 				<v-card
 					outlined
 				>
-					<v-card-title>
-						<span class="title text-capitalize">{{ item.title }}</span>
-						<v-row
-							align="center"
-							justify="end"
-							class="mr-1"
-						>
-							<span class="caption">{{ getDateHuman(item.timestamp) }}</span>
-						</v-row>
-					</v-card-title>
+					<v-card-item>
+						<v-card-title>
+							<span class="title text-capitalize">{{ item.title }}</span>
+						</v-card-title>
+						<v-card-subtitle>
+							<v-row
+								dense
+								align="center"
+								justify="end"
+								class="mr-1"
+							>
+								<span class="caption">{{ getDateTimeHuman(item.timestamp) }}</span>
+							</v-row>
+						</v-card-subtitle>
+					</v-card-item>
 					<v-card-text class="body-1">
-						<VMarkdown v-model="item.article" />
+						<VtMarkdown v-model="item.article" />
 					</v-card-text>
 				</v-card>
-			</v-flex>
-		</v-layout>
+			</v-col>
+		</v-row>
 	</v-container>
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import { computed } from 'vue';
 
-import base from '@/library_vue/components/base';
-import VMarkdown from '@/library_vue_vuetify/components/markup/VMarkdown';
+import LibraryClientConstants from '@thzero/library_client/constants';
+
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility/index';
+import LibraryMomentUtility from '@thzero/library_common/utility/moment';
+
+import { useBaseComponent } from '@thzero/library_client_vue3/components/base';
+
+import VtMarkdown from '@thzero/library_client_vue3_vuetify3/components/markup/VtMarkdown';
 
 export default {
-	name: 'News',
+	name: 'AppNews',
 	components: {
-		VMarkdown
+		VtMarkdown
 	},
-	extends: base,
-	computed: {
-		news() {
-			if (!GlobalUtility.$store.state.news.latest)
+	setup(props, context) {
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success
+		} = useBaseComponent(props, context);
+
+		const serviceStore = LibraryClientUtility.$injector.getService(LibraryClientConstants.InjectorKeys.SERVICE_STORE);
+
+		const getDateTimeHuman = computed(() => {
+			return LibraryMomentUtility.getDateTimeHuman(date);
+		});
+		const news = computed(() => {
+			if (!serviceStore.news.latest)
 				return [];
-			const newsS = LibraryUtility.sortByTimestamp(GlobalUtility.$store.state.news.latest.filter(l => l.sticky));
-			let news = LibraryUtility.sortByTimestamp(GlobalUtility.$store.state.news.latest.filter(l => !l.sticky));
+			const newsS = LibraryCommonUtility.sortByTimestamp(serviceStore.news.latest.filter(l => l.sticky));
+			const news = LibraryCommonUtility.sortByTimestamp(serviceStore.news.latest.filter(l => !l.sticky));
 			return newsS.concat(news);
-		}
+		});
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			getDateTimeHuman,
+			news
+		};
 	}
 };
 </script>
