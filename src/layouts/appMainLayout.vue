@@ -96,8 +96,6 @@ export function useAppMainLayout(props, context, options) {
 	});
 
 	onMounted(async () => {
-		await serviceStore.dispatcher.requestContent(correlationId());
-
 		await messageUrlPost();
 	});
 

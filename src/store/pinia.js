@@ -1,6 +1,7 @@
 import AppSharedConstants from '@/utility/constants';
 import LibraryClientConstants from '@thzero/library_client/constants.js';
 
+import AppUtility from '@/utility/app';
 import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryCommonUtility from '@thzero/library_common/utility/index';
 import LibraryMomentUtility from '@thzero/library_common/utility/moment';
@@ -56,11 +57,6 @@ class AppStore extends BaseStore {
 			async _initialize(correlationId, results) {
 				const serviceFeatures = LibraryClientUtility.$injector.getService(LibraryClientConstants.InjectorKeys.SERVICE_FEATURES);
 				this.mobileOnly = serviceFeatures.features().MobileOnly;
-
-				const service = LibraryClientUtility.$injector.getService(LibraryClientConstants.InjectorKeys.SERVICE_UTILITY);
-				const response = await service.content(correlationId);
-				if (Response.hasSucceeded(response))
-					await this.setContent(correlationId, response.results);
 			},
 			_checkTtl(array, delta, diff) {
 				// return (array && Array.isArray(array) && (array.length) > 0 && (delta <= diff));
@@ -111,6 +107,11 @@ class AppStore extends BaseStore {
 
 	_initStoreConfigStateBase() {
 		return {
+			checksumLastUpdate: [],
+			gameSystems: [],
+			organizedPlay: [],
+			plans: [],
+			settings: AppUtility.initializeSettingsUser(),
 			online: {}
 		};
 	}

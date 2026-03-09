@@ -100,11 +100,6 @@ export function useHomeBaseComponent(props, context, options) {
 				initializeCompleted.value = true;
 				clearTimeout(timeout);
 			}, AppSharedConstants.Overlay.Timeout);
-
-			await Promise.all([
-				LibraryClientUtility.$store.dispatcher.news.getLatest(correlationIdI),
-				serviceStore.dispatcher.requestContent(correlationIdI)
-			]);
 		}
 		finally {
 			initializeCompleted.value = true;

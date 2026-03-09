@@ -98,9 +98,6 @@ const Constants = {
 			contributing: "info@thzero.com",
 			inquiry: "info@thzero.com"
 		}
-	},
-	Stores: { // TODO: Config driven...
-		Gaming: 'gaming'
 	}
 };
 
