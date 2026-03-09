@@ -1,19 +1,28 @@
-import AppSharedConstants from '@/utility/constants';
 import LibraryClientConstants from '@thzero/library_client/constants.js';
 
 import AppUtility from '@/utility/app';
 import LibraryClientUtility from '@thzero/library_client/utility/index';
-import LibraryCommonUtility from '@thzero/library_common/utility/index';
-import LibraryMomentUtility from '@thzero/library_common/utility/moment';
-
-import Response from '@thzero/library_common/response';
 
 import BaseStore from '@thzero/library_client_vue3_store_pinia/store/index';
 
+import boons from './boons';
+import characters from './characters';
+import classes from './classes';
+import equipment from './equipment';
+import factions from './factions';
+import scenarios from './scenarios';
+
 class AppStore extends BaseStore {
-	// _initModules() {
-	// 	// Admin Update
-	// }
+	_initModules(options, storeConfigPersist, pluginPersistType) {
+		const storeFuncModules = [];
+		storeFuncModules.push(options.addModule('boons', boons, options.actionDispatcher, options.actionGetters, storeConfigPersist, pluginPersistType, options.pluginPersistSetup, options.pluginPersistSetupOverride, options.pinia));
+		storeFuncModules.push(options.addModule('characters', characters, options.actionDispatcher, options.actionGetters, storeConfigPersist, pluginPersistType, options.pluginPersistSetup, options.pluginPersistSetupOverride, options.pinia));
+		storeFuncModules.push(options.addModule('classes', classes, options.actionDispatcher, options.actionGetters, storeConfigPersist, pluginPersistType, options.pluginPersistSetup, options.pluginPersistSetupOverride, options.pinia));
+		storeFuncModules.push(options.addModule('equipment', equipment, options.actionDispatcher, options.actionGetters, storeConfigPersist, pluginPersistType, options.pluginPersistSetup, options.pluginPersistSetupOverride, options.pinia));
+		storeFuncModules.push(options.addModule('factions', factions, options.actionDispatcher, options.actionGetters, storeConfigPersist, pluginPersistType, options.pluginPersistSetup, options.pluginPersistSetupOverride, options.pinia));
+		storeFuncModules.push(options.addModule('scenarios', scenarios, options.actionDispatcher, options.actionGetters, storeConfigPersist, pluginPersistType, options.pluginPersistSetup, options.pluginPersistSetupOverride, options.pinia));
+		return storeFuncModules;
+	}
 
 	_initPluginPersistConfig() {
 		return {
@@ -88,9 +97,6 @@ class AppStore extends BaseStore {
 
 	_initStoreConfigGettersBase() {
 		return {
-			getContent() {
-				return LibraryClientUtility.$store.content;
-			},
 			getOnline() {
 				return LibraryClientUtility.$store.online;
 			}
@@ -109,10 +115,10 @@ class AppStore extends BaseStore {
 		return {
 			checksumLastUpdate: [],
 			gameSystems: [],
+			online: {},
 			organizedPlay: [],
 			plans: [],
-			settings: AppUtility.initializeSettingsUser(),
-			online: {}
+			settings: AppUtility.initializeSettingsUser()
 		};
 	}
 
