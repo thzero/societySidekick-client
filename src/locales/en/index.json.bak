@@ -364,7 +364,7 @@
 		  "renameInvalid": "Requires both a selected gear set and name, try again.",
 		  "renameInvalidGearSet": "Unable to find the gear set, try again."
 	   },
-	   "missingGamerTag": "You must set a gamer tag, under settings, in order to use this feature.",
+	   "missingGamerTag": "You must set a gamerTag, under settings, in order to use this feature.",
 	   "notFound": "You have been led astray.",
 	   "objectChanged": "The \\'{objectType}\\' has changed, please refresh and try again.",
 	   "params": {
@@ -454,11 +454,10 @@
 			"namePlural": "Locations",
 			"online": "Online"
 		},
-		"message": "Message",
 		"minAbbr": "Min.",
-		"maxAbbr": "Max.",
-		"name": "Name",
-		"news": {
+	   "maxAbbr": "Max.",
+	   "name": "Name",
+	   "news": {
 		  "article": "Article",
 		  "gameSystem": "Game System",
 		  "publishDate": "Publish Date",
@@ -541,6 +540,18 @@
 	   "name": "Player",
 	   "namePlural": "Players"
 	},
+	"scenarios": {
+	   "actions": "Actions",
+	   "description": "Description",
+	   "gameSystem": "Game System",
+	   "identifier": "Identifier",
+	   "name": "Scenario",
+	   "namePlural": "Scenarios",
+	   "noData": "No scenarios available...",
+	   "repeatable": "Repeatable",
+	   "season": "Season",
+	   "type": "Type"
+	},
 	"openSource": {
 	   "client": "Client",
 	   "name": "Name",
@@ -553,18 +564,6 @@
 	   "areYouSureNonRecoverable": "This will permanently delete the item, are you sure?",
 	   "areYouSureNonRecoverableGearSetLoad": "This will overwrite the existing inventory for the character, are you sure?",
 	   "areYouSureNonRecoverableGearSetSave": "This will overwrite the existing inventory for the gear set, are you sure?"
-	},
-	"scenarios": {
-	   "actions": "Actions",
-	   "description": "Description",
-	   "gameSystem": "Game System",
-	   "identifier": "Identifier",
-	   "name": "Scenario",
-	   "namePlural": "Scenarios",
-	   "noData": "No scenarios available...",
-	   "repeatable": "Repeatable",
-	   "season": "Season",
-	   "type": "Type"
 	},
 	"strings": {
 	   "add": "Add",
@@ -585,8 +584,8 @@
 	},
 	"titles": {
 	   "about": "About",
-	   "application": "Society Sidekick",
 	   "boons": "Boons",
+	   "application": "Society Sidekick",
 	   "characters": "Characters",
 	   "edit": "Edit",
 	   "editType": "Edit {type}",
