@@ -16,4 +16,4 @@ The site does not capture any personal information.
 All authentication for the accounts will be through social providers; this site will keep and store no passwords.
 
 ## Storage
-The thZero.com site does not store any information on backend servers.
+The Society Sidekick site does not store any information on backend servers.
