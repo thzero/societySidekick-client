@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@thzero/library_client": "^0.16.10",
-    "@thzero/library_client_firebase": "^0.16.6",
+    "@thzero/library_client_firebase": "^0.18.30",
     "@thzero/library_client_service_rest_axios": "^0.16.6",
     "@thzero/library_client_vue": "^0.16.5",
     "@thzero/library_common": "^0.16.6",
