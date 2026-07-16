@@ -1,22 +1,179 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-// Phase 1: minimal router so the app boots under vue-router 4. Phase 2 rebuilds
-// the real routes (home, cards, favorites, characters, scenarios, character,
-// admin, openSource, settings, support, auth, notFound) against the new layouts.
-const Home = {
-	name: 'Phase1Home',
-	template: '<div style="padding:24px;color:#fff;font-family:sans-serif">' +
-		'<h2>Society Sidekick</h2>' +
-		'<p>Phase 1 boot OK &mdash; Vite + Vue 3 + Vuetify 3 are serving.</p>' +
-		'</div>'
-};
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 const routes = [
 	{
-		path: '/:pathMatch(.*)*',
-		name: 'default',
-		component: Home,
-		meta: { requiresAuth: false }
+		path: '/',
+		component: () => import('./layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				name: 'default',
+				component: () => import('./components/Home.vue'),
+				meta: { requiresAuth: false }
+			}
+		]
+	},
+	{
+		path: '/home',
+		component: () => import('./layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				component: () => import('./components/Home.vue'),
+				meta: { requiresAuth: false }
+			}
+		]
+	},
+	{
+		path: '/cards',
+		component: () => import('@thzero/library_client_vue3_vuetify3/layouts/BlankLayout.vue'),
+		children: [
+			{
+				path: '',
+				name: 'cards',
+				component: () => import('./components/Cards.vue'),
+				meta: { requiresAuth: true }
+			}
+		]
+	},
+	{
+		path: '/cards/:gamerTag/:key',
+		component: () => import('@thzero/library_client_vue3_vuetify3/layouts/BlankLayout.vue'),
+		children: [
+			{
+				path: '',
+				name: 'cardsGamerTagKey',
+				component: () => import('./components/Cards.vue'),
+				meta: { requiresAuth: false }
+			}
+		]
+	},
+	{
+		path: '/favorites',
+		component: () => import('./layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				component: () => import('./components/Favorites.vue'),
+				meta: { requiresAuth: false }
+			}
+		]
+	},
+	{
+		path: '/characters/:gamerTag/:key',
+		component: () => import('./layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				component: () => import('./components/Characters.vue'),
+				meta: { requiresAuth: false }
+			}
+		]
+	},
+	{
+		path: '/scenarios/:gamerTag/:key',
+		component: () => import('./layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				component: () => import('./components/Scenarios.vue'),
+				meta: { requiresAuth: false }
+			}
+		]
+	},
+	{
+		path: '/character/:id',
+		component: () => import('./layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				name: 'character',
+				component: () => import('./components/gameSystems/Character.vue'),
+				meta: { requiresAuth: true }
+			}
+		]
+	},
+	{
+		path: '/admin',
+		component: () => import('@thzero/library_client_vue3_vuetify3/layouts/AdminLayout.vue'),
+		children: [
+			{
+				path: '',
+				name: 'admin',
+				component: () => import('./components/admin/Admin.vue'),
+				meta: { requiresAuth: true }
+			}
+		]
+	},
+	{
+		path: '/openSource',
+		component: () => import('./layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				name: 'openSource',
+				component: () => import('./components/OpenSource.vue'),
+				meta: { requiresAuth: false }
+			}
+		]
+	},
+	{
+		path: '/settings',
+		component: () => import('./layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				name: 'settings',
+				component: () => import('./components/Settings.vue'),
+				meta: { requiresAuth: true }
+			}
+		]
+	},
+	{
+		path: '/support',
+		component: () => import('./layouts/MainLayout.vue'),
+		children: [
+			{
+				path: '',
+				name: 'support',
+				component: () => import('./components/Support.vue'),
+				meta: { requiresAuth: true }
+			}
+		]
+	},
+	{
+		path: '/auth',
+		component: () => import('@thzero/library_client_vue3_vuetify3/layouts/AuthLayout.vue'),
+		children: [
+			{
+				path: '',
+				name: 'auth',
+				component: () => import('./components/Auth.vue'),
+				meta: { requiresAuth: false }
+			}
+		]
+	},
+	{
+		path: '/notFound',
+		component: () => import('@thzero/library_client_vue3_vuetify3/layouts/BlankLayout.vue'),
+		children: [
+			{
+				path: '',
+				name: 'notFound',
+				component: () => import('./components/NotFound.vue'),
+				meta: { requiresAuth: false }
+			}
+		]
+	},
+	{
+		path: '/:catchAll(.*)*',
+		component: () => import('@thzero/library_client_vue3_vuetify3/layouts/BlankLayout.vue'),
+		meta: {
+			notFound: true,
+			requiresAuth: false
+		}
 	}
 ];
 
@@ -24,6 +181,16 @@ const router = createRouter({
 	history: createWebHistory(),
 	scrollBehavior: () => ({ left: 0, top: 0 }),
 	routes
+});
+
+// eslint-disable-next-line
+router.beforeResolve((to, from, next) => {
+	if (to.matched.some(record => record.meta.notFound)) {
+		LibraryClientUtility.$navRouter.push('/notFound');
+		return;
+	}
+
+	next();
 });
 
 export default router;

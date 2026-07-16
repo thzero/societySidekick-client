@@ -59,7 +59,11 @@ try {
 // https://vitejs.dev/config/
 export default defineConfig({
 	optimizeDeps: {
-		force: configEnv === 'development'
+		force: configEnv === 'development',
+		// Skip the eager dependency scan while the component layer is mid-migration
+		// (Phase 3). Un-migrated Vue2 components still import removed libraries, which
+		// makes the scan fail noisily; deps are optimized on-demand instead.
+		noDiscovery: true
 	},
 	plugins: [
 		vue(),

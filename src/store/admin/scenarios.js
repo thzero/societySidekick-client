@@ -1,84 +1,79 @@
 import Constants from '@/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import Response from '@thzero/library_common/response';
 
 const store = {
-	state: {
+	state: () => ({
 		scenarios: null
-	},
+	}),
 	actions: {
-		async createAdminScenario({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
-			const response = await service.create(params.correlationId, params.item);
-			this.$logger.debug('store.admin', 'createAdminScenario', 'response', response, params.correlationId);
+		async createAdminScenario(correlationId, item) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
+			const response = await service.create(correlationId, item);
+			this.$logger.debug('store.admin', 'createAdminScenario', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setAdminScenarios', { correlationId: params.correlationId, item: response.results ? response.results : null });
+				await this.setAdminScenarios(correlationId, response.results ? response.results : null);
 			return response;
 		},
-		async deleteAdminScenario({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
-			const response = await service.delete(params.correlationId, params.id);
-			this.$logger.debug('store.admin', 'deleteAdminScenario', 'response', response, params.correlationId);
+		async deleteAdminScenario(correlationId, id) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
+			const response = await service.delete(correlationId, id);
+			this.$logger.debug('store.admin', 'deleteAdminScenario', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('deleteAdminScenario', { correlationId: params.correlationId, id: params.id });
+				LibraryUtility.deleteArrayById(this.scenarios, id);
 			return response;
 		},
-		async searchAdminScenarios({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
-			const response = await service.search(params.correlationId, params.params);
-			this.$logger.debug('store.admin', 'searchAdminScenarios', 'response', response, params.correlationId);
+		async searchAdminScenarios(correlationId, params) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
+			const response = await service.search(correlationId, params);
+			this.$logger.debug('store.admin', 'searchAdminScenarios', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setAdminScenariosListing', { correlationId: params.correlationId, list: response.results ? response.results.data : null });
+				await this.setAdminScenariosListing(correlationId, response.results ? response.results.data : null);
 			return response;
 		},
-		async updateAdminScenario({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
-			const response = await service.update(params.correlationId, params.item);
-			this.$logger.debug('store.admin', 'updateAdminScenario', 'response', response, params.correlationId);
+		async updateAdminScenario(correlationId, item) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS);
+			const response = await service.update(correlationId, item);
+			this.$logger.debug('store.admin', 'updateAdminScenario', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setAdminScenarios', { correlationId: params.correlationId, item: response.results ? response.results : null });
+				await this.setAdminScenarios(correlationId, response.results ? response.results : null);
 			return response;
+		},
+		async setAdminScenarios(correlationId, item) {
+			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.a', item, correlationId);
+			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.b', this.scenarios, correlationId);
+			this.scenarios = LibraryUtility.updateArrayByObject(this.scenarios, item, true);
+			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.c', this.scenarios, correlationId);
+		},
+		async setAdminScenariosListing(correlationId, list) {
+			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.a', list, correlationId);
+			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.b', this.scenarios, correlationId);
+			this.scenarios = list;
+			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.c', this.scenarios, correlationId);
 		}
 	},
 	getters: {
-		getAdminScenario: (state) => (id) => {
-			if (state.scenarios == null)
+		getAdminScenario(correlationId, id) {
+			if (LibraryClientUtility.$store.adminScenarios.scenarios == null)
 				return null;
-			return state.scenarios.find(scenario => scenario.id === id);
-		}
-	},
-	mutations: {
-		deleteAdminScenario(state, params) {
-			return LibraryUtility.deleteArrayById(state.scenarios, params.id);
-		},
-		setAdminScenarios(state, params) {
-			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.a', params.item, params.correlationId);
-			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.b', state.scenarios, params.correlationId);
-			state.scenarios = LibraryUtility.updateArrayByObject(state.scenarios, params.item, true);
-			this.$logger.debug('store.admin', 'setAdminScenarios', 'item.c', state.scenarios, params.correlationId);
-		},
-		setAdminScenariosListing(state, params) {
-			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.a', params.list, params.correlationId);
-			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.b', state.scenarios, params.correlationId);
-			state.scenarios = params.list;
-			this.$logger.debug('store.admin', 'setAdminScenariosListing', 'list.c', state.scenarios, params.correlationId);
+			return LibraryClientUtility.$store.adminScenarios.scenarios.find(scenario => scenario.id === id);
 		}
 	},
 	dispatcher: {
 		async createAdminScenario(correlationId, item) {
-			return await GlobalUtility.$store.dispatch('createAdminScenario', { correlationId: correlationId, item: item });
+			return await LibraryClientUtility.$store.adminScenarios.createAdminScenario(correlationId, item);
 		},
 		async deleteAdminScenario(correlationId, id) {
-			return await GlobalUtility.$store.dispatch('deleteAdminScenario', { correlationId: correlationId, id: id });
+			return await LibraryClientUtility.$store.adminScenarios.deleteAdminScenario(correlationId, id);
 		},
 		async searchAdminScenarios(correlationId, params) {
-			await GlobalUtility.$store.dispatch('searchAdminScenarios', { correlationId: correlationId, params: params });
+			await LibraryClientUtility.$store.adminScenarios.searchAdminScenarios(correlationId, params);
 		},
 		async updateAdminScenario(correlationId, item) {
-			return await GlobalUtility.$store.dispatch('updateAdminScenario', { correlationId: correlationId, item: item });
+			return await LibraryClientUtility.$store.adminScenarios.updateAdminScenario(correlationId, item);
 		}
 	}
 };

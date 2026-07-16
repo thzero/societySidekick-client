@@ -1,6 +1,6 @@
 import LibraryConstants from '@thzero/library_client/constants';
 
-import VueBaseUserService from '@thzero/library_client_vue/service/baseUser';
+import VueBaseUserService from '@thzero/library_client_vue3/service/baseUser';
 
 class UserService extends VueBaseUserService {
 	constructor() {

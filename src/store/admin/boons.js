@@ -1,77 +1,72 @@
 import Constants from '@/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import Response from '@thzero/library_common/response';
 
 const store = {
-	state: {
+	state: () => ({
 		boons: null
-	},
+	}),
 	actions: {
-		async createAdminBoon({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
-			const response = await service.create(params.correlationId, params.item);
-			this.$logger.debug('store.admin.boons', 'createAdminBoon', 'response', response, params.correlationId);
+		async createAdminBoon(correlationId, item) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
+			const response = await service.create(correlationId, item);
+			this.$logger.debug('store.admin.boons', 'createAdminBoon', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setAdminBoons', { correlationId: params.correlationId, item: response.results ? response.results : null });
+				await this.setAdminBoons(correlationId, response.results ? response.results : null);
 			return response;
 		},
-		async deleteAdminBoon({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
-			const response = await service.delete(params.correlationId, params.id);
-			this.$logger.debug('store.admin.boons', 'deleteAdminBoon', 'response', response, params.correlationId);
+		async deleteAdminBoon(correlationId, id) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
+			const response = await service.delete(correlationId, id);
+			this.$logger.debug('store.admin.boons', 'deleteAdminBoon', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('deleteAdminBoon', { correlationId: params.correlationId, id: params.id });
+				LibraryUtility.deleteArrayById(this.boons, id);
 			return response;
 		},
-		async searchAdminBoons({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
-			const response = await service.search(params.correlationId, params.params);
-			this.$logger.debug('store.admin.boons', 'searchAdminBoons', 'response', response, params.correlationId);
+		async searchAdminBoons(correlationId, params) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
+			const response = await service.search(correlationId, params);
+			this.$logger.debug('store.admin.boons', 'searchAdminBoons', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setAdminBoonsListing', { correlationId: params.correlationId, list: response.results ? response.results.data : null });
+				await this.setAdminBoonsListing(correlationId, response.results ? response.results.data : null);
 			return response;
 		},
-		async updateAdminBoon({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
-			const response = await service.update(params.correlationId, params.item);
-			this.$logger.debug('store.admin.boons', 'updateAdminBoon', 'response', response, params.correlationId);
+		async updateAdminBoon(correlationId, item) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS);
+			const response = await service.update(correlationId, item);
+			this.$logger.debug('store.admin.boons', 'updateAdminBoon', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setAdminBoons', { correlationId: params.correlationId, item: response.results ? response.results : null });
+				await this.setAdminBoons(correlationId, response.results ? response.results : null);
 			return response;
-		}
-	},
-	mutations: {
-		deleteAdminBoon(state, params) {
-			return LibraryUtility.deleteArrayById(state.boons, params.id);
 		},
-		setAdminBoons(state, params) {
-			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.a', params.item, params.correlationId);
-			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.b', state.boons, params.correlationId);
-			state.boons = LibraryUtility.updateArrayByObject(state.boons, params.item, true);
-			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.c', state.boons, params.correlationId);
+		async setAdminBoons(correlationId, item) {
+			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.a', item, correlationId);
+			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.b', this.boons, correlationId);
+			this.boons = LibraryUtility.updateArrayByObject(this.boons, item, true);
+			this.$logger.debug('store.admin.boons', 'setAdminBoons', 'item.c', this.boons, correlationId);
 		},
-		setAdminBoonsListing(state, params) {
-			this.$logger.debug('store.admin.boons', 'setAdminBoonsListing', 'list.a', params.list, params.correlationId);
-			this.$logger.debug('store.admin.boons', 'setAdminBoonsListing', 'list.b', state.boons, params.correlationId);
-			state.boons = params.list;
-			this.$logger.debug('store.admin.boons', 'setAdminBoonsListing', 'list.c', state.boons, params.correlationId);
+		async setAdminBoonsListing(correlationId, list) {
+			this.$logger.debug('store.admin.boons', 'setAdminBoonsListing', 'list.a', list, correlationId);
+			this.$logger.debug('store.admin.boons', 'setAdminBoonsListing', 'list.b', this.boons, correlationId);
+			this.boons = list;
+			this.$logger.debug('store.admin.boons', 'setAdminBoonsListing', 'list.c', this.boons, correlationId);
 		}
 	},
 	dispatcher: {
 		async createAdminBoon(correlationId, item) {
-			return await GlobalUtility.$store.dispatch('createAdminBoon', { correlationId: correlationId, item: item });
+			return await LibraryClientUtility.$store.adminBoons.createAdminBoon(correlationId, item);
 		},
 		async deleteAdminBoon(correlationId, id) {
-			return await GlobalUtility.$store.dispatch('deleteAdminBoon', { correlationId: correlationId, id: id });
+			return await LibraryClientUtility.$store.adminBoons.deleteAdminBoon(correlationId, id);
 		},
 		async searchAdminBoons(correlationId, params) {
-			await GlobalUtility.$store.dispatch('searchAdminBoons', { correlationId: correlationId, params: params });
+			await LibraryClientUtility.$store.adminBoons.searchAdminBoons(correlationId, params);
 		},
 		async updateAdminBoon(correlationId, item) {
-			return await GlobalUtility.$store.dispatch('updateAdminBoon', { correlationId: correlationId, item: item });
+			return await LibraryClientUtility.$store.adminBoons.updateAdminBoon(correlationId, item);
 		}
 	}
 };

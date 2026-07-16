@@ -1,83 +1,77 @@
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import Response from '@thzero/library_common/response';
 
 const store = {
-	state: {
+	state: () => ({
 		listing: [],
 		played: []
-	},
+	}),
 	actions: {
-		async getScenarioListing({ commit }, params) {
-			const crypto = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
-			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'scenarios', params.gameSystemId))
-				return;
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
-			const response = await service.listing(params.correlationId, params.gameSystemId);
-			this.$logger.debug('store.scenarios', 'getScenarioListing', 'response', response, params.correlationId);
+		async getScenarioListing(correlationId, gameSystemId) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
+			const response = await service.listing(correlationId, gameSystemId);
+			this.$logger.debug('store.scenarios', 'getScenarioListing', 'response', response, correlationId);
 			if (Response.hasSucceeded(response)) {
 				const listing = response.results ? response.results.data : null;
-				commit('setScenarioListing', { correlationId: params.correlationId, listing: listing });
-				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'scenarios', params.gameSystemId);
+				await this.setScenarioListing(correlationId, listing);
 				return listing;
 			}
 			return [];
 		},
-		async getScenarioListingPlayed({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
-			const response = await service.played(params.correlationId, params.characterId);
-			this.$logger.debug('store.scenarios', 'getScenarioListingPlayed', 'response', response, params.correlationId);
+		async getScenarioListingPlayed(correlationId, characterId) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_SCENARIOS);
+			const response = await service.played(correlationId, characterId);
+			this.$logger.debug('store.scenarios', 'getScenarioListingPlayed', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setScenarioListingPlayed', { correlationId: params.correlationId, played: response.results ? response.results : null, characterId: params.characterId });
+				await this.setScenarioListingPlayed(correlationId, response.results ? response.results : null, characterId);
 			return response;
+		},
+		async setScenarioListing(correlationId, listing) {
+			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.a', listing, correlationId);
+			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.b', this.listing, correlationId);
+			if (!listing)
+				return;
+
+				listing.forEach((item) => {
+				this.listing = LibraryUtility.updateArrayByObject(this.listing, item, true);
+			});
+			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.c', this.listing, correlationId);
+		},
+		async setScenarioListingPlayed(correlationId, played, characterId) {
+			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.a', played, correlationId);
+			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.b', this.played, correlationId);
+			const results = this.played.find(played => played.id === characterId);
+			if (!results)
+				this.played.push({ id: characterId, played: played });
+			else
+				results.played = played;
+			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.c', this.played, correlationId);
 		}
 	},
 	getters: {
-		getScenario: (state) => (id) => {
-			if (state.listing == null)
+		getScenario(correlationId, id) {
+			if (LibraryClientUtility.$store.scenarios.listing == null)
 				return null;
-			return state.listing.find(scenario => scenario.id === id);
+			return LibraryClientUtility.$store.scenarios.listing.find(scenario => scenario.id === id);
 		},
-		getScenarioPlayed: (state) => (characterId) => {
-			if (state.played == null)
+		getScenarioPlayed(correlationId, characterId) {
+			if (LibraryClientUtility.$store.scenarios.played == null)
 				return null;
-			const results = state.played.find(played => played.id === characterId);
+			const results = LibraryClientUtility.$store.scenarios.played.find(played => played.id === characterId);
 			return results ? results.played : [];
-		}
-	},
-	mutations: {
-		setScenarioListing(state, params) {
-			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.a', params.listing, params.correlationId);
-			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.b', state.listing, params.correlationId);
-			if (!params.listing)
-				return;
-
-				params.listing.forEach((item) => {
-				state.listing = LibraryUtility.updateArrayByObject(state.listing, item, true);
-			});
-			this.$logger.debug('store.scenarios', 'setScenarioListing', 'list.c', state.listing, params.correlationId);
-		},
-		setScenarioListingPlayed(state, params) {
-			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.a', params, params.correlationId);
-			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.b', state.played, params.correlationId);
-			const results = state.played.find(played => played.id === params.characterId);
-			if (!results)
-				state.played.push({ id: params.characterId, played: params.played });
-			else
-				results.played = params.played;
-			this.$logger.debug('store.scenarios', 'setScenarioListingPlayed', 'item.c', state.played, params.correlationId);
 		}
 	},
 	dispatcher: {
 		async getScenarioListing(correlationId, gameSystemId) {
-			await GlobalUtility.$store.dispatch('getScenarioListing', { correlationId: correlationId, gameSystemId: gameSystemId });
+			await LibraryClientUtility.$store.scenarios.getScenarioListing(correlationId, gameSystemId);
 		},
 		async getScenarioListingPlayed(correlationId, characterId) {
-			return await GlobalUtility.$store.dispatch('getScenarioListingPlayed', { correlationId: correlationId, characterId: characterId });
+			return await LibraryClientUtility.$store.scenarios.getScenarioListingPlayed(correlationId, characterId);
 		}
 	}
 };

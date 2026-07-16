@@ -1,16 +1,39 @@
 <template>
-	<v-app>
-		<v-main>
-			<router-view />
-		</v-main>
-	</v-app>
+	<router-view />
 </template>
 
 <script>
-// Phase 1: minimal root shell. Phase 3 restores `extends baseApp`
-// (@thzero/library_client_vue3/components/baseApp) and the store initialize() dispatch.
+import { useAppComponent } from '@/components/appBase';
+
 export default {
-	name: 'App'
+	name: 'App',
+	setup(props, context) {
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			serviceStore
+		} = useAppComponent(props, context);
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			serviceStore
+		};
+	}
 };
 </script>
 

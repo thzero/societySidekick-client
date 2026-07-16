@@ -16,9 +16,11 @@ import equipmentService from '@/service/equipment';
 import factionsService from '@/service/factions';
 import gameSystemsService from '@/service/gameSystems';
 import organizedPlayService from '@/service/organizedPlay';
-import restCommunicationService from '@thzero/library_client_service_rest_axios';
+import restCommunicationService from '@thzero/library_client_service_rest_fetch';
 import scenariosService from '@/service/scenarios';
+import securityService from '@/service/security';
 import settingsService from '@/service/settings';
+import storeService from '@thzero/library_client_vue3_store_pinia/service/store/index';
 import userService from '@/service/user';
 import versionService from '@/service/version';
 
@@ -28,12 +30,12 @@ import gameSystemsStarfinder1eService from '@/common/gameSystems/starfinder1e/se
 import gameSystemsRulesPathfinder2eService from '@/common/gameSystems/pathfinder2e/service/rules';
 import gameSystemsRulesStarfinder1eService from '@/common/gameSystems/starfinder1e/service/rules';
 
-import BaseServices from '@thzero/library_client_vue/boot/baseServices';
+import RootServicesBoot from '@thzero/library_client_vue3/boot/rootServices';
 
-class Services extends BaseServices {
+class ServiceBoot extends RootServicesBoot {
 	_initialize() {
 		super._initialize();
-		
+
 		// Admin Update
 		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_BOONS, new adminBoonsService());
 		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES, new adminClassesService());
@@ -66,8 +68,16 @@ class Services extends BaseServices {
 		return new restCommunicationService();
 	}
 
+	_initializeSecurity() {
+		return new securityService();
+	}
+
 	_initializeSettings() {
 		return new settingsService();
+	}
+
+	_initializeStore(injector) {
+		return new storeService(injector);
 	}
 
 	_initializeUser() {
@@ -79,4 +89,4 @@ class Services extends BaseServices {
 	}
 }
 
-export default Services;
+export default ServiceBoot;

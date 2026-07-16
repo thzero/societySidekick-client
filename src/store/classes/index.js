@@ -1,54 +1,48 @@
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import Response from '@thzero/library_common/response';
 
 const store = {
-	state: {
+	state: () => ({
 		listing: []
-	},
+	}),
 	actions: {
-		async getClassListing({ commit }, params) {
-			const crypto = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
-			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'classes', params.gameSystemId))
-				return;
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CLASSES);
-			const response = await service.listing(params.correlationId, params.gameSystemId);
-			this.$logger.debug('store.classes', 'setClassListing', 'response', response, params.correlationId);
+		async getClassListing(correlationId, gameSystemId) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CLASSES);
+			const response = await service.listing(correlationId, gameSystemId);
+			this.$logger.debug('store.classes', 'setClassListing', 'response', response, correlationId);
 			if (Response.hasSucceeded(response)) {
 				const listing = response.results ? response.results.data : null;
-				commit('setClassListing', { correlationId: params.correlationId, listing: listing });
-				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'classes', params.gameSystemId);
+				await this.setClassListing(correlationId, listing);
 				return listing;
 			}
 			return [];
+		},
+		async setClassListing(correlationId, listing) {
+			this.$logger.debug('store.classes', 'setClassListing', 'list.a', listing, correlationId);
+			this.$logger.debug('store.classes', 'setClassListing', 'list.b', this.listing, correlationId);
+			if (!listing)
+				return;
+				listing.forEach((item) => {
+					this.listing = LibraryUtility.updateArrayByObject(this.listing, item, true);
+			});
+			this.$logger.debug('store.classes', 'setClassListing', 'list.c', this.listing, correlationId);
 		}
 	},
 	getters: {
-		getClass: (state) => (id) => {
-			if (state.listing == null)
+		getClass(correlationId, id) {
+			if (LibraryClientUtility.$store.classes.listing == null)
 				return null;
-			return state.listing.find(item => item.id === id);
-		}
-	},
-	mutations: {
-		setClassListing(state, params) {
-			this.$logger.debug('store.classes', 'setClassListing', 'list.a', params.listing, params.correlationId);
-			this.$logger.debug('store.classes', 'setClassListing', 'list.b', state.listing, params.correlationId);
-			if (!params.listing)
-				return;
-				params.listing.forEach((item) => {
-					state.listing = LibraryUtility.updateArrayByObject(state.listing, item, true);
-			});
-			this.$logger.debug('store.classes', 'setClassListing', 'list.c', state.listing, params.correlationId);
+			return LibraryClientUtility.$store.classes.listing.find(item => item.id === id);
 		}
 	},
 	dispatcher: {
 		async getClassListing(correlationId, gameSystemId) {
-			await GlobalUtility.$store.dispatch('getClassListing', { correlationId: correlationId, gameSystemId: gameSystemId });
+			await LibraryClientUtility.$store.classes.getClassListing(correlationId, gameSystemId);
 		}
 	}
 };

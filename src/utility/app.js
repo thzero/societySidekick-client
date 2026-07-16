@@ -1,7 +1,7 @@
 import LibraryConstants from '@thzero/library_client/constants';
 import SharedConstants from '@/common/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import SettingsUser from '@/common/data/settingsUser';
 
@@ -36,7 +36,7 @@ class AppUtility {
 	}
 
 	static settings() {
-		return GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_SETTINGS);
+		return LibraryClientUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_SETTINGS);
 	}
 
 	static validateSettingsUserGameSystems(settings) {

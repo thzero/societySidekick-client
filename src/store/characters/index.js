@@ -1,233 +1,228 @@
 import Constants from '@/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryUtility from '@thzero/library_common/utility';
-import VueUtility from '@thzero/library_client_vue/utility/index';
 
 import Response from '@thzero/library_common/response';
 
 const store = {
-	state: {
+	state: () => ({
 		characters: [],
 		status: []
-	},
+	}),
 	actions: {
-		async createCharacter({ commit }, params) {
-			if (!params.details)
-				return Response.error('store.characters', 'createCharacter', 'Invalid chraacter details.', null, null, null, params.correlationId);
+		async createCharacter(correlationId, details) {
+			if (!details)
+				return Response.error('store.characters', 'createCharacter', 'Invalid chraacter details.', null, null, null, correlationId);
 
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.create(params.correlationId, params.details);
-			this.$logger.debug('store.characters', 'createCharacter', 'response', response, params.correlationId);
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.create(correlationId, details);
+			this.$logger.debug('store.characters', 'createCharacter', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
+				await this.setCharacter(correlationId, response.results);
 			return response;
 		},
-		async deleteCharacter({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.delete(params.correlationId, params.characterId);
-			this.$logger.debug('store.characters', 'deleteCharacter', 'response', response, params.correlationId);
+		async deleteCharacter(correlationId, characterId) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.delete(correlationId, characterId);
+			this.$logger.debug('store.characters', 'deleteCharacter', 'response', response, correlationId);
+			if (Response.hasSucceeded(response)) {
+				this.$logger.debug('store.characters', 'deleteCharacter', 'item.a', characterId, correlationId);
+				this.$logger.debug('store.characters', 'deleteCharacter', 'item.b', this.characters, correlationId);
+				LibraryUtility.deleteArrayById(this.characters, characterId);
+				this.$logger.debug('store.characters', 'deleteCharacter', 'item.c', this.characters, correlationId);
+			}
+			return response;
+		},
+		async deleteCharacterBoon(correlationId, characterId, boonId) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.deleteBoon(correlationId, characterId, boonId);
+			this.$logger.debug('store.characters', 'deleteCharacterBoon', 'response', response, correlationId);
+			if (Response.hasSucceeded(response) && response.results)
+				await this.setCharacter(correlationId, response.results);
+			return response;
+		},
+		async deleteCharacterInventory(correlationId, characterId, inventoryId) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.deleteInventory(correlationId, characterId, inventoryId);
+			this.$logger.debug('store.characters', 'deleteCharacterInventory', 'response', response, correlationId);
+			if (Response.hasSucceeded(response) && response.results)
+				await this.setCharacter(correlationId, response.results);
+			return response;
+		},
+		async deleteCharacterScenario(correlationId, characterId, scenarioId) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.deleteScenario(correlationId, characterId, scenarioId);
+			this.$logger.debug('store.characters', 'deleteCharacterScenario', 'response', response, correlationId);
+			if (Response.hasSucceeded(response) && response.results)
+				await this.setCharacter(correlationId, response.results);
+			return response;
+		},
+		async getCharacter(correlationId, id) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.fetch(correlationId, id);
+			this.$logger.debug('store.characters', 'getCharacter', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('deleteCharacter', { correlationId: params.correlationId, characterId: params.characterId });
+				await this.setCharacter(correlationId, response.results ? response.results : null);
 			return response;
 		},
-		async deleteCharacterBoon({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.deleteBoon(params.correlationId, params.characterId, params.boonId);
-			this.$logger.debug('store.characters', 'deleteCharacterBoon', 'response', response, params.correlationId);
-			if (Response.hasSucceeded(response) && response.results)
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
-			return response;
-		},
-		async deleteCharacterInventory({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.deleteInventory(params.correlationId, params.characterId, params.inventoryId);
-			this.$logger.debug('store.characters', 'deleteCharacterInventory', 'response', response, params.correlationId);
-			if (Response.hasSucceeded(response) && response.results)
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
-			return response;
-		},
-		async deleteCharacterScenario({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.deleteScenario(params.correlationId, params.characterId, params.scenarioId);
-			this.$logger.debug('store.characters', 'deleteCharacterScenario', 'response', response, params.correlationId);
-			if (Response.hasSucceeded(response) && response.results)
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
-			return response;
-		},
-		async getCharacter({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.fetch(params.correlationId, params.id);
-			this.$logger.debug('store.characters', 'getCharacter', 'response', response, params.correlationId);
-			if (Response.hasSucceeded(response))
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results ? response.results : null });
-			return response;
-		},
-		async getCharacterListing({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			if (!this.state.user.user)
+		async getCharacterListing(correlationId, sections) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			if (!LibraryClientUtility.$store.user.user)
 				return;
-			const response = await service.listing(params.correlationId, params.sections);
-			this.$logger.debug('store.characters', 'getCharacterListing', 'response', response, params.correlationId);
+			const response = await service.listing(correlationId, sections);
+			this.$logger.debug('store.characters', 'getCharacterListing', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setCharacterListing', { correlationId: params.correlationId, results: response.results ? response.results.data : null, sections: params.sections });
+				await this.setCharacterListing(correlationId, response.results ? response.results.data : null, sections);
 			return response;
 		},
 		// eslint-disable-next-line
-		async initializeCharacters({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.initialize(params.correlationId);
-			this.$logger.debug('store.characters', 'initializeCharacters', 'response', response, params.correlationId);
+		async initializeCharacters(correlationId) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.initialize(correlationId);
+			this.$logger.debug('store.characters', 'initializeCharacters', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setCharacterLookups', { correlationId: params.correlationId, lookups: response.results ? response.results.lookups : null });
+				await this.setCharacterLookups(correlationId, response.results ? response.results.lookups : null);
 			return response;
 		},
-		async loadCharacterInventory({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.loadInventory(params.correlationId, params.characterId, params.gearSetId);
-			this.$logger.debug('store.characters', 'loadCharacterInventory', 'response', response, params.correlationId);
+		async loadCharacterInventory(correlationId, characterId, gearSetId) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.loadInventory(correlationId, characterId, gearSetId);
+			this.$logger.debug('store.characters', 'loadCharacterInventory', 'response', response, correlationId);
 			if (Response.hasSucceeded(response) && response.results)
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
+				await this.setCharacter(correlationId, response.results);
 			return response;
 		},
-		async setCharacter({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.create(params.correlationId, params.character);
-			this.$logger.debug('store.characters', 'setCharacter', 'response', response, params.correlationId);
+		async saveCharacter(correlationId, character) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.create(correlationId, character);
+			this.$logger.debug('store.characters', 'setCharacter', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results ? response.results : null });
+				await this.setCharacter(correlationId, response.results ? response.results : null);
 			return response;
 		},
-		async updateCharacterBoon({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.updateBoon(params.correlationId, params.characterId, params.boon);
-			this.$logger.debug('store.characters', 'updateCharacterBoon', 'response', response, params.correlationId);
+		async updateCharacterBoon(correlationId, characterId, boon) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.updateBoon(correlationId, characterId, boon);
+			this.$logger.debug('store.characters', 'updateCharacterBoon', 'response', response, correlationId);
 			if (Response.hasSucceeded(response) && response.results) {
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
-				this.dispatcher.user.refreshUserSettings(params.correlationId);
+				await this.setCharacter(correlationId, response.results);
+				LibraryClientUtility.$store.dispatcher.user.refreshUserSettings(correlationId);
 			}
 			return response;
 		},
-		async updateCharacterDetails({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.updateDetails(params.correlationId, params.details);
-			this.$logger.debug('store.characters', 'updateCharacterDetails', 'response', response, params.correlationId);
+		async updateCharacterDetails(correlationId, details) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.updateDetails(correlationId, details);
+			this.$logger.debug('store.characters', 'updateCharacterDetails', 'response', response, correlationId);
 			if (Response.hasSucceeded(response) && response.results) {
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
-				this.dispatcher.user.refreshUserSettings(params.correlationId);
+				await this.setCharacter(correlationId, response.results);
+				LibraryClientUtility.$store.dispatcher.user.refreshUserSettings(correlationId);
 			}
 			return response;
 		},
-		async updateCharacterInventory({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.updateInventory(params.correlationId, params.characterId, params.inventory);
-			this.$logger.debug('store.characters', 'updateCharacterInventory', 'response', response, params.correlationId);
+		async updateCharacterInventory(correlationId, characterId, inventory) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.updateInventory(correlationId, characterId, inventory);
+			this.$logger.debug('store.characters', 'updateCharacterInventory', 'response', response, correlationId);
 			if (Response.hasSucceeded(response) && response.results) {
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
-				this.dispatcher.user.refreshUserSettings(params.correlationId);
+				await this.setCharacter(correlationId, response.results);
+				LibraryClientUtility.$store.dispatcher.user.refreshUserSettings(correlationId);
 			}
 			return response;
 		},
-		async updateCharacterScenario({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-			const response = await service.updateScenario(params.correlationId, params.characterId, params.scenario);
-			this.$logger.debug('store.characters', 'updateCharacterScenario', 'response', response, params.correlationId);
+		async updateCharacterScenario(correlationId, characterId, scenario) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+			const response = await service.updateScenario(correlationId, characterId, scenario);
+			this.$logger.debug('store.characters', 'updateCharacterScenario', 'response', response, correlationId);
 			if (Response.hasSucceeded(response) && response.results) {
-				commit('setCharacter', { correlationId: params.correlationId, character: response.results });
-				this.dispatcher.user.refreshUserSettings(params.correlationId);
+				await this.setCharacter(correlationId, response.results);
+				LibraryClientUtility.$store.dispatcher.user.refreshUserSettings(correlationId);
 			}
 			return response;
-		}
-	},
-	getters: {
-		getCharacter: (state) => (id) => {
-			if (state.characters == null)
-				return null;
-			return state.characters.find(character => character.id === id);
-		}
-	},
-	mutations: {
-		deleteCharacter(state, params) {
-			this.$logger.debug('store.characters', 'deleteCharacter', 'item.a', params.characterId, params.correlationId);
-			this.$logger.debug('store.characters', 'deleteCharacter', 'item.b', state.characters, params.correlationId);
-			LibraryUtility.deleteArrayById(state.characters, params.characterId);
-			this.$logger.debug('store.characters', 'deleteCharacter', 'item.c', state.characters, params.correlationId);
 		},
-		setCharacter(state, params) {
-			this.$logger.debug('store.characters', 'setCharacter', 'item.a', params.character, params.correlationId);
-			this.$logger.debug('store.characters', 'setCharacter', 'item.b', state.characters, params.correlationId);
-			state.characters = LibraryUtility.updateArrayByObject(state.characters, params.character, params.correlationId, true);
-			this.$logger.debug('store.characters', 'setCharacter', 'item.c', state.characters, params.correlationId);
+		async setCharacter(correlationId, character) {
+			this.$logger.debug('store.characters', 'setCharacter', 'item.a', character, correlationId);
+			this.$logger.debug('store.characters', 'setCharacter', 'item.b', this.characters, correlationId);
+			this.characters = LibraryUtility.updateArrayByObject(this.characters, character, correlationId, true);
+			this.$logger.debug('store.characters', 'setCharacter', 'item.c', this.characters, correlationId);
 		},
-		setCharacterListing(state, params) {
-			this.$logger.debug('store.characters', 'setCharacterListing', 'params', params, params.correlationId);
-			this.$logger.debug('store.characters', 'setCharacterListing', 'params.results', params.results, params.correlationId);
-			this.$logger.debug('store.characters', 'setCharacterListing', 'params.sections', params.sections, params.correlationId);
-			this.$logger.debug('store.characters', 'setCharacterListing', 'state.characters', state.characters, params.correlationId);
-			if (params.sections) {
+		async setCharacterListing(correlationId, results, sections) {
+			this.$logger.debug('store.characters', 'setCharacterListing', 'params', { correlationId, results, sections }, correlationId);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'params.results', results, correlationId);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'params.sections', sections, correlationId);
+			this.$logger.debug('store.characters', 'setCharacterListing', 'state.characters', this.characters, correlationId);
+			if (sections) {
 				let character;
-				params.results.forEach((item) => {
-					character = state.characters.find(l => l.id === item.id);
+				results.forEach((item) => {
+					character = this.characters.find(l => l.id === item.id);
 					if (character)
 						character = LibraryUtility.merge2(character, item);
 					else
 						character = item;
-					state.characters = LibraryUtility.updateArrayByObject(state.characters, character, true);
+					this.characters = LibraryUtility.updateArrayByObject(this.characters, character, true);
 				});
 			}
 			else
-				state.characters = params.results ? params.results : [];
-			this.$logger.debug('store.characters', 'setCharacterListing', 'state.characters', state.characters, params.correlationId);
+				this.characters = results ? results : [];
+			this.$logger.debug('store.characters', 'setCharacterListing', 'state.characters', this.characters, correlationId);
 		},
-		setCharacterLookups(state, params) {
-			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.a', params.lookups, params.correlationId);
-			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.b', state.status, params.correlationId);
-			state.status = params.lookups ? params.lookups.status : [];
-			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.c', state.status, params.correlationId);
+		async setCharacterLookups(correlationId, lookups) {
+			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.a', lookups, correlationId);
+			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.b', this.status, correlationId);
+			this.status = lookups ? lookups.status : [];
+			this.$logger.debug('store.characters', 'setCharacterLookups', 'list.c', this.status, correlationId);
+		}
+	},
+	getters: {
+		getCharacter(correlationId, id) {
+			if (LibraryClientUtility.$store.characters.characters == null)
+				return null;
+			return LibraryClientUtility.$store.characters.characters.find(character => character.id === id);
 		}
 	},
 	dispatcher: {
 		async createCharacter(correlationId, details) {
-			return await GlobalUtility.$store.dispatch('createCharacter', { correlationId: correlationId, details: details });
+			return await LibraryClientUtility.$store.characters.createCharacter(correlationId, details);
 		},
 		async deleteCharacter(correlationId, characterId) {
-			return await GlobalUtility.$store.dispatch('deleteCharacter', { correlationId: correlationId, characterId: characterId });
+			return await LibraryClientUtility.$store.characters.deleteCharacter(correlationId, characterId);
 		},
 		async deleteCharacterBoon(correlationId, characterId, boonId) {
-			return await GlobalUtility.$store.dispatch('deleteCharacterBoon', { correlationId: correlationId, characterId: characterId, boonId: boonId});
+			return await LibraryClientUtility.$store.characters.deleteCharacterBoon(correlationId, characterId, boonId);
 		},
 		async deleteCharacterInventory(correlationId, characterId, inventoryId) {
-			return await GlobalUtility.$store.dispatch('deleteCharacterInventory', { correlationId: correlationId, characterId: characterId, inventoryId: inventoryId});
+			return await LibraryClientUtility.$store.characters.deleteCharacterInventory(correlationId, characterId, inventoryId);
 		},
 		async deleteCharacterScenario(correlationId, characterId, scenarioId) {
-			return await GlobalUtility.$store.dispatch('deleteCharacterScenario', { correlationId: correlationId, characterId: characterId, scenarioId: scenarioId});
+			return await LibraryClientUtility.$store.characters.deleteCharacterScenario(correlationId, characterId, scenarioId);
 		},
 		async getCharacter(correlationId, id) {
-			return await GlobalUtility.$store.dispatch('getCharacter', { correlationId: correlationId, id: id });
+			return await LibraryClientUtility.$store.characters.getCharacter(correlationId, id);
 		},
 		async getCharacterListing(correlationId, sections) {
-			await GlobalUtility.$store.dispatch('getCharacterListing', { correlationId: correlationId, sections: sections });
+			await LibraryClientUtility.$store.characters.getCharacterListing(correlationId, sections);
 		},
 		async initializeCharacters(correlationId) {
-			await GlobalUtility.$store.dispatch('initializeCharacters', { correlationId: correlationId });
+			await LibraryClientUtility.$store.characters.initializeCharacters(correlationId);
 		},
 		async setCharacter(correlationId, character) {
-			await GlobalUtility.$store.dispatch('setCharacter', { correlationId: correlationId, character: character });
+			await LibraryClientUtility.$store.characters.saveCharacter(correlationId, character);
 		},
 		async loadCharacterInventory(correlationId, characterId, gearSetId) {
-			return await GlobalUtility.$store.dispatch('loadCharacterInventory', { correlationId: correlationId, characterId: characterId, gearSetId: gearSetId});
+			return await LibraryClientUtility.$store.characters.loadCharacterInventory(correlationId, characterId, gearSetId);
 		},
 		async updateCharacterBoon(correlationId, characterId, boon) {
-			return await GlobalUtility.$store.dispatch('updateCharacterBoon', { correlationId: correlationId, characterId: characterId, boon: boon});
+			return await LibraryClientUtility.$store.characters.updateCharacterBoon(correlationId, characterId, boon);
 		},
 		async updateCharacterDetails(correlationId, details) {
-			return await GlobalUtility.$store.dispatch('updateCharacterDetails', { correlationId: correlationId, details: details });
+			return await LibraryClientUtility.$store.characters.updateCharacterDetails(correlationId, details);
 		},
 		async updateCharacterInventory(correlationId, characterId, inventory) {
-			return await GlobalUtility.$store.dispatch('updateCharacterInventory', { correlationId: correlationId, characterId: characterId, inventory: inventory});
+			return await LibraryClientUtility.$store.characters.updateCharacterInventory(correlationId, characterId, inventory);
 		},
 		async updateCharacterScenario(correlationId, characterId, scenario) {
-			return await GlobalUtility.$store.dispatch('updateCharacterScenario', { correlationId: correlationId, characterId: characterId, scenario: scenario});
+			return await LibraryClientUtility.$store.characters.updateCharacterScenario(correlationId, characterId, scenario);
 		}
 	}
 };
