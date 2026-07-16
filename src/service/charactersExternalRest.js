@@ -1,5 +1,7 @@
 import RestExternalService from '@thzero/library_client/service/externalRest';
 
+import LibraryCommonUtility from '@thzero/library_common/utility';
+
 import security from '@/common/security/user';
 
 const KeyEnforcer = 'character';
@@ -14,7 +16,8 @@ class CharacterRestExternalService extends RestExternalService {
 	async init(injector) {
 		await super.init(injector);
 
-		this._enforcer = this._serviceSecurity.initSecurity(KeyEnforcer, security.options);
+		// 0.18 signature: initSecurity(correlationId, key, model, policies)
+		await this._serviceSecurity.initSecurity(LibraryCommonUtility.correlationId(), KeyEnforcer, security.options);
 	}
 
 	async validate(correlationId, sub, dom, obj, act) {

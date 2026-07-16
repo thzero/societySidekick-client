@@ -1,8 +1,14 @@
+<template>
+	<VtAuth />
+</template>
+
 <script>
-import baseAuth from '@/library_vue_vuetify/components/baseAuth';
+import VtAuth from '@thzero/library_client_vue3_vuetify3/components/VtAuth';
 
 export default {
 	name: 'Auth',
-	extends: baseAuth
+	components: {
+		VtAuth
+	}
 };
 </script>
