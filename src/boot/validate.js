@@ -1,6 +1,6 @@
-import BaseValidation from '@/library_vue_vuetify/boot/baseValidation';
+import BaseValidationBoot from '@thzero/library_client_vue3/boot/baseValidation';
 
-class Validation extends BaseValidation {
+class ValidationBoot extends BaseValidationBoot {
 	_initialize(extend) {
 		super._initialize(extend);
 
@@ -14,4 +14,4 @@ class Validation extends BaseValidation {
 	}
 }
 
-export default Validation;
+export default ValidationBoot;

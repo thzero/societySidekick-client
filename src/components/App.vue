@@ -1,25 +1,16 @@
 <template>
-	<div id="app">
-		<router-view />
-	</div>
+	<v-app>
+		<v-main>
+			<router-view />
+		</v-main>
+	</v-app>
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
-
-import baseApp from '@/library_vue/components/baseApp';
-
+// Phase 1: minimal root shell. Phase 3 restores `extends baseApp`
+// (@thzero/library_client_vue3/components/baseApp) and the store initialize() dispatch.
 export default {
-	name: 'App',
-	extends: baseApp,
-	methods: {
-		initialize(correlationId) {
-			return [
-				GlobalUtility.$store.dispatcher.root.initialize(correlationId),
-				GlobalUtility.$store.dispatcher.characters.initializeCharacters(correlationId)
-			];
-		}
-	}
+	name: 'App'
 };
 </script>
 
@@ -27,17 +18,6 @@ export default {
 </style>
 
 <style>
-	/* .bg {
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			top: 0;
-			left: 0;
-			background-color: black;
-			background: url( '/images/background.png') no-repeat center center;
-			background-attachment: fixed;
-	} */
-
 	.displayLink {
 		cursor: pointer;
 		text-decoration: underline;
