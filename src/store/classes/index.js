@@ -41,7 +41,7 @@ const store = {
 			if (!params.listing)
 				return;
 				params.listing.forEach((item) => {
-				state.listing = LibraryUtility.updateArrayByObject(state.listing, item, true);
+					state.listing = LibraryUtility.updateArrayByObject(state.listing, item, true);
 			});
 			this.$logger.debug('store.classes', 'setClassListing', 'list.c', state.listing, params.correlationId);
 		}
