@@ -8,42 +8,19 @@
 </template>
 
 <script>
+import { useColorizeValue } from '@/components/gameSystems/ColorizeValue';
+
+import colorizeValueProps from '@/components/gameSystems/colorizeValueProps';
+
 export default {
-	name: 'ColorizeValue',
+	name: 'ExperienceColorizeValue',
 	props: {
-		displayValue: {
-			type: [String],
-			default: null
-		},
-		value: {
-			type: [String, Number],
-			default: null
-		},
-		serviceGameSystem: {
-			type: Object,
-			default: null
-		}
+		...colorizeValueProps
 	},
-	computed: {
-		output() {
-			return this.displayValue ? this.displayValue : this.value;
-		}
-	},
-	methods: {
-		calculate(value) {
-			const level = this.calculateValue(value);
-			return this.calculateColors(level);
-		},
-		calculateColors(level) {
-			if (level == 1)
-				return 'green';
-			if (level == 2)
-				return 'orange';
-			return 'red';
-		},
-		calculateValue(value) {
-			return value;
-		}
+	setup(props, context) {
+		// Original used the default calculateValue (no serviceGameSystem-based override).
+		const { calculate, output } = useColorizeValue(props, context);
+		return { calculate, output };
 	}
 };
 </script>

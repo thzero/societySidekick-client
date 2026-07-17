@@ -1,19 +1,19 @@
 <template>
-	<vue-fragment>
-		<!-- // GameSystems Update -->
-		<ScenarioNameSnippetPathfinder2e
-			v-if="isGameSystemPathfinder2e"
-			:value="value"
-		/>
-		<ScenarioNameSnippetStarfinder1e
-			v-if="isGameSystemStarfinder1e"
-			:value="value"
-		/>
-	</vue-fragment>
+	<!-- GameSystems Update -->
+	<ScenarioNameSnippetPathfinder2e
+		v-if="isGameSystemPathfinder2e"
+		:value="value"
+	/>
+	<ScenarioNameSnippetStarfinder1e
+		v-if="isGameSystemStarfinder1e"
+		:value="value"
+	/>
 </template>
 
 <script>
-import baseSnippet from '@/components/gameSystems/baseSnippet';
+import { useGameSystemBaseSnippetComponent } from '@/components/gameSystems/baseSnippet';
+
+import gameSystemBaseSnippetProps from '@/components/gameSystems/gameSystemBaseSnippetProps';
 
 // GameSystems Update
 import ScenarioNameSnippetPathfinder2e from '@/components/gameSystems/pathfinder2e/ScenarioNameSnippet';
@@ -26,12 +26,19 @@ export default {
 		ScenarioNameSnippetPathfinder2e,
 		ScenarioNameSnippetStarfinder1e
 	},
-	extends: baseSnippet,
 	props: {
-		value: {
-			type: Object,
-			default: null
-		}
+		...gameSystemBaseSnippetProps
+	},
+	setup(props, context) {
+		const {
+			isGameSystemPathfinder2e,
+			isGameSystemStarfinder1e
+		} = useGameSystemBaseSnippetComponent(props, context);
+
+		return {
+			isGameSystemPathfinder2e,
+			isGameSystemStarfinder1e
+		};
 	}
 };
 </script>
