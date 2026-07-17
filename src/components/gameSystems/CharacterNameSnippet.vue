@@ -1,33 +1,33 @@
 <template>
-	<vue-fragment>
-		<!-- // GameSystems Update -->
-		<CharacterNameSnippetPathfinder2e
-			v-if="isGameSystemPathfinder2e"
-			:value="value"
-			:font-name="fontName"
-			:font-secondary="fontSecondary"
-			:has-name="hasName"
-			:has-secondary="hasSecondary"
-			:include-character-number="includeCharacterNumber"
-			:prefix="prefix"
-			:suffix="suffix"
-		/>
-		<CharacterNameSnippetStarfinder1e
-			v-if="isGameSystemStarfinder1e"
-			:value="value"
-			:font-name="fontName"
-			:font-secondary="fontSecondary"
-			:has-name="hasName"
-			:has-secondary="hasSecondary"
-			:include-character-number="includeCharacterNumber"
-			:prefix="prefix"
-			:suffix="suffix"
-		/>
-	</vue-fragment>
+	<!-- GameSystems Update -->
+	<CharacterNameSnippetPathfinder2e
+		v-if="isGameSystemPathfinder2e"
+		:value="value"
+		:font-name="fontName"
+		:font-secondary="fontSecondary"
+		:has-name="hasName"
+		:has-secondary="hasSecondary"
+		:include-character-number="includeCharacterNumber"
+		:prefix="prefix"
+		:suffix="suffix"
+	/>
+	<CharacterNameSnippetStarfinder1e
+		v-if="isGameSystemStarfinder1e"
+		:value="value"
+		:font-name="fontName"
+		:font-secondary="fontSecondary"
+		:has-name="hasName"
+		:has-secondary="hasSecondary"
+		:include-character-number="includeCharacterNumber"
+		:prefix="prefix"
+		:suffix="suffix"
+	/>
 </template>
 
 <script>
-import baseSnippet from '@/components/gameSystems/baseSnippet';
+import { useGameSystemBaseSnippetComponent } from '@/components/gameSystems/baseSnippet';
+
+import characterNameSnippetProps from '@/components/gameSystems/characterNameSnippetProps';
 
 // GameSystems Update
 import CharacterNameSnippetPathfinder2e from '@/components/gameSystems/pathfinder2e/CharacterNameSnippet';
@@ -40,36 +40,19 @@ export default {
 		CharacterNameSnippetPathfinder2e,
 		CharacterNameSnippetStarfinder1e
 	},
-	extends: baseSnippet,
 	props: {
-		fontName: {
-			type: String,
-			default: () => 'headline'
-		},
-		fontSecondary: {
-			type: String,
-			default: () => 'subtitle-1'
-		},
-		hasName: {
-			type: Boolean,
-			default: true
-		},
-		hasSecondary: {
-			type: Boolean,
-			default: true
-		},
-		includeCharacterNumber: {
-			type: Boolean,
-			default: true
-		},
-		prefix: {
-			type: String,
-			default: '('
-		},
-		suffix: {
-			type: String,
-			default: ')'
-		}
+		...characterNameSnippetProps
+	},
+	setup(props, context) {
+		const {
+			isGameSystemPathfinder2e,
+			isGameSystemStarfinder1e
+		} = useGameSystemBaseSnippetComponent(props, context);
+
+		return {
+			isGameSystemPathfinder2e,
+			isGameSystemStarfinder1e
+		};
 	}
 };
 </script>
