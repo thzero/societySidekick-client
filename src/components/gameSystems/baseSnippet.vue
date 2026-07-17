@@ -1,69 +1,97 @@
 <script>
+import { computed, ref } from 'vue';
+
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
-import base from '@/components/base';
+import { useBaseComponent } from '@/components/base';
 
-export default {
-	name: 'BaseSnippet',
-	extends: base,
-	props: {
-		externalListType: {
-			type: String,
-			default: null
-		},
-		user: {
-			type: Object,
-			default: null
-		},
-		value: {
-			type: [Object, String],
-			default: null
-		}
-	},
-	data: () => ({
-		lookups: {},
-		serviceGameSystem: null
-	}),
-	computed: {
-		isExternalList() {
-			return (this.externalListType === Constants.ExternalListTypes.Favorites || this.externalListType === Constants.ExternalListTypes.Scenarios);
-		},
-		isExternalListFavorites() {
-			return this.externalListType === Constants.ExternalListTypes.Favorites;
-		},
-		isExternalListScenarios() {
-			return this.externalListType === Constants.ExternalListTypes.Scenarios;
-		},
-		// GameSystems Update
-		isGameSystemDungeonsAndDragons5e() {
-			return this.value && this.value.gameSystemId == SharedConstants.GameSystems.DungeonsAndDragons5e.id;
-		},
-		isGameSystemPathfinder2e() {
-			return this.value && this.value.gameSystemId == SharedConstants.GameSystems.Pathfinder2e.id;
-		},
-		isGameSystemStarfinder1e() {
-			return this.value && this.value.gameSystemId == SharedConstants.GameSystems.Starfinder1e.id;
-		}
-	},
-	created() {
-		this.initializeServices();
-		this.lookups = this.initializeLookups(this.correlationId());
-	},
-	methods: {
-		getGameSystemName(id) {
-			const results = GlobalUtility.$store.getters.getGameSystem(id);
-			return results ? results.name : '';
-		},
-		initializeLookups(correlationId) {
-			if (!this.serviceGameSystem)
-				return [];
-			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
-		},
-		initializeServices() {
-		}
-	}
+// Base gameSystem snippet composable. The leaf component resolves its game-system service
+// and passes it in via options.serviceGameSystem (replacing the old abstract initializeServices()).
+export function useGameSystemBaseSnippetComponent(props, context, options) {
+	const {
+		correlationId,
+		error,
+		hasFailed,
+		hasSucceeded,
+		initialize,
+		logger,
+		noBreakingSpaces,
+		notImplementedError,
+		success,
+		successResponse,
+		hover,
+		formatCurrency,
+		formatNumber,
+		handleDisplay,
+		handleDisplayHover,
+		handleDisplayHoverClear
+	} = useBaseComponent(props, context, options);
+
+	const serviceGameSystem = (options && options.serviceGameSystem) ? options.serviceGameSystem : null;
+	const lookups = ref({});
+
+	const isExternalList = computed(() => {
+		return (props.externalListType === Constants.ExternalListTypes.Favorites || props.externalListType === Constants.ExternalListTypes.Scenarios);
+	});
+	const isExternalListFavorites = computed(() => {
+		return props.externalListType === Constants.ExternalListTypes.Favorites;
+	});
+	const isExternalListScenarios = computed(() => {
+		return props.externalListType === Constants.ExternalListTypes.Scenarios;
+	});
+	// GameSystems Update
+	const isGameSystemDungeonsAndDragons5e = computed(() => {
+		return props.value && props.value.gameSystemId == SharedConstants.GameSystems.DungeonsAndDragons5e.id;
+	});
+	const isGameSystemPathfinder2e = computed(() => {
+		return props.value && props.value.gameSystemId == SharedConstants.GameSystems.Pathfinder2e.id;
+	});
+	const isGameSystemStarfinder1e = computed(() => {
+		return props.value && props.value.gameSystemId == SharedConstants.GameSystems.Starfinder1e.id;
+	});
+
+	const getGameSystemName = (id) => {
+		const results = LibraryClientUtility.$store.getters.getGameSystem(correlationId(), id);
+		return results ? results.name : '';
+	};
+	const initializeLookups = (correlationIdI) => {
+		if (!serviceGameSystem)
+			return [];
+		return serviceGameSystem.initializeLookups(correlationIdI, LibraryClientUtility.$injector);
+	};
+
+	lookups.value = initializeLookups(correlationId());
+
+	return {
+		correlationId,
+		error,
+		hasFailed,
+		hasSucceeded,
+		initialize,
+		logger,
+		noBreakingSpaces,
+		notImplementedError,
+		success,
+		successResponse,
+		hover,
+		formatCurrency,
+		formatNumber,
+		handleDisplay,
+		handleDisplayHover,
+		handleDisplayHoverClear,
+		serviceGameSystem,
+		lookups,
+		isExternalList,
+		isExternalListFavorites,
+		isExternalListScenarios,
+		isGameSystemDungeonsAndDragons5e,
+		isGameSystemPathfinder2e,
+		isGameSystemStarfinder1e,
+		getGameSystemName,
+		initializeLookups
+	};
 };
 </script>
