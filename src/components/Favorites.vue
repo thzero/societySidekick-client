@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<v-layout>
-			<v-flex
-				xs12
+		<v-row>
+			<v-col
+				cols="12"
 			>
 				<ScenarioList
 					:value="characters"
@@ -10,116 +10,146 @@
 					:external-list-type="externalListType"
 					class="pt-4"
 				/>
-			</v-flex>
-		</v-layout>
-		<VLoadingOverlay
+			</v-col>
+		</v-row>
+		<VtLoadingOverlay
 			:signal="initializeCompleted"
 		/>
 	</div>
 </template>
 
 <script>
+import { computed, onMounted, ref } from 'vue';
+
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
-import base from '@/library_vue/components/base';
+import { useBaseComponent } from '@/components/base';
+
 import ScenarioList from '@/components/gameSystems/ScenarioList';
-import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
+import VtLoadingOverlay from '@thzero/library_client_vue3_vuetify3/components/VtLoadingOverlay';
 
 const DelayMs = 0; // 250
 
+// TODO(migration): human review:
+//  1. Child <ScenarioList> (@/components/gameSystems/ScenarioList) is NOT yet migrated to Vue3.
+//  2. `tab` computed uses AppUtility.settings().getSettingsUserTab/updateSettingsUserTab; those
+//     methods do not currently exist on src/service/settings.js. Name preserved - confirm/implement.
+//     (`tab` is not referenced in this template.)
+//  3. Route guards beforeRouteEnter/beforeRouteUpdate kept as component options.
 export default {
 	name: 'Favorites',
 	components: {
 		ScenarioList,
-		VLoadingOverlay
+		VtLoadingOverlay
 	},
-	extends: base,
-	data: () => ({
-		characters: [],
-		externalListType: Constants.ExternalListTypes.Favorites,
-		initializeCompleted: false,
-		service: null
-	}),
-	computed: {
-		isAuthUserUser() {
-			const authUserId = GlobalUtility.$store.state.user.user ? GlobalUtility.$store.state.user.user.id : null;
-			const userId = this.user ? this.user.id : null;
+	setup(props, context) {
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse
+		} = useBaseComponent(props, context);
+
+		const serviceCharacters = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+		const serviceUsers = LibraryClientUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
+
+		const characters = ref([]);
+		const externalListType = ref(Constants.ExternalListTypes.Favorites);
+		const initializeCompleted = ref(false);
+
+		const user = computed(() => {
+			return LibraryClientUtility.$store.user.user;
+		});
+		const isAuthUserUser = computed(() => {
+			const authUserId = LibraryClientUtility.$store.user.user ? LibraryClientUtility.$store.user.user.id : null;
+			const userId = user.value ? user.value.id : null;
 			return authUserId === userId;
-		},
-		tab: {
-			get: function () {
-				return this.getSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.tab);
+		});
+		const tab = computed({
+			get() {
+				// TODO(migration): getSettingsUserTab not present on settings service yet.
+				return AppUtility.settings().getSettingsUserTab(correlationId(), LibraryClientUtility.$store.user.user, (settings) => settings.tab);
 			},
-			set: function (newVal) {
-				this.updateSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
+			set(newVal) {
+				// TODO(migration): updateSettingsUserTab not present on settings service yet.
+				AppUtility.settings().updateSettingsUserTab(correlationId(), LibraryClientUtility.$store.user.user, newVal, (settings) => { return settings.tab = newVal; });
 			}
-		},
-		user() {
-			return GlobalUtility.$store.state.user.user;
-		},
-		userDisplayName() {
-			return AppUtility.userDisplayName(this.user);
-		}
-	},
-	created() {
-		this.serviceCharacters = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-		this.serviceUsers = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
-	},
-	async mounted() {
-		this.initializeCompleted = false;
+		});
+		const userDisplayName = computed(() => {
+			return AppUtility.userDisplayName(user.value);
+		});
 
-		await this.fetch(this.correlationId());
-	},
-	methods: {
-		async fetch(correlationId) {
-			const self = this;
-
+		const fetch = async (correlationIdI) => {
 			try {
-				if (!this.serviceCharacters || !this.serviceUsers)
+				if (!serviceCharacters || !serviceUsers)
 					return;
 
-				const responseFavorites = await this.serviceCharacters.listingByFavorites(correlationId);
-				this.logger.debug('Favorites', 'fetch', 'response', responseFavorites, correlationId);
-				if (this._hasFailed(responseFavorites))
+				const responseFavorites = await serviceCharacters.listingByFavorites(correlationIdI);
+				logger.debug('Favorites', 'fetch', 'response', responseFavorites, correlationIdI);
+				if (hasFailed(responseFavorites))
 					return;
 
-				const user = GlobalUtility.$store.state.user.user;
-				const characters = responseFavorites.results.data;
-				await GlobalUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true });
-				this.logger.debug('Favorites', 'fetch', 'characters', characters, correlationId);
-				for (const char of GlobalUtility.$store.state.characters.characters) {
-					char.user = user;
-					characters.push(char);
+				const userValue = LibraryClientUtility.$store.user.user;
+				const charactersValue = responseFavorites.results.data;
+				await LibraryClientUtility.$store.dispatcher.characters.getCharacterListing(correlationIdI, { listing: true });
+				logger.debug('Favorites', 'fetch', 'characters', charactersValue, correlationIdI);
+				for (const char of LibraryClientUtility.$store.characters.characters) {
+					char.user = userValue;
+					charactersValue.push(char);
 				}
-				this.characters = characters;
+				characters.value = charactersValue;
 			}
 			finally {
 				const timeout = setTimeout(function () {
-					self.initializeCompleted = true;
+					initializeCompleted.value = true;
 					clearTimeout(timeout);
 				}, DelayMs);
 			}
-		}
+		};
+
+		onMounted(async () => {
+			initializeCompleted.value = false;
+
+			await fetch(correlationId());
+		});
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse,
+			characters,
+			externalListType,
+			initializeCompleted,
+			user,
+			isAuthUserUser,
+			tab,
+			userDisplayName,
+			fetch
+		};
 	},
 	// eslint-disable-next-line
 	async beforeRouteEnter (to, from, next) {
-		// called before the route that renders this component is confirmed.
-		// does NOT have access to `this` component instance,
-		// because it has not been created yet when this guard is called!
 		next();
 	},
 	// eslint-disable-next-line
 	async beforeRouteUpdate (to, from, next) {
-		// called when the route that renders this component has changed,
-		// but this component is reused in the new route.
-		// For example, for a route with dynamic params `/foo/:id`, when we
-		// navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
-		// will be reused, and this hook will be called when that happens.
-		// has access to `this` component instance.
 		next();
 	}
 };

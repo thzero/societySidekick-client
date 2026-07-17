@@ -2,171 +2,114 @@
 	<div>
 		<v-card>
 			<v-card-text>
-				<v-layout
-					wrap
-					pt-2
-				>
-					<v-flex
-						v-if="$vuetify.breakpoint.smAndDown"
-						sm12
-						pl-2
-						pr-2
-						pb-4
+				<v-row class="pt-2">
+					<v-col
+						v-if="$vuetify.display.smAndDown"
+						cols="12"
+						class="pl-2 pr-2 pb-4"
 						style="text-align: center; margin-top: auto; margin-bottom: auto;"
 					>
 						<v-chip
 							color="success"
-							outlined
+							variant="outlined"
 							label
 						>
 							{{ gameSystemName }}
 						</v-chip>
-					</v-flex>
-					<v-flex
-						xs12
-						pl-2
-						pr-2
+					</v-col>
+					<v-col
+						cols="12"
+						class="pl-2 pr-2"
 					>
-						<v-layout>
-							<v-flex
-								xs6
-								md4
+						<v-row>
+							<v-col
+								cols="6"
+								md="4"
 							>
 								<v-chip
 									color="success"
-									outlined
+									variant="outlined"
 									label
 								>
 									{{ userDisplayName }}
 								</v-chip>
-							</v-flex>
-							<v-flex
-								v-if="$vuetify.breakpoint.mdAndUp"
-								md4
+							</v-col>
+							<v-col
+								v-if="$vuetify.display.mdAndUp"
+								cols="12"
+								md="4"
 								style="text-align: center"
 							>
 								<v-chip
 									color="success"
-									outlined
+									variant="outlined"
 									label
 								>
 									{{ gameSystemName }}
 								</v-chip>
-							</v-flex>
-							<v-flex
-								xs6
-								md4
+							</v-col>
+							<v-col
+								cols="6"
+								md="4"
 								style="text-align: right"
 							>
 								<v-chip
 									color="success"
-									outlined
+									variant="outlined"
 									label
 								>
 									#{{ gameSystemNumber }}
 								</v-chip>
-								<VFavoriteButton
+								<VtFavoriteButton
 									v-if="hasFavorite && isAuthUserUser"
 									v-model="isFavorite"
 									:disabled="!isAuthUserUser"
 									class="ml-2"
 									style="min-width: 0px"
 								/>
-								<!-- <v-btn
-									depressed
-									small
-									class="ml-2"
-									style="min-width: 0px"
-								>
-									<v-icon
-										color="blue"
-									>
-										mdi-star-three-points-outline
-									</v-icon>
-								</v-btn> -->
-							</v-flex>
-						</v-layout>
-						<!-- <v-layout>
-							<v-flex
-								xs12
-								mt-2
-								style="text-align: right"
-							>
-								<v-btn
-									depressed
-									small
-									class="ml-2"
-									style="min-width: 0px"
-								>
-									<v-icon
-										color="blue"
-									>
-										mdi-facebook
-									</v-icon>
-								</v-btn>
-								<v-btn
-									depressed
-									small
-									class="ml-2"
-									style="min-width: 0px"
-								>
-									<v-icon
-										color="blue"
-									>
-										mdi-twitter
-									</v-icon>
-								</v-btn>
-								<v-btn
-									depressed
-									small
-									class="ml-2"
-									style="min-width: 0px"
-								>
-									<v-icon
-										color="blue"
-									>
-										mdi-star-three-points-outline
-									</v-icon>
-								</v-btn>
-							</v-flex>
-						</v-layout> -->
-					</v-flex>
-				</v-layout>
+							</v-col>
+						</v-row>
+					</v-col>
+				</v-row>
 			</v-card-text>
 		</v-card>
-		<v-layout>
-			<v-flex
-				xs12
+		<v-row>
+			<v-col
+				cols="12"
 			>
 				<CharacterList
-					ref="characterList"
+					ref="characterListRef"
 					:value="characters"
 					:user="user"
 					:game-system-filter-override="gameSystemId"
 					:external-list-type="externalListType"
 					class="pt-4"
 				/>
-			</v-flex>
-		</v-layout>
-		<VLoadingOverlay
+			</v-col>
+		</v-row>
+		<VtLoadingOverlay
 			:signal="initializeCompleted"
 		/>
 	</div>
 </template>
 
 <script>
+import { computed, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
 import GameSystemsUtility from '@/utility/gameSystems';
-import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@thzero/library_client_vue/utility/index';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import VueUtility from '@thzero/library_client_vue3/utility/index';
 
-import base from '@/library_vue/components/base';
+import { useBaseComponent } from '@/components/base';
+
 import CharacterList from '@/components/gameSystems/CharacterList';
-import VFavoriteButton from '@/library_vue_vuetify/components/VFavoriteButton';
-import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
+import VtFavoriteButton from '@thzero/library_client_vue3_vuetify3/components/VtFavoriteButton';
+import VtLoadingOverlay from '@thzero/library_client_vue3_vuetify3/components/VtLoadingOverlay';
 
 const check = (to) => {
 	return VueUtility.checkHasParams(to, null, null, [ 'gamerTag', 'key' ]);
@@ -174,150 +117,188 @@ const check = (to) => {
 
 const DelayMs = 0; // 250
 
+// TODO(migration): human review:
+//  1. Child <CharacterList> (@/components/gameSystems/CharacterList) is NOT yet migrated to Vue3.
+//  2. `tab` computed uses AppUtility.settings().getSettingsUserTab/updateSettingsUserTab; those
+//     methods do not currently exist on src/service/settings.js. Name preserved - confirm/implement.
+//     (`tab` is not referenced in this template.)
+//  3. Route guards beforeRouteEnter/beforeRouteUpdate kept as component options; params via useRoute().
 export default {
 	name: 'Characters',
 	components: {
 		CharacterList,
-		VFavoriteButton,
-		VLoadingOverlay
+		VtFavoriteButton,
+		VtLoadingOverlay
 	},
-	extends: base,
-	data: () => ({
-		characters: [],
-		gameSystemId: null,
-		externalListType: Constants.ExternalListTypes.Characters,
-		initializeCompleted: false,
-		service: null,
-		user: null
-	}),
-	computed: {
-		gameSystemName() {
-			const results = GlobalUtility.$store.getters.getGameSystem(this.gameSystemId);
+	setup(props, context) {
+		const characterListRef = ref(null);
+
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse
+		} = useBaseComponent(props, context);
+
+		const route = useRoute();
+
+		const serviceCharacters = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+		const serviceUsers = LibraryClientUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
+
+		const characters = ref([]);
+		const gameSystemId = ref(null);
+		const externalListType = ref(Constants.ExternalListTypes.Characters);
+		const initializeCompleted = ref(false);
+		const user = ref(null);
+
+		const gameSystemName = computed(() => {
+			const results = LibraryClientUtility.$store.getters.getGameSystem(correlationId(), gameSystemId.value);
 			return results ? results.name : '';
-		},
-		gameSystemNumber() {
-			return GameSystemsUtility.gameSystemNumber(this.correlationId(), this.user, this.gameSystemId);
-		},
-		hasFavorite() {
-			return GlobalUtility.$store.state.user.user != null;
-		},
-		isFavorite: {
-			get: function () {
-				if (!this.hasFavorite)
+		});
+		const gameSystemNumber = computed(() => {
+			return GameSystemsUtility.gameSystemNumber(correlationId(), user.value, gameSystemId.value);
+		});
+		const hasFavorite = computed(() => {
+			return LibraryClientUtility.$store.user.user != null;
+		});
+		const isAuthUserUser = computed(() => {
+			const authUserId = LibraryClientUtility.$store.user.user ? LibraryClientUtility.$store.user.user.id : null;
+			const userId = user.value ? user.value.id : null;
+			return authUserId === userId;
+		});
+		const isFavorite = computed({
+			get() {
+				if (!hasFavorite.value)
 					return false;
 
-				if (this.isAuthUserUser)
+				if (isAuthUserUser.value)
 					return true;
 
-				return AppUtility.settings().getSettingsUserFavorite(this.correlationId(), GlobalUtility.$store.state.user.user, this.user ? this.user.id : null);
+				return AppUtility.settings().getSettingsUserFavorite(correlationId(), LibraryClientUtility.$store.user.user, user.value ? user.value.id : null);
 			},
-			set: function (newVal) {
-				if (!this.hasFavorite)
+			set(newVal) {
+				if (!hasFavorite.value)
 					return;
-				if (this.isAuthUserUser)
+				if (isAuthUserUser.value)
 					return;
 
-				AppUtility.settings().updateSettingsUserFavorite(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.user ? this.user.id : null, newVal);
+				AppUtility.settings().updateSettingsUserFavorite(correlationId(), LibraryClientUtility.$store, LibraryClientUtility.$store.user.user, user.value ? user.value.id : null, newVal);
 			}
-		},
-		isAuthUserUser() {
-			const authUserId = GlobalUtility.$store.state.user.user ? GlobalUtility.$store.state.user.user.id : null;
-			const userId = this.user ? this.user.id : null;
-			return authUserId === userId;
-		},
-		tab: {
-			get: function () {
-				return this.getSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.tab);
+		});
+		const tab = computed({
+			get() {
+				// TODO(migration): getSettingsUserTab not present on settings service yet.
+				return AppUtility.settings().getSettingsUserTab(correlationId(), LibraryClientUtility.$store.user.user, (settings) => settings.tab);
 			},
-			set: function (newVal) {
-				this.updateSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
+			set(newVal) {
+				// TODO(migration): updateSettingsUserTab not present on settings service yet.
+				AppUtility.settings().updateSettingsUserTab(correlationId(), LibraryClientUtility.$store.user.user, newVal, (settings) => { return settings.tab = newVal; });
 			}
-		},
-		userDisplayName() {
-			return AppUtility.userDisplayName(this.user);
-		}
-	},
-	created() {
-		this.serviceCharacters = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-		this.serviceUsers = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
-	},
-	async mounted() {
-		check(this.$route);
+		});
+		const userDisplayName = computed(() => {
+			return AppUtility.userDisplayName(user.value);
+		});
 
-		this.initializeCompleted = false;
-
-		await this.fetch(this.correlationId());
-	},
-	methods: {
-		async fetch(correlationId) {
-			if (!this.serviceCharacters || !this.serviceUsers)
+		const fetch = async (correlationIdI) => {
+			if (!serviceCharacters || !serviceUsers)
 				return;
-		
+
 			try {
-				const gamerTag = this.$route.params.gamerTag;
+				const gamerTag = route.params.gamerTag;
 				if (!gamerTag) {
 					VueUtility.invalid();
 					return;
 				}
 
-				const gameSystem = AppUtility.findSharedConstantsGameSystemByFriendlyId(this.$route.params.key);
+				const gameSystem = AppUtility.findSharedConstantsGameSystemByFriendlyId(route.params.key);
 				if (!gameSystem) {
 					VueUtility.invalid();
 					return;
 				}
-				this.gameSystemId = gameSystem.id;
+				gameSystemId.value = gameSystem.id;
 
-				const responseUser = await this.serviceUsers.fetchByGamerId(correlationId, gamerTag);
-				this.logger.debug('Characters', 'fetch', 'response', responseUser, correlationId);
-				if (this._hasFailed(responseUser)) {
+				const responseUser = await serviceUsers.fetchByGamerId(correlationIdI, gamerTag);
+				logger.debug('Characters', 'fetch', 'response', responseUser, correlationIdI);
+				if (hasFailed(responseUser)) {
 					VueUtility.invalid();
 					return;
 				}
 
-				this.user = responseUser.results;
-				this.logger.debug('Characters', 'fetch', 'user', this.user);
+				user.value = responseUser.results;
+				logger.debug('Characters', 'fetch', 'user', user.value);
 
-				const responseCharacter = await this.serviceCharacters.listingByShortId(correlationId, gamerTag, this.gameSystemId);
-				this.logger.debug('Characters', 'fetch', 'response', responseCharacter, correlationId);
-				if (this._hasFailed(responseCharacter)) {
+				const responseCharacter = await serviceCharacters.listingByShortId(correlationIdI, gamerTag, gameSystemId.value);
+				logger.debug('Characters', 'fetch', 'response', responseCharacter, correlationIdI);
+				if (hasFailed(responseCharacter)) {
 					//VueUtility.invalid()
 					return;
 				}
 
-				const characters = responseCharacter.results.data;
-				for (const character of characters)
-					character.user = this.user;
-				this.logger.debug('Characters', 'fetch', 'characters', characters, correlationId);
-				this.characters = characters;
+				const charactersValue = responseCharacter.results.data;
+				for (const character of charactersValue)
+					character.user = user.value;
+				logger.debug('Characters', 'fetch', 'characters', charactersValue, correlationIdI);
+				characters.value = charactersValue;
 
-				// this.$refs.CharacterList.execute()
+				// characterListRef.value.execute()
 			}
 			finally {
-				const self = this;
 				const timeout = setTimeout(function () {
-					self.initializeCompleted = true;
+					initializeCompleted.value = true;
 					clearTimeout(timeout);
 				}, DelayMs);
 			}
-		}
+		};
+
+		onMounted(async () => {
+			check(route);
+
+			initializeCompleted.value = false;
+
+			await fetch(correlationId());
+		});
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse,
+			characterListRef,
+			characters,
+			gameSystemId,
+			externalListType,
+			initializeCompleted,
+			user,
+			gameSystemName,
+			gameSystemNumber,
+			hasFavorite,
+			isAuthUserUser,
+			isFavorite,
+			tab,
+			userDisplayName,
+			fetch
+		};
 	},
 	// eslint-disable-next-line
 	async beforeRouteEnter (to, from, next) {
-		// called before the route that renders this component is confirmed.
-		// does NOT have access to `this` component instance,
-		// because it has not been created yet when this guard is called!
 		const results = check(to);
 		if (results)
 			next();
 	},
 	// eslint-disable-next-line
 	async beforeRouteUpdate (to, from, next) {
-		// called when the route that renders this component has changed,
-		// but this component is reused in the new route.
-		// For example, for a route with dynamic params `/foo/:id`, when we
-		// navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
-		// will be reused, and this hook will be called when that happens.
-		// has access to `this` component instance.
 		const results = check(to);
 		if (results)
 			next();
