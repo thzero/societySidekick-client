@@ -48,8 +48,12 @@ export function useAppMainLayout(props, context, options) {
 	const dialogDisplayMarkupSignal = ref(new DialogSupport());
 	const displayMarkupValue = ref(null);
 
+	const newCharacterDialogRef = ref(null);
+	const dialogNewCharacter = ref(new DialogSupport());
+
 	const displaySignIn = computed(() => {
-		return !isLoggedIn.value && serviceFeatures.features().Auth;
+		// skick original gates on just !isLoggedIn (no Auth-feature gate — the whole app is auth-based).
+		return !isLoggedIn.value;
 	});
 
 	const clickCards = () => {
@@ -66,6 +70,10 @@ export function useAppMainLayout(props, context, options) {
 	};
 	const markup = (correlationId, value) => {
 		displayMarkupValue.value = value ? serviceMarkup.trimResults(correlationId, serviceMarkup.render(correlationId, value)) : null;
+	};
+	const dialogNewCharacterOpen = async () => {
+		await newCharacterDialogRef.value.reset(correlationId(), {});
+		dialogNewCharacter.value.open();
 	};
 
 	LibraryClientUtility.$EventBus.on('display-markup', (value) => {
@@ -107,7 +115,10 @@ export function useAppMainLayout(props, context, options) {
 		dialogDisplayMarkupOk,
 		dialogDisplayMarkupSignal,
 		displayMarkupValue,
-		markup
+		markup,
+		newCharacterDialogRef,
+		dialogNewCharacter,
+		dialogNewCharacterOpen
 	};
 };
 </script>

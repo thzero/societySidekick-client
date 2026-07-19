@@ -1,6 +1,7 @@
 <template>
 	<v-card
 		variant="outlined"
+		style="background-color: rgb(var(--v-theme-surface));"
 		min-width="300px"
 		height="100%"
 	>
@@ -41,7 +42,7 @@
 				<v-divider
 					class="mt-2 mb-1"
 				/>
-				<table style="width: 100%;">
+				<table style="width: 100%;"><tbody>
 					<tr>
 						<td>
 							<div
@@ -79,7 +80,7 @@
 							</div>
 						</td>
 					</tr>
-				</table>
+				</tbody></table>
 				<div>
 					<span class="subtitle-2">{{ $t('characters.playedOn') }}</span>&nbsp;
 					<span class="body-2">{{ playedTimestamp(scenario) }}</span>

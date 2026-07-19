@@ -30,8 +30,16 @@ export function useBaseDashboardComponent(props, context, options) {
 		if (!value)
 			return;
 
-		// 0.18 signature: validateEdit(correlationId, character, user, act)
-		editable.value = await serviceCharacter.validateEdit(base.correlationId(), props.value, LibraryClientUtility.$store.user.user, 'edit');
+		// 0.18 signature: validateEdit(correlationId, character, user, act). This path isn't verified
+		// yet and can throw, which previously left editable=false and hid every edit control (the
+		// details speed-dial, the scenario/boon "+" FABs). Guard it so the forced value below always
+		// applies. TODO(migration): restore the real ownership check once validateEdit is confirmed.
+		try {
+			editable.value = await serviceCharacter.validateEdit(base.correlationId(), props.value, LibraryClientUtility.$store.user.user, 'edit');
+		}
+		catch {
+			// fall through to the forced value below
+		}
 		editable.value = true; // TODO(migration): original forced editable = true here.
 	};
 	const getGameSystemName = (id) => {

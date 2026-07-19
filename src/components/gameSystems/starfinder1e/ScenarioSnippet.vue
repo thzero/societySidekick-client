@@ -1,6 +1,7 @@
 <template>
 	<v-card
 		variant="outlined"
+		style="background-color: rgb(var(--v-theme-surface));"
 		min-width="300px"
 		height="100%"
 	>
@@ -10,7 +11,7 @@
 			</span>
 		</v-card-title>
 		<v-card-text class="body-1">
-			<table style="width: 100%;">
+			<table style="width: 100%;"><tbody>
 				<tr>
 					<th class="text-left subtitle-2 gameSystemHeaderSpacer">
 						{{ $t('characters.scenarios.season') }}
@@ -67,7 +68,7 @@
 						class="body-2"
 						colspan="2"
 					>
-						<table style="width: 100%;">
+						<table style="width: 100%;"><tbody>
 							<tr>
 								<td>
 									<div
@@ -134,7 +135,7 @@
 									</div>
 								</td>
 							</tr>
-						</table>
+						</tbody></table>
 					</td>
 				</tr>
 				<tr
@@ -161,7 +162,7 @@
 						{{ gamerTag }}
 					</td>
 				</tr>
-			</table>
+			</tbody></table>
 		</v-card-text>
 	</v-card>
 </template>

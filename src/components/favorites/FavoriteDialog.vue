@@ -4,8 +4,7 @@
 		:signal="signal"
 		:validation="validation"
 		:pre-complete-ok="preCompleteResponseOk"
-		@close="close"
-		@cancel="cancel"
+		@close="cancel"
 		@ok="ok"
 	>
 		<v-card

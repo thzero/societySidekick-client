@@ -1,138 +1,132 @@
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { computed, ref } from 'vue';
 
-import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
-import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-export default {
-	name: 'Pathfinder2eCharacterDetailsDialog',
-	components: {
-		VFormDialog,
-		VNumberFieldWithValidation,
-		VSelectWithValidation,
-		VTextFieldWithValidation
-	},
-	extends: VFormDialog,
-	props: {
-		label: {
-			type: String,
-			default: ''
+import { useBaseComponent } from '@/components/base';
+
+// Base character-details-dialog composable. Leaf owns the template (VtFormDialog stepper wrapper + fields)
+// and passes services/callbacks via options { serviceGameSystem, initResponseDetails?, resetDialogI? }.
+// Exposes reset(cid, value) for the parent CharacterDetails dialog ref.
+export function useBaseCharacterDetailsDialogComponent(props, context, options) {
+	const base = useBaseComponent(props, context, options);
+
+	const serviceGameSystem = options.serviceGameSystem;
+
+	const innerValue = ref({});
+	const lookups = ref([]);
+	const steps = ref(1);
+
+	const assignBoon = (correlationId, boonId, boons, output) => {
+		const boon = boons.find(l => l.id == boonId);
+		if (boon)
+			output.push(boon);
+	};
+	const fetchBoonsFromScenarios = (correlationId, boons, results, scenarios) => {
+		for (const item of (scenarios || [])) {
+			if (item.boon1Id)
+				assignBoon(correlationId, item.boon1Id, results, boons);
+			if (item.boon2Id)
+				assignBoon(correlationId, item.boon2Id, results, boons);
 		}
-	},
-	data: () => ({
-		innerValue: {},
-		lookups: [],
-		serviceGameSystem: null,
-		steps: 1,
-		watch: null
-	}),
-	computed: {
-		boons() {
-			const correlationId = this.correlationId();
-			const results = this.serviceGameSystem.boons(correlationId, GlobalUtility.$store, false);
+	};
 
-			const boons = [];
-			// for (const item of this.innerValue.scenarios) {
-			//	 if (item.boon1Id)
-			//		 this.assignBoon(item.boon1Id, results, boons)
-			//	 if (item.boon2Id)
-			//		 this.assignBoon(item.boon2Id, results, boons)
-			// }
-			this.fetchBoonsFromScenarios(correlationId, boons, results, this.innerValue.scenarios);
+	const boons = computed(() => {
+		const correlationId = base.correlationId();
+		const results = serviceGameSystem.boons(correlationId, LibraryClientUtility.$store, false);
 
-			if (this.initResponse && this.innerValue.boons) {
-				for (const item of this.innerValue.boons) {
-					if (item.boonId)
-						this.assignBoon(item.boonId, results, boons);
-				}
+		const boonsOut = [];
+		fetchBoonsFromScenarios(correlationId, boonsOut, results, innerValue.value.scenarios);
+
+		if (innerValue.value.boons) {
+			for (const item of innerValue.value.boons) {
+				if (item.boonId)
+					assignBoon(item.boonId, results, boonsOut);
 			}
+		}
 
-			return boons;
-		},
-		factions() {
-			return this.serviceGameSystem.factions(this.correlationId(), GlobalUtility.$store, true);
-		},
-		hasScenarios() {
-			return this.innerValue.scenarios ? true : false;
-		},
-		status() {
-			return this.lookups.characterStatus;
-		}
-	},
-	created() {
-		this.initializeServices();
-		this.lookups = this.initializeLookups(this.correlationId());
-	},
-	methods: {
-		assignBoon(correlationId, boonId, boons, output) {
-			const boon = boons.find(l => l.id == boonId);
-			if (boon)
-				output.push(boon);
-		},
-		// eslint-disable-next-line
-		async cancel() {
-			this.$emit('cancel');
-		},
-		// eslint-disable-next-line
-		async close() {
-		},
-		fetchBoonsFromScenarios(correlationId, boons, results, scenarios) {
-			for (const item of scenarios) {
-				if (item.boon1Id)
-					this.assignBoon(correlationId, item.boon1Id, results, boons);
-				if (item.boon2Id)
-					this.assignBoon(correlationId, item.boon2Id, results, boons);
-			}
-		},
-		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
-		},
-		initResponse() {
-			const details = {
-				factionId: this.innerValue.factionId,
-				status: this.innerValue.status
-			};
-			return this.initResponseDetails(this.correlationId(), details);
-		},
-		initResponseDetails(correlationId, details) {
-			return details;
-		},
-		initializeServices() {
-			this.notImplementedError();
-		},
-		// eslint-disable-next-line
-		async ok() {
-			this.$emit('ok');
-			return true;
-		},
-		async open() {
-		},
-		async preComplete(correlationId) {
-			const details = this.initResponse(correlationId);
-			details.id = this.innerValue.id;
-			details.gameSystemId = this.innerValue.gameSystemId;
-			details.name = String.trim(this.innerValue.name);
-			details.number = String.trim(this.innerValue.number);
-			details.tagLine = String.trim(this.innerValue.tagLine);
-			details.updatedTimestamp = this.innerValue.updatedTimestamp;
-			const response = await GlobalUtility.$store.dispatcher.characters.updateCharacterDetails(correlationId, details);
-			this.logger.debug('Pathfinder2eCharacterDetailsDialog', 'preComplete', 'response', response, correlationId);
-			return response;
-		},
-		// eslint-disable-next-line
-		async resetDialog(correlationId, value) {
-			this.steps = 1;
-			this.innerValue = value ? this.clone(value) : {};
-			this.resetDialogI(correlationId);
-		},
-		// eslint-disable-next-line
-		async resetDialogI(correlationId) {
-		}
-	}
+		return boonsOut;
+	});
+	const factions = computed(() => {
+		return serviceGameSystem.factions(base.correlationId(), LibraryClientUtility.$store, true);
+	});
+	const hasScenarios = computed(() => {
+		return innerValue.value.scenarios ? true : false;
+	});
+	const status = computed(() => {
+		return lookups.value.characterStatus;
+	});
+
+	const initializeLookups = (correlationId) => {
+		return serviceGameSystem.initializeLookups(correlationId, LibraryClientUtility.$injector);
+	};
+	const initResponseDetails = (correlationId, details) => {
+		return options.initResponseDetails ? options.initResponseDetails(correlationId, details) : details;
+	};
+	const initResponse = (correlationId) => {
+		const details = {
+			factionId: innerValue.value.factionId,
+			status: innerValue.value.status
+		};
+		return initResponseDetails(base.correlationId(), details);
+	};
+
+	const cancel = async () => {
+		context.emit('cancel');
+	};
+	const close = async () => {
+	};
+	const ok = async () => {
+		context.emit('ok');
+		return true;
+	};
+	const open = async () => {
+	};
+	const preComplete = async (correlationId) => {
+		const details = initResponse(correlationId);
+		details.id = innerValue.value.id;
+		details.gameSystemId = innerValue.value.gameSystemId;
+		details.name = String.trim(innerValue.value.name);
+		details.number = String.trim(innerValue.value.number);
+		details.tagLine = String.trim(innerValue.value.tagLine);
+		details.updatedTimestamp = innerValue.value.updatedTimestamp;
+		const response = await LibraryClientUtility.$store.dispatcher.characters.updateCharacterDetails(correlationId, details);
+		base.logger.debug('BaseCharacterDetailsDialog', 'preComplete', 'response', response, correlationId);
+		return response;
+	};
+	const resetDialog = async (correlationId, value) => {
+		steps.value = 1;
+		innerValue.value = value ? LibraryCommonUtility.cloneDeep(value) : {};
+		if (options.resetDialogI)
+			await options.resetDialogI(correlationId);
+	};
+
+	// created(): load lookups.
+	lookups.value = initializeLookups(base.correlationId());
+
+	return {
+		...base,
+		serviceGameSystem,
+		innerValue,
+		lookups,
+		steps,
+		boons,
+		factions,
+		hasScenarios,
+		status,
+		assignBoon,
+		fetchBoonsFromScenarios,
+		initializeLookups,
+		initResponse,
+		initResponseDetails,
+		cancel,
+		close,
+		ok,
+		open,
+		preComplete,
+		resetDialog,
+		reset: resetDialog
+	};
 };
 </script>
-
-<style scoped>
-</style>

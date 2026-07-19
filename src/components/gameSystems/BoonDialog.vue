@@ -36,7 +36,7 @@
 					cellpadding="0"
 					cellspacing="0"
 					style="width: 100%;"
-				>
+				><tbody>
 					<tr>
 						<td class="text-top">
 							<div class="pr-4">
@@ -62,7 +62,7 @@
 							/>
 						</td>
 					</tr>
-				</table>
+				</tbody></table>
 			</v-card-text>
 		</v-card>
 		<BoonLookupDialog

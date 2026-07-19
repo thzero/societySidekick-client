@@ -91,7 +91,8 @@ export function useGameSystemBaseListComponent(props, context, options) {
 		downloadI(content, filename + '.txt', 'text/text;encoding:utf-8');
 	};
 	const download = (content, type, user, defaultName) => {
-		let filename = user.settings && !String.isNullOrEmpty(user.settings.gamerTag) ? user.settings.gamerTag.toLowerCase() : defaultName;
+		const settingsFilename = (user && user.settings) ? user.settings : LibraryClientUtility.$store.user.settings;
+		let filename = settingsFilename && !String.isNullOrEmpty(settingsFilename.gamerTag) ? settingsFilename.gamerTag.toLowerCase() : defaultName;
 		if (type == Constants.ExtractTypes.Csv)
 			downloadCsv(content, filename);
 		else if (type == Constants.ExtractTypes.Text)

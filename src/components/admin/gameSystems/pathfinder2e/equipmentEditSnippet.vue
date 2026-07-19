@@ -1,5 +1,5 @@
 <template>
-	<table width="100%">
+	<table width="100%"><tbody>
 		<tr>
 			<td>
 				<!-- eslint-disable vue/no-mutating-props -->
@@ -22,7 +22,7 @@
 				<!--eslint-enable-->
 			</td>
 		</tr>
-	</table>
+	</tbody></table>
 </template>
 
 <script>

@@ -3,7 +3,19 @@ import path from 'path';
 import { fileURLToPath, URL } from 'node:url'
 
 // Utilities
-import { defineConfig } from 'vite'
+import { defineConfig, createLogger } from 'vite'
+
+// The migrated Vuetify layout tables use `<table><tr>` / nested `<table>` inside `<tr>` (valid enough
+// for the browser, which auto-inserts <tbody>/<td>), but Vue 3's compiler emits non-blocking
+// "<tr> cannot be child of <table>" / "<table> cannot be child of <tr>" DOM-nesting hints for each.
+// They flood the dev console without affecting runtime, so filter just those out of Vite's logger.
+const logger = createLogger();
+const _origWarn = logger.warn.bind(logger);
+logger.warn = (msg, options) => {
+	if (typeof msg === 'string' && msg.includes('cannot be child of'))
+		return;
+	_origWarn(msg, options);
+};
 
 // Plugins
 import vue from '@vitejs/plugin-vue'
@@ -61,8 +73,22 @@ try {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig({optimizeDeps: {
-    force: configEnv === 'development'
+export default defineConfig({
+  customLogger: logger,
+  optimizeDeps: {
+    force: configEnv === 'development',
+    // dayjs (and its plugins) ship as CJS/UMD; they're only reached via lazily-loaded components
+    // (e.g. VtDateTimePickerField on the character-detail route), so Vite's initial scan misses them
+    // and serves the raw UMD with no `default` export. Force pre-bundling so the ESM interop applies.
+    include: [
+      'dayjs',
+      'dayjs/plugin/localeData.js',
+      'dayjs/plugin/localizedFormat.js',
+      'dayjs/plugin/utc.js',
+      // The Temp date/time picker (VtDateTimePickerFieldWithValidationTemp) is only reached lazily
+      // via the boon/scenario dialogs; pre-bundle it so first open doesn't trigger a re-optimize reload.
+      '@vuepic/vue-datepicker'
+    ]
   },
   plugins: [
     vue(),

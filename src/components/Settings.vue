@@ -60,10 +60,8 @@
 				:auto-save="true"
 				:pre-complete-ok="preCompleteOk"
 				:reset-additional="resetAdditional"
-				@close="close"
 				@cancel="cancel"
 				@ok="ok"
-				@open="open"
 			>
 				<v-row>
 					<v-col
@@ -80,6 +78,7 @@
 									:validation="validation"
 									:label="$t('forms.gamerTag')"
 									:counter="30"
+									:blur="submitForm"
 								/>
 							</v-card-text>
 						</v-card>
@@ -104,6 +103,7 @@
 									:label="getGameSystemNumberName(gameSystemIds.DungeonsAndDragons5e.id)"
 									step="1"
 									:counter="10"
+									:blur="submitForm"
 								/>
 							</v-card-text>
 						</v-card>
@@ -127,6 +127,7 @@
 									:label="getGameSystemNumberName(gameSystemIds.Pathfinder2e.id)"
 									step="1"
 									:counter="10"
+									:blur="submitForm"
 								/>
 							</v-card-text>
 						</v-card>
@@ -153,6 +154,7 @@
 									:label="getGameSystemNumberName(gameSystemIds.Starfinder1e.id)"
 									step="1"
 									:counter="10"
+									:blur="submitForm"
 								/>
 							</v-card-text>
 						</v-card>
@@ -451,9 +453,13 @@ export default {
 			return GameSystemsUtility.numberName(id, LibraryClientUtility.$trans);
 		};
 		const loadFavorites = async () => {
-			// return LibraryCommonUtility.sortByName(AppUtility.settings().getSettingsUserFavorites(correlationId(), user.value), true)
-			const response = await LibraryClientUtility.$store.dispatcher.user.getUserFavorites(correlationId());
-			favorites.value = hasSucceeded(response) ? response.results : [];
+			favorites.value = LibraryCommonUtility.sortByName(AppUtility.settings().getSettingsUserFavorites(correlationId(), user.value) || [], true);
+		};
+		// Auto-save: VtFormControl's auto-save mode has no built-in trigger, so each field's blur
+		// submits the form (mirrors master's :blur="submitForm").
+		const submitForm = async () => {
+			if (formRef.value)
+				await formRef.value.submit();
 		};
 		// Adapts the old preCompleteI hook: persists the game-system numbers on save.
 		const preCompleteOk = async (correlationIdI) => {
@@ -556,6 +562,7 @@ export default {
 			getGameSystemNumberName,
 			preCompleteOk,
 			resetAdditional,
+			submitForm,
 			validation: useVuelidate({ $scope: 'Settings' })
 		};
 	},

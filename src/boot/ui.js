@@ -4,6 +4,14 @@ import BaseBoot from '@thzero/library_client/boot/base';
 export default class UiBoot extends BaseBoot {
 	async execute(framework, router, store, options) {
 		options.vuetify = {
+			// Global component defaults. Vuetify 3/4 dropped v-row's `dense` prop in favor of
+			// `density` (default | comfortable | compact); set it app-wide so rows aren't the looser
+			// default spacing. Switch 'comfortable' -> 'compact' for tighter gutters.
+			defaults: {
+				VRow: {
+					density: 'compact'
+				}
+			},
 			theme: {
 				defaultTheme: 'defaultTheme',
 				themes: {

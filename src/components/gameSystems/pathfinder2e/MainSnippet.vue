@@ -1,7 +1,7 @@
 <template>
 	<v-chip
 		color="success"
-		outlined
+		variant="outlined"
 		label
 	>
 		{{ $t('characters.gameSystems.pathfinder2e.achievementPoints') }}: {{ gameSystemNumber }}
@@ -9,29 +9,31 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
-import GlobalUtility from '@thzero/library_client/utility/global';
-// import GameSystemsUtility from '@/utility/gameSystems';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
-import baseMainSnippet from '@/components/gameSystems/baseMainSnippet';
+import { useGameSystemBaseMainSnippetComponent } from '@/components/gameSystems/baseMainSnippet';
 
 export default {
 	name: 'Pathfinder2eMainSnippet',
-	extends: baseMainSnippet,
-	computed: {
-		gameSystemNumber() {
-			const number = AppUtility.settings().getSettingsUserGameSystem(this.correlationId(), GlobalUtility.$store.state.user.user, SharedConstants.GameSystems.Pathfinder2e.id, (settings) => { return settings.achievementPoints; });
-			return number;
-			// return GameSystemsUtility.gameSystemNumber(this.correlationId(), GlobalUtility.$store.state.user.user, SharedConstants.GameSystems.Pathfinder2e.id);
-		}
-	},
-	methods: {
-		initializeServices() {
-			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
-		}
+	setup(props, context) {
+		const serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+
+		const base = useGameSystemBaseMainSnippetComponent(props, context, { serviceGameSystem });
+
+		const gameSystemNumber = computed(() => {
+			return AppUtility.settings().getSettingsUserGameSystem(base.correlationId(), LibraryClientUtility.$store.user.user, SharedConstants.GameSystems.Pathfinder2e.id, (settings) => { return settings.achievementPoints; });
+		});
+
+		return {
+			...base,
+			gameSystemNumber
+		};
 	}
 };
 </script>

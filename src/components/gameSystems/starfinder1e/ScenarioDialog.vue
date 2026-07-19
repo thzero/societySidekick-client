@@ -1,97 +1,95 @@
 <template>
-	<VFormDialog
+	<VtFormDialog
 		:label="$t('characters.scenarios.name')"
 		:signal="signal"
+		:validation="validation"
 		:pre-complete-delete="preCompleteResponseDelete"
 		:pre-complete-ok="preComplete"
-		:fullscreen="fullscreenInternal"
 		:button-delete="true"
 		max-width="700px"
-		@close="close"
-		@cancel="cancel"
+		@close="cancel"
 		@ok="ok"
 	>
 		<v-stepper
 			v-model="steps"
 		>
 			<v-stepper-header>
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="1"
+					:value="1"
 				>
 					{{ $t('characters.scenarios.name') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider />
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="2"
+					:value="2"
 				>
 					{{ $t('characters.gameSystems.starfinder1e.experience') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider />
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="3"
+					:value="3"
 				>
 					{{ $t('characters.gameSystems.starfinder1e.currency') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider />
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="4"
+					:value="4"
 				>
 					{{ $t('characters.gameSystems.starfinder1e.fame.name') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider />
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="5"
+					:value="5"
 				>
 					{{ $t('characters.gameSystems.starfinder1e.boons.name') }}
-				</v-stepper-step>
+				</v-stepper-item>
 			</v-stepper-header>
-			<v-stepper-items>
-				<v-stepper-content
-					step="1"
-					pa-0
+			<v-stepper-window>
+				<v-stepper-window-item
+					:value="1"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="outlined"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard starfinder1eScenario2"
 						>
-							<VNumberFieldWithValidation
-								ref="order"
+							<VtNumberFieldWithValidation
+								ref="orderRef"
 								v-model="innerValue.order"
-								rules="required|min_value:0|max_value:99|"
 								vid="order"
+								:validation="validation"
 								:label="$t('characters.scenarios.order')"
 								step="1"
 							/>
-							<VTextFieldWithValidation
-								ref="scenarioName"
+							<VtTextFieldWithValidation
+								ref="scenarioNameRef"
 								v-model="scenarioName"
-								rules="required|"
 								vid="scenarioName"
+								:validation="validation"
 								:label="$t('forms.name')"
 								:readonly="true"
 							/>
 							<div style="text-align: right">
 								<v-btn
-									color="primary lighten-1"
+									color="primary"
 									@click="dialogScenariosOpen()"
 								>
 									{{ $t('buttons.select') }}
@@ -102,55 +100,41 @@
 								cellpadding="0"
 								cellspacing="0"
 								style="width: 100%;"
-							>
+							><tbody>
 								<tr>
 									<td>
 										<div class="pr-4">
-											<VDateTimeFieldWithValidation
-												ref="timestamp"
+											<VtDateTimePickerFieldWithValidationTemp
+												ref="timestampRef"
 												v-model="innerValue.timestamp"
 												vid="timestamp"
-												rules="required|"
+												:validation="validation"
 												:output-type="outputType"
 												:date-format="dateFormat"
 												:time-format="timeFormat"
 												:label="$t('characters.scenarios.date')"
 											/>
-											<!-- <VNumberFieldWithValidation
-												ref="order"
-												v-model="innerValue.order"
-												:rules="rulesOrder"
-												vid="order"
-												:label="$t('characters.order')"
-											/> -->
-											<VSelectWithValidation
-												ref="scenarioAdvancementSpeed"
+											<VtSelectWithValidation
+												ref="scenarioAdvancementSpeedRef"
 												v-model="innerValue.scenarioAdvancementSpeed"
-												rules="required|"
 												vid="scenarioAdvancementSpeed"
+												:validation="validation"
 												:items="lookups.scenarioAdvancementSpeeds"
 												:label="$t('characters.gameSystems.starfinder1e.scenarios.advancementSpeed')"
 											/>
-											<!-- <VSelectWithValidation
-												ref="scenarioAdventure"
-												v-model="innerValue.scenarioAdventure"
-												rules="required|"
-												vid="scenarioAdventure"
-												:items="lookups.scenarioAdventures"
-												:label="$t('characters.gameSystems.starfinder1e.scenarios.adventure')"
-											/> -->
-											<VTextFieldWithValidation
-												ref="scenarioAdventure"
+											<VtTextFieldWithValidation
+												ref="scenarioAdventureRef"
 												v-model="scenarioAdventureName"
 												vid="scenarioAdventure"
+												:validation="validation"
 												:label="$t('characters.gameSystems.starfinder1e.scenarios.adventure')"
 												:readonly="true"
 											/>
-											<VSelectWithValidation
-												ref="status"
+											<VtSelectWithValidation
+												ref="statusRef"
 												v-model="innerValue.status"
-												rules="required"
 												vid="status"
+												:validation="validation"
 												:items="status"
 												:label="$t('characters.gameSystems.starfinder1e.status.name')"
 												class="pb-2"
@@ -158,289 +142,297 @@
 										</div>
 									</td>
 									<td style="vertical-align: top;">
-										<VSelectWithValidation
-											ref="scenarioLocation"
+										<VtSelectWithValidation
+											ref="scenarioLocationRef"
 											v-model="innerValue.locationId"
 											vid="scenarioLocation"
+											:validation="validation"
 											:items="locations"
 											:label="$t('locations.name')"
 										/>
-										<VSelectWithValidation
-											ref="scenarioStatus"
+										<VtSelectWithValidation
+											ref="scenarioStatusRef"
 											v-model="innerValue.scenarioStatus"
-											rules="required|"
 											vid="scenarioStatus"
+											:validation="validation"
 											:items="lookups.scenarioStatus"
 											:label="$t('characters.status.name')"
 										/>
-										<VSelectWithValidation
-											ref="scenarioParticipant"
+										<VtSelectWithValidation
+											ref="scenarioParticipantRef"
 											v-model="innerValue.scenarioParticipant"
-											rules="required|"
 											vid="scenarioParticipant"
+											:validation="validation"
 											:items="lookups.scenarioParticipants"
 											:label="$t('characters.gameSystems.starfinder1e.scenarios.participant')"
 										/>
 									</td>
 								</tr>
-							</table>
+							</tbody></table>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
-					step="2"
-					pa-0
+				</v-stepper-window-item>
+				<v-stepper-window-item
+					:value="2"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="outlined"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard starfinder1eExperiencePoints2"
 						>
-							<VNumberFieldWithValidation
-								ref="experiencePointsEarned"
+							<VtNumberFieldWithValidation
+								ref="experiencePointsEarnedRef"
 								v-model="innerValue.experiencePointsEarned"
-								rules="required|decimal:1|min_value:0|max_value:3|"
 								vid="experiencePointsEarned"
+								:validation="validation"
 								:label="$t('characters.gameSystems.starfinder1e.experiencePoints') + ' ' + $t('characters.earned')"
 								step=".1"
 							/>
-							<VSelectWithValidation
+							<VtSelectWithValidation
 								v-if="canSelectClass"
-								ref="class"
+								ref="classRef"
 								v-model="innerValue.classId"
-								rules="required|"
 								vid="class"
+								:validation="validation"
 								:items="classes"
 								:label="$t('characters.gameSystems.starfinder1e.classes.name')"
 								class="pb-2"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
-					step="3"
-					pa-0
+				</v-stepper-window-item>
+				<v-stepper-window-item
+					:value="3"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="outlined"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard starfinder1eCurrency2"
 						>
-							<VNumberFieldWithValidation
-								ref="currencyEarned"
+							<VtNumberFieldWithValidation
+								ref="currencyEarnedRef"
 								v-model="innerValue.currencyEarned"
-								rules="required|decimal:2|min_value:0|max_value:100000|"
 								vid="currencyEarned"
+								:validation="validation"
 								:label="$t('characters.gameSystems.starfinder1e.currency') + ' ' + $t('characters.gameSystems.starfinder1e.currencyGarnered')"
 								step=".01"
 							/>
-							<VNumberFieldWithValidation
-								ref="currencyIncomeEarned"
+							<VtNumberFieldWithValidation
+								ref="currencyIncomeEarnedRef"
 								v-model="innerValue.currencyIncomeEarned"
-								rules="decimal:2|min_value:0|max_value:1000|"
 								vid="currencyIncomeEarned"
+								:validation="validation"
 								:label="$t('characters.earned') + ' ' + $t('characters.gameSystems.starfinder1e.currencyIncome')"
 								step=".01"
 							/>
-							<VNumberFieldWithValidation
-								ref="currencySpent"
+							<VtNumberFieldWithValidation
+								ref="currencySpentRef"
 								v-model="innerValue.currencySpent"
-								rules="decimal:2|min_value:0|max_value:100000|"
 								vid="currencySpent"
+								:validation="validation"
 								:label="$t('characters.gameSystems.starfinder1e.currency') + ' ' + $t('characters.spent')"
 								step=".01"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
-					step="4"
-					pa-0
+				</v-stepper-window-item>
+				<v-stepper-window-item
+					:value="4"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="outlined"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard starfinder1eFame2"
 						>
-							<VSelectWithValidation
-								ref="fameFaction"
+							<VtSelectWithValidation
+								ref="fameFactionRef"
 								v-model="innerValue.fameFactionId"
-								rules="required|"
 								vid="fameFaction"
+								:validation="validation"
 								:items="factions"
 								:label="$t('characters.gameSystems.starfinder1e.fame.name') + ' ' + $t('characters.gameSystems.starfinder1e.faction')"
 							/>
-							<VNumberFieldWithValidation
-								ref="fameEarned"
+							<VtNumberFieldWithValidation
+								ref="fameEarnedRef"
 								v-model="innerValue.fameEarned"
-								rules="required|decimal:1|min_value:0|max_value:5|"
 								vid="fameEarned"
+								:validation="validation"
 								:label="$t('characters.gameSystems.starfinder1e.fame.name')"
 								step=".1"
 							/>
-							<VNumberFieldWithValidation
-								ref="fameSpent"
+							<VtNumberFieldWithValidation
+								ref="fameSpentRef"
 								v-model="innerValue.fameSpent"
-								rules="decimal:1|min_value:0|max_value:99|"
 								vid="fameSpent"
+								:validation="validation"
 								:label="$t('characters.gameSystems.starfinder1e.fame.name') + ' ' + $t('characters.spent')"
 								step=".1"
 							/>
 						</v-card-text>
 					</v-card>
-					<!-- <v-card
-						tile
-						outlined
-						class="mt-2"
-					>
-						<v-card-text
-							class="gameSystemScenarioCard starfinder1eReputation2"
-						>
-							<VSelectWithValidation
-								ref="reputationFaction"
-								v-model="innerValue.reputationFactionId"
-								vid="reputationFaction"
-								:items="factions"
-								:label="$t('characters.gameSystems.starfinder1e.reputation') + ' ' + $t('characters.gameSystems.starfinder1e.faction')"
-							/>
-							<VNumberFieldWithValidation
-								ref="reputationEarned"
-								v-model="innerValue.reputationEarned"
-								rules="decimal:1|min_value:0|max_value:12|"
-								vid="reputationEarned"
-								:label="$t('characters.gameSystems.starfinder1e.reputation') + ' ' + $t('characters.earned')"
-								step=".1"
-							/>
-						</v-card-text>
-					</v-card> -->
-				</v-stepper-content>
-				<v-stepper-content
-					step="5"
-					pa-0
+				</v-stepper-window-item>
+				<v-stepper-window-item
+					:value="5"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="outlined"
 						class="mt-2"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard starfinder1eReputation2"
 						>
-							<VSelectWithValidation
-								ref="boon1"
+							<VtSelectWithValidation
+								ref="boon1Ref"
 								v-model="innerValue.boon1Id"
 								vid="boon1"
+								:validation="validation"
 								:items="boons"
 								:label="$t('characters.gameSystems.starfinder1e.boons.name')"
 							/>
-							<VSelectWithValidation
-								ref="boon2"
+							<VtSelectWithValidation
+								ref="boon2Ref"
 								v-model="innerValue.boon2Id"
 								vid="boon2"
+								:validation="validation"
 								:items="boons"
 								:label="$t('characters.gameSystems.starfinder1e.boons.name')"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-			</v-stepper-items>
+				</v-stepper-window-item>
+			</v-stepper-window>
 		</v-stepper>
 		<ScenarioLookupDialog
-			ref="scenarioLookup"
+			ref="scenarioLookupRef"
 			:label="$t('characters.name')"
 			:signal="dialogScenarios.signal"
-			:fullscreen="fullscreenInternal"
 			:character-id="character ? character.id : null"
 			@cancel="dialogScenarios.cancel()"
 			@ok="dialogScenariosOk"
 		/>
-	</VFormDialog>
+	</VtFormDialog>
 </template>
 
 <script>
+import { computed, ref } from 'vue';
+
+import useVuelidate from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
-
-import baseScenarioDialog from '@/components/gameSystems/baseScenarioDialog';
-
-import ScenarioLookupDialog from '@/components/gameSystems/starfinder1e/ScenarioLookupDialog';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import CharacterScenario from '@/common/gameSystems/starfinder1e/data/characterScenario';
+
+import { useBaseScenarioDialogComponent } from '@/components/gameSystems/baseScenarioDialog';
+
+import ScenarioLookupDialog from '@/components/gameSystems/starfinder1e/ScenarioLookupDialog';
+import VtDateTimePickerFieldWithValidationTemp from '@thzero/library_client_vue3_vuetify3/components/form/VtDateTimePickerFieldWithValidationTemp';
+import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
+import VtNumberFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberFieldWithValidation';
+import VtSelectWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtSelectWithValidation';
+import VtTextFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtTextFieldWithValidation';
 
 export default {
 	name: 'Starfinder1eScenarioDialog',
 	components: {
-		ScenarioLookupDialog
+		ScenarioLookupDialog,
+		VtDateTimePickerFieldWithValidationTemp,
+		VtFormDialog,
+		VtNumberFieldWithValidation,
+		VtSelectWithValidation,
+		VtTextFieldWithValidation
 	},
-	extends: baseScenarioDialog,
-	data: () => ({
-		scenarioAdventureName: null
-	}),
-	computed: {
-		canSelectClass() {
-			return this.rulesGameSystem.calculateCharacterScenarioCanSelectClass(this.correlationId(), this.character, this.innerValue, this.innerValue.experiencePointsEarned);
+	props: {
+		signal: {
+			type: Boolean,
+			default: false
 		},
-		classes() {
-			return this.serviceGameSystem.classes(GlobalUtility.$store, true);
+		character: {
+			type: Object,
+			default: null
 		}
 	},
-	methods: {
-		dialogScenariosOkI(correlationId, id) {
-			this.$set(this.innerValue, 'scenarioAdventure', this.getScenarioAdventure(id));
-			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, this.innerValue.scenarioAdventure, this.lookups);
-		},
-		getScenarioAdventure(id) {
+	emits: ['cancel', 'ok'],
+	setup(props, context) {
+		const rulesGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
+		const serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+
+		const scenarioAdventureName = ref(null);
+
+		const getScenarioAdventure = (id) => {
 			if (!id)
 				return null;
-			const results = GlobalUtility.$store.getters.getScenario(this.innerValue.scenarioId);
+			const results = LibraryClientUtility.$store.getters.getScenario(base.correlationId(), base.innerValue.value.scenarioId);
 			return results ? results.type : null;
-		},
-		gameSystemId() {
-			return SharedConstants.GameSystems.Starfinder1e.id;
-		},
-		initResponseDetails(correlationId, details) {
-			details.boon1Id = this.innerValue.boon1Id;
-			details.boon2Id = this.innerValue.boon2Id;
-			details.classId = this.innerValue.classId;
-			details.fameFactionId = this.innerValue.fameFactionId;
-			// details.fameEarned = this.rulesGameSystem.clean(this.fameEarned);
-			details.fameEarned = this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.fameEarned));
-			// details.fameSpent = this.rulesGameSystem.clean(this.innerValue.fameSpent);
-			details.fameSpent = this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.innerValue.fameSpent));
-			details.reputationEarned = this.rulesGameSystem.calculateScenarioReputationEarned(correlationId, this.innerValue);
-			details.scenarioAdvancementSpeed = this.innerValue.scenarioAdvancementSpeed;
-			return details;
-		},
-		initScenario() {
-			return new CharacterScenario();
-		},
-		initializeServices() {
-			this.rulesGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
-			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
-		},
-		// eslint-disable-next-line
-		onChangeI(correlationId, newValue, recalculateScenario) {
-			newValue.fameFactionId = newValue && newValue.fameFactionId ? newValue.fameFactionId : this.character.factionId;
-			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, newValue.scenario ? newValue.scenario.type : null, this.lookups);
-			return recalculateScenario;
-		},
-		async resetDialogI(correlationId, value) {
-			value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : this.character.factionId;
-			await GlobalUtility.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, this.character ? this.character.id : null);
-			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenario ? value.scenario.type : null, this.lookups);
-		}
+		};
+
+		const base = useBaseScenarioDialogComponent(props, context, {
+			serviceGameSystem,
+			rulesGameSystem,
+			gameSystemId: () => SharedConstants.GameSystems.Starfinder1e.id,
+			initScenario: () => new CharacterScenario(),
+			dialogScenariosOkI: (correlationId, id) => {
+				base.innerValue.value.scenarioAdventure = getScenarioAdventure(id);
+				scenarioAdventureName.value = serviceGameSystem.scenarioLookupAdventureName(correlationId, base.innerValue.value.scenarioAdventure, base.lookups.value);
+			},
+			initResponseDetails: (correlationId, details) => {
+				details.boon1Id = base.innerValue.value.boon1Id;
+				details.boon2Id = base.innerValue.value.boon2Id;
+				details.classId = base.innerValue.value.classId;
+				details.fameFactionId = base.innerValue.value.fameFactionId;
+				details.fameEarned = rulesGameSystem.cleanDecimal(rulesGameSystem.clean(base.innerValue.value.fameEarned));
+				details.fameSpent = rulesGameSystem.cleanDecimal(rulesGameSystem.clean(base.innerValue.value.fameSpent));
+				details.reputationEarned = rulesGameSystem.calculateScenarioReputationEarned(correlationId, base.innerValue.value);
+				details.scenarioAdvancementSpeed = base.innerValue.value.scenarioAdvancementSpeed;
+				return details;
+			},
+			onChangeI: (correlationId, newValue, recalculateScenario) => {
+				newValue.fameFactionId = newValue && newValue.fameFactionId ? newValue.fameFactionId : props.character.factionId;
+				scenarioAdventureName.value = serviceGameSystem.scenarioLookupAdventureName(correlationId, newValue.scenario ? newValue.scenario.type : null, base.lookups.value);
+				return recalculateScenario;
+			},
+			resetDialogI: async (correlationId, value) => {
+				value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : props.character.factionId;
+				await LibraryClientUtility.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, props.character ? props.character.id : null);
+				scenarioAdventureName.value = serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenario ? value.scenario.type : null, base.lookups.value);
+			}
+		});
+
+		const canSelectClass = computed(() => {
+			return rulesGameSystem.calculateCharacterScenarioCanSelectClass(base.correlationId(), props.character, base.innerValue.value, base.innerValue.value.experiencePointsEarned);
+		});
+		const classes = computed(() => {
+			return serviceGameSystem.classes(LibraryClientUtility.$store, true);
+		});
+
+		return {
+			...base,
+			canSelectClass,
+			classes,
+			validation: useVuelidate({ $scope: 'Starfinder1eScenarioDialog' })
+		};
+	},
+	validations() {
+		return {
+			scenarioName: {
+				required,
+				$autoDirty: true
+			}
+		};
 	}
 };
 </script>

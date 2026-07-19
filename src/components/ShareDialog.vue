@@ -6,15 +6,14 @@
 		:button-cancel="false"
 		:button-clear="false"
 		max-width="450px"
-		@close="close"
-		@cancel="cancel"
+		@close="cancel"
 		@ok="ok"
 		@open="open"
 	>
 		<table
 			v-if="hasGamerTag"
 			style="width: 100%;"
-		>
+		><tbody>
 			<tr>
 				<td>
 					<VtTextField
@@ -37,7 +36,7 @@
 					</v-btn>
 				</td>
 			</tr>
-		</table>
+		</tbody></table>
 		<v-alert
 			v-if="!hasGamerTag"
 		>

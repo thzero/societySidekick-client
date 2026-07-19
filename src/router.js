@@ -183,14 +183,11 @@ const router = createRouter({
 	routes
 });
 
-// eslint-disable-next-line
-router.beforeResolve((to, from, next) => {
+router.beforeResolve((to, from) => {
 	if (to.matched.some(record => record.meta.notFound)) {
 		LibraryClientUtility.$navRouter.push('/notFound');
-		return;
+		return false;
 	}
-
-	next();
 });
 
 export default router;

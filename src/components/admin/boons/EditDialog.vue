@@ -16,7 +16,7 @@
 			:counter="50"
 		/>
 
-		<table width="100%">
+		<table width="100%"><tbody>
 			<tr>
 				<td class="pr-2">
 					<VSelectWithValidation
@@ -47,7 +47,7 @@
 					/>
 				</td>
 			</tr>
-		</table>
+		</tbody></table>
 
 		<!-- Scenario Lookup -->
 		<VTextFieldWithValidation

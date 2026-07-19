@@ -18,7 +18,7 @@
 								cellspacing="0"
 								cellpadding="0"
 								style="width: 100%;"
-							>
+							><tbody>
 								<tr>
 									<td style="width: 100%;">
 										<VtSelect
@@ -60,7 +60,7 @@
 											cellpadding="0"
 											style="width: 100%;"
 											class="pt-1"
-										>
+										><tbody>
 											<tr>
 												<td>
 													<VtNumberField
@@ -87,7 +87,7 @@
 													/>
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 									<td
 										v-if="$vuetify.display.mdAndDown"
@@ -99,7 +99,7 @@
 											cellpadding="0"
 											class="mb-1 ml-2"
 											style="margin-left: auto; margin-right: 0px;"
-										>
+										><tbody>
 											<tr>
 												<td
 													style="padding-right: 4px;"
@@ -189,10 +189,10 @@
 													</v-tooltip>
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 								</tr>
-							</table>
+							</tbody></table>
 						</v-col>
 						<v-col
 							cols="12"
@@ -206,7 +206,7 @@
 								cellpadding="0"
 								class="mb-1"
 								style="width: 100%;"
-							>
+							><tbody>
 								<tr>
 									<td style="width: 100%; vertical-align: top;">
 										<table
@@ -215,7 +215,7 @@
 											cellpadding="0"
 											class="mb-1"
 											style="width: 100%;"
-										>
+										><tbody>
 											<tr>
 												<td>
 													<VtNumberField
@@ -240,13 +240,13 @@
 													/>
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 										<table
 											border="0"
 											cellspacing="0"
 											cellpadding="0"
 											style="width: 100%;"
-										>
+										><tbody>
 											<tr>
 												<td style="padding-right: 4px">
 													<VtSelect
@@ -264,7 +264,7 @@
 													<VtDirectionButton v-model="sortDirection" />
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 									<td style="vertical-align: top;">
 										<table
@@ -273,7 +273,7 @@
 											cellpadding="0"
 											class="mb-1 ml-2"
 											style="margin-left: auto; margin-right: 0px;"
-										>
+										><tbody>
 											<tr>
 												<td
 													style="padding-right: 4px;"
@@ -359,10 +359,10 @@
 													</v-tooltip>
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 								</tr>
-							</table>
+							</tbody></table>
 						</v-col>
 						<ShareDialog
 							ref="shareDialogRef"
@@ -386,6 +386,7 @@
 		>
 			<v-card
 				variant="outlined"
+				style="background-color: rgb(var(--v-theme-surface));"
 				min-width="300px"
 				height="100%"
 			>
@@ -397,7 +398,7 @@
 							font-name="title"
 						/>
 					</span>
-					<v-spacer />
+					<div class="mb-3"></div>
 					<span class="title text-capitalize displayLink">
 						<CharacterNameSnippet
 							:value="item"
@@ -479,14 +480,31 @@ export default {
 
 		const characters = ref([]);
 
+		// base.gameSystemFilter is a settings-backed computed that does not reliably re-trigger reactivity
+		// when persisted via setUserSettings (store settings replacement), so it stays cached at its
+		// initial value. Drive the list off a local ref (updated immediately on select) while still
+		// persisting the saved setting directly through the settings service.
+		const gameSystemFilterLocal = ref(AppUtility.settings().getSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store.user.user, (s) => s.gameSystemFilter));
+		const gameSystemFilter = computed({
+			get: () => gameSystemFilterLocal.value,
+			set: (newVal) => {
+				gameSystemFilterLocal.value = newVal;
+				AppUtility.settings().updateSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store, LibraryClientUtility.$store.user.user, newVal, (s) => { return s.gameSystemFilter = newVal; });
+			}
+		});
+
 		const getSettingsUser = (correlationId, user, funcAttribute) => {
-			if (!user || !user.settings)
+			if (!user)
 				return null;
-			const charactersS = user.settings.characters ? user.settings.characters : {};
+			// 0.18 lib stores settings at $store.user.settings (user.settings is deleted on load).
+			const settings = LibraryClientUtility.$store.user.settings;
+			if (!settings)
+				return null;
+			const charactersS = settings.characters ? settings.characters : {};
 			return funcAttribute(charactersS);
 		};
 		const updateSettingsUserCharacter = (correlationId, user, newVal, func) => {
-			const settings = AppUtility.settings().mergeUser(correlationId, user.settings);
+			const settings = AppUtility.settings().mergeUser(correlationId, LibraryClientUtility.$store.user.settings);
 			func(settings.characters, newVal);
 			LibraryClientUtility.$store.dispatcher.user.setUserSettings(correlationId, settings);
 		};
@@ -602,7 +620,7 @@ export default {
 			extract(base.correlationId(), type);
 		};
 		const dialogShareOpen = () => {
-			shareDialogRef.value.openDialog(base.gameSystemFilter.value);
+			shareDialogRef.value.openDialog(gameSystemFilter.value);
 			base.dialogShare.value.open();
 		};
 		const extract = (correlationId, type) => {
@@ -648,7 +666,7 @@ export default {
 		};
 
 		const computeCharacters = async () => {
-			if (!base.gameSystemFilter.value) {
+			if (!gameSystemFilter.value) {
 				characters.value = [];
 				return;
 			}
@@ -656,7 +674,7 @@ export default {
 			const correlationId = base.correlationId();
 
 			let results = props.value ? props.value : LibraryClientUtility.$store.characters.characters.slice(0);
-			results = results.filter(l => l.gameSystemId === base.gameSystemFilter.value);
+			results = results.filter(l => l.gameSystemId === gameSystemFilter.value);
 
 			if (characterLevelMaxFilter.value && characterLevelMinFilter.value)
 				results = results.filter(l => ((characterLevel(l.level) >= Number(characterLevelMinFilter.value)) && (characterLevel(l.level) <= Number(characterLevelMaxFilter.value))));
@@ -668,24 +686,36 @@ export default {
 			if (characterNameValue.value)
 				results = results.filter(l => l.name.toLowerCase().indexOf(characterNameValue.value.toLowerCase()) > -1);
 
-			let classes = classCache.value[base.gameSystemFilter.value];
+			let classes = classCache.value[gameSystemFilter.value];
 			if (!classes) {
-				await LibraryClientUtility.$store.dispatcher.classes.getClassListing(correlationId, base.gameSystemFilter.value);
-				classes = LibraryClientUtility.$store.classes.listing;
-				if (classes) {
-					classes = classes.filter(l => l.gameSystemId == base.gameSystemFilter.value);
-					classCache.value[base.gameSystemFilter.value] = classes;
+				try {
+					await LibraryClientUtility.$store.dispatcher.classes.getClassListing(correlationId, gameSystemFilter.value);
+					classes = LibraryClientUtility.$store.classes.listing;
+					if (classes) {
+						classes = classes.filter(l => l.gameSystemId == gameSystemFilter.value);
+						classCache.value[gameSystemFilter.value] = classes;
+					}
+				}
+				catch (err) {
+					// eslint-disable-next-line no-console
+					console.error('[CharacterList] getClassListing failed', err);
 				}
 			}
 			classes = classes ? classes : [];
 
-			let factions = factionsCache.value[base.gameSystemFilter.value];
+			let factions = factionsCache.value[gameSystemFilter.value];
 			if (!factions) {
-				await LibraryClientUtility.$store.dispatcher.factions.getFactionListing(correlationId, base.gameSystemFilter.value);
-				factions = LibraryClientUtility.$store.factions.listing;
-				if (factions) {
-					factions = factions.filter(l => l.gameSystemId == base.gameSystemFilter.value);
-					factionsCache.value[base.gameSystemFilter.value] = factions;
+				try {
+					await LibraryClientUtility.$store.dispatcher.factions.getFactionListing(correlationId, gameSystemFilter.value);
+					factions = LibraryClientUtility.$store.factions.listing;
+					if (factions) {
+						factions = factions.filter(l => l.gameSystemId == gameSystemFilter.value);
+						factionsCache.value[gameSystemFilter.value] = factions;
+					}
+				}
+				catch (err) {
+					// eslint-disable-next-line no-console
+					console.error('[CharacterList] getFactionListing failed', err);
 				}
 			}
 			factions = factions ? factions : [];
@@ -712,14 +742,15 @@ export default {
 
 		watch(
 			[
-				() => base.gameSystemFilter.value,
+				() => gameSystemFilter.value,
 				forceRecomputeCounter,
 				characterLevelMinFilter,
 				characterLevelMaxFilter,
 				characterNameValue,
 				() => sortBy.value,
 				() => sortDirection.value,
-				() => props.value
+				() => props.value,
+				() => LibraryClientUtility.$store.characters.characters ? LibraryClientUtility.$store.characters.characters.length : 0
 			],
 			async () => {
 				await computeCharacters();
@@ -727,11 +758,18 @@ export default {
 		);
 
 		onMounted(async () => {
+			// Ensure the listing is loaded even if the Home route guard didn't populate it (timing/auth).
+			if (!props.value) {
+				const existing = LibraryClientUtility.$store.characters.characters;
+				if (!existing || existing.length === 0)
+					await LibraryClientUtility.$store.dispatcher.characters.getCharacterListing(base.correlationId(), { listing: true });
+			}
 			await computeCharacters();
 		});
 
 		return {
 			...base,
+			gameSystemFilter,
 			shareDialogRef,
 			characters,
 			characterNameValue,

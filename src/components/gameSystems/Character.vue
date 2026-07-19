@@ -1,52 +1,51 @@
 <template>
-	<vue-fragment>
+	<div>
 		<v-navigation-drawer
 			v-model="drawer"
-			fixed
 			temporary
 			style="z-index: 2"
 		>
 			<v-list
-				dense
+				density="compact"
 				class="pt-0 mt-12"
 			>
-				<v-list-item @click="clickTab(0)">
-					<v-list-item-action>
-						<v-icon>dashboard</v-icon>
-					</v-list-item-action>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('characters.dashboard') }}</v-list-item-title>
-					</v-list-item-content>
+				<v-list-item
+					:title="$t('characters.dashboard')"
+					@click="clickTab(0)"
+				>
+					<template #prepend>
+						<v-icon>mdi-view-dashboard</v-icon>
+					</template>
 				</v-list-item>
-				<v-list-item @click="clickTab(1)">
-					<v-list-item-action>
-						<v-icon>list_alt</v-icon>
-					</v-list-item-action>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('characters.boons.namePlural') }}</v-list-item-title>
-					</v-list-item-content>
+				<v-list-item
+					:title="$t('characters.boons.namePlural')"
+					@click="clickTab(1)"
+				>
+					<template #prepend>
+						<v-icon>mdi-format-list-bulleted</v-icon>
+					</template>
 				</v-list-item>
-				<v-list-item @click="clickTab(2)">
-					<v-list-item-action>
-						<v-icon>list_alt</v-icon>
-					</v-list-item-action>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('characters.inventory') }}</v-list-item-title>
-					</v-list-item-content>
+				<v-list-item
+					:title="$t('characters.inventory')"
+					@click="clickTab(2)"
+				>
+					<template #prepend>
+						<v-icon>mdi-format-list-bulleted</v-icon>
+					</template>
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
 
 		<div class="flex-container">
 			<div
-				class="flex-item hidden-sm-and-down"
+				class="flex-item d-none d-md-block"
 			>
 				<v-card>
 					<v-card-text>
 						<v-tabs
 							v-model="tabSupport.currentTab"
-							vertical
-							@change="clickTab"
+							direction="vertical"
+							@update:model-value="clickTab"
 						>
 							<v-tab
 								v-for="tab of tabSupport.tabs"
@@ -56,7 +55,7 @@
 							>
 								<v-icon
 									v-if="tab.icon"
-									left
+									start
 								>
 									{{ tab.icon }}
 								</v-icon>
@@ -68,14 +67,12 @@
 			</div>
 			<div class="flex-item2">
 				<v-card
-					v-if="$vuetify.breakpoint.mdAndUp"
+					v-if="$vuetify.display.mdAndUp"
 				>
 					<v-card-text>
-						<v-layout
-							wrap
-						>
-							<v-flex
-								xs7
+						<v-row>
+							<v-col
+								cols="7"
 							>
 								<!-- // GameSystems Update -->
 								<CharacterNameSnippetPathfinder2e
@@ -94,9 +91,9 @@
 									prefix=""
 									suffix=""
 								/>
-							</v-flex>
-							<v-flex
-								xs5
+							</v-col>
+							<v-col
+								cols="5"
 							>
 								<div class="text-right">
 									<span class="mr-2">
@@ -122,35 +119,32 @@
 									</span>
 									<v-chip
 										color="success"
-										outlined
+										variant="outlined"
 										label
 									>
 										{{ getGameSystemName(character.gameSystemId) }}
 									</v-chip>
 								</div>
-							</v-flex>
-							<v-flex
+							</v-col>
+							<v-col
 								v-if="character.tagLine"
-								xs8
-								pt-2
+								cols="8"
+								class="pt-2"
 							>
 								<span class="subtitle-1">
 									{{ character.tagLine }}
 								</span>
-							</v-flex>
-						</v-layout>
+							</v-col>
+						</v-row>
 					</v-card-text>
 				</v-card>
 				<v-card
-					v-if="$vuetify.breakpoint.smAndDown"
+					v-if="$vuetify.display.smAndDown"
 				>
 					<v-card-text>
-						<v-layout
-							wrap
-						>
-							<v-flex
-								:xs12="$vuetify.breakpoint.smAndDown"
-								:xs6="$vuetify.breakpoint.mdAndUp"
+						<v-row>
+							<v-col
+								:cols="$vuetify.display.smAndDown ? 12 : 6"
 							>
 								<!-- // GameSystems Update -->
 								<CharacterNameSnippetPathfinder2e
@@ -169,10 +163,10 @@
 									prefix=""
 									suffix=""
 								/>
-							</v-flex>
-							<v-flex
-								xs6
-								pt-2
+							</v-col>
+							<v-col
+								cols="6"
+								class="pt-2"
 							>
 								<div>
 									<!-- // GameSystems Update -->
@@ -195,81 +189,86 @@
 										suffix=""
 									/>
 								</div>
-							</v-flex>
-							<v-flex
-								xs6
-								pt-2
+							</v-col>
+							<v-col
+								cols="6"
+								class="pt-2"
 							>
 								<div class="text-right">
 									<v-chip
 										color="success"
-										outlined
+										variant="outlined"
 										label
 									>
 										{{ getGameSystemName(character.gameSystemId) }}
 									</v-chip>
 								</div>
-							</v-flex>
-							<v-flex
+							</v-col>
+							<v-col
 								v-if="character.tagLine"
-								xs12
-								pt-2
+								cols="12"
+								class="pt-2"
 							>
 								<span class="subtitle-1">
 									{{ character.tagLine }}
 								</span>
-							</v-flex>
-						</v-layout>
+							</v-col>
+						</v-row>
 					</v-card-text>
 				</v-card>
 				<!-- // GameSystems Update -->
 				<ScenariosDashboardPathfinder2e
 					v-if="isGameSystemPathfinder2e && tabSupport.currentTab === tabDashboard"
-					v-model="character"
-					mb-4
+					:value="character"
+					class="mb-4"
 				/>
 				<BoonsDashboardPathfinder2e
 					v-if="isGameSystemPathfinder2e && tabSupport.currentTab === tabBoons"
-					v-model="character"
-					mb-4
+					:value="character"
+					class="mb-4"
 				/>
 				<InventoryDashboardPathfinder2e
 					v-if="isGameSystemPathfinder2e && tabSupport.currentTab === tabInventory"
-					v-model="character"
-					mb-4
+					:value="character"
+					class="mb-4"
 				/>
 				<ScenariosDashboardStarfinder1e
 					v-if="isGameSystemStarfinder1e && tabSupport.currentTab === tabDashboard"
-					v-model="character"
-					mb-4
+					:value="character"
+					class="mb-4"
 				/>
 				<BoonsDashboardStarfinder1e
 					v-if="isGameSystemStarfinder1e && tabSupport.currentTab === tabBoons"
-					v-model="character"
-					mb-4
+					:value="character"
+					class="mb-4"
 				/>
 				<InventoryDashboardStarfinder1e
 					v-if="isGameSystemStarfinder1e && tabSupport.currentTab === tabInventory"
-					v-model="character"
-					mb-4
+					:value="character"
+					class="mb-4"
 				/>
 			</div>
 		</div>
-		<VLoadingOverlay
+		<VtLoadingOverlay
 			:signal="initializeCompleted"
 		/>
-	</vue-fragment>
+	</div>
 </template>
 
 <script>
+import { computed, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@thzero/library_client_vue/utility/index';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
+import VueUtility from '@thzero/library_client_vue3/utility/index';
 
-import base from '@/components/base';
-import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
+import { useBaseComponent } from '@/components/base';
+
+import VtLoadingOverlay from '@thzero/library_client_vue3_vuetify3/components/VtLoadingOverlay';
 
 // GameSystems Update
 import BoonsDashboardPathfinder2e from '@/components/gameSystems/pathfinder2e/BoonsDashboard';
@@ -281,7 +280,7 @@ import CharacterNameSnippetStarfinder1e from '@/components/gameSystems/starfinde
 import InventoryDashboardStarfinder1e from '@/components/gameSystems/starfinder1e/InventoryDashboard';
 import ScenariosDashboardStarfinder1e from '@/components/gameSystems/starfinder1e/ScenariosDashboard';
 
-import TabSupport from '@/library_vue/components/support/tab';
+import TabSupport from '@thzero/library_client_vue3/components/support/tab';
 
 const DelayMs = 0; // 250
 
@@ -297,173 +296,161 @@ export default {
 		InventoryDashboardStarfinder1e,
 		ScenariosDashboardPathfinder2e,
 		ScenariosDashboardStarfinder1e,
-		VLoadingOverlay
+		VtLoadingOverlay
 	},
-	extends: base,
-	async beforeRouteEnter(to, from, next) {
-		// eslint-disable-next-line
-		// console.log('beforeRouteEnter1')
-		// called before the route that renders this component is confirmed.
-		// does NOT have access to `this` component instance,
-		// because it has not been created yet when this guard is called!
-		//VueUtility.checkId(to, from, next)
-		// next(vm => {
-		//	 // access to component instance via `vm`
-		//	 vm.character = vm.$store.getters.getCharacter(vm.$route.params.id)
-		// })
+	async beforeRouteEnter(to, from) {
 		const results = VueUtility.checkId(to);
-		await GlobalUtility.$store.dispatcher.characters.getCharacterListing({ basics: true });
-		if (results) {
-			next(async vm => {
-				// access to component instance via `vm`
-				vm.logger.debug('Character', 'beforeRouteEnter2');
-				vm.determineActiveTab();
-			});
-		}
+		await LibraryClientUtility.$store.dispatcher.characters.getCharacterListing(LibraryCommonUtility.correlationId(), { basics: true });
+		if (!results)
+			return false;
+		// The mounted component runs determineActiveTab() in onMounted, so no instance callback is needed here.
 	},
-	async beforeRouteUpdate(to, from, next) {
-		// called when the route that renders this component has changed,
-		// but this component is reused in the new route.
-		// has access to `this` component instance.
+	async beforeRouteUpdate(to, from) {
 		const correlationId = this.correlationId();
-
 		this.logger.debug('Character', 'beforeRouteUpdate', null, null, correlationId);
 		const results = VueUtility.checkId(to);
 		this.determineActiveTab();
-		await GlobalUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { basics: true });
-		// this.character = GlobalUtility.$store.getters.getCharacter(this.getId())
-		if (results)
-			next();
+		await LibraryClientUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { basics: true });
+		if (!results)
+			return false;
 	},
-	data: () => ({
-		drawer: false,
-		initializeCompleted: false,
-		// GameSystems Update
-		servicePathfinder2e: null,
-		serviceStarfinder1e: null,
-		tabSupport: new TabSupport(),
-		tabDashboard: 0,
-		tabBoons: 1,
-		tabInventory: 2
-	}),
-	computed: {
-		character() {
-			this.logger.debug('Character', 'character', 'id', this.getId(), this.correlationId());
-			const results = GlobalUtility.$store.getters.getCharacter(this.getId());
+	setup(props, context) {
+		const base = useBaseComponent(props, context);
+
+		const route = useRoute();
+
+		const servicePathfinder2e = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+		const serviceStarfinder1e = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+
+		const drawer = ref(false);
+		const initializeCompleted = ref(false);
+		const tabSupport = ref(new TabSupport());
+		const tabDashboard = 0;
+		const tabBoons = 1;
+		const tabInventory = 2;
+
+		const getId = () => {
+			return route.params.id;
+		};
+
+		const character = computed(() => {
+			base.logger.debug('Character', 'character', 'id', getId(), base.correlationId());
+			const results = LibraryClientUtility.$store.getters.getCharacter(base.correlationId(), getId());
 			return results ? results : {};
-		},
-		// GameSystems Update
-		isGameSystemDungeonsAndDragons5e() {
-			return this.character.gameSystemId === SharedConstants.GameSystems.DungeonsAndDragons5e.id;
-		},
-		isGameSystemPathfinder2e() {
-			return this.character.gameSystemId === SharedConstants.GameSystems.Pathfinder2e.id;
-		},
-		isGameSystemStarfinder1e() {
-			return this.character.gameSystemId === SharedConstants.GameSystems.Starfinder1e.id;
-		},
-		user() {
-			return GlobalUtility.$store.state.user.user;
-		}
-	},
-	created() {
-		// GameSystems Update
-		this.servicePathfinder2e = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
-		this.serviceStarfinder1e = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
-	},
-	async mounted() {
-		VueUtility.checkId(this.$route);
-
-		this.initializeCompleted = false;
-
-		this.initializeTabs();
-		this.determineActiveTab();
-
-		const self = this;
-		GlobalUtility.$EventBus.on('toggle-drawer', () => {
-			self.drawer = !self.drawer;
+		});
+		const isGameSystemPathfinder2e = computed(() => {
+			return character.value.gameSystemId === SharedConstants.GameSystems.Pathfinder2e.id;
+		});
+		const isGameSystemStarfinder1e = computed(() => {
+			return character.value.gameSystemId === SharedConstants.GameSystems.Starfinder1e.id;
+		});
+		const user = computed(() => {
+			return LibraryClientUtility.$store.user.user;
 		});
 
-		await this.initializeCharacter();
-	},
-	methods: {
-		clickTab(value) {
-			this.tabSupport.changeTab(value);
-			this.drawer = false;
-		},
-		determineActiveTab() {
-			const correlationId = this.correlationId();
-			this.logger.debug('Character', 'determineActiveTab', null, null, correlationId);
-			let tab = this.tabDashboard;
-			const page = this.$route.params.page;
+		const clickTab = (value) => {
+			tabSupport.value.changeTab(value);
+			drawer.value = false;
+		};
+		const determineActiveTab = () => {
+			const correlationId = base.correlationId();
+			base.logger.debug('Character', 'determineActiveTab', null, null, correlationId);
+			let tab = tabDashboard;
+			const page = route.params.page;
 			if (!String.isNullOrEmpty(page))
-				tab = this.tabWiki;
+				tab = tabDashboard;
 
-			const self = this;
 			const timer = setInterval(async () => {
 				clearInterval(timer);
-				self.tabSupport.changeTab(tab);
+				tabSupport.value.changeTab(tab);
 			}, 150);
-		},
-		getId() {
-			return this.$route.params.id;
-		},
-		getGameSystemName(id) {
-			const results = GlobalUtility.$store.getters.getGameSystem(id);
+		};
+		const getGameSystemName = (id) => {
+			const results = LibraryClientUtility.$store.getters.getGameSystem(base.correlationId(), id);
 			return results ? results.name : '';
-		},
-		async initializeCharacter(correlationId) {
-			const self = this;
-			// try and fetch an update from the api
-			GlobalUtility.$store.dispatcher.characters.getCharacter(correlationId, this.getId())
+		};
+		const initializeGameSystem = async (correlationId) => {
+			if (isGameSystemPathfinder2e.value)
+				servicePathfinder2e.initializeFetches(correlationId, LibraryClientUtility.$store);
+			if (isGameSystemStarfinder1e.value)
+				serviceStarfinder1e.initializeFetches(correlationId, LibraryClientUtility.$store);
+		};
+		const initializeCharacter = async (correlationId) => {
+			LibraryClientUtility.$store.dispatcher.characters.getCharacter(correlationId, getId())
 				.then(async (response) => {
 					try {
-						self.logger.debug('Character', 'initializeCharacter', 'response', response);
-						if (this.hasFailed(response)) {
+						base.logger.debug('Character', 'initializeCharacter', 'response', response);
+						if (base.hasFailed(response)) {
 							VueUtility.invalid();
 							return;
 						}
 
-						// TODO: Check to see if we can even see it.... otherwise redirect to homepage?
-
-						await self.initializeGameSystem(correlationId);
+						await initializeGameSystem(correlationId);
 
 						try {
-							let scenarios = GlobalUtility.$store.state.scenarios.listing;
+							const scenarios = LibraryClientUtility.$store.scenarios.listing;
 							if (!scenarios || (scenarios.length <= 0))
-								await GlobalUtility.$store.dispatcher.scenarios.getScenarioListing(correlationId, response.results.gameSystemId);
+								await LibraryClientUtility.$store.dispatcher.scenarios.getScenarioListing(correlationId, response.results.gameSystemId);
 						}
-						catch(err) {
-							self.logger.error('Character', 'initializeCharacter', null, err, null, null, correlationId);
+						catch (err) {
+							base.logger.error('Character', 'initializeCharacter', null, err, null, null, correlationId);
 							VueUtility.invalid();
 						}
 
 						const timeout = setTimeout(function () {
-							self.initializeCompleted = true;
+							initializeCompleted.value = true;
 							clearTimeout(timeout);
 						}, DelayMs);
 					}
-					catch(err) {
+					catch (err) {
 						VueUtility.invalid();
 					}
 				})
 				.catch(() => {
 					VueUtility.invalid();
 				});
-		},
-		async initializeGameSystem(correlationId) {
-			// GameSystems Update
-			if (this.isGameSystemPathfinder2e)
-				this.servicePathfinder2e.initializeFetches(correlationId, GlobalUtility.$store);
-			if (this.isGameSystemStarfinder1e)
-				this.serviceStarfinder1e.initializeFetches(correlationId, GlobalUtility.$store);
-		},
-		initializeTabs() {
-			// TODO: Depending on security results, only some of these should be displayed...
-			this.tabSupport.add(this.tabDashboard, 'dashboard', GlobalUtility.$trans.t('characters.dashboard'));
-			this.tabSupport.add(this.tabBoons, 'list_alt', GlobalUtility.$trans.t('characters.boons.namePlural'));
-			this.tabSupport.add(this.tabInventory, 'list_alt', GlobalUtility.$trans.t('characters.inventory'));
-		}
+		};
+		const initializeTabs = () => {
+			tabSupport.value.add(tabDashboard, 'mdi-view-dashboard', LibraryClientUtility.$trans.t('characters.dashboard'));
+			tabSupport.value.add(tabBoons, 'mdi-format-list-bulleted', LibraryClientUtility.$trans.t('characters.boons.namePlural'));
+			tabSupport.value.add(tabInventory, 'mdi-format-list-bulleted', LibraryClientUtility.$trans.t('characters.inventory'));
+		};
+
+		onMounted(async () => {
+			VueUtility.checkId(route);
+
+			initializeCompleted.value = false;
+
+			initializeTabs();
+			determineActiveTab();
+
+			LibraryClientUtility.$EventBus.on('toggle-drawer', () => {
+				drawer.value = !drawer.value;
+			});
+
+			await initializeCharacter(base.correlationId());
+		});
+
+		return {
+			...base,
+			drawer,
+			initializeCompleted,
+			tabSupport,
+			tabDashboard,
+			tabBoons,
+			tabInventory,
+			character,
+			isGameSystemPathfinder2e,
+			isGameSystemStarfinder1e,
+			user,
+			clickTab,
+			determineActiveTab,
+			getId,
+			getGameSystemName,
+			initializeCharacter,
+			initializeGameSystem,
+			initializeTabs
+		};
 	}
 };
 </script>

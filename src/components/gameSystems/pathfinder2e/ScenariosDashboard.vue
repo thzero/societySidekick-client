@@ -1,113 +1,82 @@
 <template>
-	<vue-fragment>
-		<v-layout
-			wrap
-			pt-2
+	<v-row class="pt-2">
+		<v-col
+			cols="12"
+			class="pt-8"
 		>
-			<v-flex
-				xs12
-				sm12
-				md12
-				lg12
-				xl12
-				pt-8
+			<CharacterDetails
+				:value="value"
+				:editable="editable"
+			/>
+		</v-col>
+		<v-col
+			cols="12"
+			class="pt-8"
+		>
+			<v-card
+				class="mb-2"
+				style="position: relative; overflow: visible;"
 			>
-				<CharacterDetails
-					v-model="value"
-					:editable="editable"
-				/>
-			</v-flex>
-			<v-flex
-				xs12
-				sm12
-				md12
-				lg12
-				xl12
-				pt-8
-			>
-				<v-card
-					class="mb-2"
+				<v-card-title
+					class="pb-2"
 				>
-					<v-card-title
-						class="pb-2"
-					>
-						<v-layout>
-							<v-flex
-								xs5
-							>
-								{{ $t('characters.scenarios.namePlural') }}
-							</v-flex>
-							<v-flex
-								xs7
-								style="text-align: right; padding-right: 45px;"
-							>
-								<!-- <VCollapseButton
-									:value="false"
-									:label="$t('buttons.collapseAll')"
-								/>
-								<VCollapseButton
-									:value="true"
-									:label="$t('buttons.expandAll')"
-								/> -->
-							</v-flex>
-						</v-layout>
-					</v-card-title>
-					<v-card-text>
-						<v-flex
-							xs12
-						>
-							<v-fab-transition
-								v-if="editable"
-							>
-								<v-btn
-									absolute
-									fab
-									right
-									top
-									small
-									dark
-									color="green"
-									@click="dialogScenarioNew()"
-								>
-									<v-icon>mdi-plus</v-icon>
-								</v-btn>
-							</v-fab-transition>
-						</v-flex>
-					</v-card-text>
-				</v-card>
-				<div
-					v-for="item of scenarios"
-					:key="item.id"
+					<v-row>
+						<v-col cols="5">
+							{{ $t('characters.scenarios.namePlural') }}
+						</v-col>
+						<v-col
+							cols="7"
+							style="text-align: right; padding-right: 45px;"
+						/>
+					</v-row>
+				</v-card-title>
+				<v-fab-transition
+					v-if="editable"
 				>
-					<Scenario
-						:value="item"
-						:character="value"
-						:editable="editable"
-						:collapse="collapseInner"
-						@dialog-edit="dialogScenarioEdit"
+					<v-btn
+						icon="mdi-plus"
+						size="small"
+						color="green"
+						style="position: absolute; right: 16px; top: 0; transform: translateY(-50%);"
+						@click="dialogScenarioNew()"
 					/>
-				</div>
-			</v-flex>
-		</v-layout>
+				</v-fab-transition>
+			</v-card>
+		</v-col>
+		<v-col
+			v-for="item of scenarios"
+			:key="item.id"
+			cols="12"
+		>
+			<Scenario
+				:value="item"
+				:character="value"
+				:editable="editable"
+				:collapse="collapseInner"
+				@dialog-edit="dialogScenarioEdit"
+			/>
+		</v-col>
 		<ScenarioDialog
-			ref="scenarioDialog"
-			v-model="dialogScenarioItem"
+			ref="scenarioDialogRef"
 			:character="value"
 			:label="$t('scenarios.name')"
 			:signal="dialogScenario.signal"
 			@cancel="dialogScenario.cancel()"
 			@ok="dialogScenario.ok()"
 		/>
-	</vue-fragment>
+	</v-row>
 </template>
 
 <script>
+import { computed } from 'vue';
+
 import Constants from '@/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import baseScenarioDashboard from '@/components/gameSystems/baseScenarioDashboard';
+import { useBaseScenarioDashboardComponent } from '@/components/gameSystems/baseScenarioDashboard';
+
 import CharacterDetails from '@/components/gameSystems/pathfinder2e/CharacterDetails';
 import Scenario from '@/components/gameSystems/pathfinder2e/Scenario';
 import ScenarioDialog from '@/components/gameSystems/pathfinder2e/ScenarioDialog';
@@ -117,20 +86,28 @@ export default {
 	components: {
 		CharacterDetails,
 		Scenario,
-		ScenarioDialog,
-		// VCollapseButton
+		ScenarioDialog
 	},
-	extends: baseScenarioDashboard,
-	computed: {
-		scenarios() {
-			const results = this.value && this.value.scenarios ? this.value.scenarios : [];
-			return LibraryUtility.sortByOrder(results, true);
+	props: {
+		value: {
+			type: Object,
+			default: null
 		}
 	},
-	methods: {
-		initializeServices() {
-			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
-		}
+	setup(props, context) {
+		const serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+
+		const base = useBaseScenarioDashboardComponent(props, context, { serviceGameSystem });
+
+		const scenarios = computed(() => {
+			const results = props.value && props.value.scenarios ? props.value.scenarios : [];
+			return LibraryCommonUtility.sortByOrder(results, true);
+		});
+
+		return {
+			...base,
+			scenarios
+		};
 	}
 };
 </script>

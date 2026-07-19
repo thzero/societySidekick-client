@@ -1,7 +1,7 @@
 <template>
 	<v-row>
 		<v-col cols="12">
-			<table style="width: 100;">
+			<table style="width: 100;"><tbody>
 				<tr>
 					<th
 						class="text-left subtitle-2 gameSystemHeaderSpacer"
@@ -19,10 +19,10 @@
 						>{{ value.factionName }}</span>
 					</td>
 				</tr>
-			</table>
+			</tbody></table>
 		</v-col>
 		<v-col cols="6">
-			<table>
+			<table><tbody>
 				<tr>
 					<th
 						class="text-left subtitle-2 gameSystemHeaderSpacer"
@@ -34,10 +34,10 @@
 						{{ className }}
 					</td>
 				</tr>
-			</table>
+			</tbody></table>
 		</v-col>
 		<v-col cols="6">
-			<table style="margin-left: auto; margin-right: 0px;">
+			<table style="margin-left: auto; margin-right: 0px;"><tbody>
 				<tr>
 					<th class="text-left subtitle-2 gameSystemHeaderSpacer">
 						{{ $t('characters.gameSystems.pathfinder2e.status.name') }}
@@ -52,10 +52,10 @@
 						/>
 					</td>
 				</tr>
-			</table>
+			</tbody></table>
 		</v-col>
 		<v-col cols="6">
-			<table>
+			<table><tbody>
 				<tr>
 					<th
 						class="text-left subtitle-2 gameSystemHeaderSpacer"
@@ -67,10 +67,10 @@
 						{{ value.level }}
 					</td>
 				</tr>
-			</table>
+			</tbody></table>
 		</v-col>
 		<v-col cols="6">
-			<table style="margin-left: auto; margin-right: 0px;">
+			<table style="margin-left: auto; margin-right: 0px;"><tbody>
 				<tr>
 					<th class="text-left subtitle-2 gameSystemHeaderSpacer">
 						{{ $t('characters.gameSystems.' + gameSystemil8n + '.experiencePointsAbbr') }} /
@@ -84,7 +84,7 @@
 						/>
 					</td>
 				</tr>
-			</table>
+			</tbody></table>
 		</v-col>
 	</v-row>
 </template>

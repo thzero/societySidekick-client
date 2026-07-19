@@ -1,225 +1,208 @@
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { computed, ref, watch } from 'vue';
 
-import LibraryUtility from '@thzero/library_common/utility';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
-import VAutoCompleteWithValidation from '@/library_vue_vuetify/components/form/VAutoCompleteWithValidation';
-import VNumberField from '@/library_vue_vuetify/components/form/VNumberField';
-import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
+import { useBaseComponent } from '@/components/base';
 
-export default {
-	name: 'BaseInventoryDialog',
-	components: {
-		VFormDialog,
-		VAutoCompleteWithValidation,
-		VNumberField,
-		VNumberFieldWithValidation,
-		VSelectWithValidation,
-		VTextFieldWithValidation
-	},
-	extends: VFormDialog,
-	data: () => ({
-		character: null,
-		innerValue: {},
-		isNew: false,
-		item: null,
-		itemId: null,
-		rulesGameSystem: null,
-		scenarios: [],
-		serviceGameSystem: null,
-		watch: null
-	}),
-	computed: {
-		characterCurrencyCurrent: {
-			get: function () {
-				return this.rulesGameSystem.calculateCharacterCurrencyCurrent(this.correlationId(), this.character, this.total);
-			},
-			set: function() {},
-			cache: false
-		},
-		characterScenarioCurrencyCurrent: {
-			get: function () {
-				if (!this.character || !this.character.scenarios || !this.innerValue)
-					return 0;
+// Reusable inventory-dialog logic composable. The per-game-system leaf owns the template (VtFormDialog
+// wrapper + fields) and passes services/callbacks via options:
+//   { serviceGameSystem, rulesGameSystem, gameSystemId(), transCurrency() }
+export function useBaseInventoryDialogComponent(props, context, options) {
+	const base = useBaseComponent(props, context, options);
 
-				const scenario = this.character.scenarios.find(l => l.id === this.innerValue.boughtScenarioId);
-				if (!scenario)
-					return 0;
+	const serviceGameSystem = options.serviceGameSystem;
+	const rulesGameSystem = options.rulesGameSystem;
 
-				return this.rulesGameSystem.calculateCharacterCurrencyScenario(this.correlationId(), scenario, this.total);
-			},
-			set: function() {},
-			cache: false
-		},
-		characterScenarios() {
-			if (!this.character || !this.character.scenarios)
-				return [];
+	const character = ref(null);
+	const innerValue = ref({});
+	const isNew = ref(false);
+	const item = ref(null);
+	const itemId = ref(null);
+	const scenarios = ref([]);
 
-			const correlationId = this.correlationId();
-			let scenarios = this.character.scenarios.slice(0);
-			for (const item of scenarios) {
-				item.scenario = this.scenarios.find(l => l.id == item.scenarioId);
-				item.displayName = item.order + ') ' + this.scenarioName(correlationId, item.scenario);
-				item.name = item.scenario ? item.scenario.name : '';
-			}
+	const scenarioName = (correlationId, scenario) => {
+		return scenario ? serviceGameSystem.scenarioName(correlationId, scenario) : '';
+	};
 
-			return LibraryUtility.sortByOrder(scenarios, true);
-		},
-		characterScenariosBlank() {
-			return LibraryUtility.selectBlank(this.characterScenarios.slice(0));
-		},
-		isItemOrItemId() {
-			const hasItem = this.innerValue.item && this.innerValue.item !== '';
-			const hasItemId = this.itemId && this.itemId !== '';
-			if (!hasItem && !hasItemId)
+	const total = computed(() => {
+		if (!innerValue.value)
+			return 0;
+		return rulesGameSystem.calculateItemTotalFixed(innerValue.value.quantity, innerValue.value.value);
+	});
+	const quantity = computed(() => {
+		return item.value ? innerValue.value.quantity * item.value.quantity : innerValue.value.quantity;
+	});
+	const characterCurrencyCurrent = computed({
+		get: () => rulesGameSystem.calculateCharacterCurrencyCurrent(base.correlationId(), character.value, total.value),
+		set: () => {}
+	});
+	const characterScenarioCurrencyCurrent = computed({
+		get: () => {
+			if (!character.value || !character.value.scenarios || !innerValue.value)
 				return 0;
-			if (hasItemId)
-				return 1;
-			return 2;
+			const scenario = character.value.scenarios.find(l => l.id === innerValue.value.boughtScenarioId);
+			if (!scenario)
+				return 0;
+			return rulesGameSystem.calculateCharacterCurrencyScenario(base.correlationId(), scenario, total.value);
 		},
-		quantity: {
-			get: function () {
-				// const value = this.innerValue
-				// const quantity = value.quantity
-				return this.item ? this.innerValue.quantity * this.item.quantity : this.innerValue.quantity;
-			},
-			cache: false
-		},
-		total: {
-			get: function () {
-				if (!this.innerValue)
-					return 0;
-				return this.rulesGameSystem.calculateItemTotalFixed(this.innerValue.quantity, this.innerValue.value);
-			},
-			cache: false
-		},
-		usedRules() {
-			// return 'decimal:0|min_value:0|max_value:99|'
-			const rules = 'decimal:0|min_value:0|max_value:' + (this.quantity ? this.quantity : '99') + '|';
-			return rules;
+		set: () => {}
+	});
+	const characterScenarios = computed(() => {
+		if (!character.value || !character.value.scenarios)
+			return [];
+		const correlationId = base.correlationId();
+		const list = character.value.scenarios.slice(0);
+		for (const s of list) {
+			s.scenario = scenarios.value.find(l => l.id == s.scenarioId);
+			s.displayName = s.order + ') ' + scenarioName(correlationId, s.scenario);
+			s.name = s.scenario ? s.scenario.name : '';
 		}
-	},
-	watch: {
-		itemId(newValue) {
-			if (!newValue) {
-				this.item = null;
-				return;
-			}
+		return LibraryCommonUtility.sortByOrder(list, true);
+	});
+	const characterScenariosBlank = computed(() => {
+		return LibraryCommonUtility.selectBlank(characterScenarios.value.slice(0));
+	});
+	const isItemOrItemId = computed(() => {
+		const hasItem = innerValue.value.item && innerValue.value.item !== '';
+		const hasItemId = itemId.value && itemId.value !== '';
+		if (!hasItem && !hasItemId)
+			return 0;
+		if (hasItemId)
+			return 1;
+		return 2;
+	});
 
-			this.item = GlobalUtility.$store.state.equipment.listing.find(l => l.id === newValue);
-		},
-		innerValue: {
-			// eslint-disable-next-line
-			handler(newValue) {
-				this.onChange(newValue);
-			},
-			deep: true
-		}
-	},
-	async created() {
-		this.initializeServices();
-		this.scenarios = await this.initScenarios();
-	},
-	methods: {
-		async cancel() {
-			this.$emit('cancel');
-		},
-		async close() {
-		},
-		gameSystemId() {
-			return this.rulesGameSystem.gameSystemId();
-		},
-		async initScenarios() {
-			return this.serviceGameSystem.scenarios(this.correlationId(), GlobalUtility.$store);
-		},
-		initializeServices() {
-			this.notImplementedError();
-		},
-		async ok() {
-			this.$emit('ok');
-			return true;
-		},
-		onChange(newValue) {
-			if (!newValue)
-				return;
+	const gameSystemId = () => {
+		return options.gameSystemId ? options.gameSystemId() : rulesGameSystem.gameSystemId();
+	};
+	const transCurrency = () => {
+		return options.transCurrency ? options.transCurrency() : '';
+	};
 
-			const correlationId = this.correlationId();
-
-			const self = this;
-			(async () => {
-				self.rulesGameSystem.calculateCharacter(correlationId, self.character, null, newValue.id);
-			})().catch(err => {
-				self.logger.error('BaseInventoryDialog', 'onChange', null, err, null, null, correlationId);
-			});
-		},
-		async preCompleteResponseDelete(correlationId) {
-			return await GlobalUtility.$store.dispatcher.characters.deleteCharacterInventory(correlationId, this.character.id, this.innerValue.id);
-		},
-		async preCompleteResponseOk(correlationId) {
-			const inventory = {
-				id: this.innerValue.id,
-				updatedTimestamp: this.character.updatedTimestamp,
-				gameSystemId: this.gameSystemId(),
-				timestamp: this.innerValue.timestamp,
-				boughtScenarioId: this.innerValue.boughtScenarioId,
-				item: String.trim(this.innerValue.item),
-				itemId: this.itemId,
-				quantity: String.trim(this.innerValue.quantity),
-				soldScenarioId: this.innerValue.soldScenarioId,
-				usedScenarioId: this.innerValue.usedScenarioId,
-				used: String.trim(this.innerValue.used),
-				value: String.trim(this.innerValue.value)
-			};
-			if (!this.innerValue.item && !this.itemId) {
-				const response = this.error('BaseInventoryDialog', 'preCompleteResponseOk', null, null, null, null, correlationId);
-				response.addGeneric(GlobalUtility.$trans.t('errors.inventories.eitherItemOrName'));
-				return response;
-			}
-			const response = await GlobalUtility.$store.dispatcher.characters.updateCharacterInventory(correlationId, this.character.id, inventory);
-			this.logger.debug('BaseInventoryDialog', 'preCompleteResponseOk', 'response', response, correlationId);
+	const cancel = async () => {
+		context.emit('cancel');
+	};
+	const close = async () => {
+	};
+	const ok = async () => {
+		context.emit('ok');
+		return true;
+	};
+	const initScenarios = async () => {
+		return serviceGameSystem.scenarios(base.correlationId(), LibraryClientUtility.$store);
+	};
+	const onChange = (newValue) => {
+		if (!newValue)
+			return;
+		const correlationId = base.correlationId();
+		(async () => {
+			rulesGameSystem.calculateCharacter(correlationId, character.value, null, newValue.id);
+		})().catch(err => {
+			base.logger.error('BaseInventoryDialog', 'onChange', null, err, null, null, correlationId);
+		});
+	};
+	const preCompleteResponseDelete = async (correlationId) => {
+		return await LibraryClientUtility.$store.dispatcher.characters.deleteCharacterInventory(correlationId, character.value.id, innerValue.value.id);
+	};
+	const preCompleteResponseOk = async (correlationId) => {
+		const inventory = {
+			id: innerValue.value.id,
+			updatedTimestamp: character.value.updatedTimestamp,
+			gameSystemId: gameSystemId(),
+			timestamp: innerValue.value.timestamp,
+			boughtScenarioId: innerValue.value.boughtScenarioId,
+			item: String.trim(innerValue.value.item),
+			itemId: itemId.value,
+			quantity: String.trim(innerValue.value.quantity),
+			soldScenarioId: innerValue.value.soldScenarioId,
+			usedScenarioId: innerValue.value.usedScenarioId,
+			used: String.trim(innerValue.value.used),
+			value: String.trim(innerValue.value.value)
+		};
+		if (!innerValue.value.item && !itemId.value) {
+			const response = base.error('BaseInventoryDialog', 'preCompleteResponseOk', null, null, null, null, correlationId);
+			response.addGeneric(LibraryClientUtility.$trans.t('errors.inventories.eitherItemOrName'));
 			return response;
-		},
-		async querySelection(newVal) {
-			let results = [];
-			newVal = newVal ? String.trim(newVal) : newVal;
-			if (newVal &&newVal.length >= 3)
-				results = await GlobalUtility.$store.dispatcher.equipment.equipmentSearch(this.correlationId(), this.gameSystemId(), { name: newVal });
-			return LibraryUtility.selectBlank(results);
-		},
-		async resetDialog(correlationId, value) {
-			this.itemId = null;
-			this.character = value.character;
-			const temp = value.character.inventory.find(l => l.id == value.id);
-			temp.timestamp = temp.timestamp ? LibraryUtility.convertTimestampToLocal(temp.timestamp).valueOf() : LibraryUtility.getTimestampLocal().valueOf();
-			this.isNew = value && !value.id;
-			this.innerValue = temp;
-
-			if (this.watch)
-				this.watch();
-
-			this.watch = this.$watch('itemId', async (newVal) => {
-				if (newVal) {
-					const item = GlobalUtility.$store.getters.getEquipment(newVal);
-					if (item) {
-						this.innerValue.item = item.name;
-						this.innerValue.value = item.cost;
-						return;
-					}
-				}
-
-				this.innerValue.item = null;
-				this.innerValue.value = null;
-			});
-		},
-		scenarioName(correlationId, scenario) {
-			return scenario ? this.serviceGameSystem.scenarioName(correlationId, scenario) : '';
-		},
-		transCurrency() {
-			return '';
 		}
-	}
+		const response = await LibraryClientUtility.$store.dispatcher.characters.updateCharacterInventory(correlationId, character.value.id, inventory);
+		base.logger.debug('BaseInventoryDialog', 'preCompleteResponseOk', 'response', response, correlationId);
+		return response;
+	};
+	const querySelection = async (newVal) => {
+		let results = [];
+		newVal = newVal ? String.trim(newVal) : newVal;
+		if (newVal && newVal.length >= 3)
+			results = await LibraryClientUtility.$store.dispatcher.equipment.equipmentSearch(base.correlationId(), gameSystemId(), { name: newVal });
+		return LibraryCommonUtility.selectBlank(results);
+	};
+	const resetDialog = async (correlationId, value) => {
+		itemId.value = null;
+		character.value = value.character;
+		const temp = value.character.inventory.find(l => l.id == value.id);
+		temp.timestamp = temp.timestamp ? LibraryCommonUtility.convertTimestampToLocal(temp.timestamp).valueOf() : LibraryCommonUtility.getTimestampLocal().valueOf();
+		isNew.value = value && !value.id;
+		innerValue.value = temp;
+	};
+
+	// itemId watcher: resolve the equipment item + backfill item name/value (was a static watch + a
+	// dynamically-recreated $watch in resetDialog; folded into one persistent watcher).
+	watch(itemId, (newValue) => {
+		if (!newValue) {
+			item.value = null;
+			if (innerValue.value) {
+				innerValue.value.item = null;
+				innerValue.value.value = null;
+			}
+			return;
+		}
+		item.value = LibraryClientUtility.$store.equipment.listing.find(l => l.id === newValue);
+		const equip = LibraryClientUtility.$store.getters.getEquipment(base.correlationId(), newValue);
+		if (equip && innerValue.value) {
+			innerValue.value.item = equip.name;
+			innerValue.value.value = equip.cost;
+		}
+	});
+	watch(innerValue, (newValue) => {
+		onChange(newValue);
+	}, { deep: true });
+
+	// created(): load scenarios.
+	(async () => {
+		scenarios.value = await initScenarios();
+	})();
+
+	return {
+		...base,
+		serviceGameSystem,
+		rulesGameSystem,
+		character,
+		innerValue,
+		isNew,
+		item,
+		itemId,
+		scenarios,
+		total,
+		quantity,
+		characterCurrencyCurrent,
+		characterScenarioCurrencyCurrent,
+		characterScenarios,
+		characterScenariosBlank,
+		isItemOrItemId,
+		gameSystemId,
+		transCurrency,
+		cancel,
+		close,
+		ok,
+		initScenarios,
+		onChange,
+		preCompleteResponseDelete,
+		preCompleteResponseOk,
+		querySelection,
+		resetDialog,
+		reset: resetDialog,
+		scenarioName
+	};
 };
 </script>

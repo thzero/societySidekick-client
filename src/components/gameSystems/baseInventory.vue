@@ -1,117 +1,61 @@
-<template>
-	<tr>
-		<td
-			class="text-bottom body-2"
-		>
-			<v-tooltip bottom>
-				<template #activator="{ on }">
-					<span v-on="on">{{ scenarioOrder(value.boughtScenarioId) }}</span>
-				</template>
-				<span>{{ scenarioName(value.boughtScenarioId) }}</span>
-			</v-tooltip>
-		</td>
-		<td
-			v-if="$vuetify.breakpoint.mdAndUp"
-			class="text-bottom body-2"
-		>
-			{{ value.item }}
-		</td>
-		<td class="text-bottom body-2">
-			{{ value.quantity }}
-		</td>
-		<td class="text-bottom body-2">
-			{{ value.value }}
-		</td>
-		<td
-			class="text-bottom body-2"
-		>
-			<v-tooltip bottom>
-				<template #activator="{ on }">
-					<span v-on="on">{{ scenarioOrder(value.soldScenarioId) }}</span>
-				</template>
-				<span>{{ scenarioName(value.soldScenarioId) }}</span>
-			</v-tooltip>
-		</td>
-		<td class="text-bottom body-2">
-			{{ value.used }}
-		</td>
-		<td>
-			<v-btn
-				depressed
-				small
-				style="min-width: 0px"
-				@click="dialogEditOpen()"
-			>
-				<v-icon>mdi-pencil</v-icon>
-			</v-btn>
-		</td>
-	</tr>
-</template>
-
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { ref } from 'vue';
 
-import baseEdit from '@/library_vue/components/baseEdit';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import { useBaseEditComponent } from '@/components/baseEdit';
 
-export default {
-	name: 'BaseInventory',
-	extends: baseEdit,
-	props: {
-		value: {
-			type: Object,
-			default: () => {}
-		},
-		editable: {
-			type: Boolean,
-			default: false
-		}
-	},
-	data: () => ({
-		dialogEdit: new DialogSupport(),
-		service: null
-	}),
-	created() {
-		this.initService();
-	},
-	methods: {
-		dialogEditOpen() {
-			this.$emit('dialog-edit', this.value);
-		},
-		getGameSystemName(id) {
-			const results = GlobalUtility.$store.getters.getGameSystem(id);
-			return results ? results.name : '';
-		},
-		initService() {
-			this.notImplementedError();
-		},
-		scenarioById(id) {
-			return this.character.scenarios.find(l => l.id === id);
-		},
-		scenarioName(id) {
-			if (!this.character || !this.character.inventory)
-				return '';
+import DialogSupport from '@thzero/library_client_vue3/components/support/dialog';
 
-			const scenario = this.scenarioById(id);
-			if (!scenario)
-				return '';
+// Base inventory-row composable. Leaf owns the <tr> template + passes options { serviceGameSystem }.
+// The leaf must declare a `character` prop (used by scenarioById/scenarioName/scenarioOrder).
+export function useGameSystemBaseInventoryComponent(props, context, options) {
+	const base = useBaseEditComponent(props, context, options);
 
-			return this.scenarioNameById(scenario.scenarioId, GlobalUtility.$store);
-		},
-		scenarioNameById(id) {
-			return id ? this.serviceGameSystem.determineScenarioNameById(this.correlationId(), id, GlobalUtility.$store) : '';
-		},
-		scenarioOrder(id) {
-			if (!this.character || !this.character.inventory)
-				return '';
+	const serviceGameSystem = options.serviceGameSystem;
 
-			const scenario = this.scenarioById(id);
-			if (!scenario)
-				return '';
+	const dialogEdit = ref(new DialogSupport());
 
-			return scenario.order;
-		}
-	}
+	const dialogEditOpen = () => {
+		context.emit('dialog-edit', props.value);
+	};
+	const getGameSystemName = (id) => {
+		const results = LibraryClientUtility.$store.getters.getGameSystem(base.correlationId(), id);
+		return results ? results.name : '';
+	};
+	const scenarioById = (id) => {
+		return props.character.scenarios.find(l => l.id === id);
+	};
+	const scenarioNameById = (id) => {
+		return id ? serviceGameSystem.determineScenarioNameById(base.correlationId(), id, LibraryClientUtility.$store) : '';
+	};
+	const scenarioName = (id) => {
+		if (!props.character || !props.character.inventory)
+			return '';
+		const scenario = scenarioById(id);
+		if (!scenario)
+			return '';
+		return scenarioNameById(scenario.scenarioId);
+	};
+	const scenarioOrder = (id) => {
+		if (!props.character || !props.character.inventory)
+			return '';
+		const scenario = scenarioById(id);
+		if (!scenario)
+			return '';
+		return scenario.order;
+	};
+
+	return {
+		...base,
+		serviceGameSystem,
+		dialogEdit,
+		dialogEditOpen,
+		getGameSystemName,
+		scenarioById,
+		scenarioName,
+		scenarioNameById,
+		scenarioOrder
+	};
 };
 </script>

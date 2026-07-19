@@ -110,10 +110,11 @@ export function useBaseBoonDialogComponent(props, context, options) {
 
 	watch(innerValue, () => {}, { deep: true });
 
+	// Set innerValue synchronously so the template can bind to it on first render.
+	innerValue.value = initBoon(base.correlationId());
+
 	onMounted(async () => {
-		const correlationId = base.correlationId();
-		innerValue.value = initBoon(correlationId);
-		lookups.value = await initializeLookups(correlationId);
+		lookups.value = await initializeLookups(base.correlationId());
 	});
 
 	return {
@@ -143,7 +144,8 @@ export function useBaseBoonDialogComponent(props, context, options) {
 		dialogBoonsOpen,
 		preComplete,
 		preCompleteResponseDelete,
-		resetDialog
+		resetDialog,
+		reset: resetDialog
 	};
 };
 </script>

@@ -5,7 +5,7 @@
 		<v-card-text
 			style="padding-left: 0px; padding-right: 0px;"
 		>
-			<table>
+			<table><tbody>
 				<tr>
 					<th class="text-left subtitle-2 gameSystemHeaderSpacer">
 						{{ $t('forms.name' ) }}
@@ -22,7 +22,7 @@
 						{{ value.favorite ? $t('strings.yes') : $t('strings.no') }}
 					</td>
 				</tr>
-			</table>
+			</tbody></table>
 		</v-card-text>
 		<v-card-actions>
 			<v-spacer />

@@ -144,13 +144,9 @@ export default {
 			fetch
 		};
 	},
-	// eslint-disable-next-line
-	async beforeRouteEnter (to, from, next) {
-		next();
+	async beforeRouteEnter (to, from) {
 	},
-	// eslint-disable-next-line
-	async beforeRouteUpdate (to, from, next) {
-		next();
+	async beforeRouteUpdate (to, from) {
 	}
 };
 </script>

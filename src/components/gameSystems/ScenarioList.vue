@@ -18,7 +18,7 @@
 								cellspacing="0"
 								cellpadding="0"
 								style="width: 100%;"
-							>
+							><tbody>
 								<tr>
 									<td style="width: 100%;">
 										<VtSelect
@@ -70,7 +70,7 @@
 											cellpadding="0"
 											style="width: 100%;"
 											class="pt-1"
-										>
+										><tbody>
 											<tr>
 												<td>
 													<VtTextField
@@ -115,7 +115,7 @@
 													/>
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 									<td
 										v-if="$vuetify.display.mdAndDown"
@@ -127,7 +127,7 @@
 											cellpadding="0"
 											class="mb-1 ml-2"
 											style="margin-left: auto; margin-right: 0px;"
-										>
+										><tbody>
 											<tr>
 												<td
 													style="padding-right: 4px;"
@@ -235,10 +235,10 @@
 													</v-tooltip>
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 								</tr>
-							</table>
+							</tbody></table>
 						</v-col>
 						<v-col
 							cols="12"
@@ -251,7 +251,7 @@
 								cellpadding="0"
 								class="mb-1"
 								style="width: 100%;"
-							>
+							><tbody>
 								<tr>
 									<td style="width: 100%;">
 										<table
@@ -260,7 +260,7 @@
 											cellpadding="0"
 											class="mb-1"
 											style="width: 100%;"
-										>
+										><tbody>
 											<tr>
 												<td>
 													<VtTextField
@@ -311,7 +311,7 @@
 													cellspacing="0"
 													cellpadding="0"
 													style="width: 100%;"
-												>
+												><tbody>
 													<tr>
 														<td style="padding-right: 4px;">
 															<VtSelect
@@ -328,9 +328,9 @@
 															<VtDirectionButton v-model="sortDirection" />
 														</td>
 													</tr>
-												</table>
+												</tbody></table>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 									<td style="vertical-align: top;">
 										<table
@@ -339,7 +339,7 @@
 											cellpadding="0"
 											class="mb-1 ml-2"
 											style="margin-left: auto; margin-right: 0px;"
-										>
+										><tbody>
 											<tr>
 												<td
 													style="padding-right: 4px;"
@@ -447,10 +447,10 @@
 													</v-tooltip>
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 								</tr>
-							</table>
+							</tbody></table>
 						</v-col>
 						<ShareDialog
 							ref="shareDialogRef"
@@ -550,6 +550,18 @@ export default {
 		const users = ref([]);
 
 		const scenarios = ref([]);
+
+		// base.gameSystemFilter is a settings-backed computed that does not reliably re-trigger reactivity
+		// when persisted via setUserSettings (store settings replacement). Drive the list off a local ref
+		// (updated immediately on select) while still persisting the saved setting through the settings service.
+		const gameSystemFilterLocal = ref(AppUtility.settings().getSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store.user.user, (s) => s.gameSystemFilter));
+		const gameSystemFilter = computed({
+			get: () => gameSystemFilterLocal.value,
+			set: (newVal) => {
+				gameSystemFilterLocal.value = newVal;
+				AppUtility.settings().updateSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store, LibraryClientUtility.$store.user.user, newVal, (s) => { return s.gameSystemFilter = newVal; });
+			}
+		});
 
 		// Returns the active ScenarioListFilter child ref for the current game system (either layout).
 		const filterPathfinder2e = () => {
@@ -672,7 +684,7 @@ export default {
 			}
 		});
 		const scenarioSeasons = computed(() => {
-			const scenariosS = scenariosCache.value[base.gameSystemFilter.value];
+			const scenariosS = scenariosCache.value[gameSystemFilter.value];
 			if (!scenariosS)
 				return [];
 
@@ -761,13 +773,13 @@ export default {
 		const executeScenariosCache = async (correlationId) => {
 			return new Promise(async (resolve, reject) => {
 				try {
-					let scenariosS = scenariosCache.value[base.gameSystemFilter.value];
+					let scenariosS = scenariosCache.value[gameSystemFilter.value];
 					if (!scenariosS) {
-						await LibraryClientUtility.$store.dispatcher.scenarios.getScenarioListing(correlationId, base.gameSystemFilter.value);
+						await LibraryClientUtility.$store.dispatcher.scenarios.getScenarioListing(correlationId, gameSystemFilter.value);
 						scenariosS = LibraryClientUtility.$store.scenarios.listing;
 						if (scenariosS) {
-							scenariosS = scenariosS.filter(l => l.gameSystemId == base.gameSystemFilter.value);
-							scenariosCache.value[base.gameSystemFilter.value] = scenariosS;
+							scenariosS = scenariosS.filter(l => l.gameSystemId == gameSystemFilter.value);
+							scenariosCache.value[gameSystemFilter.value] = scenariosS;
 						}
 					}
 					scenariosS = scenariosS ? scenariosS : [];
@@ -853,7 +865,7 @@ export default {
 		const execute = async () => {
 			users.value = [];
 
-			if (!base.gameSystemFilter.value)
+			if (!gameSystemFilter.value)
 				return [];
 			if (!characterList.value)
 				return [];
@@ -861,7 +873,7 @@ export default {
 			const correlationId = base.correlationId();
 
 			let characters = characterList.value.slice(0);
-			characters = characters.filter(l => l.gameSystemId === base.gameSystemFilter.value);
+			characters = characters.filter(l => l.gameSystemId === gameSystemFilter.value);
 
 			if (!characters || characters.length <= 0)
 				return [];
@@ -979,9 +991,9 @@ export default {
 
 		const clickClearGameSystem = () => {
 			if (base.isGameSystemPathfinder2e.value && filterPathfinder2e())
-				filterPathfinder2e().clear(base.gameSystemFilter.value);
+				filterPathfinder2e().clear(gameSystemFilter.value);
 			if (base.isGameSystemStarfinder1e.value && filterStarfinder1e())
-				filterStarfinder1e().clear(base.gameSystemFilter.value);
+				filterStarfinder1e().clear(gameSystemFilter.value);
 		};
 		const clickClear = () => {
 			if (base.isExternalList.value) {
@@ -1008,7 +1020,7 @@ export default {
 			extract(base.correlationId(), type);
 		};
 		const dialogShareOpen = () => {
-			shareDialogRef.value.openDialog(base.gameSystemFilter.value);
+			shareDialogRef.value.openDialog(gameSystemFilter.value);
 			base.dialogShare.value.open();
 		};
 		const extract = (correlationId, type) => {
@@ -1053,7 +1065,7 @@ export default {
 
 		watch(
 			[
-				() => base.gameSystemFilter.value,
+				() => gameSystemFilter.value,
 				forceRecomputeCounter,
 				scenarioNameValue,
 				scenarioNumberValue,
@@ -1076,6 +1088,7 @@ export default {
 
 		return {
 			...base,
+			gameSystemFilter,
 			shareDialogRef,
 			scenarioListFilterPathfinder2eRef,
 			scenarioListFilterStarfinder1eRef,

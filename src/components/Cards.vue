@@ -52,7 +52,7 @@
 					cellspacing="0"
 					cellpadding="0"
 					style="margin-right: 0px; margin-left: auto;"
-				>
+				><tbody>
 					<tr>
 						<td
 							style="padding-right: 4px;"
@@ -82,7 +82,7 @@
 							</v-btn>
 						</td>
 					</tr>
-				</table>
+				</tbody></table>
 			</v-col>
 			<v-col
 				v-if="gameSystemFilter"
@@ -326,18 +326,16 @@ export default {
 			fetch
 		};
 	},
-	// eslint-disable-next-line
-	async beforeRouteEnter (to, from, next) {
+	async beforeRouteEnter (to, from) {
 		const results = check(to);
-		if (results)
-			next();
+		if (!results)
+			return false;
 	},
-	// eslint-disable-next-line
-	async beforeRouteUpdate (to, from, next) {
+	async beforeRouteUpdate (to, from) {
 		this.logger.debug('Cards', 'beforeRouteUpdate', null, null, this.correlationId());
 		const results = check(to);
-		if (results)
-			next();
+		if (!results)
+			return false;
 	}
 };
 </script>

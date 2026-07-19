@@ -22,6 +22,21 @@ import equipment from '@/store/equipment';
 import factions from '@/store/factions';
 import scenarios from '@/store/scenarios';
 
+// Vuex exposed every module getter FLAT on `$store.getters`; the pinia lib nests them under the module
+// key (`$store.getters.classes.getClass`). skick's common game-system services call them flat
+// (`store.getters.getClass`, `getFaction`, `getScenario`, ...), so merge the domain-module getters into
+// the root getters. Captured here at import time because module registration deletes `module.getters`.
+const domainGetters = Object.assign(
+	{},
+	boons.getters,
+	characters.getters,
+	classes.getters,
+	equipment.getters,
+	factions.getters,
+	scenarios.getters,
+	adminScenarios.getters
+);
+
 class AppStore extends BaseStore {
 	_initModules(addModule) {
 		return [
@@ -127,6 +142,7 @@ class AppStore extends BaseStore {
 
 	_initStoreConfigGettersAdditional() {
 		return {
+			...domainGetters,
 			getGameSystem(correlationId, id) {
 				if (LibraryClientUtility.$store.gameSystems == null)
 					return null;

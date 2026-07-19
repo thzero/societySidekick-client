@@ -1,12 +1,11 @@
 <template>
-	<VFormDialog
+	<VtFormDialog
 		:label="label"
 		:signal="signal"
+		:validation="validation"
 		:pre-complete-ok="preComplete"
-		:fullscreen="fullscreenInternal"
 		max-width="500px"
-		@close="close"
-		@cancel="cancel"
+		@close="cancel"
 		@ok="ok"
 		@open="open"
 	>
@@ -14,276 +13,351 @@
 			v-model="steps"
 		>
 			<v-stepper-header>
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="1"
+					:value="1"
 				>
 					{{ $t('characters.basic') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider />
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="2"
+					:value="2"
 				>
 					{{ $t('characters.details') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider
 					v-if="hasScenarios"
 				/>
-				<v-stepper-step
+				<v-stepper-item
 					v-if="hasScenarios"
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="3"
+					:value="3"
 				>
 					{{ $t('characters.gameSystems.pathfinder2e.boons.name') }}
-				</v-stepper-step>
+				</v-stepper-item>
 			</v-stepper-header>
-			<v-stepper-items>
-				<v-stepper-content
-					step="1"
-					pa-0
+			<v-stepper-window>
+				<v-stepper-window-item
+					:value="1"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="outlined"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard"
 						>
-							<VTextFieldWithValidation
-								ref="name"
+							<VtTextFieldWithValidation
+								ref="nameRef"
 								v-model="innerValue.name"
-								rules="required|min:3|max:30|"
 								vid="name"
+								:validation="validation"
 								:label="$t('forms.name')"
 								:counter="30"
 							/>
-							<VTextFieldWithValidation
-								ref="tagLine"
+							<VtTextFieldWithValidation
+								ref="tagLineRef"
 								v-model="innerValue.tagLine"
-								rules="min:3|max:30"
 								vid="tagLine"
+								:validation="validation"
 								:label="$t('forms.tagLine')"
 								:counter="30"
 							/>
-							<VNumberFieldWithValidation
-								ref="number"
+							<VtNumberFieldWithValidation
+								ref="numberRef"
 								v-model="innerValue.number"
-								rules="required|numeric|min_value:1|max_value:99|"
 								vid="number"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.number')"
 								step="1"
+								:min="1"
+								:max="99"
 							/>
-							<VSelectWithValidation
-								ref="status"
+							<VtSelectWithValidation
+								ref="statusRef"
 								v-model="innerValue.status"
-								rules="required"
 								vid="status"
+								:validation="validation"
 								:items="status"
 								:label="$t('characters.gameSystems.pathfinder2e.status.name')"
 								class="pb-2"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
-					step="2"
-					pa-0
+				</v-stepper-window-item>
+				<v-stepper-window-item
+					:value="2"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="outlined"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard"
 						>
-							<VSelectWithValidation
-								ref="class"
+							<VtSelectWithValidation
+								ref="classRef"
 								v-model="innerValue.classId"
-								rules="required"
 								vid="class"
+								:validation="validation"
 								:items="classes"
 								:label="$t('characters.gameSystems.pathfinder2e.classes.name')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="archetype"
+							<VtSelectWithValidation
+								ref="archetype1Ref"
 								v-model="archetypeId1"
-								vid="archetype"
+								vid="archetype1"
+								:validation="validation"
 								:items="archetypes"
 								:label="$t('characters.gameSystems.pathfinder2e.archetype')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="archetype"
+							<VtSelectWithValidation
+								ref="archetype2Ref"
 								v-model="archetypeId2"
-								vid="archetype"
+								vid="archetype2"
+								:validation="validation"
 								:items="archetypes"
 								:label="$t('characters.gameSystems.pathfinder2e.archetype')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="archetype"
+							<VtSelectWithValidation
+								ref="archetype3Ref"
 								v-model="archetypeId3"
-								vid="archetype"
+								vid="archetype3"
+								:validation="validation"
 								:items="archetypes"
 								:label="$t('characters.gameSystems.pathfinder2e.archetype')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="faction"
+							<VtSelectWithValidation
+								ref="factionRef"
 								v-model="innerValue.factionId"
-								rules="required"
 								vid="faction"
+								:validation="validation"
 								:items="factions"
 								:label="$t('characters.gameSystems.pathfinder2e.faction')"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
+				</v-stepper-window-item>
+				<v-stepper-window-item
 					v-if="hasScenarios"
-					step="3"
-					pa-0
+					:value="3"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="outlined"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard"
 						>
-							<VSelectWithValidation
-								ref="boonGeneric1Id"
+							<VtSelectWithValidation
+								ref="boonGeneric1IdRef"
 								v-model="innerValue.boonGeneric1Id"
 								vid="boonGeneric1Id"
+								:validation="validation"
 								:items="boonsGeneral"
 								:label="$t('characters.gameSystems.pathfinder2e.boons.types.generic')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="boonGeneric2Id"
+							<VtSelectWithValidation
+								ref="boonGeneric2IdRef"
 								v-model="innerValue.boonGeneric2Id"
 								vid="boonGeneric2Id"
+								:validation="validation"
 								:items="boonsGeneral"
 								:label="$t('characters.gameSystems.pathfinder2e.boons.types.generic')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="boonGeneric3Id"
+							<VtSelectWithValidation
+								ref="boonGeneric3IdRef"
 								v-model="innerValue.boonGeneric3Id"
 								vid="boonGeneric3Id"
+								:validation="validation"
 								:items="boonsGeneral"
 								:label="$t('characters.gameSystems.pathfinder2e.boons.types.generic')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="boonFactionId"
+							<VtSelectWithValidation
+								ref="boonFactionIdRef"
 								v-model="innerValue.boonFactionId"
 								vid="boonFactionId"
+								:validation="validation"
 								:items="boonsFaction"
 								:label="$t('characters.gameSystems.pathfinder2e.boons.types.faction')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="boonAdvancedId"
+							<VtSelectWithValidation
+								ref="boonAdvancedIdRef"
 								v-model="innerValue.boonAdvancedId"
 								vid="boonAdvancedId"
+								:validation="validation"
 								:items="boonsAdvanced"
 								:label="$t('characters.gameSystems.pathfinder2e.boons.types.advanced')"
 								class="pb-2"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-			</v-stepper-items>
+				</v-stepper-window-item>
+			</v-stepper-window>
 		</v-stepper>
-	</VFormDialog>
+	</VtFormDialog>
 </template>
 
 <script>
+import { computed, ref } from 'vue';
+
+import useVuelidate from '@vuelidate/core';
+import { maxLength, maxValue, minLength, minValue, numeric, required } from '@vuelidate/validators';
+
 import Constants from '@/constants';
 import PatfinderSharedConstants from '@/common/gameSystems/pathfinder2e/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import baseCharacterDetailsDialog from '@/components/gameSystems/baseCharacterDetailsDialog';
+import { useBaseCharacterDetailsDialogComponent } from '@/components/gameSystems/baseCharacterDetailsDialog';
+
+import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
+import VtNumberFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberFieldWithValidation';
+import VtSelectWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtSelectWithValidation';
+import VtTextFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtTextFieldWithValidation';
 
 export default {
 	name: 'Pathfinder2eCharacterDetailsDialog',
-	extends: baseCharacterDetailsDialog,
-	data: () => ({
-		archetypeId1: null,
-		archetypeId2: null,
-		archetypeId3: null
-	}),
-	computed: {
-		archetypes() {
-			return this.serviceGameSystem.archetypes(this.correlationId(), GlobalUtility.$store, true);
+	components: {
+		VtFormDialog,
+		VtNumberFieldWithValidation,
+		VtSelectWithValidation,
+		VtTextFieldWithValidation
+	},
+	props: {
+		signal: {
+			type: Boolean,
+			default: false
 		},
-		boonsAdvanced() {
-			const boons = this.boons.filter(l => l.type == PatfinderSharedConstants.BoonTypes.ADVANCED);
-			return LibraryUtility.selectBlank(boons);
-		},
-		boonsFaction() {
-			const boons = this.boons.filter(l => l.type == PatfinderSharedConstants.BoonTypes.FACTION);
-			return LibraryUtility.selectBlank(boons);
-		},
-		boonsGeneral() {
-			const boons = this.boons.filter(l => l.type != PatfinderSharedConstants.BoonTypes.ADVANCED || l.type != PatfinderSharedConstants.BoonTypes.FACTION);
-			return LibraryUtility.selectBlank(boons);
-		},
-		classes() {
-			return this.serviceGameSystem.classes(this.correlationId(), GlobalUtility.$store, true);
+		label: {
+			type: String,
+			default: ''
 		}
 	},
-	methods: {
-		initResponseDetails(correlationId, details) {
-			details.archetypeIds = [];
-			if (!String.isNullOrEmpty(this.archetypeId1))
-				details.archetypeIds.push(this.archetypeId1);
-			if (!String.isNullOrEmpty(this.archetypeId2))
-				details.archetypeIds.push(this.archetypeId2);
-			if (!String.isNullOrEmpty(this.archetypeId3))
-				details.archetypeIds.push(this.archetypeId3);
-			details.boonAdvancedId = this.innerValue.boonAdvancedId;
-			details.boonFactionId = this.innerValue.boonFactionId;
-			details.boonGeneric1Id = this.innerValue.boonGeneric1Id;
-			details.boonGeneric2Id = this.innerValue.boonGeneric2Id;
-			details.boonGeneric3Id = this.innerValue.boonGeneric3Id;
-			details.classId = this.innerValue.classId;
-			return details;
-		},
-		initializeServices() {
-			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
-		},
-		// eslint-disable-next-line
-		async resetDialogI(correlationId) {
-			if (this.innerValue.archetypeIds) {
-				this.innerValue.archetypeIds.forEach((item, index) => {
-					if (index === 0)
-						this.archetypeId1 = item;
-					else if (index === 1)
-						this.archetypeId2 = item;
-					else if (index === 2)
-						this.archetypeId3 = item;
+	emits: ['cancel', 'ok'],
+	setup(props, context) {
+		const serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 
-				});
+		const archetypeId1 = ref(null);
+		const archetypeId2 = ref(null);
+		const archetypeId3 = ref(null);
+
+		const base = useBaseCharacterDetailsDialogComponent(props, context, {
+			serviceGameSystem,
+			initResponseDetails: (correlationId, details) => {
+				details.archetypeIds = [];
+				if (!String.isNullOrEmpty(archetypeId1.value))
+					details.archetypeIds.push(archetypeId1.value);
+				if (!String.isNullOrEmpty(archetypeId2.value))
+					details.archetypeIds.push(archetypeId2.value);
+				if (!String.isNullOrEmpty(archetypeId3.value))
+					details.archetypeIds.push(archetypeId3.value);
+				details.boonAdvancedId = base.innerValue.value.boonAdvancedId;
+				details.boonFactionId = base.innerValue.value.boonFactionId;
+				details.boonGeneric1Id = base.innerValue.value.boonGeneric1Id;
+				details.boonGeneric2Id = base.innerValue.value.boonGeneric2Id;
+				details.boonGeneric3Id = base.innerValue.value.boonGeneric3Id;
+				details.classId = base.innerValue.value.classId;
+				return details;
+			},
+			resetDialogI: async (correlationId) => {
+				if (base.innerValue.value.archetypeIds) {
+					base.innerValue.value.archetypeIds.forEach((item, index) => {
+						if (index === 0)
+							archetypeId1.value = item;
+						else if (index === 1)
+							archetypeId2.value = item;
+						else if (index === 2)
+							archetypeId3.value = item;
+					});
+				}
 			}
-		}
+		});
+
+		const archetypes = computed(() => {
+			return serviceGameSystem.archetypes(base.correlationId(), LibraryClientUtility.$store, true);
+		});
+		const boonsAdvanced = computed(() => {
+			return LibraryCommonUtility.selectBlank(base.boons.value.filter(l => l.type == PatfinderSharedConstants.BoonTypes.ADVANCED));
+		});
+		const boonsFaction = computed(() => {
+			return LibraryCommonUtility.selectBlank(base.boons.value.filter(l => l.type == PatfinderSharedConstants.BoonTypes.FACTION));
+		});
+		const boonsGeneral = computed(() => {
+			return LibraryCommonUtility.selectBlank(base.boons.value.filter(l => l.type != PatfinderSharedConstants.BoonTypes.ADVANCED || l.type != PatfinderSharedConstants.BoonTypes.FACTION));
+		});
+		const classes = computed(() => {
+			return serviceGameSystem.classes(base.correlationId(), LibraryClientUtility.$store, true);
+		});
+
+		return {
+			...base,
+			archetypeId1,
+			archetypeId2,
+			archetypeId3,
+			archetypes,
+			boonsAdvanced,
+			boonsFaction,
+			boonsGeneral,
+			classes,
+			validation: useVuelidate({ $scope: 'Pathfinder2eCharacterDetailsDialog' })
+		};
+	},
+	validations() {
+		return {
+			innerValue: {
+				name: {
+					required,
+					minLength: minLength(3),
+					maxLength: maxLength(30),
+					$autoDirty: true
+				},
+				number: {
+					required,
+					numeric,
+					minValue: minValue(1),
+					maxValue: maxValue(99),
+					$autoDirty: true
+				},
+				status: {
+					required,
+					$autoDirty: true
+				},
+				classId: {
+					required,
+					$autoDirty: true
+				},
+				factionId: {
+					required,
+					$autoDirty: true
+				}
+			}
+		};
 	}
 };
 </script>
 
 <style scoped>
+.gameSystemScenarioCard {
+	padding-top: 2px;
+}
 </style>

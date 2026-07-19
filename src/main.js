@@ -1,5 +1,6 @@
 import '@mdi/font/css/materialdesignicons.css';
 import 'vuetify/styles';
+import '@/style/app.css';
 
 import bootStarter from '@thzero/library_client_firebase_vue/boot/starter';
 import bootEventBus from '@thzero/library_client_vue3/boot/eventBus';

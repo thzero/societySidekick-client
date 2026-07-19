@@ -34,6 +34,13 @@
 			>
 				{{ $t('favorites.namePlural') }}
 			</v-btn>
+			<v-btn
+				v-if="isLoggedIn && $vuetify.display.mdAndUp"
+				variant="text"
+				@click="dialogNewCharacterOpen()"
+			>
+				{{ $t('titles.new') }} {{ $t('characters.name') }}
+			</v-btn>
 
 			<template #append>
 				<v-menu>
@@ -53,6 +60,11 @@
 							v-if="isLoggedIn"
 							:title="$t('favorites.namePlural')"
 							@click="clickFavorites()"
+						/>
+						<v-list-item
+							v-if="isLoggedIn"
+							:title="$t('titles.new') + ' ' + $t('characters.name')"
+							@click="dialogNewCharacterOpen()"
 						/>
 						<v-list-item
 							v-if="isLoggedIn"
@@ -89,6 +101,13 @@
 			</v-container>
 		</v-main>
 
+		<CharacterNewDialog
+			ref="newCharacterDialogRef"
+			:label="$t('characters.name')"
+			:signal="dialogNewCharacter.signal"
+			@cancel="dialogNewCharacter.cancel()"
+			@ok="dialogNewCharacter.ok()"
+		/>
 		<VtConfirmationDialog
 			:signal="dialogSignOut.signal"
 			@cancel="dialogSignOut.cancel()"
@@ -124,17 +143,16 @@
 <script>
 import { useAppMainLayout } from '@/layouts/appMainLayout';
 
+import CharacterNewDialog from '@/components/gameSystems/CharacterNewDialog';
 import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
 import VtDisplayDialog from '@thzero/library_client_vue3_vuetify3/components/VtDisplayDialog';
 import VtLayoutFooter from '@thzero/library_client_vue3_vuetify3/components/VtLayoutFooter';
 import VtLoadingOverlay from '@thzero/library_client_vue3_vuetify3/components/VtLoadingOverlay';
 
-// NOTE(migration): the new-character button + CharacterNewDialog are intentionally deferred until
-// the character-dialog chain is migrated. Everything else (nav, sign in/out, markup display,
-// footer, loading overlay) is wired via the useAppMainLayout composable (matches thzero).
 export default {
 	name: 'MainLayout',
 	components: {
+		CharacterNewDialog,
 		VtConfirmationDialog,
 		VtDisplayDialog,
 		VtLayoutFooter,
@@ -171,7 +189,10 @@ export default {
 			dialogDisplayMarkupCancel,
 			dialogDisplayMarkupOk,
 			dialogDisplayMarkupSignal,
-			displayMarkupValue
+			displayMarkupValue,
+			newCharacterDialogRef,
+			dialogNewCharacter,
+			dialogNewCharacterOpen
 		} = useAppMainLayout(props, context);
 
 		return {
@@ -204,7 +225,10 @@ export default {
 			dialogDisplayMarkupCancel,
 			dialogDisplayMarkupOk,
 			dialogDisplayMarkupSignal,
-			displayMarkupValue
+			displayMarkupValue,
+			newCharacterDialogRef,
+			dialogNewCharacter,
+			dialogNewCharacterOpen
 		};
 	}
 };

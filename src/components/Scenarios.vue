@@ -291,17 +291,15 @@ export default {
 			fetch
 		};
 	},
-	// eslint-disable-next-line
-	async beforeRouteEnter (to, from, next) {
+	async beforeRouteEnter (to, from) {
 		const results = check(to);
-		if (results)
-			next();
+		if (!results)
+			return false;
 	},
-	// eslint-disable-next-line
-	async beforeRouteUpdate (to, from, next) {
+	async beforeRouteUpdate (to, from) {
 		const results = check(to);
-		if (results)
-			next();
+		if (!results)
+			return false;
 	}
 };
 </script>
