@@ -17,3 +17,15 @@
 table.scenario {
     width: 100%;
 }
+
+/* Scenario / boon / character-details dialog field cards. The migrated fields hardcode
+   density="compact" + hide-details="auto", so they stack tightly and the first field jams against
+   the card's top border. Give the card top room and separate the stacked fields. 12px == Vuetify's
+   spacing-3 (pt-3 / mb-3). Global so every dialog using .gameSystemScenarioCard gets it from one
+   place (no :deep needed — this is a global, unscoped stylesheet). */
+.gameSystemScenarioCard {
+	padding-top: 12px;
+}
+.gameSystemScenarioCard .v-input:not(:last-child) {
+	margin-bottom: 12px;
+}

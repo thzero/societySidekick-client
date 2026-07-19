@@ -66,7 +66,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eScenario2"
@@ -256,7 +256,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eExperiencePoints2"
@@ -272,7 +272,7 @@
 					</v-card>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eAchievementPoints2"
@@ -297,7 +297,7 @@
 					</v-card>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 						class="mt-2"
 					>
 						<v-card-text
@@ -328,7 +328,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eCurrency2"
@@ -366,7 +366,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eFame2"
@@ -398,7 +398,7 @@
 					</v-card>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 						class="mt-2"
 					>
 						<v-card-text
@@ -439,7 +439,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 						class="mt-2"
 					>
 						<v-card-text
@@ -689,7 +689,4 @@ export default {
 </script>
 
 <style scoped>
-.gameSystemScenarioCard {
-	padding-top: 2px;
-}
 </style>

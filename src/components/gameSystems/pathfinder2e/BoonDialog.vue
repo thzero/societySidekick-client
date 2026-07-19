@@ -143,7 +143,4 @@ export default {
 </script>
 
 <style scoped>
-.gameSystemScenarioCard {
-	padding-top: 2px;
-}
 </style>

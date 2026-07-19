@@ -66,7 +66,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard starfinder1eScenario2"
@@ -178,7 +178,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard starfinder1eExperiencePoints2"
@@ -210,7 +210,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard starfinder1eCurrency2"
@@ -248,7 +248,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard starfinder1eFame2"
@@ -286,7 +286,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 						class="mt-2"
 					>
 						<v-card-text
@@ -438,7 +438,4 @@ export default {
 </script>
 
 <style scoped>
-.gameSystemScenarioCard {
-	padding-top: 2px;
-}
 </style>

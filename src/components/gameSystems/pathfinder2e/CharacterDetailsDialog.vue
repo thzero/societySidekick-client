@@ -50,7 +50,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard"
@@ -99,7 +99,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard"
@@ -158,7 +158,7 @@
 				>
 					<v-card
 						tile
-						variant="outlined"
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard"
@@ -357,7 +357,4 @@ export default {
 </script>
 
 <style scoped>
-.gameSystemScenarioCard {
-	padding-top: 2px;
-}
 </style>
