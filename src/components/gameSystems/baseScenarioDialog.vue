@@ -4,6 +4,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import AppUtility from '@/utility/app';
 import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryCommonUtility from '@thzero/library_common/utility';
+import LibraryMomentUtility from '@thzero/library_common/utility/moment';
 
 import { useBaseComponent } from '@/components/base';
 
@@ -152,7 +153,7 @@ export function useBaseScenarioDialogComponent(props, context, options) {
 
 	const resetDialog = async (correlationId, value) => {
 		steps.value = 1;
-		value.timestamp = value.timestamp ? LibraryCommonUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryCommonUtility.getTimestampLocal().valueOf();
+		value.timestamp = value.timestamp ? LibraryMomentUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryMomentUtility.getTimestampLocal().valueOf();
 		scenarioName.value = serviceGameSystem.determineScenarioName(correlationId, value, LibraryClientUtility.$store);
 
 		value.scenario = LibraryClientUtility.$store.getters.getScenario(correlationId, value.scenarioId);

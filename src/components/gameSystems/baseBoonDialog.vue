@@ -4,6 +4,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import AppUtility from '@/utility/app';
 import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryCommonUtility from '@thzero/library_common/utility';
+import LibraryMomentUtility from '@thzero/library_common/utility/moment';
 
 import { useBaseComponent } from '@/components/base';
 
@@ -102,7 +103,7 @@ export function useBaseBoonDialogComponent(props, context, options) {
 	// Shared BoonDialog.vue resetDialogI: normalize timestamp + resolve the boon name.
 	const resetDialog = async (correlationId, value) => {
 		steps.value = 1;
-		value.timestamp = value.timestamp ? LibraryCommonUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryCommonUtility.getTimestampLocal().valueOf();
+		value.timestamp = value.timestamp ? LibraryMomentUtility.convertTimestampToLocal(value.timestamp).valueOf() : LibraryMomentUtility.getTimestampLocal().valueOf();
 		boonName.value = serviceGameSystem.boonNameById(correlationId, value.boonId, LibraryClientUtility.$store);
 		isNew.value = value && !value.id;
 		innerValue.value = value;

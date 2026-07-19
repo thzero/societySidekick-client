@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue';
 
 import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryCommonUtility from '@thzero/library_common/utility';
+import LibraryMomentUtility from '@thzero/library_common/utility/moment';
 
 import { useBaseComponent } from '@/components/base';
 
@@ -141,7 +142,7 @@ export function useBaseInventoryDialogComponent(props, context, options) {
 		itemId.value = null;
 		character.value = value.character;
 		const temp = value.character.inventory.find(l => l.id == value.id);
-		temp.timestamp = temp.timestamp ? LibraryCommonUtility.convertTimestampToLocal(temp.timestamp).valueOf() : LibraryCommonUtility.getTimestampLocal().valueOf();
+		temp.timestamp = temp.timestamp ? LibraryMomentUtility.convertTimestampToLocal(temp.timestamp).valueOf() : LibraryMomentUtility.getTimestampLocal().valueOf();
 		isNew.value = value && !value.id;
 		innerValue.value = temp;
 	};
