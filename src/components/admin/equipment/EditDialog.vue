@@ -1,17 +1,19 @@
 <template>
-	<VAdminFormDialog
+	<VtFormDialog
 		:label="label"
 		:signal="signal"
+		:validation="validation"
 		:pre-complete-ok="preComplete"
-		max-width="750px"
-		@cancel="cancel"
+		max-width="1200px"
+		width="1200px"
+		@close="cancel"
 		@ok="ok"
 	>
-		<VTextFieldWithValidation
-			ref="name"
+		<VtTextFieldWithValidation
+			ref="nameRef"
 			v-model="innerValue.name"
 			vid="name"
-			rules="required|min:3|max:30|"
+			:validation="validation"
 			:label="$t('forms.name')"
 			:counter="30"
 		/>
@@ -19,20 +21,21 @@
 		<table width="100%"><tbody>
 			<tr>
 				<td class="pr-2">
-					<VSelectWithValidation
-						ref="gameSystem"
+					<VtSelectWithValidation
+						ref="gameSystemRef"
 						v-model="gameSystemId"
 						vid="gameSystem"
+						:validation="validation"
 						:items="gameSystems"
 						:label="$t('forms.equipment.gameSystem')"
 					/>
 				</td>
 				<td>
-					<VNumberFieldWithValidation
-						ref="cost"
+					<VtNumberFieldWithValidation
+						ref="costRef"
 						v-model="innerValue.cost"
-						rules="min_value:0|max_value:999999999|"
 						vid="cost"
+						:validation="validation"
 						:label="$t('forms.equipment.cost')"
 						step="1"
 					/>
@@ -43,28 +46,31 @@
 		<table width="100%"><tbody>
 			<tr>
 				<td class="pr-2">
-					<VSelectWithValidation
-						ref="category"
+					<VtSelectWithValidation
+						ref="categoryRef"
 						v-model="innerValue.category"
 						vid="category"
+						:validation="validation"
 						:items="categories"
 						:label="$t('forms.equipment.category')"
 					/>
 				</td>
 				<td>
-					<VSelectWithValidation
-						ref="categorySecondary"
+					<VtSelectWithValidation
+						ref="categorySecondaryRef"
 						v-model="innerValue.categorySecondary"
 						vid="categorySecondary"
+						:validation="validation"
 						:items="secondaryCategories"
 						:label="$t('forms.equipment.secondaryCategory')"
 					/>
 				</td>
 				<td>
-					<VSelectWithValidation
-						ref="categoryTertiary"
+					<VtSelectWithValidation
+						ref="categoryTertiaryRef"
 						v-model="innerValue.categoryTertiary"
 						vid="categoryTertiary"
+						:validation="validation"
 						:items="tertiaryCategories"
 						:label="$t('forms.equipment.tertiaryCategory')"
 					/>
@@ -85,22 +91,30 @@
 			</tr>
 		</tbody></table>
 
-		<VMarkdownEditor
+		<VtMarkdownEditor
 			:key="randomKey"
-			ref="description"
+			ref="descriptionRef"
 			v-model="innerValue.description"
 			vid="description"
+			:validation="validation"
 			:options="editorOptions"
 		/>
-	</VAdminFormDialog>
+	</VtFormDialog>
 </template>
 
 <script>
-import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
-import VMarkdownEditor from '@/library_vue_vuetify/components/markup/VMarkdownEditor';
-import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
+import { computed } from 'vue';
+
+import useVuelidate from '@vuelidate/core';
+import { maxLength, maxValue, minLength, minValue, numeric, required } from '@vuelidate/validators';
+
+import { useAdminFormDialogComponent } from '@/components/admin/VAdminFormDialog';
+
+import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
+import VtMarkdownEditor from '@thzero/library_client_vue3_vuetify3/components/markup/VtMarkdownEditor';
+import VtNumberFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberFieldWithValidation';
+import VtSelectWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtSelectWithValidation';
+import VtTextFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtTextFieldWithValidation';
 
 import Pathfinder2eEquipmentSnippet from '@/components/admin/gameSystems/pathfinder2e/equipmentEditSnippet';
 import Starfinder1eEquipmentSnippet from '@/components/admin/gameSystems/starfinder1e/equipmentEditSnippet';
@@ -108,54 +122,92 @@ import Starfinder1eEquipmentSnippet from '@/components/admin/gameSystems/starfin
 export default {
 	name: 'AdminEquipmentEditDialog',
 	components: {
-		VAdminFormDialog,
-		VMarkdownEditor,
-		VNumberFieldWithValidation,
-		VSelectWithValidation,
-		VTextFieldWithValidation,
+		VtFormDialog,
+		VtMarkdownEditor,
+		VtNumberFieldWithValidation,
+		VtSelectWithValidation,
+		VtTextFieldWithValidation,
 		Pathfinder2eEquipmentSnippet,
 		Starfinder1eEquipmentSnippet
 	},
-	extends: VAdminFormDialog,
-	computed: {
-		categories: {
-			get() {
-				const lookups = this.initLookupsByGameSystemId(this.correlationId(), this.gameSystemId);
-				return lookups ? lookups.equipmentCategories : [];
-			},
-			cache: false
+	props: {
+		label: {
+			type: String,
+			default: ''
 		},
-		secondaryCategories: {
-			get() {
-				const lookups = this.initLookupsByGameSystemId(this.correlationId(), this.gameSystemId);
-				return lookups ? lookups.equipmentSecondaryCategories : [];
-			},
-			cache: false
-		},
-		tertiaryCategories: {
-			get() {
-				const lookups = this.initLookupsByGameSystemId(this.correlationId(), this.gameSystemId);
-				return lookups ? lookups.equipmentTertiaryCategories : [];
-			},
-			cache: false
+		signal: {
+			type: Boolean,
+			default: false
 		}
 	},
-	methods: {
-		// eslint-disable-next-line
-		async preCompleteI(correlationId, value) {
-		},
-		async preCompleteSubmitCreate(correlationId, dispatcher, value) {
-			delete value.timestamp;
-			delete value.updatedTimestamp;
-			return await dispatcher.adminEquipment.createAdminEquipment(correlationId, value);
-		},
-		async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
-			delete value.timestamp;
-			return await dispatcher.adminEquipment.updateAdminEquipment(correlationId, value);
-		},
-		// eslint-disable-next-line
-		resetDialogI(correlationId, value) {
-		}
+	emits: ['cancel', 'ok'],
+	setup(props, context) {
+		const base = useAdminFormDialogComponent(props, context, {
+			async preCompleteSubmitCreate(correlationId, dispatcher, value) {
+				delete value.timestamp;
+				delete value.updatedTimestamp;
+				return await dispatcher.adminEquipment.createAdminEquipment(correlationId, value);
+			},
+			async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
+				delete value.timestamp;
+				return await dispatcher.adminEquipment.updateAdminEquipment(correlationId, value);
+			}
+		});
+
+		const categories = computed(() => {
+			const lookups = base.initLookupsByGameSystemId(base.correlationId(), base.gameSystemId.value);
+			return lookups ? lookups.equipmentCategories : [];
+		});
+		const secondaryCategories = computed(() => {
+			const lookups = base.initLookupsByGameSystemId(base.correlationId(), base.gameSystemId.value);
+			return lookups ? lookups.equipmentSecondaryCategories : [];
+		});
+		const tertiaryCategories = computed(() => {
+			const lookups = base.initLookupsByGameSystemId(base.correlationId(), base.gameSystemId.value);
+			return lookups ? lookups.equipmentTertiaryCategories : [];
+		});
+
+		return {
+			...base,
+			reset: base.resetDialog,
+			validation: useVuelidate({ $scope: 'AdminEquipmentEditDialog' }),
+			categories,
+			secondaryCategories,
+			tertiaryCategories
+		};
+	},
+	validations() {
+		return {
+			innerValue: {
+				name: {
+					required,
+					minLength: minLength(3),
+					maxLength: maxLength(30),
+					$autoDirty: true
+				},
+				cost: {
+					minValue: minValue(0),
+					maxValue: maxValue(999999999),
+					numeric,
+					$autoDirty: true
+				},
+				category: {
+					$autoDirty: true
+				},
+				categorySecondary: {
+					$autoDirty: true
+				},
+				categoryTertiary: {
+					$autoDirty: true
+				},
+				description: {
+					$autoDirty: true
+				}
+			},
+			gameSystemId: {
+				$autoDirty: true
+			}
+		};
 	}
 };
 </script>

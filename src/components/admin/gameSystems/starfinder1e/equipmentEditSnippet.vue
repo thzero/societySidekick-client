@@ -3,11 +3,15 @@
 </template>
 
 <script>
-import baseEdit from '@/library_vue/components/baseEdit';
-
 export default {
-	name: 'Starfinder1eeAdminEquipmentEditSnippet',
-	extends: baseEdit
+	name: 'Starfinder1eAdminEquipmentEditSnippet',
+	props: {
+		// must be included in props
+		modelValue: {
+			type: null,
+			default: null
+		}
+	}
 };
 </script>
 

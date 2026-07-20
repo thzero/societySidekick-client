@@ -615,6 +615,7 @@
 	   "externalId": "External Id",
 	   "id": "Id",
 	   "name": "Name",
+	   "noData": "No users available...",
 	   "role": "Role",
 	   "roles": "Roles"
 	},

@@ -1,13 +1,12 @@
 <template>
-	<v-container pa-0>
+	<v-container class="pa-0">
 		<v-row>
 			<v-col>
 				<v-data-table
 					:headers="headers"
 					:items="classes"
 					multi-sort
-					:sort-by="[ 'gameSystemId', 'name' ]"
-					:sort-desc="[ true, false, false, false ]"
+					:sort-by="[ { key: 'gameSystemId', order: 'desc' }, { key: 'name', order: 'asc' } ]"
 					class="elevation-1"
 				>
 					<template #top>
@@ -24,7 +23,6 @@
 							<v-spacer />
 							<v-btn
 								color="primary"
-								dark
 								class="mb-2"
 								@click="dialogEditOpen(null, true)"
 							>
@@ -40,32 +38,31 @@
 					</template>
 					<template #[`item.action`]="{ item }">
 						<v-icon
-							small
+							size="small"
 							class="mr-2"
 							@click="dialogEditOpen(item, false)"
 						>
-							edit
+							mdi-pencil
 						</v-icon>
 						<v-icon
-							small
+							size="small"
 							@click="dialogDeleteOpen(item)"
 						>
-							delete
+							mdi-delete
 						</v-icon>
 					</template>
 					<template #no-data>
 						{{ $t('classes.noData') }}
 					</template>
 				</v-data-table>
-
 				<EditDialog
-					ref="editDialog"
+					ref="editDialogRef"
 					:label="dialogEditItemTitle"
 					:signal="dialogEditSignal.signal"
 					@cancel="dialogEditCancel"
 					@ok="dialogEditOk"
 				/>
-				<VConfirmationDialog
+				<VtConfirmationDialog
 					:non-recoverable="true"
 					:signal="dialogDeleteSignal.signal"
 					:pre-complete-ok="dialogDeletePreCompleteOk"
@@ -78,47 +75,60 @@
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { computed, onMounted, ref } from 'vue';
 
-import baseListing from '@/components/admin/baseListing';
-import EditDialog from '@/components/admin/classes/EditDialog';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import ClassData from '@/common/data/class';
+
+import { useAdminBaseListingComponent } from '@/components/admin/baseListing';
+
+import EditDialog from '@/components/admin/classes/EditDialog';
+import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
 
 export default {
 	name: 'BaseAdminClassesListing',
 	components: {
-		EditDialog
+		EditDialog,
+		VtConfirmationDialog
 	},
-	extends: baseListing,
-	computed: {
-		classes() {
-			const classes = GlobalUtility.$store.state.adminClasses.classes;
+	setup(props, context) {
+		const editDialogRef = ref(null);
+
+		const base = useAdminBaseListingComponent(props, context, {
+			editDialogRef,
+			defaultItem: () => new ClassData(),
+			initializeHeaders: () => [
+				{ title: LibraryClientUtility.$trans.t('classes.name'), align: 'start', key: 'name' },
+				{ title: LibraryClientUtility.$trans.t('classes.type'), align: 'start', key: 'type' },
+				{ title: LibraryClientUtility.$trans.t('classes.gameSystem'), align: 'start', key: 'gameSystemId' },
+				{ title: LibraryClientUtility.$trans.t('classes.actions'), align: 'end', key: 'action', sortable: false }
+			],
+			async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+				return await dispatcher.adminClasses.deleteAdminClass(correlationId, id);
+			}
+		});
+
+		const getTypeName = (gameSystemId, type) => {
+			const lookups = base.getLookupsByGameSystemId(gameSystemId);
+			return lookups ? base.getLookupName(lookups.classTypes, type) : '';
+		};
+
+		const classes = computed(() => {
+			const classes = LibraryClientUtility.$store.adminClasses.classes;
 			return classes ? classes.slice(0) : [];
-		}
-	},
-	async mounted() {
-		await GlobalUtility.$store.dispatcher.adminClasses.searchAdminClasses(this.correlationId(), {});
-	},
-	methods: {
-		defaultItem() {
-			return new ClassData();
-		},
-		async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
-			return await dispatcher.adminClasses.deleteAdminClass(correlationId, id);
-		},
-		getTypeName(gameSystemId, type) {
-			const lookups = this.getLookupsByGameSystemId(gameSystemId);
-			return lookups ? this.getLookupName(lookups.classTypes, type) : '';
-		},
-		initializeHeaders() {
-			return [
-				{ text: GlobalUtility.$trans.t('classes.name'), align: 'left', value: 'name', },
-				{ text: GlobalUtility.$trans.t('classes.type'), align: 'left', value: 'type' },
-				{ text: GlobalUtility.$trans.t('classes.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: GlobalUtility.$trans.t('classes.actions'), align: 'right', value: 'action', sortable: false }
-			];
-		}
+		});
+
+		onMounted(async () => {
+			await LibraryClientUtility.$store.dispatcher.adminClasses.searchAdminClasses(base.correlationId(), {});
+		});
+
+		return {
+			...base,
+			editDialogRef,
+			classes,
+			getTypeName
+		};
 	}
 };
 </script>

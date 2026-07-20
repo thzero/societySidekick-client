@@ -14,7 +14,9 @@ import adminBoons from '@/store/admin/boons';
 import adminClasses from '@/store/admin/classes';
 import adminEquipment from '@/store/admin/equipment';
 import adminFactions from '@/store/admin/factions';
+import adminNews from '@/store/admin/news';
 import adminScenarios from '@/store/admin/scenarios';
+import adminUsers from '@/store/admin/users';
 import boons from '@/store/boons';
 import characters from '@/store/characters';
 import classes from '@/store/classes';
@@ -44,7 +46,9 @@ class AppStore extends BaseStore {
 			addModule('adminClasses', adminClasses),
 			addModule('adminEquipment', adminEquipment),
 			addModule('adminFactions', adminFactions),
+			addModule('adminNews', adminNews),
 			addModule('adminScenarios', adminScenarios),
+			addModule('adminUsers', adminUsers),
 			addModule('boons', boons),
 			addModule('characters', characters),
 			addModule('classes', classes),

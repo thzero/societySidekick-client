@@ -5,7 +5,9 @@ import adminBoonsService from '@/service/admin/boons';
 import adminClassesService from '@/service/admin/classes';
 import adminEquipmentService from '@/service/admin/equipment';
 import adminFactionsService from '@/service/admin/factions';
+import adminNewsService from '@thzero/library_client/service/admin/news';
 import adminScenariosService from '@/service/admin/scenarios';
+import adminUsersService from '@thzero/library_client/service/admin/users';
 
 import apiService from '@/service/api';
 import authService from '@thzero/library_client_firebase/service';
@@ -41,7 +43,9 @@ class ServiceBoot extends RootServicesBoot {
 		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_CLASSES, new adminClassesService());
 		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT, new adminEquipmentService());
 		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_FACTIONS, new adminFactionsService());
+		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_NEWS, new adminNewsService());
 		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_SCENARIOS, new adminScenariosService());
+		this._injectService(Constants.InjectorKeys.SERVICE_ADMIN_USERS, new adminUsersService());
 
 		this._injectService(Constants.InjectorKeys.SERVICE_API, new apiService());
 		this._injectService(Constants.InjectorKeys.SERVICE_BOONS, new boonsService());
