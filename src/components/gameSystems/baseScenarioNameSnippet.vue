@@ -1,32 +1,24 @@
-<template>
-	<vue-fragment>
-		<span
-			class="displayLink"
-			@click="handleDisplay(scenarioDescription)"
-			@mouseenter="handleDisplayHover(scenarioDescription)"
-			@mouseout="handleDisplayHoverClear()"
-		>
-			{{ scenarioName }}
-		</span>
-	</vue-fragment>
-</template>
-
 <script>
-import baseSnippet from '@/components/gameSystems/baseSnippet';
+import { computed } from 'vue';
 
-export default {
-	name: 'BaseScenarioNameSnippet',
-	extends: baseSnippet,
-	computed: {
-		scenarioDescription() {
-			return this.serviceGameSystem.scenarioDescription(this.correlationId(), this.value);
-		},
-		scenarioName() {
-			return this.serviceGameSystem.scenarioName(this.correlationId(), this.value);
-		}
-	}
+import { useGameSystemBaseSnippetComponent } from '@/components/gameSystems/baseSnippet';
+
+// Base scenario-name snippet composable. The template lives in the per-game-system leaf,
+// which injects its service via options.serviceGameSystem.
+export function useGameSystemBaseScenarioNameSnippetComponent(props, context, options) {
+	const base = useGameSystemBaseSnippetComponent(props, context, options);
+
+	const scenarioDescription = computed(() => {
+		return base.serviceGameSystem.scenarioDescription(base.correlationId(), props.value);
+	});
+	const scenarioName = computed(() => {
+		return base.serviceGameSystem.scenarioName(base.correlationId(), props.value);
+	});
+
+	return {
+		...base,
+		scenarioDescription,
+		scenarioName
+	};
 };
 </script>
-
-<style scoped>
-</style>

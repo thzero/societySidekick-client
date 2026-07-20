@@ -1,11 +1,11 @@
 <template>
-	<table width="100%">
+	<table width="100%"><tbody>
 		<tr>
 			<td>
 				<!-- eslint-disable vue/no-mutating-props -->
-				<VNumberFieldWithValidation
-					ref="level"
-					v-model="value.level"
+				<VtNumberFieldWithValidation
+					ref="levelRef"
+					v-model="modelValue.level"
 					vid="level"
 					:label="$t('forms.equipment.level')"
 				/>
@@ -13,31 +13,29 @@
 			</td>
 			<td>
 				<!-- eslint-disable vue/no-mutating-props -->
-				<VNumberFieldWithValidation
-					ref="bulk"
-					v-model="value.bulk"
+				<VtNumberFieldWithValidation
+					ref="bulkRef"
+					v-model="modelValue.bulk"
 					vid="bulk"
 					:label="$t('forms.equipment.bulk')"
 				/>
 				<!--eslint-enable-->
 			</td>
 		</tr>
-	</table>
+	</tbody></table>
 </template>
 
 <script>
-import baseEdit from '@/library_vue/components/baseEdit';
-import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
+import VtNumberFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberFieldWithValidation';
 
 export default {
 	name: 'Pathfinder2eAdminEquipmentEditSnippet',
 	components: {
-		VNumberFieldWithValidation
+		VtNumberFieldWithValidation
 	},
-	extends: baseEdit,
 	props: {
 		// must be included in props
-		value: {
+		modelValue: {
 			type: null,
 			default: null
 		}

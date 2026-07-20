@@ -1,114 +1,108 @@
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import { computed, onMounted, ref } from 'vue';
 
-import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
-import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryMomentUtility from '@thzero/library_common/utility/moment';
 
-export default {
-	name: 'BaseBoonLookupDialog',
-	components: {
-		VFormDialog,
-		VSelectWithValidation,
-		VTextFieldWithValidation
-	},
-	extends: VFormDialog,
-	props: {
-		characterId: {
-			type: String,
-			default: null
-		}
-	},
-	data: () => ({
-		lookups: [],
-		played: [],
-		boonNameFilter: null,
-		serviceGameSystem: null
-	}),
-	computed: {
-		boons() {
-			let results = this.serviceGameSystem.boons(this.correlationId, GlobalUtility.$store);
-			results = results.filter(l => l.scenarioId == null);
-			if (this.boonNameFilter)
-				results = results.filter(l => l.name ? l.name.toLowerCase().indexOf(this.boonNameFilter.toLowerCase()) > -1 : false);
-			return results;
-		}
-	},
-	created() {
-		this.initializeServices();
-		this.lookups = this.initializeLookups(this.correlationId());
-	},
-	methods: {
-		boonName(item) {
-			return this.serviceGameSystem.boonName(this.correlationId(), item, GlobalUtility.$store);
-		},
-		async close() {
-		},
-		async cancel() {
-			this.$emit('cancel');
-		},
-		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
-		},
-		initializeServices() {
-			this.notImplementedError();
-		},
-		getPlayed(id) {
-			const results = [];
-			for (const played of this.played) {
-				if (played.scenarioId === id) {
-					played.character = GlobalUtility.$store.getters.getCharacter(played.characterId);
-					results.push(played);
-				}
+import { useBaseComponent } from '@/components/base';
+
+// Base boon-lookup-dialog composable. Leaf owns the template (VtFormDialog wrapper) and passes
+// its service via options.serviceGameSystem. Exposes reset(correlationId) for the parent dialog ref.
+export function useBaseBoonLookupDialogComponent(props, context, options) {
+	const base = useBaseComponent(props, context, options);
+
+	const serviceGameSystem = options.serviceGameSystem;
+
+	const lookups = ref([]);
+	const played = ref([]);
+	const boonNameFilter = ref(null);
+
+	const boons = computed(() => {
+		let results = serviceGameSystem.boons(base.correlationId(), LibraryClientUtility.$store);
+		results = results.filter(l => l.scenarioId == null);
+		if (boonNameFilter.value)
+			results = results.filter(l => l.name ? l.name.toLowerCase().indexOf(boonNameFilter.value.toLowerCase()) > -1 : false);
+		return results;
+	});
+
+	const boonName = (item) => {
+		return serviceGameSystem.boonName(base.correlationId(), item, LibraryClientUtility.$store);
+	};
+	const close = async () => {
+	};
+	const cancel = async () => {
+		context.emit('cancel');
+	};
+	const ok = async (id) => {
+		context.emit('ok', id);
+		return true;
+	};
+	const initializeLookups = (correlationId) => {
+		return serviceGameSystem.initializeLookups(correlationId, LibraryClientUtility.$injector);
+	};
+	const getPlayed = (id) => {
+		const results = [];
+		for (const p of played.value) {
+			if (p.scenarioId === id) {
+				p.character = LibraryClientUtility.$store.getters.getCharacter(base.correlationId(), p.characterId);
+				results.push(p);
 			}
-			return results;
-		},
-		hasPlayed(id) {
-			for (const played of this.played) {
-				if (played.scenarioId === id) {
-					played.character = GlobalUtility.$store.getters.getCharacter(played.characterId);
-					return true;
-				}
-			}
-			return false;
-		},
-		async ok(id) {
-			this.$emit('ok', id);
-			return true;
-		},
-		playedCharacterName(item) {
-			if (!item)
-				return null;
-			const character = GlobalUtility.$store.getters.getCharacter(item.characterId);
-			if (!character)
-				return null;
-
-			return character ? character.name : null;
-		},
-		playedCharacterNumber(item) {
-			if (!item)
-				return null;
-			const character = GlobalUtility.$store.getters.getCharacter(item.characterId);
-			if (!character)
-				return null;
-
-			return character ? character.number : null;
-		},
-		playedTimestamp(item) {
-			return LibraryUtility.getDateHuman(item ? item.timestamp : 0);
-		},
-		async resetDialog(correlationId) {
-			this.played = GlobalUtility.$store.getters.getScenarioPlayed(this.characterId);
-			this.boonNameFilter = null;
-			await this.resetDialogI(correlationId);
-		},
-		// eslint-disable-next-line
-		async resetDialogI(correlationId) {
 		}
-	}
+		return results;
+	};
+	const hasPlayed = (id) => {
+		for (const p of played.value) {
+			if (p.scenarioId === id) {
+				p.character = LibraryClientUtility.$store.getters.getCharacter(base.correlationId(), p.characterId);
+				return true;
+			}
+		}
+		return false;
+	};
+	const playedCharacterName = (item) => {
+		if (!item)
+			return null;
+		const character = LibraryClientUtility.$store.getters.getCharacter(base.correlationId(), item.characterId);
+		return character ? character.name : null;
+	};
+	const playedCharacterNumber = (item) => {
+		if (!item)
+			return null;
+		const character = LibraryClientUtility.$store.getters.getCharacter(base.correlationId(), item.characterId);
+		return character ? character.number : null;
+	};
+	const playedTimestamp = (item) => {
+		return LibraryMomentUtility.getDateHuman(item ? item.timestamp : 0);
+	};
+	const reset = async (correlationId) => {
+		played.value = LibraryClientUtility.$store.getters.getScenarioPlayed(correlationId, props.characterId);
+		boonNameFilter.value = null;
+		if (options.resetDialogI)
+			await options.resetDialogI(correlationId);
+	};
+
+	onMounted(() => {
+		lookups.value = initializeLookups(base.correlationId());
+	});
+
+	return {
+		...base,
+		serviceGameSystem,
+		lookups,
+		played,
+		boonNameFilter,
+		boons,
+		boonName,
+		close,
+		cancel,
+		ok,
+		initializeLookups,
+		getPlayed,
+		hasPlayed,
+		playedCharacterName,
+		playedCharacterNumber,
+		playedTimestamp,
+		reset
+	};
 };
 </script>
-
-<style scoped>
-</style>

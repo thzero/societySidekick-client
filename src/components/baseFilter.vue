@@ -1,63 +1,55 @@
 <script>
-import base from '@/library_vue/components/base';
+import { computed, ref } from 'vue';
 
 import AppUtility from '@/utility/app';
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
-export default {
-	name: 'BaseFilter',
-	extends: base,
-	props: {
-		gameSystemFilterOverride: {
-			type: String,
-			default: null
-		},
-		externalList: {
-			type: Boolean,
-			default: false
-		}
-	},
-	data: () => ({
-		gameSystemFilterOverrideI: null,
-		lookups: [],
-		serviceGameSystem: null,
-		sortKeys: []
-	}),
-	computed: {
-		gameSystemFilter: {
-			get: function () {
-				if (this.externalList) {
-					if (this.gameSystemFilterOverrideI)
-						return this.gameSystemFilterOverrideI;
+import { useBaseComponent } from '@/components/base';
 
-					return this.gameSystemFilterOverride;
-				}
+// Base filter composable. The leaf provides its game-system service via options.serviceGameSystem.
+export function useBaseFilterComponent(props, context, options) {
+	const base = useBaseComponent(props, context, options);
 
-				return AppUtility.settings().getSettingsUserGameSystemFilter(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.gameSystemFilter);
-			},
-			set: function (newVal) {
-				if (this.externalList) {
-					this.gameSystemFilterOverrideI = newVal;
-					return;
-				}
+	const serviceGameSystem = (options && options.serviceGameSystem) ? options.serviceGameSystem : null;
+	const gameSystemFilterOverrideI = ref(null);
+	const lookups = ref([]);
+	const sortKeys = ref([]);
 
-				AppUtility.settings().updateSettingsUserGameSystemFilter(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, newVal, (settings) => { return settings.gameSystemFilter = newVal; });
+	const gameSystemFilter = computed({
+		get() {
+			if (props.externalList) {
+				if (gameSystemFilterOverrideI.value)
+					return gameSystemFilterOverrideI.value;
+				return props.gameSystemFilterOverride;
 			}
-		}
-	},
-	created() {
-		this.initializeServices();
-		this.lookups = this.initializeLookups(this.correlationId());
-	},
-	methods: {
-		clear() {
+			return AppUtility.settings().getSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store.user.user, (settings) => settings.gameSystemFilter);
 		},
-		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
-		},
-		initializeServices() {
-			this.notImplementedError();
+		set(newVal) {
+			if (props.externalList) {
+				gameSystemFilterOverrideI.value = newVal;
+				return;
+			}
+			AppUtility.settings().updateSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store, LibraryClientUtility.$store.user.user, newVal, (settings) => { return settings.gameSystemFilter = newVal; });
 		}
-	}
+	});
+
+	const initializeLookups = (correlationIdI) => {
+		return serviceGameSystem.initializeLookups(correlationIdI, LibraryClientUtility.$injector);
+	};
+	const clear = () => {
+	};
+
+	lookups.value = initializeLookups(base.correlationId());
+
+	return {
+		...base,
+		serviceGameSystem,
+		gameSystemFilterOverrideI,
+		lookups,
+		sortKeys,
+		gameSystemFilter,
+		initializeLookups,
+		clear
+	};
 };
 </script>

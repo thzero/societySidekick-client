@@ -1,79 +1,56 @@
 <template>
 	<v-btn
-		depressed
-		large
+		variant="flat"
+		size="large"
 		style="min-width: 0px"
 		@click="click()"
-		v-bind="attrs"
-		v-on="on"
 	>
-		<v-icon
-			v-if="isGrid"
-		>
+		<v-icon v-if="isGrid">
 			mdi-view-grid
 		</v-icon>
-		<v-icon
-			v-if="isList"
-		>
+		<v-icon v-if="isList">
 			mdi-format-list-bulleted
 		</v-icon>
-		{{ attrs }}
 	</v-btn>
 </template>
 
 <script>
+import { computed } from 'vue';
+
 import SharedConstants from '@/common/constants';
 
-import LibraryUtility from '@thzero/library_common/utility';
+import { useBaseControlEditComponent } from '@thzero/library_client_vue3/components/baseControlEdit';
 
-import baseControlEdit from '@/library_vue/components/baseControlEdit';
+import { useBaseControlEditProps } from '@thzero/library_client_vue3/components/baseControlEditProps';
 
 export default {
 	name: 'GameSystemListingSyleButton',
-	extends: baseControlEdit,
 	props: {
-		attrs: {
-			type: null,
-			default: null
-		},
-		on: {
-			type: null,
-			default: null
-		},
-		// must be included in props
-		value: {
-			type: null,
-			default: null
-		}
+		...useBaseControlEditProps
 	},
-	data: () => ({
-		innerValue: SharedConstants.ListingTypes.Grid
-	}),
-	computed: {
-		isGrid() {
-			return this.innerValue === SharedConstants.ListingTypes.Grid;
-		},
-		isList() {
-			return this.innerValue === SharedConstants.ListingTypes.List;
-		}
-	},
-	watch: {
-		// Handles external model changes.
-		value(newVal) {
-			this.initValue(newVal);
-		}
-	},
-	mounted() {
-		this.initValue(this.value);
-	},
-	methods: {
-		click() {
-			let value = this.innerValue === SharedConstants.ListingTypes.Grid ? SharedConstants.ListingTypes.List : SharedConstants.ListingTypes.Grid;
-			this.update(this, value);
-		},
-		update: LibraryUtility.debounce(async function(self, value) {
-			self.innerValue = value;
-		}, 500)
+	emits: ['update:modelValue'],
+	setup(props, context) {
+		const base = useBaseControlEditComponent(props, context);
+
+		const isGrid = computed(() => {
+			return base.innerValue.value === SharedConstants.ListingTypes.Grid;
+		});
+		const isList = computed(() => {
+			return base.innerValue.value === SharedConstants.ListingTypes.List;
+		});
+
+		const click = () => {
+			base.innerValue.value = base.innerValue.value === SharedConstants.ListingTypes.Grid
+				? SharedConstants.ListingTypes.List
+				: SharedConstants.ListingTypes.Grid;
+		};
+
+		return {
+			...base,
+			isGrid,
+			isList,
+			click
+		};
 	}
 };
 </script>

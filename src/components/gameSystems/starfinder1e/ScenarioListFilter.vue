@@ -1,91 +1,100 @@
 <template>
-	<vue-fragment>
-		<VSelect2
-			ref="scenarioAdventures"
-			v-model="scenarioAdventureFilter"
-			:items="scenarioAdventures"
-			:flat="true"
-			:hide-details="true"
-			:solo-inverted="true"
-			:label="$t('characters.gameSystems.starfinder1e.scenarios.adventure')"
-		/>
-	</vue-fragment>
+	<VtSelect
+		ref="scenarioAdventuresRef"
+		v-model="scenarioAdventureFilter"
+		:items="scenarioAdventures"
+		:flat="true"
+		:hide-details="true"
+		:solo-inverted="true"
+		:label="$t('characters.gameSystems.starfinder1e.scenarios.adventure')"
+	/>
 </template>
 
 <script>
+import { computed, ref } from 'vue';
+
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 import Starfinder1eSharedConstants from '@/common/gameSystems/starfinder1e/constants';
 
 import AppUtility from '@/utility/app';
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import baseFilter from '@/components/baseFilter';
+import { useBaseFilterComponent } from '@/components/baseFilter';
 
-import VSelect2 from '@/library_vue_vuetify/components/form/VSelect';
+import baseFilterProps from '@/components/baseFilterProps';
+
+import VtSelect from '@thzero/library_client_vue3_vuetify3/components/form/VtSelect';
 
 export default {
 	name: 'Starfinder1eScenarioListFiltering',
 	components: {
-		VSelect2
+		VtSelect
 	},
-	extends: baseFilter,
 	props: {
-		value: {
+		...baseFilterProps,
+		modelValue: {
 			type: Number,
 			default: 0
 		}
 	},
-	data: () => ({
-		scenarioAdventureFilterOverride: null
-	}),
-	computed: {
-		scenarioAdventureFilter: {
-			get: function () {
-				if (this.externalList)
-					return this.scenarioAdventureFilterOverride;
+	emits: ['update:modelValue'],
+	setup(props, context) {
+		const serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 
-				return AppUtility.settings().getSettingsUserScenariosGameSystem(this.correlationId(), GlobalUtility.$store.state.user.user, SharedConstants.GameSystems.Starfinder1e.id, (settings) => settings.scenarioAdventureFilter);
+		const base = useBaseFilterComponent(props, context, { serviceGameSystem });
+
+		const scenarioAdventureFilterOverride = ref(null);
+
+		const scenarioAdventureFilter = computed({
+			get() {
+				if (props.externalList)
+					return scenarioAdventureFilterOverride.value;
+				return AppUtility.settings().getSettingsUserScenariosGameSystem(base.correlationId(), LibraryClientUtility.$store.user.user, SharedConstants.GameSystems.Starfinder1e.id, (settings) => settings.scenarioAdventureFilter);
 			},
-			set: function (newVal) {
-				if (this.externalList) {
-					this.scenarioAdventureFilterOverride = newVal;
-					this.$emit('input', this.value + 1);
+			set(newVal) {
+				if (props.externalList) {
+					scenarioAdventureFilterOverride.value = newVal;
+					context.emit('update:modelValue', props.modelValue + 1);
 					return;
 				}
-
-				AppUtility.settings().updateSettingsUserScenariosGameSystem(this.correlationId(), GlobalUtility.$store, GlobalUtility.$store.state.user.user, SharedConstants.GameSystems.Starfinder1e.id, newVal, (settings) => { return settings.scenarioAdventureFilter = newVal; });
+				AppUtility.settings().updateSettingsUserScenariosGameSystem(base.correlationId(), LibraryClientUtility.$store, LibraryClientUtility.$store.user.user, SharedConstants.GameSystems.Starfinder1e.id, newVal, (settings) => { return settings.scenarioAdventureFilter = newVal; });
 			}
-		},
-		scenarioAdventures() {
-			const adventures = this.lookups.scenarioAdventures.filter(l => l.id !== Starfinder1eSharedConstants.ScenarioAdventures.INITIAL);
-			return LibraryUtility.selectBlank(adventures, GlobalUtility.$trans.t('characters.gameSystems.starfinder1e.scenarios.adventure'));
-		}
-	},
-	methods: {
-		filterAdditional(scenario) {
+		});
+		const scenarioAdventures = computed(() => {
+			const adventures = base.lookups.value.scenarioAdventures.filter(l => l.id !== Starfinder1eSharedConstants.ScenarioAdventures.INITIAL);
+			return LibraryCommonUtility.selectBlank(adventures, LibraryClientUtility.$trans.t('characters.gameSystems.starfinder1e.scenarios.adventure'));
+		});
+
+		const filterAdditional = (scenario) => {
 			if (!scenario)
 				return false;
 
 			let valid = true;
-			if (this.scenarioAdventureFilter && (scenario.type != this.scenarioAdventureFilter))
+			if (scenarioAdventureFilter.value && (scenario.type != scenarioAdventureFilter.value))
 				valid &= false;
 
 			return valid;
-		},
-		filterScenarioName(scenario, filter) {
+		};
+		const filterScenarioName = (scenario, filter) => {
 			if (!scenario)
 				return false;
 			if (!filter)
 				return true;
 
-			const scenarioName = this.serviceGameSystem.scenarioName(this.correlationId(), scenario);
+			const scenarioName = serviceGameSystem.scenarioName(base.correlationId(), scenario);
 			return scenarioName.toLowerCase().indexOf(filter.toLowerCase()) == -1;
-		},
-		initializeServices() {
-			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
-		}
+		};
+
+		return {
+			...base,
+			scenarioAdventureFilterOverride,
+			scenarioAdventureFilter,
+			scenarioAdventures,
+			filterAdditional,
+			filterScenarioName
+		};
 	}
 };
 </script>

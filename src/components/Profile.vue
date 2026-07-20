@@ -12,29 +12,62 @@
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { computed } from 'vue';
 
-import base from '@/library_vue/components/base';
+import LibraryClientConstants from '@thzero/library_client/constants';
+
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+
+import { useBaseComponent } from '@thzero/library_client_vue3/components/base';
 
 export default {
 	name: 'Profile',
-	extends: base,
-	data: () => ({
-		signedIn: false
-	}),
-	computed: {
-		hasPicture() {
-			return (this.user != null && this.user.external.picture != null && this.user.external.picture !== '');
-		},
-		name() {
-			return (this.user != null && this.user.external.name != null ? this.user.external.name : '');
-		},
-		picture() {
-			return (this.user != null && this.user.external.picture != null ? this.user.external.picture : null);
-		},
-		user() {
-			return GlobalUtility.$store.state.user.user;
-		}
+	setup(props, context) {
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse
+		} = useBaseComponent(props, context);
+
+		const serviceStore = LibraryClientUtility.$injector.getService(LibraryClientConstants.InjectorKeys.SERVICE_STORE);
+
+		const user = computed(() => {
+			return serviceStore.user;
+		});
+		const hasPicture = computed(() => {
+			return (user.value != null && user.value.external != null && !String.isNullOrEmpty(user.value.external.picture));
+		});
+		const name = computed(() => {
+			return (user.value != null && user.value.external != null && user.value.external.name != null ? user.value.external.name : '');
+		});
+		const picture = computed(() => {
+			return (user.value != null && user.value.external != null && user.value.external.picture != null ? user.value.external.picture : null);
+		});
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse,
+			hasPicture,
+			name,
+			picture,
+			serviceStore,
+			user
+		};
 	}
 };
 </script>

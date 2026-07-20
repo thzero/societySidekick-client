@@ -1,49 +1,44 @@
 <script>
+import { computed } from 'vue';
+
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import LibraryUtility from '@thzero/library_common/utility';
+import { useGameSystemBaseSnippetComponent } from '@/components/gameSystems/baseSnippet';
 
-import baseSnippet from '@/components/gameSystems/baseSnippet';
+// Base for game-system-agnostic snippets. Composes baseSnippet and adds shared
+// character/location helpers. Leaf passes its service via options.serviceGameSystem.
+export function useGameSystemBaseGameSystemSnippetComponent(props, context, options) {
+	const base = useGameSystemBaseSnippetComponent(props, context, options);
 
-export default {
-	name: 'BaseGameSystemSnippet',
-	extends: baseSnippet,
-	props: {
-		user: {
-			type: Object,
-			default: null
-		},
-		value: {
-			type: Object,
-			default: null
-		}
-	},
-	computed: {
-		gameSystemil8n() {
-			return this.serviceGameSystem ? this.serviceGameSystem.il8n : '';
-		}
-	},
-	methods: {
-		clickCharacter(id) {
-			this.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ id ]}));
-		},
-		getGameSystemName(id) {
-			const results = GlobalUtility.$store.getters.getGameSystem(id);
-			return results ? results.name : '';
-		},
-		initLookup(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
-		},
-		isParticipantGamemaster(participant) {
-			return participant == SharedConstants.ScenarioParticipants.GAMEMASTER;
-		},
-		locationName(id) {
-			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), GlobalUtility.$store.state.user.user, id);
-			return location ? '@ ' + location.name : '';
-		}
-	}
+	const gameSystemil8n = computed(() => {
+		return base.serviceGameSystem ? base.serviceGameSystem.il8n : '';
+	});
+
+	const clickCharacter = (id) => {
+		LibraryClientUtility.$navRouter.push(LibraryCommonUtility.formatUrl({ url: '/character', params: [ id ] }));
+	};
+	const initLookup = (correlationIdI) => {
+		return base.serviceGameSystem.initializeLookups(correlationIdI, LibraryClientUtility.$injector);
+	};
+	const isParticipantGamemaster = (participant) => {
+		return participant == SharedConstants.ScenarioParticipants.GAMEMASTER;
+	};
+	const locationName = (id) => {
+		const location = AppUtility.settings().getSettingsUserLocation(base.correlationId(), LibraryClientUtility.$store.user.user, id);
+		return location ? '@ ' + location.name : '';
+	};
+
+	return {
+		...base,
+		gameSystemil8n,
+		clickCharacter,
+		initLookup,
+		isParticipantGamemaster,
+		locationName
+	};
 };
 </script>

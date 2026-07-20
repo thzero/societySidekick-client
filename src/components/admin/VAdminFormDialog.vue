@@ -1,56 +1,68 @@
 <script>
+import { computed } from 'vue';
+
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import baseAdminFormDialog from '@/library_vue_vuetify/components/admin/VAdminFormDialog';
+import { useVtAdminFormDialogComponent } from '@thzero/library_client_vue3_vuetify3/components/admin/VtAdminFormDialog';
 
-export default {
-	name: 'BaseAdminFormDialog',
-	extends: baseAdminFormDialog,
-	data: () => ({
-		gameSystemId: null,
-		serviceGameSystemsUtility: null
-	}),
-	computed: {
-		gameSystems() {
-			return LibraryUtility.selectBlank(GlobalUtility.$store.state.gameSystems);
-		},
-		// GameSystems Update
-		isGameSystemDungeonsAndDragons5e() {
-			return this.gameSystemId === SharedConstants.GameSystems.DungeonsAndDragons5e.id;
-		},
-		isGameSystemPathfinder2e() {
-			return this.gameSystemId === SharedConstants.GameSystems.Pathfinder2e.id;
-		},
-		isGameSystemStarfinder1e() {
-			return this.gameSystemId === SharedConstants.GameSystems.Starfinder1e.id;
-		},
-		serviceGameSystem() {
-			return this.getServiceByGameSystemId(this.correlationId(), this.gameSystemId);
-		}
-	},
-	methods: {
-		getServiceByGameSystemId(correlationId, gameSystemId) {
-			if (!gameSystemId)
-				return null;
+export function useAdminFormDialogComponent(props, context, options) {
+	const base = useVtAdminFormDialogComponent(props, context, options);
 
-			const response = this.serviceGameSystemsUtility.getServiceByGameSystemId(correlationId, gameSystemId);
-			if (this.hasFailed(response))
-				return null;
+	let serviceGameSystemsUtility = null;
 
-			return response.results;
-		},
-		initLookupsByGameSystemId(correlationId, gameSystemId) {
-			const service = this.getServiceByGameSystemId(correlationId, gameSystemId);
-			const lookups = service ? service.initializeLookups(correlationId, GlobalUtility.$injector) : null;
-			return lookups;
-		},
-		initializeServices() {
-			this.serviceGameSystemsUtility = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
-		}
-	}
+	const gameSystems = computed(() => {
+		return LibraryCommonUtility.selectBlank(LibraryClientUtility.$store.gameSystems);
+	});
+	// GameSystems Update
+	const isGameSystemDungeonsAndDragons5e = computed(() => {
+		return base.gameSystemId.value === SharedConstants.GameSystems.DungeonsAndDragons5e.id;
+	});
+	const isGameSystemPathfinder2e = computed(() => {
+		return base.gameSystemId.value === SharedConstants.GameSystems.Pathfinder2e.id;
+	});
+	const isGameSystemStarfinder1e = computed(() => {
+		return base.gameSystemId.value === SharedConstants.GameSystems.Starfinder1e.id;
+	});
+
+	const getServiceByGameSystemId = (correlationId, gameSystemId) => {
+		if (!gameSystemId)
+			return null;
+
+		const response = serviceGameSystemsUtility.getServiceByGameSystemId(correlationId, gameSystemId);
+		if (base.hasFailed(response))
+			return null;
+
+		return response.results;
+	};
+	const initLookupsByGameSystemId = (correlationId, gameSystemId) => {
+		const service = getServiceByGameSystemId(correlationId, gameSystemId);
+		const lookups = service ? service.initializeLookups(correlationId, LibraryClientUtility.$injector) : null;
+		return lookups;
+	};
+	const initializeServices = () => {
+		serviceGameSystemsUtility = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS);
+	};
+
+	const serviceGameSystem = computed(() => {
+		return getServiceByGameSystemId(base.correlationId(), base.gameSystemId.value);
+	});
+
+	initializeServices();
+
+	return {
+		...base,
+		gameSystems,
+		isGameSystemDungeonsAndDragons5e,
+		isGameSystemPathfinder2e,
+		isGameSystemStarfinder1e,
+		serviceGameSystem,
+		getServiceByGameSystemId,
+		initLookupsByGameSystemId,
+		initializeServices
+	};
 };
 </script>

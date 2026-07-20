@@ -1,24 +1,38 @@
 <template>
-	<div id="app">
-		<router-view />
-	</div>
+	<router-view />
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
-
-import baseApp from '@/library_vue/components/baseApp';
+import { useAppComponent } from '@/components/appBase';
 
 export default {
 	name: 'App',
-	extends: baseApp,
-	methods: {
-		initialize(correlationId) {
-			return [
-				GlobalUtility.$store.dispatcher.root.initialize(correlationId),
-				GlobalUtility.$store.dispatcher.characters.initializeCharacters(correlationId)
-			];
-		}
+	setup(props, context) {
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			serviceStore
+		} = useAppComponent(props, context);
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			serviceStore
+		};
 	}
 };
 </script>
@@ -27,17 +41,6 @@ export default {
 </style>
 
 <style>
-	/* .bg {
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			top: 0;
-			left: 0;
-			background-color: black;
-			background: url( '/images/background.png') no-repeat center center;
-			background-attachment: fixed;
-	} */
-
 	.displayLink {
 		cursor: pointer;
 		text-decoration: underline;

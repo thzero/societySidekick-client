@@ -1,13 +1,12 @@
 <template>
-	<v-container pa-0>
+	<v-container class="pa-0">
 		<v-row>
 			<v-col>
 				<v-data-table
 					:headers="headers"
 					:items="boons"
 					multi-sort
-					:sort-by="[ 'gameSystemId', 'name' ]"
-					:sort-desc="[ true, false, false, false ]"
+					:sort-by="[ { key: 'gameSystemId', order: 'desc' }, { key: 'name', order: 'asc' } ]"
 					class="elevation-1"
 				>
 					<template #top>
@@ -24,7 +23,6 @@
 							<v-spacer />
 							<v-btn
 								color="primary"
-								dark
 								class="mb-2"
 								@click="dialogEditOpen(null, true)"
 							>
@@ -46,32 +44,31 @@
 					</template>
 					<template #[`item.action`]="{ item }">
 						<v-icon
-							small
+							size="small"
 							class="mr-2"
 							@click="dialogEditOpen(item, false)"
 						>
-							edit
+							mdi-pencil
 						</v-icon>
 						<v-icon
-							small
+							size="small"
 							@click="dialogDeleteOpen(item)"
 						>
-							delete
+							mdi-delete
 						</v-icon>
 					</template>
 					<template #no-data>
 						{{ $t('boons.noData') }}
 					</template>
 				</v-data-table>
-
 				<EditDialog
-					ref="editDialog"
+					ref="editDialogRef"
 					:label="dialogEditItemTitle"
 					:signal="dialogEditSignal.signal"
 					@cancel="dialogEditCancel"
 					@ok="dialogEditOk"
 				/>
-				<VConfirmationDialog
+				<VtConfirmationDialog
 					:non-recoverable="true"
 					:signal="dialogDeleteSignal.signal"
 					:pre-complete-ok="dialogDeletePreCompleteOk"
@@ -84,67 +81,81 @@
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { computed, onMounted, ref } from 'vue';
 
-import baseListing from '@/components/admin/baseListing';
-import EditDialog from '@/components/admin/boons/EditDialog';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import BoonData from '@/common/data/boon';
+
+import { useAdminBaseListingComponent } from '@/components/admin/baseListing';
+
+import EditDialog from '@/components/admin/boons/EditDialog';
+import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
 
 export default {
 	name: 'BaseAdminBoonsListing',
 	components: {
-		EditDialog
+		EditDialog,
+		VtConfirmationDialog
 	},
-	extends: baseListing,
-	computed: {
-		boons() {
-			const boons = GlobalUtility.$store.state.adminBoons.boons;
-			return boons ? boons.slice(0) : [];
-		}
-	},
-	async mounted() {
-		const correlationId = this.correlationId();
-		await GlobalUtility.$store.dispatcher.adminFactions.searchAdminFactions(correlationId, {});
-		await GlobalUtility.$store.dispatcher.adminScenarios.searchAdminScenarios(correlationId, {});
-		await GlobalUtility.$store.dispatcher.adminBoons.searchAdminBoons(correlationId, {});
-	},
-	methods: {
-		defaultItem() {
-			return new BoonData();
-		},
-		async dialogDeletePreCompleteOkDelete(dispatcher, id) {
-			return await dispatcher.adminBoons.deleteAdminBoon(id);
-		},
-		getTypeName(gameSystemId, type) {
-			const lookups = this.getLookupsByGameSystemId(gameSystemId);
-			return lookups ? this.getLookupName(lookups.boonTypes, type) : '';
-		},
-		initializeHeaders() {
-			return [
-				{ text: GlobalUtility.$trans.t('boons.name'), align: 'left', value: 'name', },
-				{ text: GlobalUtility.$trans.t('boons.type'), align: 'left', value: 'type' },
-				{ text: GlobalUtility.$trans.t('boons.scenario'), align: 'left', value: 'scenario' },
-				{ text: GlobalUtility.$trans.t('boons.faction'), align: 'left', value: 'factionId' },
-				{ text: GlobalUtility.$trans.t('boons.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: GlobalUtility.$trans.t('boons.actions'), align: 'right', value: 'action', sortable: false }
-			];
-		},
-		getFactionName(factionId) {
-			if (!GlobalUtility.$store.state.adminFactions.factions)
+	setup(props, context) {
+		const editDialogRef = ref(null);
+
+		const base = useAdminBaseListingComponent(props, context, {
+			editDialogRef,
+			defaultItem: () => new BoonData(),
+			initializeHeaders: () => [
+				{ title: LibraryClientUtility.$trans.t('boons.name'), align: 'start', key: 'name' },
+				{ title: LibraryClientUtility.$trans.t('boons.type'), align: 'start', key: 'type' },
+				{ title: LibraryClientUtility.$trans.t('boons.scenario'), align: 'start', key: 'scenario' },
+				{ title: LibraryClientUtility.$trans.t('boons.faction'), align: 'start', key: 'factionId' },
+				{ title: LibraryClientUtility.$trans.t('boons.gameSystem'), align: 'start', key: 'gameSystemId' },
+				{ title: LibraryClientUtility.$trans.t('boons.actions'), align: 'end', key: 'action', sortable: false }
+			],
+			async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+				return await dispatcher.adminBoons.deleteAdminBoon(correlationId, id);
+			}
+		});
+
+		const getTypeName = (gameSystemId, type) => {
+			const lookups = base.getLookupsByGameSystemId(gameSystemId);
+			return lookups ? base.getLookupName(lookups.boonTypes, type) : '';
+		};
+		const getFactionName = (factionId) => {
+			if (!LibraryClientUtility.$store.adminFactions.factions)
 				return null;
-			const faction = GlobalUtility.$store.state.adminFactions.factions.find(l => l.id === factionId);
+			const faction = LibraryClientUtility.$store.adminFactions.factions.find(l => l.id === factionId);
 			return faction ? faction.name : null;
-		},
-		scenarioName(item) {
+		};
+		const scenarioName = (item) => {
 			if (!item)
 				return '';
-			const scenario = GlobalUtility.$store.getters.getAdminScenario(item.scenarioId);
+			const scenario = LibraryClientUtility.$store.getters.getAdminScenario(base.correlationId(), item.scenarioId);
 			if (!scenario)
 				return '';
 			return scenario.name;
-			//return item && item.scenario ? item.scenario.name : ''
-		}
+		};
+
+		const boons = computed(() => {
+			const boons = LibraryClientUtility.$store.adminBoons.boons;
+			return boons ? boons.slice(0) : [];
+		});
+
+		onMounted(async () => {
+			const correlationId = base.correlationId();
+			await LibraryClientUtility.$store.dispatcher.adminFactions.searchAdminFactions(correlationId, {});
+			await LibraryClientUtility.$store.dispatcher.adminScenarios.searchAdminScenarios(correlationId, {});
+			await LibraryClientUtility.$store.dispatcher.adminBoons.searchAdminBoons(correlationId, {});
+		});
+
+		return {
+			...base,
+			editDialogRef,
+			getTypeName,
+			getFactionName,
+			scenarioName,
+			boons
+		};
 	}
 };
 </script>

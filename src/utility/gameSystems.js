@@ -4,7 +4,8 @@ import AppUtility from '@/utility/app';
 
 class GameSystemsUtility {
 	static gameSystemNumber(correlationId, user, gameSystemId) {
-		if (!user || !user.settings)
+		// 0.18 lib deletes user.settings on load; getSettingsUserGameSystem now sources from the store.
+		if (!user)
 			return '';
 
 		return AppUtility.settings().getSettingsUserGameSystem(correlationId, user, gameSystemId, (settings) => { return settings.number; });

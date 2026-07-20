@@ -1,128 +1,108 @@
 <script>
-import LibraryConstants from '@thzero/library_client/constants';
+import { computed, onMounted, ref } from 'vue';
+
+import LibraryClientConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryMomentUtility from '@thzero/library_common/utility/moment';
 
-import baseEdit from '@/components/baseEdit';
+import { useBaseEditComponent } from '@/components/baseEdit';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import DialogSupport from '@thzero/library_client_vue3/components/support/dialog';
 
-export default {
-	name: 'BaseCharacterScenario',
-	extends: baseEdit,
-	props: {
-		value: {
-			type: Object,
-			default: () => {}
-		},
-		editable: {
-			type: Boolean,
-			default: false
-		}
-	},
-	data: () => ({
-		dialogScenario: new DialogSupport(),
-		lookups: [],
-		rulesGameSystem: null,
-		serviceGameSystem: null
-	}),
-	computed: {
-		hasBoons() {
-			return this.value.boon1Id || this.value.boon2Id;
-		},
-		isInitial() {
-			return this.rulesGameSystem.calculateCharacterScenarioInitial(this.correlationId(), this.value);
-		},
-		scenarioLevel() {
-			return this.value.level;
-		}
-	},
-	created() {
-		this.initializeServices();
-		this.lookups = this.initializeLookups(this.correlationId());
-		this._serviceMarkup = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
-	},
-	methods: {
-		boonName(id) {
-			return this.serviceGameSystem.boonNameById(this.correlationId(), id, GlobalUtility.$store);
-		},
-		factionName(id) {
-			return this.serviceGameSystem.factionNameById(this.correlationId(), id, GlobalUtility.$store);
-		},
-		dialogScenarioOpen() {
-			this.$emit('dialog-edit', this.value);
-		},
-		getGameSystemName(id) {
-			const results = GlobalUtility.$store.getters.getGameSystem(id);
-			return results ? results.name : '';
-		},
-		initializeLookups(correlationId) {
-			return this.serviceGameSystem.initializeLookups(correlationId, GlobalUtility.$injector);
-		},
-		initializeServices() {
-			this.notImplementedError();
-		},
-		locationName(id) {
-			const location = AppUtility.settings().getSettingsUserLocation(this.correlationId(), GlobalUtility.$store.state.user.user, id);
-			return location ? '@ ' + location.name : '';
-		},
-		markup(correlationId, value) {
-			if (!value)
-				return null;
-			return this._serviceMarkup.trimResults(correlationId, this._serviceMarkup.render(correlationId, value));
-		},
-		scenarioDescription(value) {
-			return this.markup(this.correlationId(), this.serviceGameSystem.determineScenarioDescription(this.correlationId(), value, GlobalUtility.$store));
-		},
-		scenarioName(value) {
-			return this.serviceGameSystem.determineScenarioName(this.correlationId(), value, GlobalUtility.$store);
-		},
-		scenarioParticipantName(id) {
-			return this.serviceGameSystem.scenarioLookupParticipantName(this.correlationId(), id, this.lookups);
-		},
-		scenarioStatusName(id) {
-			return this.serviceGameSystem.scenarioLookupStatusName(this.correlationId(), id, this.lookups);
-		},
-		statusName(value) {
-			return this.serviceGameSystem.characterLookupStatusName(this.correlationId(), value, this.lookups);
-		}
-	}
+// Base scenario-card composable. Leaf passes options { serviceGameSystem, rulesGameSystem }.
+export function useGameSystemBaseScenarioComponent(props, context, options) {
+	const base = useBaseEditComponent(props, context, options);
+
+	const serviceGameSystem = options.serviceGameSystem;
+	const rulesGameSystem = options.rulesGameSystem;
+	const serviceMarkup = LibraryClientUtility.$injector.getService(LibraryClientConstants.InjectorKeys.SERVICE_MARKUP_PARSER);
+
+	const dialogScenario = ref(new DialogSupport());
+	const lookups = ref([]);
+
+	const hasBoons = computed(() => {
+		return props.value.boon1Id || props.value.boon2Id;
+	});
+	const isInitial = computed(() => {
+		return rulesGameSystem.calculateCharacterScenarioInitial(base.correlationId(), props.value);
+	});
+	const scenarioLevel = computed(() => {
+		return props.value.level;
+	});
+
+	const boonName = (id) => {
+		return serviceGameSystem.boonNameById(base.correlationId(), id, LibraryClientUtility.$store);
+	};
+	const factionName = (id) => {
+		return serviceGameSystem.factionNameById(base.correlationId(), id, LibraryClientUtility.$store);
+	};
+	const dialogScenarioOpen = () => {
+		context.emit('dialog-edit', props.value);
+	};
+	const getGameSystemName = (id) => {
+		const results = LibraryClientUtility.$store.getters.getGameSystem(base.correlationId(), id);
+		return results ? results.name : '';
+	};
+	const getDateHuman = (timestamp) => {
+		return LibraryMomentUtility.getDateHuman(timestamp);
+	};
+	const initializeLookups = (correlationId) => {
+		return serviceGameSystem.initializeLookups(correlationId, LibraryClientUtility.$injector);
+	};
+	const locationName = (id) => {
+		const location = AppUtility.settings().getSettingsUserLocation(base.correlationId(), LibraryClientUtility.$store.user.user, id);
+		return location ? '@ ' + location.name : '';
+	};
+	const markup = (correlationId, value) => {
+		if (!value)
+			return null;
+		return serviceMarkup.trimResults(correlationId, serviceMarkup.render(correlationId, value));
+	};
+	const scenarioDescription = (value) => {
+		return markup(base.correlationId(), serviceGameSystem.determineScenarioDescription(base.correlationId(), value, LibraryClientUtility.$store));
+	};
+	const scenarioName = (value) => {
+		return serviceGameSystem.determineScenarioName(base.correlationId(), value, LibraryClientUtility.$store);
+	};
+	const scenarioParticipantName = (id) => {
+		return serviceGameSystem.scenarioLookupParticipantName(base.correlationId(), id, lookups.value);
+	};
+	const scenarioStatusName = (id) => {
+		return serviceGameSystem.scenarioLookupStatusName(base.correlationId(), id, lookups.value);
+	};
+	const statusName = (value) => {
+		return serviceGameSystem.characterLookupStatusName(base.correlationId(), value, lookups.value);
+	};
+
+	onMounted(() => {
+		lookups.value = initializeLookups(base.correlationId());
+	});
+
+	return {
+		...base,
+		serviceGameSystem,
+		rulesGameSystem,
+		serviceMarkup,
+		dialogScenario,
+		lookups,
+		hasBoons,
+		isInitial,
+		scenarioLevel,
+		boonName,
+		factionName,
+		dialogScenarioOpen,
+		getDateHuman,
+		getGameSystemName,
+		initializeLookups,
+		locationName,
+		markup,
+		scenarioDescription,
+		scenarioName,
+		scenarioParticipantName,
+		scenarioStatusName,
+		statusName
+	};
 };
 </script>
-
-<style scoped>
-</style>
-
-<style>
-	.text-top {
-		vertical-align: top;
-	}
-	.v-expansion-panel-content__wrap {
-		padding-left: 0px;
-		padding-right: 0px;
-	}
-	table.scenario {
-		width: 100%;
-	}
-	td.scenario {
-		padding-left: 4px;
-		padding-bottom: 4px;
-		padding-top: 4px;
-		border-top-right-radius: 4px;
-		border-bottom-right-radius: 4px;
-		border-top-left-radius: 4px;
-		border-bottom-left-radius: 4px;
-		vertical-align: middle;
-	}
-	th.scenario {
-		padding-left: 4px;
-		padding-bottom: 4px;
-		padding-top: 4px;
-		border-top-right-radius: 4px;
-		border-bottom-right-radius: 4px;
-		border-top-left-radius: 4px;
-		border-bottom-left-radius: 4px;
-		vertical-align: middle;
-	}
-</style>

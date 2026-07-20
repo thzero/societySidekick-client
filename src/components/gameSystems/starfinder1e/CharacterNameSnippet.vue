@@ -1,63 +1,56 @@
 <template>
-	<vue-fragment>
+	<span
+		v-if="hasName"
+		:class="fontName"
+	>
+		{{ name }}
+	</span>
+	<v-chip
+		v-if="hasSecondary"
+		color="success"
+		variant="outlined"
+		label
+	>
 		<span
-			v-if="hasName"
-			:class="fontName"
+			:class="fontSecondary"
 		>
-			{{ name }}
+			{{ secondary }}
 		</span>
-		<v-chip
-			v-if="hasSecondary"
-			color="success"
-			outlined
-			label
-		>
-			<span
-				:class="fontSecondary"
-			>
-				{{ secondary }}
-			</span>
-		</v-chip>
-	</vue-fragment>
+	</v-chip>
 </template>
 
 <script>
-import Constants from '@/constants';
+import { computed } from 'vue';
 
 import SharedConstants from '@/common/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { useGameSystemBaseCharacterNameSnippetComponent } from '@/components/gameSystems/baseCharacterNameSnippet';
 
-import baseCharacterNameSnippet from '@/components/gameSystems/baseCharacterNameSnippet';
+import characterNameSnippetProps from '@/components/gameSystems/characterNameSnippetProps';
 
 export default {
 	name: 'Starfinder1eCharacterNameSnippet',
-	extends: baseCharacterNameSnippet,
 	props: {
-		includeCharacterNumber: {
-			type: Boolean,
-			default: true
-		},
-		user: {
-			type: Object,
-			default: null
-		}
+		...characterNameSnippetProps
 	},
-	computed: {
-		name() {
-			return this.value ? this.value.name : '';
-		}
-	},
-	methods: {
-		gameSystemId() {
+	setup(props, context) {
+		const gameSystemId = () => {
 			return SharedConstants.GameSystems.Starfinder1e.id;
-		},
-		initializeServices() {
-			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
-		},
-		secondaryFormat(number) {
+		};
+		const secondaryFormat = (number) => {
 			return `7${number.padStart(2, '0')}`;
-		}
+		};
+
+		const base = useGameSystemBaseCharacterNameSnippetComponent(props, context, { gameSystemId, secondaryFormat });
+
+		const name = computed(() => {
+			return props.value ? props.value.name : '';
+		});
+
+		return {
+			...base,
+			name
+		};
 	}
 };
 </script>

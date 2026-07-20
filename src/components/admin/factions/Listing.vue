@@ -1,13 +1,12 @@
 <template>
-	<v-container pa-0>
+	<v-container class="pa-0">
 		<v-row>
 			<v-col>
 				<v-data-table
 					:headers="headers"
 					:items="factions"
 					multi-sort
-					:sort-by="[ 'gameSystemId', 'name' ]"
-					:sort-desc="[ true, false, false, false ]"
+					:sort-by="[ { key: 'gameSystemId', order: 'desc' }, { key: 'name', order: 'asc' } ]"
 					class="elevation-1"
 				>
 					<template #top>
@@ -24,7 +23,6 @@
 							<v-spacer />
 							<v-btn
 								color="primary"
-								dark
 								class="mb-2"
 								@click="dialogEditOpen(null, true)"
 							>
@@ -37,17 +35,17 @@
 					</template>
 					<template #[`item.action`]="{ item }">
 						<v-icon
-							small
+							size="small"
 							class="mr-2"
 							@click="dialogEditOpen(item, false)"
 						>
-							edit
+							mdi-pencil
 						</v-icon>
 						<v-icon
-							small
+							size="small"
 							@click="dialogDeleteOpen(item)"
 						>
-							delete
+							mdi-delete
 						</v-icon>
 					</template>
 					<template #no-data>
@@ -55,13 +53,13 @@
 					</template>
 				</v-data-table>
 				<EditDialog
-					ref="editDialog"
+					ref="editDialogRef"
 					:label="dialogEditItemTitle"
 					:signal="dialogEditSignal.signal"
 					@cancel="dialogEditCancel"
 					@ok="dialogEditOk"
 				/>
-				<VConfirmationDialog
+				<VtConfirmationDialog
 					:non-recoverable="true"
 					:signal="dialogDeleteSignal.signal"
 					:pre-complete-ok="dialogDeletePreCompleteOk"
@@ -74,42 +72,53 @@
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { computed, onMounted, ref } from 'vue';
 
-import baseListing from '@/components/admin/baseListing';
-import EditDialog from '@/components/admin/factions/EditDialog';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import FactionData from '@/common/data/faction';
+
+import { useAdminBaseListingComponent } from '@/components/admin/baseListing';
+
+import EditDialog from '@/components/admin/factions/EditDialog';
+import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
 
 export default {
 	name: 'BaseAdminFactionsListing',
 	components: {
-		EditDialog
+		EditDialog,
+		VtConfirmationDialog
 	},
-	extends: baseListing,
-	computed: {
-		factions() {
-			const factions = GlobalUtility.$store.state.adminFactions.factions;
+	setup(props, context) {
+		const editDialogRef = ref(null);
+
+		const base = useAdminBaseListingComponent(props, context, {
+			editDialogRef,
+			defaultItem: () => new FactionData(),
+			initializeHeaders: () => [
+				{ title: LibraryClientUtility.$trans.t('factions.name'), align: 'start', key: 'name' },
+				{ title: LibraryClientUtility.$trans.t('factions.gameSystem'), align: 'start', key: 'gameSystemId' },
+				{ title: LibraryClientUtility.$trans.t('factions.actions'), align: 'end', key: 'action', sortable: false }
+			],
+			async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+				return await dispatcher.adminFactions.deleteAdminFaction(correlationId, id);
+			}
+		});
+
+		const factions = computed(() => {
+			const factions = LibraryClientUtility.$store.adminFactions.factions;
 			return factions ? factions.slice(0) : [];
-		}
-	},
-	async mounted() {
-		await GlobalUtility.$store.dispatcher.adminFactions.searchAdminFactions(this.correlationId(), {});
-	},
-	methods: {
-		defaultItem() {
-			return new FactionData();
-		},
-		async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
-			return await dispatcher.adminFactions.deleteAdminFaction(correlationId, id);
-		},
-		initializeHeaders() {
-			return [
-				{ text: GlobalUtility.$trans.t('factions.name'), align: 'left', value: 'name', },
-				{ text: GlobalUtility.$trans.t('factions.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: GlobalUtility.$trans.t('factions.actions'), align: 'right', value: 'action', sortable: false }
-			];
-		}
+		});
+
+		onMounted(async () => {
+			await LibraryClientUtility.$store.dispatcher.adminFactions.searchAdminFactions(base.correlationId(), {});
+		});
+
+		return {
+			...base,
+			editDialogRef,
+			factions
+		};
 	}
 };
 </script>

@@ -1,0 +1,31 @@
+/* App-wide `.responsive` image utility.
+   Vuetify 2 effectively sized a raw <img> inside <v-avatar> (and provided a responsive-image
+   helper); Vuetify 3 does neither, so this restores the behavior the templates rely on. */
+.responsive {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Avatar photos should fill the fixed avatar box (e.g. 80x80) regardless of the source aspect
+   ratio, instead of rendering at natural size and being clipped by the avatar's overflow. */
+.v-avatar img.responsive {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+table.scenario {
+    width: 100%;
+}
+
+/* Scenario / boon / character-details dialog field cards. The migrated fields hardcode
+   density="compact" + hide-details="auto", so they stack tightly and the first field jams against
+   the card's top border. Give the card top room and separate the stacked fields. 12px == Vuetify's
+   spacing-3 (pt-3 / mb-3). Global so every dialog using .gameSystemScenarioCard gets it from one
+   place (no :deep needed — this is a global, unscoped stylesheet). */
+.gameSystemScenarioCard {
+	padding-top: 12px;
+}
+.gameSystemScenarioCard .v-input:not(:last-child) {
+	margin-bottom: 12px;
+}

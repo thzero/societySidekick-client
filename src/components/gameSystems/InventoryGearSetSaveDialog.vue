@@ -1,47 +1,43 @@
 <template>
-	<VFormDialog
-		ref="form"
+	<VtFormDialog
 		:label="$t('strings.save') +' ' + $t('characters.inventories.gearSets.name')"
 		:signal="signal"
+		:validation="validation"
 		:pre-complete-ok="preComplete"
-		:fullscreen="fullscreenInternal"
-		@close="close"
-		@cancel="cancel"
+		@close="cancel"
 		@ok="ok"
 	>
 		<v-card
 			tile
-			outlined
+			variant="outlined"
 		>
 			<v-card-text>
-				<VSelectWithValidation
-					ref="gearSetId"
+				<VtSelectWithValidation
+					ref="gearSetIdRef"
 					v-model="gearSetId"
 					vid="gearSetId"
+					:validation="validation"
 					:items="gearSetsBlank"
 					:label="$t('characters.inventories.gearSets.name')"
-					:rules-bail="false"
-					:rules="rulesGameSetId"
 				/>
-				<VTextFieldWithValidation
-					ref="name"
+				<VtTextFieldWithValidation
+					ref="nameRef"
 					v-model="name"
 					vid="name"
+					:validation="validation"
 					:label="$t('forms.name')"
-					:rules="rulesGameSetName"
-					:rules-bail="false"
 					:counter="30"
 				/>
 				<v-alert
-					dense
-					outlined
+					density="compact"
+					variant="outlined"
 					class="mb-0 mt-4"
 				>
 					<span class="body-2">{{ $t('messages.inventories.renameGearSet') }}</span>
 				</v-alert>
 			</v-card-text>
 		</v-card>
-		<VConfirmationDialog
+		<VtConfirmationDialog
 			:non-recoverable="true"
 			:message="$t('questions.areYouSureNonRecoverableGearSetSave')"
 			:signal="dialogConfirmSignal.signal"
@@ -49,123 +45,136 @@
 			@cancel="dialogConfirmSignal.cancel()"
 			@ok="dialogConfirmOk"
 		/>
-	</VFormDialog>
+	</VtFormDialog>
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import { ref } from 'vue';
+
+import useVuelidate from '@vuelidate/core';
+import { maxLength, minLength, requiredIf } from '@vuelidate/validators';
+
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
+import Response from '@thzero/library_common/response';
 import AppUtility from '@/utility/app';
 
-import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
-import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
-import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
+import { useBaseInventoryGearSetDialogComponent } from '@/components/gameSystems/baseInventoryGearSetDialog';
 
-import baseInventoryGearSetDialog from '@/components/gameSystems/baseInventoryGearSetDialog';
+import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
+import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
+import VtSelectWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtSelectWithValidation';
+import VtTextFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtTextFieldWithValidation';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import DialogSupport from '@thzero/library_client_vue3/components/support/dialog';
 
 export default {
 	name: 'InventoryGearSetSaveDialog',
 	components: {
-		VConfirmationDialog,
-		VFormDialog,
-		VSelectWithValidation,
-		VTextFieldWithValidation
+		VtConfirmationDialog,
+		VtFormDialog,
+		VtSelectWithValidation,
+		VtTextFieldWithValidation
 	},
-	extends: baseInventoryGearSetDialog,
 	props: {
+		signal: {
+			type: Boolean,
+			default: false
+		},
+		gameSystemId: {
+			type: String,
+			default: null
+		},
 		inventory: {
 			type: Array,
 			default: null
 		}
 	},
-	data: () => ({
-		dialogConfirmSignal: new DialogSupport()
-	}),
-	computed: {
-		rulesGameSetId() {
-			return !this.name ? 'required|' : ''; //'gearSetSave:@name'
-		},
-		rulesGameSetName() {
-			return !this.gearSetId ? 'required|min:3|max:30|' : 'min:3|max:30|'; //'gearSetSave:@gearSetId|min:3|max:30|'
-		}
-	},
-	methods: {
-		async dialogConfirmOk() {
-			this.$emit('ok');
-		},
-		async preComplete(correlationId) {
-			if (!this.gearSetId && !this.name)
-				return this.error('InventoryGearSetSaveDialog', 'preComplete', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.inventories.eitherGearSetOrName'));
+	emits: ['cancel', 'ok'],
+	setup(props, context) {
+		const base = useBaseInventoryGearSetDialogComponent(props, context, {});
 
-			if (!String.isNullOrEmpty(this.name) && this.gearSetId)
-				return await this.rename(correlationId);
+		const dialogConfirmSignal = ref(new DialogSupport());
 
-			if (this.gearSetId) {
-				this.dialogConfirmSignal.open(correlationId);
-				return this.error('InventoryGearSetSaveDialog', 'preComplete', null, null, null, null, correlationId);
-			}
-
-			return await this.save(correlationId);
-		},
-		async preCompleteConfirm(correlationId) {
-			await this.save(correlationId);
-			return this.success(correlationId);
-		},
-		async rename(correlationId) {
-			const response = await AppUtility.settings().updateSettingsUserGameSystem(GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name }, (settings, newVal) => {
-				if (!newVal && !this.gameSystemId)
-					return this.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.invalidRequest'));
-
+		const dialogConfirmOk = async () => {
+			context.emit('ok');
+		};
+		const rename = async (correlationId) => {
+			return await AppUtility.settings().updateSettingsUserGameSystem(LibraryClientUtility.$store, LibraryClientUtility.$store.user.user, props.gameSystemId, { gearSetId: base.gearSetId.value, name: base.name.value }, (settings, newVal) => {
+				if (!newVal && !props.gameSystemId)
+					return base.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(LibraryClientUtility.$trans.t('errors.invalidRequest'));
 				const name = String.trim(newVal.name);
 				const gearSet = settings.gearSets.find(l => l.id === newVal.gearSetId);
 				if (!gearSet)
-					return this.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.inventories.renameInvalidGearSet'));
-
+					return base.error('InventoryGearSetSaveDialog', 'rename', null, null, null, null, correlationId).addGeneric(LibraryClientUtility.$trans.t('errors.inventories.renameInvalidGearSet'));
 				gearSet.name = name;
-
 				return Response.success(correlationId);
 			});
-
-			return response;
-		},
-		async save(correlationId) {
-			const response = await AppUtility.settings().updateSettingsUserGameSystem(correlationId, GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.gameSystemId, { gearSetId: this.gearSetId, name: this.name, inventory: this.inventory }, (settings, newVal) => {
-				if (!newVal && !this.gameSystemId)
-					return this.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.invalidRequest'));
-
+		};
+		const save = async (correlationId) => {
+			return await AppUtility.settings().updateSettingsUserGameSystem(correlationId, LibraryClientUtility.$store, LibraryClientUtility.$store.user.user, props.gameSystemId, { gearSetId: base.gearSetId.value, name: base.name.value, inventory: props.inventory }, (settings, newVal) => {
+				if (!newVal && !props.gameSystemId)
+					return base.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(LibraryClientUtility.$trans.t('errors.invalidRequest'));
 				if (newVal.name && newVal.gearSetId)
-					return this.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(GlobalUtility.$trans.t('errors.inventories.eitherGearSetOrName'));
-
+					return base.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId).addGeneric(LibraryClientUtility.$trans.t('errors.inventories.eitherGearSetOrName'));
 				let gearSet;
 				if (newVal.name) {
 					const name = String.trim(newVal.name);
 					gearSet = settings.gearSets.find(l => l.name.toLowerCase() === name.toLowerCase());
 					if (!gearSet) {
-						gearSet = { id: LibraryUtility.generateId(), name: name, inventory: [] };
+						gearSet = { id: LibraryCommonUtility.generateId(), name: name, inventory: [] };
 						settings.gearSets.push(gearSet);
 					}
 				}
 				else
 					gearSet = settings.gearSets.find(l => l.id === newVal.gearSetId);
-
 				if (!gearSet)
-					return this.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId);
-
+					return base.error('InventoryGearSetSaveDialog', 'save', null, null, null, null, correlationId);
 				gearSet.inventory = (newVal.inventory ? newVal.inventory : []).map(l => {
-					return {
-						item: l.item,
-						itemId: l.itemId,
-						quantity: l.quantity,
-						value: l.value
-					};
+					return { item: l.item, itemId: l.itemId, quantity: l.quantity, value: l.value };
 				});
 			});
+		};
+		const preCompleteConfirm = async (correlationId) => {
+			await save(correlationId);
+			return base.success(correlationId);
+		};
+		const preComplete = async (correlationId) => {
+			if (!base.gearSetId.value && !base.name.value)
+				return base.error('InventoryGearSetSaveDialog', 'preComplete', null, null, null, null, correlationId).addGeneric(LibraryClientUtility.$trans.t('errors.inventories.eitherGearSetOrName'));
+			if (!String.isNullOrEmpty(base.name.value) && base.gearSetId.value)
+				return await rename(correlationId);
+			if (base.gearSetId.value) {
+				dialogConfirmSignal.value.open(correlationId);
+				return base.error('InventoryGearSetSaveDialog', 'preComplete', null, null, null, null, correlationId);
+			}
+			return await save(correlationId);
+		};
 
-			return response;
-		}
+		return {
+			...base,
+			dialogConfirmSignal,
+			dialogConfirmOk,
+			preComplete,
+			preCompleteConfirm,
+			rename,
+			save,
+			validation: useVuelidate({ $scope: 'InventoryGearSetSaveDialog' })
+		};
+	},
+	validations() {
+		return {
+			gearSetId: {
+				requiredIf: requiredIf(function () { return !this.name; }),
+				$autoDirty: true
+			},
+			name: {
+				requiredIf: requiredIf(function () { return !this.gearSetId; }),
+				minLength: minLength(3),
+				maxLength: maxLength(30),
+				$autoDirty: true
+			}
+		};
 	}
 };
 </script>

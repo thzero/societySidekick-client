@@ -1,37 +1,29 @@
 <template>
-	<v-layout
-		wrap
-	>
-		<v-flex
-			xs12
-			mb-2
+	<v-row>
+		<v-col
+			cols="12"
+			class="mb-2"
 		>
-			<v-card
-				tile
-			>
+			<v-card>
 				<v-card-text>
-					<v-layout
-						wrap
-					>
-						<v-flex
-							xs12
-							lg6
-							mb-1
-							:pr-2="$vuetify.breakpoint.lgAndUp"
+					<v-row>
+						<v-col
+							cols="12"
+							lg="6"
+							class="mb-1"
+							:class="{ 'pr-2': $vuetify.display.lgAndUp }"
 						>
 							<table
 								border="0"
 								cellspacing="0"
 								cellpadding="0"
 								style="width: 100%;"
-							>
+							><tbody>
 								<tr>
-									<td
-										style="width: 100%;"
-									>
-										<VSelect2
+									<td style="width: 100%;">
+										<VtSelect
 											v-if="!isExternalListScenarios"
-											ref="gameSystems"
+											ref="gameSystemsRef"
 											v-model="gameSystemFilter"
 											:items="gameSystems"
 											:flat="true"
@@ -40,9 +32,9 @@
 											:label="$t('forms.gameSystem')"
 											class="pb-1"
 										/>
-										<VText2
+										<VtTextField
 											v-if="isExternalListScenarios"
-											ref="gameSystem"
+											ref="gameSystemRef"
 											v-model="gameSystemName"
 											:flat="true"
 											:hide-details="true"
@@ -51,8 +43,8 @@
 											:readonly="true"
 											class="pb-1"
 										/>
-										<VSelect2
-											ref="scenarioSeasons"
+										<VtSelect
+											ref="scenarioSeasonsRef"
 											v-model="seasonFilter"
 											:items="scenarioSeasons"
 											:flat="true"
@@ -61,8 +53,8 @@
 											:label="$t('forms.scenarios.season')"
 											class="pb-1"
 										/>
-										<VNumber
-											ref="uses"
+										<VtNumberField
+											ref="usesRef"
 											v-model="scenarioNumberFilter"
 											:flat="true"
 											:hide-details="true"
@@ -72,17 +64,17 @@
 											class="pb-1"
 										/>
 										<table
-											v-if="$vuetify.breakpoint.mdAndDown"
+											v-if="$vuetify.display.mdAndDown"
 											border="0"
 											cellspacing="0"
 											cellpadding="0"
 											style="width: 100%;"
 											class="pt-1"
-										>
+										><tbody>
 											<tr>
 												<td>
-													<VText2
-														ref="scenarioNameFilter"
+													<VtTextField
+														ref="scenarioNameFilterRef"
 														v-model="scenarioNameFilter"
 														:flat="true"
 														:hide-details="true"
@@ -94,8 +86,8 @@
 											</tr>
 											<tr>
 												<td>
-													<VSelect2
-														ref="scenariosListingTypeFilter"
+													<VtSelect
+														ref="scenariosListingTypeFilterRef"
 														v-model="scenariosListingTypeFilter"
 														:items="scenariosListingTypeFilterList"
 														:flat="true"
@@ -108,25 +100,25 @@
 											</tr>
 											<tr>
 												<td>
-													<!-- // GameSystems Update -->
+													<!-- GameSystems Update -->
 													<ScenarioListFilterPathfinder2e
 														v-show="isGameSystemPathfinder2e"
-														ref="scenarioListFilterPathfinder2e"
+														ref="scenarioListFilterPathfinder2eRef"
 														v-model="forceRecomputeCounter"
 														:external-list="isExternalList"
 													/>
 													<ScenarioListFilterStarfinder1e
 														v-show="isGameSystemStarfinder1e"
-														ref="scenarioListFilterStarfinder1e"
+														ref="scenarioListFilterStarfinder1eRef"
 														v-model="forceRecomputeCounter"
 														:external-list="isExternalList"
 													/>
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 									<td
-										v-if="$vuetify.breakpoint.mdAndDown"
+										v-if="$vuetify.display.mdAndDown"
 										style="vertical-align: top;"
 									>
 										<table
@@ -135,7 +127,7 @@
 											cellpadding="0"
 											class="mb-1 ml-2"
 											style="margin-left: auto; margin-right: 0px;"
-										>
+										><tbody>
 											<tr>
 												<td
 													style="padding-right: 4px;"
@@ -143,17 +135,15 @@
 													class="pb-1"
 												>
 													<v-menu>
-														<template #activator="{ on: onMenu }">
-															<v-tooltip 
-																left
-															>
-																<template #activator="{ on: onTooltip }">
+														<template #activator="{ props: menu }">
+															<v-tooltip location="left">
+																<template #activator="{ props: tooltip }">
 																	<v-btn
 																		v-if="gameSystemFilter"
-																		depressed
-																		large
+																		variant="flat"
+																		size="large"
 																		style="min-width: 0px;"
-																		v-on="{ ...onMenu, ...onTooltip }"
+																		v-bind="mergeProps(menu, tooltip)"
 																	>
 																		<v-icon>mdi-file-download</v-icon>
 																	</v-btn>
@@ -162,14 +152,10 @@
 															</v-tooltip>
 														</template>
 														<v-list>
-															<v-list-item
-																@click="clickExtract(extractTypes.Csv)"
-															>
+															<v-list-item @click="clickExtract(extractTypes.Csv)">
 																<v-list-item-title>{{ $t('extracts.csv') }}</v-list-item-title>
 															</v-list-item>
-															<v-list-item
-																@click="clickExtract(extractTypes.Text)"
-															>
+															<v-list-item @click="clickExtract(extractTypes.Text)">
 																<v-list-item-title>{{ $t('extracts.text') }}</v-list-item-title>
 															</v-list-item>
 														</v-list>
@@ -182,32 +168,21 @@
 													align="right"
 													class="pb-1"
 												>
-													<v-tooltip left>
-														<template v-slot:activator="{ on, attrs }">
+													<v-tooltip location="left">
+														<template #activator="{ props }">
 															<v-btn
 																v-if="gameSystemFilter && !isExternalList"
-																depressed
-																large
+																variant="flat"
+																size="large"
 																style="min-width: 0px;"
+																v-bind="props"
 																@click="dialogShareOpen()"
-																v-bind="attrs"
-																v-on="on"
 															>
 																<v-icon>mdi-share-variant</v-icon>
 															</v-btn>
 														</template>
 														<span>{{ $t('tooltips.share') }}</span>
 													</v-tooltip>
-													<!-- <v-btn
-														v-if="gameSystemFilter && !isExternalList"
-														depressed
-														large
-														style="min-width: 0px;"
-														@click="dialogShareOpen()"
-													>
-														<v-icon>mdi-share-variant</v-icon>
-													</v-btn> -->
-													
 												</td>
 											</tr>
 											<tr>
@@ -217,8 +192,8 @@
 													align="right"
 													class="pb-1"
 												>
-													<VSelect2
-														ref="user"
+													<VtSelect
+														ref="userRef"
 														v-model="userIdFilter"
 														:items="userList"
 														:flat="true"
@@ -234,77 +209,62 @@
 													align="right"
 													class="pb-1"
 												>
-													<VGameSystemListingSyleButton 
-														v-model="listingStyle"
-													/>
+													<VGameSystemListingSyleButton v-model="listingStyle" />
 												</td>
 											</tr>
-											<tr
-												v-if="gameSystemFilter"
-											>
+											<tr v-if="gameSystemFilter">
 												<td
 													style="padding-right: 4px;"
 													align="right"
 													class="pb-1"
 												>
-													<v-tooltip left>
-														<template v-slot:activator="{ on, attrs }">
+													<v-tooltip location="left">
+														<template #activator="{ props }">
 															<v-btn
 																v-if="gameSystemFilter && !isExternalList"
-																depressed
-																large
+																variant="flat"
+																size="large"
 																style="min-width: 0px;"
+																v-bind="props"
 																@click="clickClear()"
-																v-bind="attrs"
-																v-on="on"
 															>
 																<v-icon>mdi-filter-variant-remove</v-icon>
 															</v-btn>
 														</template>
 														<span>{{ $t('tooltips.clear') }}</span>
 													</v-tooltip>
-													<!-- <v-btn
-														depressed
-														large
-														style="min-width: 0px;"
-														@click="clickClear()"
-													>
-														<v-icon>mdi-filter-variant-remove</v-icon>
-													</v-btn> -->
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 								</tr>
-							</table>
-						</v-flex>
-						<v-flex
-							xs12
-							lg6
+							</tbody></table>
+						</v-col>
+						<v-col
+							cols="12"
+							lg="6"
 						>
 							<table
-								v-if="$vuetify.breakpoint.lgAndUp"
+								v-if="$vuetify.display.lgAndUp"
 								border="0"
 								cellspacing="0"
 								cellpadding="0"
 								class="mb-1"
 								style="width: 100%;"
-							>
+							><tbody>
 								<tr>
-									<td
-										style="width: 100%;"
-									>
+									<td style="width: 100%;">
 										<table
 											border="0"
 											cellspacing="0"
 											cellpadding="0"
 											class="mb-1"
 											style="width: 100%;"
-										>
+										><tbody>
 											<tr>
 												<td>
-													<VText2
-														ref="scenarioNameFilter"
+													<VtTextField
+														ref="scenarioNameFilterRef2"
 														v-model="scenarioNameFilter"
 														:flat="true"
 														:hide-details="true"
@@ -316,8 +276,8 @@
 											</tr>
 											<tr>
 												<td>
-													<VSelect2
-														ref="scenariosListingTypeFilter"
+													<VtSelect
+														ref="scenariosListingTypeFilterRef2"
 														v-model="scenariosListingTypeFilter"
 														:items="scenariosListingTypeFilterList"
 														:flat="true"
@@ -329,19 +289,17 @@
 												</td>
 											</tr>
 											<tr>
-												<td
-													class="pb-1"
-												>
-													<!-- // GameSystems Update -->
+												<td class="pb-1">
+													<!-- GameSystems Update -->
 													<ScenarioListFilterPathfinder2e
 														v-show="isGameSystemPathfinder2e"
-														ref="scenarioListFilterPathfinder2e"
+														ref="scenarioListFilterPathfinder2eRef2"
 														v-model="forceRecomputeCounter"
 														:external-list="isExternalList"
 													/>
 													<ScenarioListFilterStarfinder1e
 														v-show="isGameSystemStarfinder1e"
-														ref="scenarioListFilterStarfinder1e"
+														ref="scenarioListFilterStarfinder1eRef2"
 														v-model="forceRecomputeCounter"
 														:external-list="isExternalList"
 													/>
@@ -353,13 +311,11 @@
 													cellspacing="0"
 													cellpadding="0"
 													style="width: 100%;"
-												>
+												><tbody>
 													<tr>
-														<td
-															style="padding-right: 4px;"
-														>
-															<VSelect2
-																ref="sortBy"
+														<td style="padding-right: 4px;">
+															<VtSelect
+																ref="sortByRef"
 																v-model="sortBy"
 																:items="sortKeys"
 																:flat="true"
@@ -369,25 +325,21 @@
 															/>
 														</td>
 														<td>
-															<VDirectionButton
-																v-model="sortDirection"
-															/>
+															<VtDirectionButton v-model="sortDirection" />
 														</td>
 													</tr>
-												</table>
+												</tbody></table>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
-									<td
-										style="vertical-align: top;"
-									>
+									<td style="vertical-align: top;">
 										<table
 											border="0"
 											cellspacing="0"
 											cellpadding="0"
 											class="mb-1 ml-2"
 											style="margin-left: auto; margin-right: 0px;"
-										>
+										><tbody>
 											<tr>
 												<td
 													style="padding-right: 4px;"
@@ -395,17 +347,15 @@
 													class="pb-1"
 												>
 													<v-menu>
-														<template #activator="{ on: onMenu }">
-															<v-tooltip 
-																left
-															>
-																<template #activator="{ on: onTooltip }">
+														<template #activator="{ props: menu }">
+															<v-tooltip location="left">
+																<template #activator="{ props: tooltip }">
 																	<v-btn
 																		v-if="gameSystemFilter"
-																		depressed
-																		large
+																		variant="flat"
+																		size="large"
 																		style="min-width: 0px;"
-																		v-on="{ ...onMenu, ...onTooltip }"
+																		v-bind="mergeProps(menu, tooltip)"
 																	>
 																		<v-icon>mdi-file-download</v-icon>
 																	</v-btn>
@@ -414,14 +364,10 @@
 															</v-tooltip>
 														</template>
 														<v-list>
-															<v-list-item
-																@click="clickExtract(extractTypes.Csv)"
-															>
+															<v-list-item @click="clickExtract(extractTypes.Csv)">
 																<v-list-item-title>{{ $t('extracts.csv') }}</v-list-item-title>
 															</v-list-item>
-															<v-list-item
-																@click="clickExtract(extractTypes.Text)"
-															>
+															<v-list-item @click="clickExtract(extractTypes.Text)">
 																<v-list-item-title>{{ $t('extracts.text') }}</v-list-item-title>
 															</v-list-item>
 														</v-list>
@@ -434,16 +380,15 @@
 													align="right"
 													class="pb-1"
 												>
-													<v-tooltip left>
-														<template v-slot:activator="{ on, attrs }">
+													<v-tooltip location="left">
+														<template #activator="{ props }">
 															<v-btn
 																v-if="gameSystemFilter && !isExternalList"
-																depressed
-																large
+																variant="flat"
+																size="large"
 																style="min-width: 0px;"
+																v-bind="props"
 																@click="dialogShareOpen()"
-																v-bind="attrs"
-																v-on="on"
 															>
 																<v-icon>mdi-share-variant</v-icon>
 															</v-btn>
@@ -459,8 +404,8 @@
 													align="right"
 													class="pb-1"
 												>
-													<VSelect2
-														ref="user"
+													<VtSelect
+														ref="userRef2"
 														v-model="userIdFilter"
 														:items="userList"
 														:flat="true"
@@ -476,29 +421,24 @@
 													align="right"
 													class="pb-1"
 												>
-													<VGameSystemListingSyleButton 
-														v-model="listingStyle"
-													/>
+													<VGameSystemListingSyleButton v-model="listingStyle" />
 												</td>
 											</tr>
-											<tr
-												v-if="gameSystemFilter"
-											>
+											<tr v-if="gameSystemFilter">
 												<td
 													style="padding-right: 4px;"
 													align="right"
 													class="pb-1"
 												>
-													<v-tooltip left>
-														<template v-slot:activator="{ on, attrs }">
+													<v-tooltip location="left">
+														<template #activator="{ props }">
 															<v-btn
 																v-if="gameSystemFilter && !isExternalList"
-																depressed
-																large
+																variant="flat"
+																size="large"
 																style="min-width: 0px;"
+																v-bind="props"
 																@click="clickClear()"
-																v-bind="attrs"
-																v-on="on"
 															>
 																<v-icon>mdi-filter-variant-remove</v-icon>
 															</v-btn>
@@ -507,68 +447,71 @@
 													</v-tooltip>
 												</td>
 											</tr>
-										</table>
+										</tbody></table>
 									</td>
 								</tr>
-							</table>
-						</v-flex>
+							</tbody></table>
+						</v-col>
 						<ShareDialog
-							ref="shareDialog"
+							ref="shareDialogRef"
 							:label="$t('characters.share') + ' ' +$t('characters.scenarios.namePlural')"
 							:signal="dialogShare.signal"
 							url="scenarios"
 							@cancel="dialogShare.cancel()"
 							@ok="dialogShare.ok()"
 						/>
-					</v-layout>
+					</v-row>
 				</v-card-text>
 			</v-card>
-		</v-flex>
-		<v-flex
+		</v-col>
+		<v-col
 			v-for="item in scenarios"
 			:key="item.id"
-			sm12
-			:lg6="isGrid"
-			:lg12="isList"
-			:xl4="isGrid"
-			:xl12="isList"
-			pb-1
-			pt-1
-			pl-1
-			pr-1
+			cols="12"
+			:lg="isGrid ? 6 : 12"
+			:xl="isGrid ? 4 : 12"
+			class="pb-1 pt-1 pl-1 pr-1"
 		>
 			<ScenarioSnippet
 				:value="item"
 				:user="item.user"
 				:external-list-type="externalListType"
 			/>
-		</v-flex>
-	</v-layout>
+		</v-col>
+	</v-row>
 </template>
 
 <script>
+import { computed, mergeProps, onMounted, ref, watch } from 'vue';
 import { firstBy } from 'thenby';
 
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
 import AppUtility from '@/utility/app';
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import baseList from '@/components/gameSystems/baseList';
-import VDirectionButton from '@/library_vue_vuetify/components/VDirectionButton';
-import VGameSystemListingSyleButton from '@/components/gameSystems/VGameSystemListingSyleButton';
-import VNumber from '@/library_vue_vuetify/components/form/VNumberField';
-import VSelect2 from '@/library_vue_vuetify/components/form/VSelect';
-import VText2 from '@/library_vue_vuetify/components/form/VTextField';
+import { useGameSystemBaseListComponent } from '@/components/gameSystems/baseList';
+
+import gameSystemBaseListProps from '@/components/gameSystems/gameSystemBaseListProps';
 
 import ScenarioSnippet from '@/components/gameSystems/ScenarioSnippet';
+import ShareDialog from '@/components/ShareDialog';
+import VGameSystemListingSyleButton from '@/components/gameSystems/VGameSystemListingSyleButton';
+import VtDirectionButton from '@thzero/library_client_vue3_vuetify3/components/VtDirectionButton';
+import VtNumberField from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberField';
+import VtSelect from '@thzero/library_client_vue3_vuetify3/components/form/VtSelect';
+import VtTextField from '@thzero/library_client_vue3_vuetify3/components/form/VtTextField';
 
 // GameSystems Update
 import ScenarioListFilterPathfinder2e from '@/components/gameSystems/pathfinder2e/ScenarioListFilter';
 import ScenarioListFilterStarfinder1e from '@/components/gameSystems/starfinder1e/ScenarioListFilter';
 
+// TODO(migration): asyncComputed `scenarios` re-implemented as a ref recomputed via watch()/execute().
+// The per-game-system ScenarioListFilter children are accessed via template refs (scenarioListFilterX2eRef*).
+// NOTE the mdAndDown and lgAndUp layouts each render a ScenarioListFilter with its own ref; the filter
+// helpers below try each ref. `this.clone` → LibraryCommonUtility.cloneDeep.
 export default {
 	name: 'BaseScenarioList',
 	components: {
@@ -576,284 +519,367 @@ export default {
 		ScenarioListFilterPathfinder2e,
 		ScenarioListFilterStarfinder1e,
 		ScenarioSnippet,
-		VDirectionButton,
+		ShareDialog,
 		VGameSystemListingSyleButton,
-		VNumber,
-		VSelect2,
-		VText2
+		VtDirectionButton,
+		VtNumberField,
+		VtSelect,
+		VtTextField
 	},
-	extends: baseList,
 	props: {
-		user: {
-			type: Object,
-			default: null
-		},
-		value: {
-			type: Array,
-			default: null
-		}
+		...gameSystemBaseListProps
 	},
-	data: () => ({
-		forceRecomputeCounter: 0,
-		listingStyleOverride: SharedConstants.ListingTypes.Grid,
-		scenarioNameValue: null,
-		scenarioNumberValue: null,
-		scenariosCache: {},
-		scenariosListingTypeValue: SharedConstants.ScenarioListingTypes.Played,
-		sortByOverride: null,
-		sortDirectionOverride: true,
-		userIdFilterValue: null,
-		users: [],
-		executing: false
-	}),
-	asyncComputed: {
-		async scenarios() {
-			return await this.execute();
-		}
-	},
-	computed: {
-		characterList() {
-			return this.value ? this.value : GlobalUtility.$store.state.characters.characters;
-		},
-		isGrid() {
-			return this.listingStyle === SharedConstants.ListingTypes.Grid;
-		},
-		isList() {
-			return this.listingStyle === SharedConstants.ListingTypes.List;
-		},
-		listingStyle: {
-			get: function () {
-				if (!this.user)
-					return this.listingStyleOverride;
-				if (this.isExternalList)
-					return this.listingStyleOverride;
+	setup(props, context) {
+		const base = useGameSystemBaseListComponent(props, context);
 
-				let value = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.listingStyleFilter);
+		const shareDialogRef = ref(null);
+		const scenarioListFilterPathfinder2eRef = ref(null);
+		const scenarioListFilterStarfinder1eRef = ref(null);
+		const scenarioListFilterPathfinder2eRef2 = ref(null);
+		const scenarioListFilterStarfinder1eRef2 = ref(null);
+
+		const forceRecomputeCounter = ref(0);
+		const listingStyleOverride = ref(SharedConstants.ListingTypes.Grid);
+		const scenarioNameValue = ref(null);
+		const scenarioNumberValue = ref(null);
+		const scenariosCache = ref({});
+		const scenariosListingTypeValue = ref(SharedConstants.ScenarioListingTypes.Played);
+		const sortByOverride = ref(SharedConstants.SortBy.Scenarios.ScenarioName);
+		const sortDirectionOverride = ref(true);
+		const userIdFilterValue = ref(null);
+		const users = ref([]);
+
+		const scenarios = ref([]);
+
+		// base.gameSystemFilter is a settings-backed computed that does not reliably re-trigger reactivity
+		// when persisted via setUserSettings (store settings replacement). Drive the list off a local ref
+		// (updated immediately on select) while still persisting the saved setting through the settings service.
+		const gameSystemFilterLocal = ref(AppUtility.settings().getSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store.user.user, (s) => s.gameSystemFilter));
+		const gameSystemFilter = computed({
+			get: () => gameSystemFilterLocal.value,
+			set: (newVal) => {
+				gameSystemFilterLocal.value = newVal;
+				AppUtility.settings().updateSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store, LibraryClientUtility.$store.user.user, newVal, (s) => { return s.gameSystemFilter = newVal; });
+			}
+		});
+
+		// Returns the active ScenarioListFilter child ref for the current game system (either layout).
+		const filterPathfinder2e = () => {
+			return scenarioListFilterPathfinder2eRef.value || scenarioListFilterPathfinder2eRef2.value;
+		};
+		const filterStarfinder1e = () => {
+			return scenarioListFilterStarfinder1eRef.value || scenarioListFilterStarfinder1eRef2.value;
+		};
+
+		const characterList = computed(() => {
+			return props.value ? props.value : LibraryClientUtility.$store.characters.characters;
+		});
+		const listingStyle = computed({
+			get() {
+				if (!props.user)
+					return listingStyleOverride.value;
+				if (base.isExternalList.value)
+					return listingStyleOverride.value;
+
+				let value = AppUtility.settings().getSettingsUserScenarios(base.correlationId(), props.user, (settings) => settings.listingStyleFilter);
 				value = !String.isNullOrEmpty(value) ? value : SharedConstants.ListingTypes.Grid;
 				return value;
 			},
-			set: function (newVal) {
-				if (!this.user)
+			set(newVal) {
+				if (!props.user)
 					return;
-				if (this.isExternalList)
-					this.listingStyleOverride = newVal;
+				if (base.isExternalList.value)
+					listingStyleOverride.value = newVal;
 
-				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.listingStyleFilter = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(base.correlationId(), LibraryClientUtility.$store, props.user, newVal, (settings) => { settings.listingStyleFilter = newVal; });
 			}
-		},
-		seasonFilter: {
-			get: function () {
-				if (this.isExternalList)
-					return this.seasonFilterOverride;
-
-				if (!this.user)
+		});
+		const isGrid = computed(() => {
+			return listingStyle.value === SharedConstants.ListingTypes.Grid;
+		});
+		const isList = computed(() => {
+			return listingStyle.value === SharedConstants.ListingTypes.List;
+		});
+		const seasonFilter = computed({
+			get() {
+				if (base.isExternalList.value)
+					return base.seasonFilterOverride.value;
+				if (!props.user)
 					return null;
-
-				return AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.seasonFilter);
+				return AppUtility.settings().getSettingsUserScenarios(base.correlationId(), props.user, (settings) => settings.seasonFilter);
 			},
-			set: function (newVal) {
-				if (this.isExternalList) {
-					this.seasonFilterOverride = newVal;
+			set(newVal) {
+				if (base.isExternalList.value) {
+					base.seasonFilterOverride.value = newVal;
 					return;
 				}
-
-				if (!this.user)
+				if (!props.user)
 					return;
-
-				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.seasonFilter = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(base.correlationId(), LibraryClientUtility.$store, props.user, newVal, (settings) => { settings.seasonFilter = newVal; });
 			}
-		},
-		scenarioNameFilter: {
-			get: function () {
-				return this.scenarioNameValue;
+		});
+		const scenarioNameFilter = computed({
+			get() {
+				return scenarioNameValue.value;
 			},
-			set: function (newVal) {
-				this.scenarioNameValue = newVal;
-				this.forceRecomputeCounter++;
+			set(newVal) {
+				scenarioNameValue.value = newVal;
+				forceRecomputeCounter.value++;
 			}
-		},
-		scenarioNumberFilter: {
-			get: function () {
-				return this.scenarioNumberValue;
+		});
+		const scenarioNumberFilter = computed({
+			get() {
+				return scenarioNumberValue.value;
 			},
-			set: function (newVal) {
-				this.scenarioNumberValue = newVal;
-				this.forceRecomputeCounter++;
+			set(newVal) {
+				scenarioNumberValue.value = newVal;
+				forceRecomputeCounter.value++;
 			}
-		},
-		scenariosListingTypeFilter: {
-			get: function () {
-				return this.scenariosListingTypeValue;
-			},
-			set: function (newVal) {
-				if (newVal) {
-					if (
-						(this.sortBy === SharedConstants.SortBy.Scenarios.CharacterName) ||
-						(this.sortBy === SharedConstants.SortBy.Scenarios.DatePlayed)
-					)
-						this.sortBy = SharedConstants.SortBy.Scenarios.Season;
-				}
-				this.scenariosListingTypeValue = newVal;
-				this.forceRecomputeCounter++;
-			}
-		},
-		sortBy: {
-			get: function () {
-				if (this.isExternalList)
-					return this.sortByOverride;
-
-				const result = AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.sortBy);
+		});
+		const sortBy = computed({
+			get() {
+				if (base.isExternalList.value)
+					return sortByOverride.value;
+				const result = AppUtility.settings().getSettingsUserScenarios(base.correlationId(), props.user, (settings) => settings.sortBy);
 				return result ? result : SharedConstants.SortBy.Scenarios.ScenarioName;
 			},
-			set: function (newVal) {
-				if (this.isExternalList) {
-					this.sortByOverride = newVal;
-					this.forceRecomputeCounter++;
+			set(newVal) {
+				if (base.isExternalList.value) {
+					sortByOverride.value = newVal;
+					forceRecomputeCounter.value++;
 					return;
 				}
-
-				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.sortBy = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(base.correlationId(), LibraryClientUtility.$store, props.user, newVal, (settings) => { settings.sortBy = newVal; });
 			}
-		},
-		sortDirection: {
-			get: function () {
-				if (this.isExternalList)
-					return this.sortDirectionOverride;
-
-				return AppUtility.settings().getSettingsUserScenarios(this.correlationId(), this.user, (settings) => settings.sortDirection);
+		});
+		const sortDirection = computed({
+			get() {
+				if (base.isExternalList.value)
+					return sortDirectionOverride.value;
+				return AppUtility.settings().getSettingsUserScenarios(base.correlationId(), props.user, (settings) => settings.sortDirection);
 			},
-			set: function (newVal) {
-				if (this.isExternalList) {
-					this.sortDirectionOverride = newVal;
-					this.forceRecomputeCounter++;
+			set(newVal) {
+				if (base.isExternalList.value) {
+					sortDirectionOverride.value = newVal;
+					forceRecomputeCounter.value++;
 					return;
 				}
-
-				AppUtility.settings().updateSettingsUserScenarios(this.correlationId(), GlobalUtility.$store, this.user, newVal, (settings) => { settings.sortDirection = newVal; });
+				AppUtility.settings().updateSettingsUserScenarios(base.correlationId(), LibraryClientUtility.$store, props.user, newVal, (settings) => { settings.sortDirection = newVal; });
 			}
-		},
-		scenarioSeasons: {
-			get: function () {
-				const scenarios = this.scenariosCache[this.gameSystemFilter];
-				if (!scenarios)
-					return [];
-
-				let output = scenarios.filter(l => l.season != null).flatMap(l => l.season).filter(l => l !== null && l !== '');
-				output = [...new Set(output)];
-				return LibraryUtility.selectBlank(output, GlobalUtility.$trans.t('forms.scenarios.season'));
+		});
+		const scenariosListingTypeFilter = computed({
+			get() {
+				return scenariosListingTypeValue.value;
 			},
-			cache: false
-		},
-		scenariosListingTypeFilterList() {
-			return LibraryUtility.selectBlank([ { 
-					id: SharedConstants.ScenarioListingTypes.Played, 
-					name: GlobalUtility.$trans.t('forms.scenarios.played') 
-				}, 
-				{ 
-					id: SharedConstants.ScenarioListingTypes.NotPlayed, 
-					name: GlobalUtility.$trans.t('forms.not') + ' ' + GlobalUtility.$trans.t('forms.scenarios.played') 
-				}, 
-				{ 
-					id: SharedConstants.ScenarioListingTypes.All, 
-					name: GlobalUtility.$trans.t('forms.scenarios.all') 
-				} 
-			], GlobalUtility.$trans.t('forms.scenarios.name') + ' ' + GlobalUtility.$trans.t('forms.listing') + ' ' + GlobalUtility.$trans.t('forms.scenarios.type'));
-		},
-		sortKeys: {
-			get: function () {
-
-				let sortKeys = [];
-
-				if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.Played) {
-					sortKeys.push({ id: SharedConstants.SortBy.Scenarios.CharacterName, name: GlobalUtility.$trans.t('forms.characters.name') + ' ' + GlobalUtility.$trans.t('forms.name') });
-					sortKeys.push({ id: SharedConstants.SortBy.Scenarios.DatePlayed, name: GlobalUtility.$trans.t('forms.scenarios.datePlayed') });
+			set(newVal) {
+				if (newVal) {
+					if (
+						(sortBy.value === SharedConstants.SortBy.Scenarios.CharacterName) ||
+						(sortBy.value === SharedConstants.SortBy.Scenarios.DatePlayed)
+					)
+						sortBy.value = SharedConstants.SortBy.Scenarios.Season;
 				}
-					
-				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.ScenarioName, name: GlobalUtility.$trans.t('forms.scenarios.name') + ' ' + GlobalUtility.$trans.t('forms.name') });
-				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.ScenarioNumber, name: GlobalUtility.$trans.t('forms.scenarios.name') + ' ' + GlobalUtility.$trans.t('forms.number') });
-				sortKeys.push({ id: SharedConstants.SortBy.Scenarios.Season, name: GlobalUtility.$trans.t('forms.season') });
-				
-				return sortKeys;
+				scenariosListingTypeValue.value = newVal;
+				forceRecomputeCounter.value++;
 			}
-		},
-		userIdFilter: {
-			get: function () {
-				return this.userIdFilterValue;
+		});
+		const scenarioSeasons = computed(() => {
+			const scenariosS = scenariosCache.value[gameSystemFilter.value];
+			if (!scenariosS)
+				return [];
+
+			let output = scenariosS.filter(l => l.season != null).flatMap(l => l.season).filter(l => l !== null && l !== '');
+			output = [...new Set(output)];
+			return LibraryCommonUtility.selectBlank(output, LibraryClientUtility.$trans.t('forms.scenarios.season'));
+		});
+		const scenariosListingTypeFilterList = computed(() => {
+			return LibraryCommonUtility.selectBlank([
+				{ id: SharedConstants.ScenarioListingTypes.Played, name: LibraryClientUtility.$trans.t('forms.scenarios.played') },
+				{ id: SharedConstants.ScenarioListingTypes.NotPlayed, name: LibraryClientUtility.$trans.t('forms.not') + ' ' + LibraryClientUtility.$trans.t('forms.scenarios.played') },
+				{ id: SharedConstants.ScenarioListingTypes.All, name: LibraryClientUtility.$trans.t('forms.scenarios.all') }
+			], LibraryClientUtility.$trans.t('forms.scenarios.name') + ' ' + LibraryClientUtility.$trans.t('forms.listing') + ' ' + LibraryClientUtility.$trans.t('forms.scenarios.type'));
+		});
+		const sortKeys = computed(() => {
+			let keys = [];
+			if (scenariosListingTypeFilter.value === SharedConstants.ScenarioListingTypes.Played) {
+				keys.push({ id: SharedConstants.SortBy.Scenarios.CharacterName, name: LibraryClientUtility.$trans.t('forms.characters.name') + ' ' + LibraryClientUtility.$trans.t('forms.name') });
+				keys.push({ id: SharedConstants.SortBy.Scenarios.DatePlayed, name: LibraryClientUtility.$trans.t('forms.scenarios.datePlayed') });
+			}
+			keys.push({ id: SharedConstants.SortBy.Scenarios.ScenarioName, name: LibraryClientUtility.$trans.t('forms.scenarios.name') + ' ' + LibraryClientUtility.$trans.t('forms.name') });
+			keys.push({ id: SharedConstants.SortBy.Scenarios.ScenarioNumber, name: LibraryClientUtility.$trans.t('forms.scenarios.name') + ' ' + LibraryClientUtility.$trans.t('forms.number') });
+			keys.push({ id: SharedConstants.SortBy.Scenarios.Season, name: LibraryClientUtility.$trans.t('forms.season') });
+			return keys;
+		});
+		const userIdFilter = computed({
+			get() {
+				return userIdFilterValue.value;
 			},
-			set: function (newVal) {
-				this.userIdFilterValue = newVal;
-				this.forceRecomputeCounter++;
+			set(newVal) {
+				userIdFilterValue.value = newVal;
+				forceRecomputeCounter.value++;
 			}
-		},
-		userList() {
-			return LibraryUtility.selectBlank(this.users, GlobalUtility.$trans.t('players.name'));
-		}
-	},
-	created() {
-		this.sortByOverride = SharedConstants.SortBy.Scenarios.ScenarioName;
-		this.scenariosCache = {};
-	},
-	mounted() {
-		this.scenariosCache = {};
-	},
-	methods: {
-		clickClear() {
-			if (this.isExternalList) {
-				this.scenarioNameValue = null;
-				this.scenarioNumberValue = null;
-				this.seasonFilterOverride = null;
-				this.sortByOverride = SharedConstants.SortBy.Scenarios.ScenarioName;
-				this.sortDirectionOverride = true;
-				this.clickClearGameSystemExternal();
+		});
+		const userList = computed(() => {
+			return LibraryCommonUtility.selectBlank(users.value, LibraryClientUtility.$trans.t('players.name'));
+		});
 
-				this.forceRecomputeCounter = 0;
-				return;
+		const executeAdditionalFilter = (temp) => {
+			if (base.isGameSystemPathfinder2e.value && filterPathfinder2e())
+				return filterPathfinder2e().filterAdditional(temp);
+			if (base.isGameSystemStarfinder1e.value && filterStarfinder1e())
+				return filterStarfinder1e().filterAdditional(temp);
+			return true;
+		};
+		const executeFilterOverride = () => {
+			if (base.isGameSystemPathfinder2e.value && filterPathfinder2e())
+				return true;
+			if (base.isGameSystemStarfinder1e.value && filterStarfinder1e())
+				return true;
+			return false;
+		};
+		const executeScenarioNameFilter = (temp, value) => {
+			if (base.isGameSystemPathfinder2e.value && filterPathfinder2e())
+				return filterPathfinder2e().filterScenarioName(temp, value);
+			if (base.isGameSystemStarfinder1e.value && filterStarfinder1e())
+				return filterStarfinder1e().filterScenarioName(temp, value);
+		};
+		const filter = (temp) => {
+			if (scenarioNameValue.value) {
+				if (executeFilterOverride()) {
+					if (executeScenarioNameFilter(temp, scenarioNameValue.value))
+						return null;
+				}
+				else if (temp.name && (temp.name.toLowerCase().indexOf(scenarioNameValue.value.toLowerCase()) == -1))
+					return null;
 			}
 
-			AppUtility.settings().clearUser(this.correlationId(), GlobalUtility.$store, this.user, (correlationId, settings) => {
-				this.scenarioNameValue = null;
-				this.scenarioNumberValue = null;
-				settings.scenarios.seasonFilter = null;
-				settings.scenarios.sortBy = SharedConstants.SortBy.Scenarios.ScenarioName;
-				settings.scenarios.sortDirection = true;
-				this.clickClearGameSystem();
+			if (scenarioNumberValue.value) {
+				if (!temp.scenario || (temp.scenario.indexOf(scenarioNumberFilter.value) == -1))
+					return null;
+			}
+
+			if (seasonFilter.value) {
+				if (temp.season !== seasonFilter.value)
+					return null;
+			}
+
+			if (executeFilterOverride()) {
+				if (!executeAdditionalFilter(temp))
+					return null;
+			}
+
+			return temp;
+		};
+		const executeScenariosCache = async (correlationId) => {
+			return new Promise(async (resolve, reject) => {
+				try {
+					let scenariosS = scenariosCache.value[gameSystemFilter.value];
+					if (!scenariosS) {
+						await LibraryClientUtility.$store.dispatcher.scenarios.getScenarioListing(correlationId, gameSystemFilter.value);
+						scenariosS = LibraryClientUtility.$store.scenarios.listing;
+						if (scenariosS) {
+							scenariosS = scenariosS.filter(l => l.gameSystemId == gameSystemFilter.value);
+							scenariosCache.value[gameSystemFilter.value] = scenariosS;
+						}
+					}
+					scenariosS = scenariosS ? scenariosS : [];
+					resolve(scenariosS);
+				}
+				catch (err) {
+					reject();
+				}
 			});
-		},
-		clickClearGameSystem() {
-			// GameSystems Update
-			if (this.isGameSystemPathfinder2e && this.$refs.scenarioListFilterPathfinder2e)
-				this.$refs.scenarioListFilterPathfinder2e.clear(this.gameSystemFilter);
-			if (this.isGameSystemStarfinder1e && this.$refs.scenarioListFilterStarfinder1e)
-				this.$refs.scenarioListFilterStarfinder1e.clear(this.gameSystemFilter);
-		},
-		clickClearGameSystemExternal() {
-			// GameSystems Update
-			if (this.isGameSystemPathfinder2e && this.$refs.scenarioListFilterPathfinder2e)
-				this.$refs.scenarioListFilterPathfinder2e.clear(this.gameSystemFilter);
-			if (this.isGameSystemStarfinder1e && this.$refs.scenarioListFilterStarfinder1e)
-				this.$refs.scenarioListFilterStarfinder1e.clear(this.gameSystemFilter);
-		},
-		async execute() {
-			this.users = [];
+		};
+		const sortByCharacterName = (values, ascending) => {
+			if (!values || !Array.isArray(values))
+				return values;
+			if (ascending)
+				return values.sort(
+					firstBy((a, b) => LibraryCommonUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.character.name : null; }))
+					.thenBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
+				);
+			return values.sort(
+				firstBy((a, b) => LibraryCommonUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.character.name : null; }))
+				.thenBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
+			);
+		};
+		const sortByDatePlayed = (values, ascending) => {
+			if (!values || !Array.isArray(values))
+				return values;
+			if (ascending)
+				return values.sort((a, b) => LibraryCommonUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }));
+			return values.sort((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }));
+		};
+		const sortByScenarioName = (values, ascending) => {
+			if (!values || !Array.isArray(values))
+				return values;
+			if (ascending)
+				return values.sort(
+					firstBy((a, b) => LibraryCommonUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+					.thenBy((a, b) => LibraryCommonUtility.sortByNumber(a, b, (v) => { return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647; }))
+					.thenBy((a, b) => LibraryCommonUtility.sortByNumber(a, b, (v) => { return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647; }))
+					.thenBy((a, b) => LibraryCommonUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
+				);
+			return values.sort(
+				firstBy((a, b) => LibraryCommonUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+				.thenBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647; }))
+				.thenBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647; }))
+				.thenBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
+			);
+		};
+		const sortByScenarioNumber = (values, ascending) => {
+			if (!values || !Array.isArray(values))
+				return values;
+			if (ascending)
+				return values.sort(
+					firstBy((a, b) => LibraryCommonUtility.sortByNumber(a, b, (v) => { return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : -2147483647; }))
+					.thenBy((a, b) => LibraryCommonUtility.sortByNumber(a, b, (v) => { return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : -2147483647; }))
+					.thenBy((a, b) => LibraryCommonUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+					.thenBy((a, b) => LibraryCommonUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
+				);
+			return values.sort(
+				firstBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647; }))
+				.thenBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647; }))
+				.thenBy((a, b) => LibraryCommonUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+				.thenBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
+			);
+		};
+		const sortBySeason = (values, ascending) => {
+			if (!values || !Array.isArray(values))
+				return values;
+			if (ascending)
+				return values.sort(
+					firstBy((a, b) => LibraryCommonUtility.sortByNumber(a, b, (v) => { return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647; }))
+					.thenBy((a, b) => LibraryCommonUtility.sortByNumber(a, b, (v) => { return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : -2147483647; }))
+					.thenBy((a, b) => LibraryCommonUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+					.thenBy((a, b) => LibraryCommonUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
+				);
+			return values.sort(
+				firstBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647; }))
+				.thenBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647; }))
+				.thenBy((a, b) => LibraryCommonUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
+				.thenBy((a, b) => LibraryCommonUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
+			);
+		};
 
-			if (!this.gameSystemFilter)
+		const execute = async () => {
+			users.value = [];
+
+			if (!gameSystemFilter.value)
+				return [];
+			if (!characterList.value)
 				return [];
 
-			if (!this.characterList)
-				return [];
+			const correlationId = base.correlationId();
 
-			const correlationId = this.correlationId();
-
-			this.forceRecomputeCounter;
-
-			let characters = this.characterList.slice(0);
-			characters = characters.filter(l => l.gameSystemId === this.gameSystemFilter);
+			let characters = characterList.value.slice(0);
+			characters = characters.filter(l => l.gameSystemId === gameSystemFilter.value);
 
 			if (!characters || characters.length <= 0)
 				return [];
 
-			const scenarios = await this.executeScenariosCache(correlationId, this);
-			if (!scenarios || scenarios.length === 0)
+			const scenariosS = await executeScenariosCache(correlationId);
+			if (!scenariosS || scenariosS.length === 0)
 				return [];
 
 			let results = [];
@@ -861,21 +887,21 @@ export default {
 			let name;
 			let user;
 			for (const character of characters) {
-				user = character.user ? character.user : this.user;
-				if (this.users.find(l => l.id === user.id))
+				user = character.user ? character.user : props.user;
+				if (users.value.find(l => l.id === user.id))
 					continue;
 
 				name = user.settings && user.settings.gamerTag ? user.settings.gamerTag : null;
 				if (!name)
 					continue;
 
-				this.users.push({ id: user.id, name: name });
+				users.value.push({ id: user.id, name: name });
 			}
 
 			let found;
 			let scenarioT;
 
-			if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.NotPlayed) {
+			if (scenariosListingTypeFilter.value === SharedConstants.ScenarioListingTypes.NotPlayed) {
 				let scenarioIds = [];
 				for (const character of characters) {
 					for (const scenario of character.scenarios) {
@@ -884,106 +910,136 @@ export default {
 					}
 				}
 
-				for (const scenario of scenarios) {
+				for (const scenario of scenariosS) {
 					if (scenarioIds.find(l => l === scenario.id))
 						continue;
 
-					found = this.filter(scenario);
+					found = filter(scenario);
 					if (!found)
 						continue;
 
-					scenarioT = this.clone(scenario);
+					scenarioT = LibraryCommonUtility.cloneDeep(scenario);
 					scenarioT.scenario = scenario;
-					scenarioT.user = this.user;
+					scenarioT.user = props.user;
 					results.push(scenarioT);
 				}
 			}
-			else if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.Played) {
-				// spin through the characters and gather up all the scenarios...
+			else if (scenariosListingTypeFilter.value === SharedConstants.ScenarioListingTypes.Played) {
 				for (const character of characters) {
 					if (!character.scenarios)
 						continue;
 
-					if (this.isExternalListFavorites) {
-						if (this.userIdFilterValue) {
-							if (character.userId !== this.userIdFilterValue)
+					if (base.isExternalListFavorites.value) {
+						if (userIdFilterValue.value) {
+							if (character.userId !== userIdFilterValue.value)
 								continue;
 						}
 					}
 
 					for (const scenario of character.scenarios) {
-						found = scenarios.find(l => l.id === scenario.scenarioId);
+						found = scenariosS.find(l => l.id === scenario.scenarioId);
 						if (!found)
 							continue;
 
 						if (found.type === SharedConstants.ScenarioTypes.INITIAL)
 							continue;
-							
-						found = this.filter(found);
 
+						found = filter(found);
 						if (!found)
 							continue;
 
-						scenarioT = this.clone(scenario);
+						scenarioT = LibraryCommonUtility.cloneDeep(scenario);
 						scenarioT.character = character;
 						scenarioT.scenario = found;
-						scenarioT.user = character.user ? character.user : this.user;
+						scenarioT.user = character.user ? character.user : props.user;
 						results.push(scenarioT);
 					}
 				}
 			}
-			else if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.All) {
-				for (const scenario of scenarios) {
-					found = this.filter(scenario);
+			else if (scenariosListingTypeFilter.value === SharedConstants.ScenarioListingTypes.All) {
+				for (const scenario of scenariosS) {
+					found = filter(scenario);
 					if (!found)
 						continue;
 
-					scenarioT = this.clone(scenario);
+					scenarioT = LibraryCommonUtility.cloneDeep(scenario);
 					scenarioT.scenario = scenario;
-					scenarioT.user = this.user;
+					scenarioT.user = props.user;
 					results.push(scenarioT);
 				}
 			}
 
 			if (!results || results.length <= 0)
 				return [];
-				
-			// TODO: Offer different sorts
-			// TODO: need to incorporation direction...
-			if (this.sortBy === SharedConstants.SortBy.Scenarios.ScenarioName)
-				results = this.sortByScenarioName(results, this.sortDirection);
-			else if (this.sortBy === SharedConstants.SortBy.Scenarios.ScenarioNumber)
-				results = this.sortByScenarioNumber(results, this.sortDirection);
-			else if (this.sortBy === SharedConstants.SortBy.Scenarios.Season)
-				results = this.sortBySeason(results, this.sortDirection);
 
-			if (this.scenariosListingTypeFilter === SharedConstants.ScenarioListingTypes.Played) {
-				// TODO: need to incorporation direction...
-				if (this.sortBy === SharedConstants.SortBy.Scenarios.CharacterName)
-					results = this.sortByCharacterName(results, this.sortDirection);
-				else if (this.sortBy === SharedConstants.SortBy.Scenarios.DatePlayed)
-					results = this.sortByDatePlayed(results, this.sortDirection);
+			if (sortBy.value === SharedConstants.SortBy.Scenarios.ScenarioName)
+				results = sortByScenarioName(results, sortDirection.value);
+			else if (sortBy.value === SharedConstants.SortBy.Scenarios.ScenarioNumber)
+				results = sortByScenarioNumber(results, sortDirection.value);
+			else if (sortBy.value === SharedConstants.SortBy.Scenarios.Season)
+				results = sortBySeason(results, sortDirection.value);
+
+			if (scenariosListingTypeFilter.value === SharedConstants.ScenarioListingTypes.Played) {
+				if (sortBy.value === SharedConstants.SortBy.Scenarios.CharacterName)
+					results = sortByCharacterName(results, sortDirection.value);
+				else if (sortBy.value === SharedConstants.SortBy.Scenarios.DatePlayed)
+					results = sortByDatePlayed(results, sortDirection.value);
 			}
 
 			return results;
-		},
-		extract(correlationId, type) {
+		};
+
+		const clickClearGameSystem = () => {
+			if (base.isGameSystemPathfinder2e.value && filterPathfinder2e())
+				filterPathfinder2e().clear(gameSystemFilter.value);
+			if (base.isGameSystemStarfinder1e.value && filterStarfinder1e())
+				filterStarfinder1e().clear(gameSystemFilter.value);
+		};
+		const clickClear = () => {
+			if (base.isExternalList.value) {
+				scenarioNameValue.value = null;
+				scenarioNumberValue.value = null;
+				base.seasonFilterOverride.value = null;
+				sortByOverride.value = SharedConstants.SortBy.Scenarios.ScenarioName;
+				sortDirectionOverride.value = true;
+				clickClearGameSystem();
+				forceRecomputeCounter.value = 0;
+				return;
+			}
+
+			AppUtility.settings().clearUser(base.correlationId(), LibraryClientUtility.$store, props.user, (correlationId, settings) => {
+				scenarioNameValue.value = null;
+				scenarioNumberValue.value = null;
+				settings.scenarios.seasonFilter = null;
+				settings.scenarios.sortBy = SharedConstants.SortBy.Scenarios.ScenarioName;
+				settings.scenarios.sortDirection = true;
+				clickClearGameSystem();
+			});
+		};
+		const clickExtract = (type) => {
+			extract(base.correlationId(), type);
+		};
+		const dialogShareOpen = () => {
+			shareDialogRef.value.openDialog(gameSystemFilter.value);
+			base.dialogShare.value.open();
+		};
+		const extract = (correlationId, type) => {
 			// GameSystems Update
 			let serviceGameSystem;
-			if (this.isGameSystemPathfinder2e)
-				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
-			else if (this.isGameSystemStarfinder1e)
-				serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+			if (base.isGameSystemPathfinder2e.value)
+				serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+			else if (base.isGameSystemStarfinder1e.value)
+				serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
 			if (!serviceGameSystem)
 				return;
-				
+
 			let id;
 			const ids = [];
 			let output = '';
 			if (type == Constants.ExtractTypes.Csv)
 				output = 'Season,Scenario,Name,Repeatable\n';
-				
-			for (let item of this.scenarios) {
+
+			for (let item of scenarios.value) {
 				id = ids.find(l => l === item.scenario.id);
 				if (id)
 					continue;
@@ -991,7 +1047,6 @@ export default {
 					continue;
 
 				if (type == Constants.ExtractTypes.Csv) {
-					// TODO put in the scenario snippet?
 					output += (item.scenario.season ? item.scenario.season : '') + ',';
 					output += item.scenario.scenario + ',';
 					output += '"' + item.scenario.name + '",';
@@ -1005,191 +1060,63 @@ export default {
 				ids.push(item.scenario.id);
 			}
 
-			this.download(output, type, this.user, 'scenarios');
-		},
-		filter(temp) {
-			if (this.scenarioNameValue) {
-				if (this.executeFilterOverride(this)) {
-					if (this.executeScenarioNameFilter(this, temp, this.scenarioNameValue))
-					return null;
-				}
-				else if (temp.name && (temp.name.toLowerCase().indexOf(this.scenarioNameValue.toLowerCase()) == -1))
-					return null;
+			base.download(output, type, props.user, 'scenarios');
+		};
+
+		watch(
+			[
+				() => gameSystemFilter.value,
+				forceRecomputeCounter,
+				scenarioNameValue,
+				scenarioNumberValue,
+				() => seasonFilter.value,
+				scenariosListingTypeValue,
+				() => sortBy.value,
+				() => sortDirection.value,
+				userIdFilterValue,
+				() => props.value
+			],
+			async () => {
+				scenarios.value = await execute();
 			}
+		);
 
-			if (this.scenarioNumberValue) {
-				if (!temp.scenario || (temp.scenario.indexOf(this.scenarioNumberFilter) == -1))
-					return null;
-			}
+		onMounted(async () => {
+			scenariosCache.value = {};
+			scenarios.value = await execute();
+		});
 
-			if (this.seasonFilter) {
-				if (temp.season !== this.seasonFilter)
-					return null;
-			}
-
-			if (this.executeFilterOverride(this)) {
-				if (!this.executeAdditionalFilter(this, temp))
-				return null;
-			}
-
-			return temp;
-		},
-		executeAdditionalFilter(self, temp) {
-			// GameSystems Update
-			if (this.isGameSystemPathfinder2e && this.$refs.scenarioListFilterPathfinder2e)
-				return self.$refs.scenarioListFilterPathfinder2e.filterAdditional(temp);
-			if (this.isGameSystemStarfinder1e && this.$refs.scenarioListFilterStarfinder1e)
-				return self.$refs.scenarioListFilterStarfinder1e.filterAdditional(temp);
-			return true;
-		},
-		executeFilterOverride(self) {
-			// GameSystems Update
-			if (this.isGameSystemPathfinder2e && this.$refs.scenarioListFilterPathfinder2e)
-				return self.isGameSystemPathfinder2e && self.$refs.scenarioListFilterPathfinder2e;
-			if (this.isGameSystemStarfinder1e && this.$refs.scenarioListFilterStarfinder1e)
-				return self.isGameSystemPathfinder2e && self.$refs.scenarioListFilterStarfinder1e;
-			return false;
-		},
-		executeScenarioNameFilter(self, temp, value) {
-			// GameSystems Update
-			if (this.isGameSystemPathfinder2e && this.$refs.scenarioListFilterPathfinder2e)
-				return self.$refs.scenarioListFilterPathfinder2e.filterScenarioName(temp, value);
-			if (this.isGameSystemStarfinder1e && this.$refs.scenarioListFilterStarfinder1e)
-				return self.$refs.scenarioListFilterStarfinder1e.filterScenarioName(temp, value);
-		},
-		// eslint-disable-next-line
-		async executeScenariosCache(correlationId) {
-			const self = this;
-			// eslint-disable-next-line
-			return new Promise(async (resolve, reject) => {
-				try {
-					let scenarios = self.scenariosCache[self.gameSystemFilter];
-					if (!scenarios) {
-						await self.$store.dispatcher.scenarios.getScenarioListing(correlationId, self.gameSystemFilter);
-						scenarios = self.$store.state.scenarios.listing;
-						if (scenarios) {
-							scenarios = scenarios.filter(l => l.gameSystemId == self.gameSystemFilter);
-							self.scenariosCache[self.gameSystemFilter] = scenarios;
-						}
-					}
-					scenarios = scenarios ? scenarios : [];
-					resolve(scenarios);
-				}
-				catch (err) {
-					reject();
-				}
-			});
-		},
-		scenarioName(scenario) {
-			if (!scenario || !scenario.scenario)
-				return '';
-			return scenario.scenario.name;
-		},
-		sortByCharacterName(values, ascending) {
-			if (!values || !Array.isArray(values))
-				return values;
-
-			if (ascending)
-				return values.sort(
-					firstBy((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.character.name : null; }))
-					.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
-				);
-
-			return values.sort(
-				firstBy((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.character.name : null; }))
-				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
-			);
-		},
-		sortByDatePlayed(values, ascending) {
-			if (!values || !Array.isArray(values))
-				return values;
-
-			if (ascending)
-				return values.sort((a, b) => LibraryUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }));
-
-			return values.sort((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }));
-		},
-		sortByScenarioName(values, ascending) {
-			if (!values || !Array.isArray(values))
-				return values;
-
-			if (ascending)
-				return values.sort(
-					firstBy((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
-						return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647;
-					}))
-					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
-						return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647;
-					}))
-					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
-				);
-
-			return values.sort(
-				firstBy((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
-					return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647;
-				}))
-				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
-					return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647;
-				}))
-				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
-			);
-		},
-		sortByScenarioNumber(values, ascending) {
-			if (!values || !Array.isArray(values))
-				return values;
-
-			if (ascending)
-				return values.sort(
-					firstBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
-						return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : -2147483647;
-					}))
-					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
-						return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : -2147483647;
-					}))
-					.thenBy((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
-				);
-
-			return values.sort(
-				firstBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
-					return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647;
-				}))
-				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
-					return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647;
-				}))
-				.thenBy((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
-			);
-		},
-		sortBySeason(values, ascending) {
-			if (!values || !Array.isArray(values))
-				return values;
-
-			if (ascending)
-				return values.sort(
-					firstBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
-						return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647;
-					}))
-					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => {
-						return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : -2147483647;
-					}))
-					.thenBy((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-					.thenBy((a, b) => LibraryUtility.sortByNumber(a, b, (v) => { return v && v.scenario ? v.timestamp : null; }))
-				);
-
-			return values.sort(
-				firstBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
-					return v && v.scenario && v.scenario.season ? parseInt(v.scenario.season, 10) : 2147483647;
-				}))
-				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => {
-					return v && v.scenario && v.scenario.scenario ? parseInt(v.scenario.scenario, 10) : 2147483647;
-				}))
-				.thenBy((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }))
-				.thenBy((a, b) => LibraryUtility.sortByNumber(b, a, (v) => { return v && v.scenario ? v.timestamp : null; }))
-			);
-		}
+		return {
+			...base,
+			gameSystemFilter,
+			shareDialogRef,
+			scenarioListFilterPathfinder2eRef,
+			scenarioListFilterStarfinder1eRef,
+			scenarioListFilterPathfinder2eRef2,
+			scenarioListFilterStarfinder1eRef2,
+			forceRecomputeCounter,
+			scenarios,
+			characterList,
+			listingStyle,
+			isGrid,
+			isList,
+			seasonFilter,
+			scenarioNameFilter,
+			scenarioNumberFilter,
+			scenariosListingTypeFilter,
+			sortBy,
+			sortDirection,
+			scenarioSeasons,
+			scenariosListingTypeFilterList,
+			sortKeys,
+			userIdFilter,
+			userList,
+			clickClear,
+			clickExtract,
+			dialogShareOpen,
+			extract,
+			mergeProps
+		};
 	}
 };
 </script>

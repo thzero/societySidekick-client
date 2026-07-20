@@ -1,12 +1,11 @@
 <template>
-	<VFormDialog
+	<VtFormDialog
 		:label="label"
 		:signal="signal"
+		:validation="validation"
 		:pre-complete-ok="preComplete"
-		:fullscreen="fullscreenInternal"
 		max-width="500px"
-		@close="close"
-		@cancel="cancel"
+		@close="cancel"
 		@ok="ok"
 		@open="open"
 	>
@@ -14,254 +13,311 @@
 			v-model="steps"
 		>
 			<v-stepper-header>
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="1"
+					:value="1"
 				>
 					{{ $t('characters.basic') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider />
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="2"
+					:value="2"
 				>
 					{{ $t('characters.details') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider
 					v-if="hasScenarios"
 				/>
-				<v-stepper-step
+				<v-stepper-item
 					v-if="hasScenarios"
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="3"
+					:value="3"
 				>
 					{{ $t('characters.gameSystems.starfinder1e.boons.name') }}
-				</v-stepper-step>
+				</v-stepper-item>
 			</v-stepper-header>
-			<v-stepper-items>
-				<v-stepper-content
-					step="1"
-					pa-0
+			<v-stepper-window>
+				<v-stepper-window-item
+					:value="1"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard"
 						>
-							<VTextFieldWithValidation
-								ref="name"
+							<VtTextFieldWithValidation
+								ref="nameRef"
 								v-model="innerValue.name"
-								rules="required|min:3|max:30|"
 								vid="name"
+								:validation="validation"
 								:label="$t('forms.name')"
 								:counter="30"
 							/>
-							<VTextFieldWithValidation
-								ref="tagLine"
+							<VtTextFieldWithValidation
+								ref="tagLineRef"
 								v-model="innerValue.tagLine"
-								rules="tagLine|min:3|max:30"
 								vid="tagLine"
+								:validation="validation"
 								:label="$t('forms.tagLine')"
 								:counter="30"
 							/>
-							<VNumberFieldWithValidation
-								ref="number"
+							<VtNumberFieldWithValidation
+								ref="numberRef"
 								v-model="innerValue.number"
-								rules="required|numeric|min_value:1|max_value:99|"
 								vid="number"
+								:validation="validation"
 								:label="$t('characters.gameSystems.starfinder1e.number')"
 								step="1"
+								:min="1"
+								:max="99"
 							/>
-							<VSelectWithValidation
-								ref="status"
+							<VtSelectWithValidation
+								ref="statusRef"
 								v-model="innerValue.status"
-								rules="required"
 								vid="status"
+								:validation="validation"
 								:items="status"
 								:label="$t('characters.gameSystems.pathfinder2e.status.name')"
 								class="pb-2"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
-					step="2"
-					pa-0
+				</v-stepper-window-item>
+				<v-stepper-window-item
+					:value="2"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard"
 						>
-							<!-- <VSelectWithValidation
-								ref="class"
-								v-model="innerValue.classId"
-								rules="required"
-								vid="class"
-								:items="classes"
-								:label="$t('characters.gameSystems.starfinder1e.classes.name')"
-								class="pb-2"
-							/> -->
-							<VSelectWithValidation
-								ref="theme"
+							<VtSelectWithValidation
+								ref="themeRef"
 								v-model="innerValue.themeId"
 								vid="theme"
+								:validation="validation"
 								:items="themes"
 								:label="$t('characters.gameSystems.starfinder1e.theme')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="faction"
+							<VtSelectWithValidation
+								ref="factionRef"
 								v-model="innerValue.factionId"
-								rules="required"
 								vid="faction"
+								:validation="validation"
 								:items="factions"
 								:label="$t('characters.gameSystems.starfinder1e.faction')"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
+				</v-stepper-window-item>
+				<v-stepper-window-item
 					v-if="hasScenarios"
-					step="3"
-					pa-0
+					:value="3"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard"
 						>
-							<VSelectWithValidation
-								ref="boonAllyId"
+							<VtSelectWithValidation
+								ref="boonAllyIdRef"
 								v-model="innerValue.boonAllyId"
 								vid="boonAllyId"
+								:validation="validation"
 								:items="boonsAlly"
 								:label="$t('characters.gameSystems.starfinder1e.boons.types.ally')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="boonFactionId"
+							<VtSelectWithValidation
+								ref="boonFactionIdRef"
 								v-model="innerValue.boonFactionId"
 								vid="boonFactionId"
+								:validation="validation"
 								:items="boonsFaction"
 								:label="$t('characters.gameSystems.starfinder1e.boons.types.faction')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="boonPersonalId"
+							<VtSelectWithValidation
+								ref="boonPersonalIdRef"
 								v-model="innerValue.boonPersonalId"
 								vid="boonPersonalId"
+								:validation="validation"
 								:items="boonsPersonal"
 								:label="$t('characters.gameSystems.starfinder1e.boons.types.personal')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="boonPromoId"
+							<VtSelectWithValidation
+								ref="boonPromoIdRef"
 								v-model="innerValue.boonPromoId"
 								vid="boonPromoId"
+								:validation="validation"
 								:items="boonsPromo"
 								:label="$t('characters.gameSystems.starfinder1e.boons.types.promo')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="boonSocialId"
+							<VtSelectWithValidation
+								ref="boonSocialIdRef"
 								v-model="innerValue.boonSocialId"
 								vid="boonSocialId"
+								:validation="validation"
 								:items="boonsSocial"
 								:label="$t('characters.gameSystems.starfinder1e.boons.types.social')"
 								class="pb-2"
 							/>
-							<VSelectWithValidation
-								ref="boonStarshipId"
+							<VtSelectWithValidation
+								ref="boonStarshipIdRef"
 								v-model="innerValue.boonStarshipId"
 								vid="boonStarshipId"
+								:validation="validation"
 								:items="boonsStarship"
 								:label="$t('characters.gameSystems.starfinder1e.boons.types.starship')"
 								class="pb-2"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-			</v-stepper-items>
+				</v-stepper-window-item>
+			</v-stepper-window>
 		</v-stepper>
-	</VFormDialog>
+	</VtFormDialog>
 </template>
 
 <script>
+import { computed } from 'vue';
+
+import useVuelidate from '@vuelidate/core';
+import { maxLength, maxValue, minLength, minValue, numeric, required } from '@vuelidate/validators';
+
 import Constants from '@/constants';
 import Starfinder1eSharedConstants from '@/common/gameSystems/starfinder1e/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import baseCharacterDetailsDialog from '@/components/gameSystems/baseCharacterDetailsDialog';
+import { useBaseCharacterDetailsDialogComponent } from '@/components/gameSystems/baseCharacterDetailsDialog';
+
+import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
+import VtNumberFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberFieldWithValidation';
+import VtSelectWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtSelectWithValidation';
+import VtTextFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtTextFieldWithValidation';
 
 export default {
 	name: 'Starfinder1eCharacterDetailsDialog',
-	extends: baseCharacterDetailsDialog,
-	computed: {
-		boonsAlly() {
-			const boons = this.boons.filter(l => l.type == Starfinder1eSharedConstants.BoonTypes.ALLY);
-			return LibraryUtility.selectBlank(boons);
+	components: {
+		VtFormDialog,
+		VtNumberFieldWithValidation,
+		VtSelectWithValidation,
+		VtTextFieldWithValidation
+	},
+	props: {
+		signal: {
+			type: Boolean,
+			default: false
 		},
-		boonsFaction() {
-			const boons = this.boons.filter(l => l.type == Starfinder1eSharedConstants.BoonTypes.FACTION);
-			return LibraryUtility.selectBlank(boons);
-		},
-		boonsPersonal() {
-			const boons = this.boons.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.PERSONAL);
-			return LibraryUtility.selectBlank(boons);
-		},
-		boonsPromo() {
-			const boons = this.boons.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.PROMO);
-			return LibraryUtility.selectBlank(boons);
-		},
-		boonsSocial() {
-			const boons = this.boons.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.SOCIAL);
-			return LibraryUtility.selectBlank(boons);
-		},
-		boonsStarship() {
-			const boons = this.boons.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.STARSHIP);
-			return LibraryUtility.selectBlank(boons);
-		},
-		classes() {
-			return this.serviceGameSystem.classes(this.correlationId(), GlobalUtility.$store, true);
-		},
-		themes() {
-			return this.serviceGameSystem.themes(this.correlationId(), GlobalUtility.$store, true);
+		label: {
+			type: String,
+			default: ''
 		}
 	},
-	methods: {
-		initResponseDetails(correlationId, details) {
-			details.boonAllyId = this.innerValue.boonAllyId;
-			details.boonFactionId = this.innerValue.boonFactionId;
-			details.boonPersonalId = this.innerValue.boonPersonalId;
-			details.boonPromoId = this.innerValue.boonPromoId;
-			details.boonSocialId = this.innerValue.boonSocialId;
-			details.boonStarshipId = this.innerValue.boonStarshipId;
-			// details.classId = this.innerValue.classId;
-			details.factionId = this.innerValue.factionId;
-			details.themeId = this.innerValue.themeId;
-			return details;
-		},
-		initializeServices() {
-			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
-		}
+	emits: ['cancel', 'ok'],
+	setup(props, context) {
+		const serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+
+		const base = useBaseCharacterDetailsDialogComponent(props, context, {
+			serviceGameSystem,
+			initResponseDetails: (correlationId, details) => {
+				details.boonAllyId = base.innerValue.value.boonAllyId;
+				details.boonFactionId = base.innerValue.value.boonFactionId;
+				details.boonPersonalId = base.innerValue.value.boonPersonalId;
+				details.boonPromoId = base.innerValue.value.boonPromoId;
+				details.boonSocialId = base.innerValue.value.boonSocialId;
+				details.boonStarshipId = base.innerValue.value.boonStarshipId;
+				details.factionId = base.innerValue.value.factionId;
+				details.themeId = base.innerValue.value.themeId;
+				return details;
+			}
+		});
+
+		const boonsAlly = computed(() => {
+			return LibraryCommonUtility.selectBlank(base.boons.value.filter(l => l.type == Starfinder1eSharedConstants.BoonTypes.ALLY));
+		});
+		const boonsFaction = computed(() => {
+			return LibraryCommonUtility.selectBlank(base.boons.value.filter(l => l.type == Starfinder1eSharedConstants.BoonTypes.FACTION));
+		});
+		const boonsPersonal = computed(() => {
+			return LibraryCommonUtility.selectBlank(base.boons.value.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.PERSONAL));
+		});
+		const boonsPromo = computed(() => {
+			return LibraryCommonUtility.selectBlank(base.boons.value.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.PROMO));
+		});
+		const boonsSocial = computed(() => {
+			return LibraryCommonUtility.selectBlank(base.boons.value.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.SOCIAL));
+		});
+		const boonsStarship = computed(() => {
+			return LibraryCommonUtility.selectBlank(base.boons.value.filter(l => l.type != Starfinder1eSharedConstants.BoonTypes.STARSHIP));
+		});
+		const classes = computed(() => {
+			return serviceGameSystem.classes(base.correlationId(), LibraryClientUtility.$store, true);
+		});
+		const themes = computed(() => {
+			return serviceGameSystem.themes(base.correlationId(), LibraryClientUtility.$store, true);
+		});
+
+		return {
+			...base,
+			boonsAlly,
+			boonsFaction,
+			boonsPersonal,
+			boonsPromo,
+			boonsSocial,
+			boonsStarship,
+			classes,
+			themes,
+			validation: useVuelidate({ $scope: 'Starfinder1eCharacterDetailsDialog' })
+		};
+	},
+	validations() {
+		return {
+			innerValue: {
+				name: {
+					required,
+					minLength: minLength(3),
+					maxLength: maxLength(30),
+					$autoDirty: true
+				},
+				number: {
+					required,
+					numeric,
+					minValue: minValue(1),
+					maxValue: maxValue(99),
+					$autoDirty: true
+				},
+				status: {
+					required,
+					$autoDirty: true
+				},
+				factionId: {
+					required,
+					$autoDirty: true
+				}
+			}
+		};
 	}
 };
 </script>
