@@ -1,206 +1,262 @@
 <template>
-	<VAdminFormDialog
+	<VtFormDialog
 		:label="label"
 		:signal="signal"
+		:validation="validation"
 		:pre-complete-ok="preComplete"
-		max-width="750px"
-		@cancel="cancel"
+		max-width="1200px"
+		width="1200px"
+		@close="cancel"
 		@ok="ok"
 	>
-		<VTextFieldWithValidation
-			ref="name"
+		<VtTextFieldWithValidation
+			ref="nameRef"
 			v-model="innerValue.name"
 			vid="name"
-			rules="required|min:3|max:50|"
+			:validation="validation"
 			:label="$t('forms.name')"
 			:counter="50"
 		/>
 
-		<table width="100%">
+		<table width="100%"><tbody>
 			<tr>
 				<td class="pr-2">
-					<VSelectWithValidation
-						ref="gameSystem"
+					<VtSelectWithValidation
+						ref="gameSystemRef"
 						v-model="gameSystemId"
 						vid="gameSystem"
+						:validation="validation"
 						:items="gameSystems"
 						:label="$t('forms.boons.gameSystem')"
 					/>
 				</td>
 				<td>
-					<VSelectWithValidation
-						ref="type"
+					<VtSelectWithValidation
+						ref="typeRef"
 						v-model="innerValue.type"
 						vid="type"
+						:validation="validation"
 						:items="types"
 						:label="$t('forms.boons.type')"
 					/>
 				</td>
 				<td>
-					<VNumberFieldWithValidation
-						ref="uses"
+					<VtNumberFieldWithValidation
+						ref="usesRef"
 						v-model="innerValue.uses"
-						rules="min_value:0|max_value:99|"
 						vid="uses"
+						:validation="validation"
 						:label="$t('forms.boons.uses')"
 						step="1"
 					/>
 				</td>
 			</tr>
-		</table>
+		</tbody></table>
 
 		<!-- Scenario Lookup -->
-		<VTextFieldWithValidation
-			ref="scenarioName"
+		<VtTextFieldWithValidation
+			ref="scenarioNameRef"
 			v-model="scenarioName"
-			rules=""
 			vid="scenarioName"
+			:validation="validation"
 			:label="$t('forms.name')"
 			:readonly="true"
 		/>
 		<div style="text-align: right">
 			<v-btn
-				color="primary lighten-1"
+				color="primary"
 				@click="dialogScenariosOpen()"
 			>
 				{{ $t('buttons.select') }}
 			</v-btn>
 		</div>
 
-		<VSelectWithValidation
-			ref="faction"
+		<VtSelectWithValidation
+			ref="factionRef"
 			v-model="innerValue.factionId"
 			vid="faction"
+			:validation="validation"
 			:items="factions"
 			:label="$t('characters.gameSystems.pathfinder2e.faction')"
 		/>
 
-		<VMarkdownEditor
+		<VtMarkdownEditor
 			:key="randomKey"
-			ref="description"
+			ref="descriptionRef"
 			v-model="innerValue.description"
 			vid="description"
+			:validation="validation"
 			:options="editorOptions"
 		/>
 		<!-- GameSystems Update -->
 		<Pathfinder2eScenarioLookupDialog
 			v-if="isGameSystemPathfinder2e"
-			ref="scenarioLookup"
+			ref="scenarioLookupRef"
 			:signal="dialogScenarios.signal"
-			:fullscreen="fullscreenInternal"
+			:fullscreen="false"
 			:scenario-override="scenarios"
 			@cancel="dialogScenarios.cancel()"
 			@ok="dialogScenariosOk"
 		/>
 		<Starfinder1eScenarioLookupDialog
 			v-if="isGameSystemStarfinder1e"
-			ref="scenarioLookup"
+			ref="scenarioLookupRef"
 			:signal="dialogScenarios.signal"
-			:fullscreen="fullscreenInternal"
+			:fullscreen="false"
 			:scenario-override="scenarios"
 			:service-game-system-override="serviceGameSystem"
 			@cancel="dialogScenarios.cancel()"
 			@ok="dialogScenariosOk"
 		/>
-	</VAdminFormDialog>
+	</VtFormDialog>
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import { computed, ref, watch } from 'vue';
 
-import VAdminFormDialog from '@/components/admin/VAdminFormDialog';
-import VMarkdownEditor from '@/library_vue_vuetify/components/markup/VMarkdownEditor';
-import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
+import useVuelidate from '@vuelidate/core';
+import { maxLength, maxValue, minLength, minValue, numeric, required } from '@vuelidate/validators';
+
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
+
+import { useAdminFormDialogComponent } from '@/components/admin/VAdminFormDialog';
+
+import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
+import VtMarkdownEditor from '@thzero/library_client_vue3_vuetify3/components/markup/VtMarkdownEditor';
+import VtNumberFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberFieldWithValidation';
+import VtSelectWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtSelectWithValidation';
+import VtTextFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtTextFieldWithValidation';
 
 // GameSystems Update
 import Pathfinder2eScenarioLookupDialog from '@/components/gameSystems/pathfinder2e/ScenarioLookupDialog';
 import Starfinder1eScenarioLookupDialog from '@/components/gameSystems/starfinder1e/ScenarioLookupDialog';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import DialogSupport from '@thzero/library_client_vue3/components/support/dialog';
 
 export default {
 	name: 'AdminBoonsEditDialog',
 	components: {
-		VAdminFormDialog,
-		VMarkdownEditor,
-		VNumberFieldWithValidation,
-		VSelectWithValidation,
-		VTextFieldWithValidation,
+		VtFormDialog,
+		VtMarkdownEditor,
+		VtNumberFieldWithValidation,
+		VtSelectWithValidation,
+		VtTextFieldWithValidation,
 		Pathfinder2eScenarioLookupDialog,
 		Starfinder1eScenarioLookupDialog
 	},
-	extends: VAdminFormDialog,
-	data: () => ({
-		dialogScenarios: new DialogSupport(),
-		gameSystemId: null,
-		scenarioName: null
-	}),
-	computed: {
-		factions() {
-			if (!GlobalUtility.$store.state.adminFactions.factions)
-				return null;
-			let factions = GlobalUtility.$store.state.adminFactions.factions.filter(l => l.gameSystemId === this.gameSystemId);
-			factions = factions ? factions.slice(0) : [];
-			return LibraryUtility.selectBlank(factions.sort((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.name; })));
+	props: {
+		label: {
+			type: String,
+			default: ''
 		},
-		scenarios() {
-			if (!GlobalUtility.$store.state.adminScenarios.scenarios)
-				return [];
-			const scenarios = GlobalUtility.$store.state.adminScenarios.scenarios.filter(l => l.gameSystemId === this.gameSystemId);
-			return scenarios ? scenarios.slice(0) : [];
-		},
-		types: {
-			get() {
-				const lookups = this.initLookupsByGameSystemId(this.correlationId(), this.gameSystemId);
-				return lookups ? lookups.boonTypes : [];
+		signal: {
+			type: Boolean,
+			default: false
+		}
+	},
+	emits: ['cancel', 'ok'],
+	setup(props, context) {
+		const dialogScenarios = ref(new DialogSupport());
+		const scenarioName = ref(null);
+		const scenarioLookupRef = ref(null);
+
+		const getScenarioNameById = (id) => {
+			const service = base.serviceGameSystem.value;
+			const results = LibraryClientUtility.$store.getters.getAdminScenario(base.correlationId(), id);
+			return service ? results ? service.scenarioName(base.correlationId(), results) : null : null;
+		};
+
+		const base = useAdminFormDialogComponent(props, context, {
+			async preCompleteSubmitCreate(correlationId, dispatcher, value) {
+				return await dispatcher.adminBoons.createAdminBoon(correlationId, value);
 			},
-			cache: false
-		}
+			async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
+				value.uses = value.uses ? value.uses : null;
+				return await dispatcher.adminBoons.updateAdminBoon(correlationId, value);
+			},
+			async resetDialogI(correlationId, value) {
+				await LibraryClientUtility.$store.dispatcher.adminScenarios.searchAdminScenarios(correlationId, { gameSystemId: value.gameSystemId });
+				scenarioName.value = getScenarioNameById(value.scenarioId);
+			}
+		});
+
+		const factions = computed(() => {
+			if (!LibraryClientUtility.$store.adminFactions.factions)
+				return null;
+			let factions = LibraryClientUtility.$store.adminFactions.factions.filter(l => l.gameSystemId === base.gameSystemId.value);
+			factions = factions ? factions.slice(0) : [];
+			return LibraryCommonUtility.selectBlank(factions.sort((a, b) => LibraryCommonUtility.sortByString(a, b, (v) => { return v && v.name; })));
+		});
+		const scenarios = computed(() => {
+			if (!LibraryClientUtility.$store.adminScenarios.scenarios)
+				return [];
+			const scenarios = LibraryClientUtility.$store.adminScenarios.scenarios.filter(l => l.gameSystemId === base.gameSystemId.value);
+			return scenarios ? scenarios.slice(0) : [];
+		});
+		const types = computed(() => {
+			const lookups = base.initLookupsByGameSystemId(base.correlationId(), base.gameSystemId.value);
+			return lookups ? lookups.boonTypes : [];
+		});
+
+		const dialogScenariosOk = (id) => {
+			base.innerValue.value.scenarioId = id;
+			scenarioName.value = getScenarioNameById(id);
+			dialogScenarios.value.ok();
+		};
+		const dialogScenariosOpen = async () => {
+			await scenarioLookupRef.value.reset(base.correlationId(), null);
+			dialogScenarios.value.open();
+		};
+
+		watch(() => base.gameSystemId.value, async () => {
+			await LibraryClientUtility.$store.dispatcher.adminScenarios.searchAdminScenarios(base.correlationId(), { gameSystemId: base.gameSystemId.value });
+		});
+
+		return {
+			...base,
+			dialogScenarios,
+			scenarioName,
+			scenarioLookupRef,
+			factions,
+			scenarios,
+			types,
+			dialogScenariosOk,
+			dialogScenariosOpen,
+			getScenarioNameById,
+			reset: base.resetDialog,
+			validation: useVuelidate({ $scope: 'AdminBoonsEditDialog' })
+		};
 	},
-	watch: {
-		// eslint-disable-next-line
-		async gameSystemId(newVal) {
-			await GlobalUtility.$store.dispatcher.adminScenarios.searchAdminScenarios(this.correlationId(), { gameSystemId: this.gameSystemId });
-		}
-	},
-	methods: {
-		dialogScenariosOk(id) {
-			this.$set(this.innerValue, 'scenarioId', id);
-			this.scenarioName = this.getScenarioNameById(id);
-			this.dialogScenariosOkI(this.correlationId(), id);
-			this.dialogScenarios.ok();
-		},
-		// eslint-disable-next-line
-		dialogScenariosOkI(correlationId, id) {
-		},
-		async dialogScenariosOpen() {
-			await this.$refs.scenarioLookup.reset(this.correlationId(), null);
-			this.dialogScenarios.open();
-		},
-		getScenarioNameById(id) {
-			const service = this.serviceGameSystem;
-			const results = GlobalUtility.$store.getters.getAdminScenario(id);
-			return service ? results ? service.scenarioName(this.correlationId(), results) : null : null;
-		},
-		// eslint-disable-next-line
-		async preCompleteI(correlationId, value) {
-		},
-		async preCompleteSubmitCreate(correlationId, dispatcher, value) {
-			return await dispatcher.adminBoons.createAdminBoon(correlationId, value);
-		},
-		async preCompleteSubmitUpdate(correlationId, dispatcher, value) {
-			value.uses = value.uses ? value.uses : null;
-			return await dispatcher.adminBoons.updateAdminBoon(correlationId, value);
-		},
-		// eslint-disable-next-line
-		async resetDialogI(correlationId, value) {
-			this.innerValue = value;
-			await GlobalUtility.$store.dispatcher.adminScenarios.searchAdminScenarios({ gameSystemId: value.gameSystemId });
-			this.scenarioName = this.getScenarioNameById(value.scenarioId);
-		}
+	validations() {
+		return {
+			innerValue: {
+				name: {
+					required,
+					minLength: minLength(3),
+					maxLength: maxLength(50),
+					$autoDirty: true
+				},
+				uses: {
+					minValue: minValue(0),
+					maxValue: maxValue(99),
+					numeric,
+					$autoDirty: true
+				},
+				type: {
+					$autoDirty: true
+				},
+				factionId: {
+					$autoDirty: true
+				},
+				description: {
+					$autoDirty: true
+				}
+			},
+			gameSystemId: {
+				$autoDirty: true
+			}
+		};
 	}
 };
 </script>

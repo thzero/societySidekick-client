@@ -1,137 +1,106 @@
 <template>
-	<vue-fragment>
-		<v-layout
-			wrap
-			pt-2
+	<v-row class="pt-2">
+		<v-col
+			cols="12"
+			class="pt-8"
 		>
-			<v-flex
-				xs12
-				sm12
-				md12
-				lg12
-				xl12
-				pt-8
-			>
-				<CharacterDetails
-					v-model="value"
-					:editable="editable"
-				/>
-			</v-flex>
-			<v-flex
-				xs12
-				sm12
-				md12
-				lg12
-				xl12
-				pt-8
-			>
-				<v-card
-					class="mb-2"
-				>
-					<v-card-title
-						class="pb-2"
-					>
-						<v-layout>
-							<v-flex
-								xs5
-							>
-								{{ $t('characters.boons.namePlural') }}
-							</v-flex>
-							<v-flex
-								xs7
-								style="text-align: right; padding-right: 45px;"
-							>
-								<!-- <VCollapseButton
-									:value="false"
-									:label="$t('buttons.collapseAll')"
-								/>
-								<VCollapseButton
-									:value="true"
-									:label="$t('buttons.expandAll')"
-								/> -->
-							</v-flex>
-						</v-layout>
-					</v-card-title>
-					<v-card-text>
-						<v-flex
-							xs12
-						>
-							<v-fab-transition
-								v-if="editable"
-							>
-								<v-btn
-									absolute
-									fab
-									right
-									top
-									small
-									dark
-									color="green"
-									@click="dialogBoonNew()"
-								>
-									<v-icon>mdi-plus</v-icon>
-								</v-btn>
-							</v-fab-transition>
-						</v-flex>
-					</v-card-text>
-				</v-card>
-			</v-flex>
-			<v-flex
-				v-for="item of boons"
-				:key="item.id"
-				xs12
-				lg6
-			>
-				<Boon
-					:value="item"
-					:character="value"
-					:editable="editable"
-					:collapse="collapseInner"
-					@dialog-edit="dialogBoonEdit"
-				/>
-			</v-flex>
-		</v-layout>
+			<CharacterDetails
+				:value="value"
+				:editable="editable"
+			/>
+		</v-col>
+		<v-col
+			cols="12"
+			class="pt-8"
+		>
+			<v-card class="mb-2" style="position: relative;">
+				<v-card-title class="pb-2">
+					<v-row>
+						<v-col cols="5">
+							{{ $t('characters.boons.namePlural') }}
+						</v-col>
+						<v-col
+							cols="7"
+							style="text-align: right; padding-right: 45px;"
+						/>
+					</v-row>
+				</v-card-title>
+				<v-fab-transition v-if="editable">
+					<v-btn
+						icon="mdi-plus"
+						size="small"
+						color="green"
+						style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%);"
+						@click="dialogBoonNew()"
+					/>
+				</v-fab-transition>
+			</v-card>
+		</v-col>
+		<v-col
+			v-for="item of boons"
+			:key="item.id"
+			cols="12"
+			lg="6"
+		>
+			<Boon
+				:value="item"
+				:character="value"
+				:editable="editable"
+				:collapse="collapseInner"
+				@dialog-edit="dialogBoonEdit"
+			/>
+		</v-col>
 		<BoonDialog
-			ref="boonDialog"
-			v-model="dialogBoonItem"
+			ref="boonDialogRef"
 			:character="value"
 			:label="$t('boons.name')"
 			:signal="dialogBoon.signal"
 			@cancel="dialogBoon.cancel()"
 			@ok="dialogBoon.ok()"
 		/>
-	</vue-fragment>
+	</v-row>
 </template>
 
 <script>
 import Constants from '@/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
-import baseBoonDashboard from '@/components/gameSystems/baseBoonDashboard';
-import CharacterDetails from '@/components/gameSystems/pathfinder2e/CharacterDetails';
+import { useBaseBoonDashboardComponent } from '@/components/gameSystems/baseBoonDashboard';
+
 import Boon from '@/components/gameSystems/pathfinder2e/Boon';
 import BoonDialog from '@/components/gameSystems/pathfinder2e/BoonDialog';
+import CharacterDetails from '@/components/gameSystems/pathfinder2e/CharacterDetails';
 
 export default {
 	name: 'Pathfinder2eBoonDashboard',
 	components: {
-		CharacterDetails,
 		Boon,
 		BoonDialog,
-		// VCollapseButton
+		CharacterDetails
 	},
-	extends: baseBoonDashboard,
-	methods: {
-		boonsScenario(correlationId, results, scenario) {
-			if (scenario.boon1Id)
-				results.push(this.initializeCharacterBoon2(correlationId, scenario.boon1Id, scenario));
-			if (scenario.boon2Id)
-				results.push(this.initializeCharacterBoon2(correlationId, scenario.boon2Id, scenario));
-		},
-		initializeServices() {
-			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+	props: {
+		value: {
+			type: Object,
+			default: null
 		}
+	},
+	setup(props, context) {
+		const serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
+
+		const base = useBaseBoonDashboardComponent(props, context, {
+			serviceGameSystem,
+			boonsScenario: (correlationId, results, scenario, initializeCharacterBoon2) => {
+				if (scenario.boon1Id)
+					results.push(initializeCharacterBoon2(correlationId, scenario.boon1Id, scenario));
+				if (scenario.boon2Id)
+					results.push(initializeCharacterBoon2(correlationId, scenario.boon2Id, scenario));
+			}
+		});
+
+		return {
+			...base
+		};
 	}
 };
 </script>

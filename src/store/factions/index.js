@@ -1,54 +1,48 @@
 import Constants from '@/constants';
 import LibraryConstants from '@thzero/library_client/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import Response from '@thzero/library_common/response';
 
 const store = {
-	state: {
+	state: () => ({
 		listing: []
-	},
+	}),
 	actions: {
-		async getFactionListing({ commit }, params) {
-			const crypto = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_CRYPTO);
-			if (await LibraryUtility.checksumUpdateCheck(crypto, this.state, commit, 'factions', params.gameSystemId))
-				return;
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_FACTIONS);
-			const response = await service.listing(params.correlationId, params.gameSystemId);
-			this.$logger.debug('store.factions', 'getFactionListing', 'response', response, params.correlationId);
+		async getFactionListing(correlationId, gameSystemId) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_FACTIONS);
+			const response = await service.listing(correlationId, gameSystemId);
+			this.$logger.debug('store.factions', 'getFactionListing', 'response', response, correlationId);
 			if (Response.hasSucceeded(response)) {
 				const listing = response.results ? response.results.data : null;
-				commit('setFactionListing', { correlationId: params.correlationId, listing: listing });
-				LibraryUtility.checksumUpdateComplete(crypto, this.state, commit, 'factions', params.gameSystemId);
+				await this.setFactionListing(correlationId, listing);
 				return listing;
 			}
 			return [];
+		},
+		async setFactionListing(correlationId, listing) {
+			this.$logger.debug('store.factions', 'setFactionListing', 'list.a', listing, correlationId);
+			this.$logger.debug('store.factions', 'setFactionListing', 'list.b', this.listing, correlationId);
+			if (!listing)
+				return;
+				listing.forEach((item) => {
+				this.listing = LibraryUtility.updateArrayByObject(this.listing, item, true);
+			});
+			this.$logger.debug('store.factions', 'setFactionListing', 'list.c', this.listing, correlationId);
 		}
 	},
 	getters: {
-		getFaction: (state) => (id) => {
-			if (state.listing == null)
+		getFaction(correlationId, id) {
+			if (LibraryClientUtility.$store.factions.listing == null)
 				return null;
-			return state.listing.find(faction => faction.id === id);
-		}
-	},
-	mutations: {
-		setFactionListing(state, params) {
-			this.$logger.debug('store.factions', 'setFactionListing', 'list.a', params.listing, params.correlationId);
-			this.$logger.debug('store.factions', 'setFactionListing', 'list.b', state.listing, params.correlationId);
-			if (!params.listing)
-				return;
-				params.listing.forEach((item) => {
-				state.listing = LibraryUtility.updateArrayByObject(state.listing, item, true);
-			});
-			this.$logger.debug('store.factions', 'setFactionListing', 'list.c', state.listing, params.correlationId);
+			return LibraryClientUtility.$store.factions.listing.find(faction => faction.id === id);
 		}
 	},
 	dispatcher: {
 		async getFactionListing(correlationId, gameSystemId) {
-			await GlobalUtility.$store.dispatch('getFactionListing', { correlationId: correlationId, gameSystemId: gameSystemId });
+			await LibraryClientUtility.$store.factions.getFactionListing(correlationId, gameSystemId);
 		}
 	}
 };

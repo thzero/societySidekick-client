@@ -1,13 +1,12 @@
 <template>
-	<v-container pa-0>
+	<v-container class="pa-0">
 		<v-row>
 			<v-col>
 				<v-data-table
 					:headers="headers"
 					:items="scenarios"
 					multi-sort
-					:sort-by="[ 'gameSystemId', 'season', 'scenario', 'name' ]"
-					:sort-desc="[ true, false, false, false ]"
+					:sort-by="[ { key: 'gameSystemId', order: 'desc' }, { key: 'season', order: 'asc' }, { key: 'scenario', order: 'asc' }, { key: 'name', order: 'asc' } ]"
 					class="elevation-1"
 				>
 					<template #top>
@@ -24,7 +23,6 @@
 							<v-spacer />
 							<v-btn
 								color="primary"
-								dark
 								class="mb-2"
 								@click="dialogEditOpen(null, true)"
 							>
@@ -43,17 +41,17 @@
 					</template>
 					<template #[`item.action`]="{ item }">
 						<v-icon
-							small
+							size="small"
 							class="mr-2"
 							@click="dialogEditOpen(item, false)"
 						>
-							edit
+							mdi-pencil
 						</v-icon>
 						<v-icon
-							small
+							size="small"
 							@click="dialogDeleteOpen(item)"
 						>
-							delete
+							mdi-delete
 						</v-icon>
 					</template>
 					<template #no-data>
@@ -61,13 +59,13 @@
 					</template>
 				</v-data-table>
 				<EditDialog
-					ref="editDialog"
+					ref="editDialogRef"
 					:label="dialogEditItemTitle"
 					:signal="dialogEditSignal.signal"
 					@cancel="dialogEditCancel"
 					@ok="dialogEditOk"
 				/>
-				<VConfirmationDialog
+				<VtConfirmationDialog
 					:non-recoverable="true"
 					:signal="dialogDeleteSignal.signal"
 					:pre-complete-ok="dialogDeletePreCompleteOk"
@@ -80,53 +78,63 @@
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { computed, onMounted, ref } from 'vue';
 
-import baseListing from '@/components/admin/baseListing';
-import EditDialog from '@/components/admin/scenarios/EditDialog';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import ScenarioData from '@/common/data/scenario';
+
+import { useAdminBaseListingComponent } from '@/components/admin/baseListing';
+
+import EditDialog from '@/components/admin/scenarios/EditDialog';
+import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
 
 export default {
 	name: 'BaseAdminScenariosListing',
 	components: {
-		EditDialog
+		EditDialog,
+		VtConfirmationDialog
 	},
-	extends: baseListing,
-	computed: {
-		scenarios() {
-			const scenarios = GlobalUtility.$store.state.adminScenarios.scenarios;
+	setup(props, context) {
+		const editDialogRef = ref(null);
+
+		const base = useAdminBaseListingComponent(props, context, {
+			editDialogRef,
+			defaultItem: () => new ScenarioData(),
+			initializeHeaders: () => [
+				{ title: LibraryClientUtility.$trans.t('scenarios.name'), align: 'start', key: 'name' },
+				{ title: LibraryClientUtility.$trans.t('scenarios.season'), align: 'start', key: 'season' },
+				{ title: LibraryClientUtility.$trans.t('scenarios.identifier'), align: 'start', key: 'scenario' },
+				{ title: LibraryClientUtility.$trans.t('scenarios.type'), align: 'start', key: 'type' },
+				{ title: LibraryClientUtility.$trans.t('scenarios.repeatable'), align: 'start', key: 'repeatable' },
+				{ title: LibraryClientUtility.$trans.t('scenarios.gameSystem'), align: 'start', key: 'gameSystemId' },
+				{ title: LibraryClientUtility.$trans.t('scenarios.actions'), align: 'end', key: 'action', sortable: false }
+			],
+			async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+				return await dispatcher.adminScenarios.deleteAdminScenario(correlationId, id);
+			}
+		});
+
+		const getTypeName = (gameSystemId, type) => {
+			const lookups = base.getLookupsByGameSystemId(gameSystemId);
+			return lookups ? base.getLookupName(lookups.scenarioAdventures, type) : '';
+		};
+
+		const scenarios = computed(() => {
+			const scenarios = LibraryClientUtility.$store.adminScenarios.scenarios;
 			return scenarios ? scenarios.slice(0) : [];
-		}
-	},
-	async mounted() {
-		await GlobalUtility.$store.dispatcher.adminScenarios.searchAdminScenarios(this.correlationId(), {});
-	},
-	methods: {
-		defaultItem() {
-			return new ScenarioData();
-		},
-		dialogDeletePreCompleteDispatcher(correlationId, dispatcher) {
-			return dispatcher.adminScenarios;
-		},
-		async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
-			return await dispatcher.adminScenarios.deleteAdminScenario(correlationId, id);
-		},
-		getTypeName(gameSystemId, type) {
-			const lookups = this.getLookupsByGameSystemId(gameSystemId);
-			return lookups ? this.getLookupName(lookups.scenarioAdventures, type) : '';
-		},
-		initializeHeaders() {
-			return [
-				{ text: GlobalUtility.$trans.t('scenarios.name'), align: 'left', value: 'name', },
-				{ text: GlobalUtility.$trans.t('scenarios.season'), align: 'left', value: 'season' },
-				{ text: GlobalUtility.$trans.t('scenarios.identifier'), align: 'left', value: 'scenario' },
-				{ text: GlobalUtility.$trans.t('scenarios.type'), align: 'left', value: 'type' },
-				{ text: GlobalUtility.$trans.t('scenarios.repeatable'), align: 'left', value: 'repeatable' },
-				{ text: GlobalUtility.$trans.t('scenarios.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: GlobalUtility.$trans.t('scenarios.actions'), align: 'right', value: 'action', sortable: false }
-			];
-		}
+		});
+
+		onMounted(async () => {
+			await LibraryClientUtility.$store.dispatcher.adminScenarios.searchAdminScenarios(base.correlationId(), {});
+		});
+
+		return {
+			...base,
+			editDialogRef,
+			scenarios,
+			getTypeName
+		};
 	}
 };
 </script>

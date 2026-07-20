@@ -1,30 +1,28 @@
 <template>
-	<VFormDialog
-		ref="form"
+	<VtFormDialog
 		:label="$t('strings.load') +' ' + $t('characters.inventories.gearSets.name')"
 		:signal="signal"
+		:validation="validation"
 		:pre-complete-ok="preComplete"
-		:fullscreen="fullscreenInternal"
-		@close="close"
-		@cancel="cancel"
+		@close="cancel"
 		@ok="ok"
 	>
 		<v-card
 			tile
-			outlined
+			variant="outlined"
 		>
 			<v-card-text>
-				<VSelectWithValidation
-					ref="gearSetId"
+				<VtSelectWithValidation
+					ref="gearSetIdRef"
 					v-model="gearSetId"
 					vid="gearSetId"
-					rules="required|"
+					:validation="validation"
 					:items="gearSets"
 					:label="$t('characters.inventories.gearSets.name')"
 				/>
 			</v-card-text>
 		</v-card>
-		<VConfirmationDialog
+		<VtConfirmationDialog
 			:non-recoverable="true"
 			:message="$t('questions.areYouSureNonRecoverableGearSetLoad')"
 			:signal="dialogConfirmSignal.signal"
@@ -32,57 +30,87 @@
 			@cancel="dialogConfirmSignal.cancel()"
 			@ok="dialogConfirmOk"
 		/>
-	</VFormDialog>
+	</VtFormDialog>
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { ref } from 'vue';
 
-import VConfirmationDialog from '@/library_vue_vuetify/components/VConfirmationDialog';
-import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
-import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
+import useVuelidate from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 
-import baseInventoryGearSetDialog from '@/components/gameSystems/baseInventoryGearSetDialog';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import { useBaseInventoryGearSetDialogComponent } from '@/components/gameSystems/baseInventoryGearSetDialog';
+
+import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
+import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
+import VtSelectWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtSelectWithValidation';
+
+import DialogSupport from '@thzero/library_client_vue3/components/support/dialog';
 
 export default {
 	name: 'InventoryGearSetLoadDialog',
 	components: {
-		VConfirmationDialog,
-		VFormDialog,
-		VSelectWithValidation
+		VtConfirmationDialog,
+		VtFormDialog,
+		VtSelectWithValidation
 	},
-	extends: baseInventoryGearSetDialog,
 	props: {
+		signal: {
+			type: Boolean,
+			default: false
+		},
+		gameSystemId: {
+			type: String,
+			default: null
+		},
 		characterId: {
 			type: String,
 			default: null
 		}
 	},
-	data: () => ({
-		dialogConfirmSignal: new DialogSupport()
-	}),
-	methods: {
-		async dialogConfirmOk() {
-			this.$emit('ok');
-		},
-		async preComplete(correlationId) {
-			const character = GlobalUtility.$store.getters.getCharacter(this.characterId);
+	emits: ['cancel', 'ok'],
+	setup(props, context) {
+		const base = useBaseInventoryGearSetDialogComponent(props, context, {});
+
+		const dialogConfirmSignal = ref(new DialogSupport());
+
+		const dialogConfirmOk = async () => {
+			context.emit('ok');
+		};
+		const preCompleteConfirm = async (correlationId) => {
+			const response = await LibraryClientUtility.$store.dispatcher.characters.loadCharacterInventory(correlationId, props.characterId, base.gearSetId.value);
+			base.logger.debug('InventoryGearSetLoadDialog', 'preCompleteConfirm', 'response', response, correlationId);
+			return response;
+		};
+		const preComplete = async (correlationId) => {
+			const character = LibraryClientUtility.$store.getters.getCharacter(correlationId, props.characterId);
 			if (character) {
 				if (character.inventory && character.inventory.length > 0) {
-					this.dialogConfirmSignal.open(correlationId);
-					return this.error('InventoryGearSetLoadDialog', 'preComplete', null, null, null, null, correlationId);
+					dialogConfirmSignal.value.open(correlationId);
+					return base.error('InventoryGearSetLoadDialog', 'preComplete', null, null, null, null, correlationId);
 				}
 			}
+			return preCompleteConfirm(correlationId);
+		};
 
-			return this.preCompleteConfirm();
-		},
-		async preCompleteConfirm(correlationId) {
-			const response = await GlobalUtility.$store.dispatcher.characters.loadCharacterInventory(correlationId, this.characterId, this.gearSetId);
-			this.logger.debug('InventoryGearSetLoadDialog', 'preCompleteConfirm', 'response', response, correlationId);
-			return response;
-		}
+		return {
+			...base,
+			dialogConfirmSignal,
+			dialogConfirmOk,
+			preComplete,
+			preCompleteConfirm,
+			validation: useVuelidate({ $scope: 'InventoryGearSetLoadDialog' })
+		};
+	},
+	validations() {
+		return {
+			gearSetId: {
+				required,
+				$autoDirty: true
+			}
+		};
 	}
 };
 </script>

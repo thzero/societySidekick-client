@@ -1,37 +1,32 @@
 <template>
 	<div>
-		<v-layout
-			wrap
-			:pt-4="$vuetify.breakpoint.smAndDown && newsCount > 0"
-			:pt-2="$vuetify.breakpoint.mdAndUp || newsCount === 0"
+		<v-row
+			:class="($vuetify.display.smAndDown && newsCount > 0) ? 'pt-4' : 'pt-2'"
 		>
-			<v-flex
-				xs12
-				sm12
-				md6
-				lg4
-				xl4
-				pb-4
+			<v-col
+				cols="12"
+				md="6"
+				lg="4"
+				class="pb-4"
 			>
 				<v-card
 					class="mb-2"
 				>
 					<v-card-text>
 						<v-badge
-							v-if="$vuetify.breakpoint.smAndDown"
+							v-if="$vuetify.display.smAndDown"
 							color="primary"
+							:content="newsCount"
 							style="top: 8px;"
 						>
 							<p
-								v-scroll-to="'#element'"
 								class="headline mb-0"
 							>
 								{{ $t('titles.newsLatest') }}
 							</p>
-							<span slot="badge"> {{ newsCount }} </span>
 						</v-badge>
 						<p
-							v-if="$vuetify.breakpoint.mdAndUp"
+							v-if="$vuetify.display.mdAndUp"
 							class="headline mb-0"
 						>
 							{{ $t('titles.newsLatest') }}
@@ -39,144 +34,143 @@
 					</v-card-text>
 				</v-card>
 				<News
-					v-if="$vuetify.breakpoint.mdAndUp"
+					v-if="$vuetify.display.mdAndUp"
 				/>
-			</v-flex>
-			<v-flex
+			</v-col>
+			<v-col
 				v-if="isLoggedIn"
-				xs12
-				sm12
-				md6
-				lg8
-				xl8
-				:pl-2="$vuetify.breakpoint.mdAndUp"
+				cols="12"
+				md="6"
+				lg="8"
+				:class="{ 'pl-2': $vuetify.display.mdAndUp }"
 			>
 				<v-card
 					class="mb-2"
 				>
 					<v-card-text>
-						<v-layout>
-							<v-flex
-								lg4
-								xs6
+						<v-row>
+							<v-col
+								cols="6"
+								lg="4"
 							>
 								<v-chip
 									color="success"
-									outlined
+									variant="outlined"
 									label
 								>
 									{{ userDisplayName }}
 								</v-chip>
-							</v-flex>
-							<v-flex
-								v-if="$vuetify.breakpoint.lgAndUp"
-								lg4
+							</v-col>
+							<v-col
+								v-if="$vuetify.display.lgAndUp"
+								lg="4"
 								style="text-align: center"
 							>
 								<!-- GameSystems Update -->
 								<Pathfinder2eSnippet
 									v-if="isGameSystemPathfinder2e"
 								/>
-							</v-flex>
-							<v-flex
-								lg4
-								xs6
+							</v-col>
+							<v-col
+								cols="6"
+								lg="4"
 								style="text-align: right"
 							>
 								<v-chip
 									color="success"
-									outlined
+									variant="outlined"
 									label
 								>
 									#{{ gameSystemNumber }}
 								</v-chip>
-							</v-flex>
-						</v-layout>
-						<v-layout>
-							<v-flex
-								v-if="$vuetify.breakpoint.mdAndDown"
-								xs12
-								pt-2
+							</v-col>
+						</v-row>
+						<v-row>
+							<v-col
+								v-if="$vuetify.display.mdAndDown"
+								cols="12"
+								class="pt-2"
 								style="text-align: center"
 							>
 								<!-- GameSystems Update -->
 								<Pathfinder2eSnippet
 									v-if="isGameSystemPathfinder2e"
 								/>
-							</v-flex>
-						</v-layout>
+							</v-col>
+						</v-row>
 					</v-card-text>
 				</v-card>
 				<v-tabs
 					v-model="tab"
 					grow
 				>
-					<v-tab>
+					<v-tab :value="0">
 						{{ $t('titles.characters') }}
 					</v-tab>
-					<v-tab>
+					<v-tab :value="1">
 						{{ $t('titles.boons') }}
 					</v-tab>
-					<v-tab>
+					<v-tab :value="2">
 						{{ $t('titles.scenarios') }}
 					</v-tab>
 					<v-tab
 						v-if="allowStatistics"
+						:value="3"
 					>
 						{{ $t('titles.statistics') }}
 					</v-tab>
 				</v-tabs>
-				<v-tabs-items
+				<v-tabs-window
 					v-model="tab"
 					style="background-color: transparent"
 				>
-					<v-tab-item
+					<v-tabs-window-item
+						:value="0"
 						transition="fade-transition"
 						reverse-transition="fade-transition"
 					>
 						<CharacterList
 							:user="user"
 						/>
-					</v-tab-item>
-					<v-tab-item
+					</v-tabs-window-item>
+					<v-tabs-window-item
+						:value="1"
 						transition="fade-transition"
 						reverse-transition="fade-transition"
 					>
 						<BoonList
 							:user="user"
 						/>
-					</v-tab-item>
-					<v-tab-item
+					</v-tabs-window-item>
+					<v-tabs-window-item
+						:value="2"
 						transition="fade-transition"
 						reverse-transition="fade-transition"
 					>
 						<ScenarioList
 							:user="user"
 						/>
-					</v-tab-item>
-					<v-tab-item
+					</v-tabs-window-item>
+					<v-tabs-window-item
 						v-if="allowStatistics"
+						:value="3"
 						transition="fade-transition"
 						reverse-transition="fade-transition"
 					>
 						<Statistics
 							:user="user"
 						/>
-					</v-tab-item>
-				</v-tabs-items>
-			</v-flex>
-			<v-flex
-				v-if="$vuetify.breakpoint.smAndDown"
+					</v-tabs-window-item>
+				</v-tabs-window>
+			</v-col>
+			<v-col
+				v-if="$vuetify.display.smAndDown"
 				id="element"
-				xs12
-				sm12
-				md6
-				lg4
-				xl4
-				pt-4
-				pb-4
-				:pl-2="$vuetify.breakpoint.mdAndUp"
-				:pr-2="$vuetify.breakpoint.mdAndUp"
+				cols="12"
+				md="6"
+				lg="4"
+				class="pt-4 pb-4"
+				:style="$vuetify.display.mdAndUp ? 'padding-left: 8px; padding-right: 8px;' : ''"
 			>
 				<v-card
 					class="mb-2"
@@ -188,31 +182,34 @@
 					</v-card-text>
 				</v-card>
 				<News />
-			</v-flex>
-		</v-layout>
-		<VLoadingOverlay
+			</v-col>
+		</v-row>
+		<VtLoadingOverlay
 			:signal="initializeCompleted"
 		/>
 	</div>
 </template>
 
 <script>
+import { computed, onMounted, ref } from 'vue';
+
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
+import LibraryClientConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
-import LibraryUtility from '@thzero/library_common/utility';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 import GameSystemsUtility from '@/utility/gameSystems';
-import GlobalUtility from '@thzero/library_client/utility/global';
 
-import base from '@/library_vue/components/base';
+import { useBaseComponent } from '@/components/base';
 
 import BoonList from '@/components/gameSystems/BoonList';
 import CharacterList from '@/components/gameSystems/CharacterList';
 import News from '@/components/News';
 import ScenarioList from '@/components/gameSystems/ScenarioList';
 import Statistics from '@/components/gameSystems/Statistics';
-import VLoadingOverlay from '@/library_vue_vuetify/components/VLoadingOverlay';
+import VtLoadingOverlay from '@thzero/library_client_vue3_vuetify3/components/VtLoadingOverlay';
 
 // GameSystems Update
 import Pathfinder2eSnippet from '@/components/gameSystems/pathfinder2e/MainSnippet';
@@ -227,112 +224,26 @@ export default {
 		News,
 		ScenarioList,
 		Statistics,
-		VLoadingOverlay,
+		VtLoadingOverlay,
 
 		// GameSystems Update
 		Pathfinder2eSnippet
 	},
-	extends: base,
-	data: () => ({
-		tab2: null,
-		items: [
-        ],
-        text: '',
-		initializeCompleted: false,
-		sortKeys: [
-			{ id: 'name', name: 'Name' },
-			{ id: 'faction', name: 'Faction' }
-		]
-	}),
-	computed: {
-		allowStatistics() {
-			return Constants.Features.Statistics;
-		},
-		gameSystemFilter() {
-			return AppUtility.settings().getSettingsUserGameSystemFilter(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.gameSystemFilter);
-		},
-		gameSystemNumber() {
-			return GameSystemsUtility.gameSystemNumber(this.correlationId(), GlobalUtility.$store.state.user.user, this.gameSystemFilter);
-		},
-		isLoggedIn() {
-			return GlobalUtility.$store.state.user && GlobalUtility.$store.state.user.isLoggedIn;
-		},
-		// GameSystems Update
-		isGameSystemDungeonsAndDragons5e() {
-			return this.gameSystemFilter === SharedConstants.GameSystems.DungeonsAndDragons5e.id;
-		},
-		isGameSystemPathfinder2e() {
-			return this.gameSystemFilter === SharedConstants.GameSystems.Pathfinder2e.id;
-		},
-		isGameSystemStarfinder1e() {
-			return this.gameSystemFilter === SharedConstants.GameSystems.Starfinder1e.id;
-		},
-		newsCount() {
-			if (!GlobalUtility.$store.state.news.latest)
-				return 0;
-
-			const news = GlobalUtility.$store.state.news.latest.slice(0);
-			return news.length;
-		},
-		tab: {
-			get: function () {
-				return this.getSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, (settings) => settings.tab);
-			},
-			set: function (newVal) {
-				this.updateSettingsUserTab(this.correlationId(), GlobalUtility.$store.state.user.user, newVal, (settings) => { return settings.tab = newVal; });
-			}
-		},
-		user() {
-			return GlobalUtility.$store.state.user.user;
-		},
-		userDisplayName() {
-			const user = GlobalUtility.$store.state.user.user;
-			if (!user)
-				return '';
-			const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
-			const userName = settings && settings.gamerTag ? settings.gamerTag : user.external && user.external.name ? user.external.name : '******';
-			return userName;
-		}
-	},
-	created() {
-		const self = this;
-		GlobalUtility.$EventBus.on('initialize-completed', (value) => {
-			self.initializeCompleted = value;
-		});
-	},
-	methods: {
-		getSettingsUserTab(correlationId, user, funcAttribute) {
-			if (!user || !user.settings)
-				return null;
-
-			const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
-			return funcAttribute(settings.home);
-		},
-		updateSettingsUserTab(correlationId, user, newVal, func) {
-			const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
-			func(settings.home, newVal);
-			GlobalUtility.$store.dispatcher.user.setUserSettings(correlationId, settings);
-		}
-	},
-	// eslint-disable-next-line
-	async beforeRouteEnter (to, from, next) {
-		// called before the route that renders this component is confirmed.
-		// does NOT have access to `this` component instance,
-		// because it has not been created yet when this guard is called!
+	async beforeRouteEnter(to, from) {
 		(async () => {
 			try {
-				GlobalUtility.$EventBus.emit('initialize-completed', false);
+				LibraryClientUtility.$EventBus.emit('initialize-completed', false);
 
-				const correlationId = LibraryUtility.generateId();
+				const correlationId = LibraryCommonUtility.generateId();
 
 				await Promise.all([
-					GlobalUtility.$store.dispatcher.news.getLatest(correlationId),
-					GlobalUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
+					LibraryClientUtility.$store.dispatcher.news.getLatest(correlationId),
+					LibraryClientUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
 				]);
 			}
 			finally {
 				const timeout = setTimeout(function () {
-					GlobalUtility.$EventBus.emit('initialize-completed', true);
+					LibraryClientUtility.$EventBus.emit('initialize-completed', true);
 					clearTimeout(timeout);
 				}, DelayMs);
 			}
@@ -340,26 +251,18 @@ export default {
 			// eslint-disable-next-line
 			console.error(err);
 		});
-		next();
 	},
-	// eslint-disable-next-line
-	async beforeRouteUpdate (to, from, next) {
-		// called when the route that renders this component has changed,
-		// but this component is reused in the new route.
-		// For example, for a route with dynamic params `/foo/:id`, when we
-		// navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
-		// will be reused, and this hook will be called when that happens.
-		// has access to `this` component instance.
+	async beforeRouteUpdate(to, from) {
+		const self = this;
 		(async () => {
-			const self = this;
 			try {
-				this.initializeCompleted = false;
+				self.initializeCompleted = false;
 
-				const correlationId = this.correlationId();
+				const correlationId = self.correlationId();
 
 				await Promise.all([
-					GlobalUtility.$store.dispatcher.news.getLatest(correlationId),
-					GlobalUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
+					LibraryClientUtility.$store.dispatcher.news.getLatest(correlationId),
+					LibraryClientUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
 				]);
 			}
 			finally {
@@ -372,7 +275,97 @@ export default {
 			// eslint-disable-next-line
 			console.error(err);
 		});
-		next();
+	},
+	setup(props, context) {
+		const base = useBaseComponent(props, context);
+
+		const serviceStore = LibraryClientUtility.$injector.getService(LibraryClientConstants.InjectorKeys.SERVICE_STORE);
+
+		const initializeCompleted = ref(false);
+
+		const gameSystemFilter = computed(() => {
+			return AppUtility.settings().getSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store.user.user, (settings) => settings.gameSystemFilter);
+		});
+
+		const allowStatistics = computed(() => {
+			return Constants.Features.Statistics;
+		});
+		const gameSystemNumber = computed(() => {
+			return GameSystemsUtility.gameSystemNumber(base.correlationId(), LibraryClientUtility.$store.user.user, gameSystemFilter.value);
+		});
+		const isLoggedIn = computed(() => {
+			return serviceStore != null && serviceStore.userAuthIsLoggedIn;
+		});
+		const isGameSystemPathfinder2e = computed(() => {
+			return gameSystemFilter.value === SharedConstants.GameSystems.Pathfinder2e.id;
+		});
+		const isGameSystemStarfinder1e = computed(() => {
+			return gameSystemFilter.value === SharedConstants.GameSystems.Starfinder1e.id;
+		});
+		const newsCount = computed(() => {
+			if (!LibraryClientUtility.$store.news.latest)
+				return 0;
+			return LibraryClientUtility.$store.news.latest.slice(0).length;
+		});
+		const user = computed(() => {
+			return LibraryClientUtility.$store.user.user;
+		});
+		const userDisplayName = computed(() => {
+			const u = LibraryClientUtility.$store.user.user;
+			if (!u)
+				return '';
+			// 0.18 lib stores settings at $store.user.settings (user.settings is deleted on load).
+			const settings = LibraryClientUtility.$store.user.settings;
+			return settings && settings.gamerTag ? settings.gamerTag : u.external && u.external.name ? u.external.name : '******';
+		});
+
+		const getSettingsUserTab = (correlationId, u, funcAttribute) => {
+			const settings = LibraryClientUtility.$store.user.settings;
+			if (!settings || !settings.home)
+				return null;
+			return funcAttribute(settings.home);
+		};
+		const updateSettingsUserTab = (correlationId, u, newVal, func) => {
+			const settings = AppUtility.settings().mergeUser(correlationId, LibraryClientUtility.$store.user.settings);
+			func(settings.home, newVal);
+			LibraryClientUtility.$store.dispatcher.user.setUserSettings(correlationId, settings);
+		};
+
+		// The settings-backed tab value does not reliably re-trigger reactivity when persisted via
+		// setUserSettings (store settings replacement), so the tab window never switches. Drive off a
+		// local ref (updated immediately on select) while still persisting the saved tab.
+		const initialTab = getSettingsUserTab(base.correlationId(), LibraryClientUtility.$store.user.user, (settings) => settings.tab);
+		const tabLocal = ref((initialTab === null || initialTab === undefined) ? 0 : initialTab);
+		const tab = computed({
+			get: () => tabLocal.value,
+			set: (newVal) => {
+				tabLocal.value = newVal;
+				updateSettingsUserTab(base.correlationId(), LibraryClientUtility.$store.user.user, newVal, (settings) => { return settings.tab = newVal; });
+			}
+		});
+
+		onMounted(() => {
+			LibraryClientUtility.$EventBus.on('initialize-completed', (value) => {
+				initializeCompleted.value = value;
+			});
+		});
+
+		return {
+			...base,
+			initializeCompleted,
+			allowStatistics,
+			gameSystemFilter,
+			gameSystemNumber,
+			isLoggedIn,
+			isGameSystemPathfinder2e,
+			isGameSystemStarfinder1e,
+			newsCount,
+			tab,
+			user,
+			userDisplayName,
+			getSettingsUserTab,
+			updateSettingsUserTab
+		};
 	}
 };
 </script>

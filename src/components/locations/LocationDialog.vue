@@ -1,94 +1,169 @@
 <template>
-	<VFormDialog
+	<VtFormDialog
 		:label="$t('locations.name')"
 		:signal="signal"
+		:validation="validation"
 		:pre-complete-ok="preCompleteResponseOk"
-		:fullscreen="fullscreenInternal"
-		@close="close"
-		@cancel="cancel"
+		@close="cancel"
 		@ok="ok"
 	>
 		<v-card
-			tile
-			outlined
+			variant="outlined"
+			rounded="0"
 		>
 			<v-card-text>
-				<VTextFieldWithValidation
-					ref="name"
+				<VtTextFieldWithValidation
+					ref="nameRef"
 					v-model="name"
-					rules="required|min:3|max:50|"
 					vid="name"
+					:validation="validation"
 					:label="$t('forms.name')"
 					:counter="50"
 				/>
-				<VTextFieldWithValidation
-					ref="location"
+				<VtTextFieldWithValidation
+					ref="locationRef"
 					v-model="location"
-					rules="required|min:3|max:50|"
 					vid="location"
+					:validation="validation"
 					:label="$t('forms.locations.name')"
 					:counter="50"
 				/>
-				<VCheckboxWithValidation
-					ref="online"
+				<VtCheckboxWithValidation
+					ref="onlineRef"
 					v-model="online"
-					vid="sticky"
+					vid="online"
+					:validation="validation"
 					:label="$t('forms.locations.online')"
 				/>
 			</v-card-text>
 		</v-card>
-	</VFormDialog>
+	</VtFormDialog>
 </template>
 
 <script>
+import { ref } from 'vue';
+import useVuelidate from '@vuelidate/core';
+import { maxLength, minLength, required } from '@vuelidate/validators';
+
+import LibraryClientConstants from '@thzero/library_client/constants';
+
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
+
 import AppUtility from '@/utility/app';
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
 
-import VCheckboxWithValidation from '@/library_vue_vuetify/components/form/VCheckboxWithValidation';
-import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
-import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
+import { useBaseComponent } from '@thzero/library_client_vue3/components/base';
 
+import VtCheckboxWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtCheckboxWithValidation';
+import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
+import VtTextFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtTextFieldWithValidation';
+
+// TODO(migration): old dialog did `extends VFormDialog`; re-shaped to WRAP <VtFormDialog> and
+// delegate via events (matches ShareDialog.vue). Human review:
+//  1. cancel/close/signal wiring — if reopen-after-cancel misbehaves, emit('cancel') from close().
+//  2. user source: uses serviceStore.user in place of GlobalUtility.$store.state.user.user.
+//  3. vee-validate string rules "required|min:3|max:50" ported to vuelidate below.
 export default {
 	name: 'LocationDialog',
 	components: {
-		VCheckboxWithValidation,
-		VFormDialog,
-		VTextFieldWithValidation
+		VtCheckboxWithValidation,
+		VtFormDialog,
+		VtTextFieldWithValidation
 	},
-	extends: VFormDialog,
-	data: () => ({
-		id: null,
-		location: null,
-		online: false,
-		name: null
-	}),
-	methods: {
-		async cancel() {
-			this.$emit('cancel');
-		},
-		async close() {
-		},
-		async ok() {
-			this.$emit('ok');
+	props: {
+		signal: {
+			type: Boolean,
+			default: false
+		}
+	},
+	emits: ['cancel', 'ok'],
+	setup(props, context) {
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse
+		} = useBaseComponent(props, context);
+
+		const serviceStore = LibraryClientUtility.$injector.getService(LibraryClientConstants.InjectorKeys.SERVICE_STORE);
+
+		const id = ref(null);
+		const location = ref(null);
+		const online = ref(false);
+		const name = ref(null);
+
+		const cancel = async () => {
+			context.emit('cancel');
+		};
+		const close = async () => {
+		};
+		const ok = async () => {
+			context.emit('ok');
 			return true;
-		},
-		async preCompleteResponseOk(correlationId) {
-			const location = { name: this.name, location: this.location, online: this.online };
-			const response = AppUtility.settings().updateSettingsUserLocation(correlationId, GlobalUtility.$store, GlobalUtility.$store.state.user.user, this.id, location, (settings, newVal) => {
+		};
+		const preCompleteResponseOk = async (correlationIdI) => {
+			const model = { name: name.value, location: location.value, online: online.value };
+			return AppUtility.settings().updateSettingsUserLocation(correlationIdI, LibraryClientUtility.$store, serviceStore.user, id.value, model, (settings, newVal) => {
 				settings.location = newVal.location;
 				settings.name = newVal.name;
 				settings.online = newVal.online;
 			});
-			return response;
-		},
-		// eslint-disable-next-line
-		async resetDialog(correlationId, value) {
-			this.id = value ? value.id : LibraryUtility.generateId();
-			this.location = value ? value.location : null;
-			this.name = value ? value.name : null;
-			this.online = value ? value.online : false;
-		}
+		};
+		const reset = async (correlationIdI, value) => {
+			id.value = value ? value.id : LibraryCommonUtility.generateId();
+			location.value = value ? value.location : null;
+			name.value = value ? value.name : null;
+			online.value = value ? value.online : false;
+		};
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse,
+			serviceStore,
+			id,
+			location,
+			online,
+			name,
+			cancel,
+			close,
+			ok,
+			preCompleteResponseOk,
+			reset,
+			validation: useVuelidate({ $scope: 'LocationDialog' })
+		};
+	},
+	validations() {
+		return {
+			name: {
+				required,
+				minLength: minLength(3),
+				maxLength: maxLength(50),
+				$autoDirty: true
+			},
+			location: {
+				required,
+				minLength: minLength(3),
+				maxLength: maxLength(50),
+				$autoDirty: true
+			}
+		};
 	}
 };
 </script>
+
+<style scoped>
+</style>

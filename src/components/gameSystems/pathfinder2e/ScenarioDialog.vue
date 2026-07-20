@@ -1,97 +1,95 @@
 <template>
-	<VFormDialog
+	<VtFormDialog
 		:label="$t('characters.scenarios.name')"
 		:signal="signal"
+		:validation="validation"
 		:pre-complete-delete="preCompleteResponseDelete"
 		:pre-complete-ok="preComplete"
-		:fullscreen="fullscreenInternal"
 		:button-delete="!isNew"
 		max-width="700px"
-		@close="close"
-		@cancel="cancel"
+		@close="cancel"
 		@ok="ok"
 	>
 		<v-stepper
 			v-model="steps"
 		>
 			<v-stepper-header>
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="1"
+					:value="1"
 				>
 					{{ $t('characters.scenarios.name') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider />
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="2"
+					:value="2"
 				>
 					{{ $t('characters.gameSystems.pathfinder2e.experience') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider />
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="3"
+					:value="3"
 				>
 					{{ $t('characters.gameSystems.pathfinder2e.currency') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider />
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="4"
+					:value="4"
 				>
 					{{ $t('characters.gameSystems.pathfinder2e.fame.name') }}
-				</v-stepper-step>
+				</v-stepper-item>
 				<v-divider />
-				<v-stepper-step
+				<v-stepper-item
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
-					step="5"
+					:value="5"
 				>
 					{{ $t('characters.gameSystems.pathfinder2e.boons.name') }}
-				</v-stepper-step>
+				</v-stepper-item>
 			</v-stepper-header>
-			<v-stepper-items>
-				<v-stepper-content
-					step="1"
-					pa-0
+			<v-stepper-window>
+				<v-stepper-window-item
+					:value="1"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eScenario2"
 						>
-							<VNumberFieldWithValidation
-								ref="order"
+							<VtNumberFieldWithValidation
+								ref="orderRef"
 								v-model="innerValue.order"
-								rules="required|min_value:0|max_value:99|"
 								vid="order"
+								:validation="validation"
 								:label="$t('characters.scenarios.order')"
 								step="1"
 							/>
-							<VTextFieldWithValidation
-								ref="scenarioName"
+							<VtTextFieldWithValidation
+								ref="scenarioNameRef"
 								v-model="scenarioName"
-								rules="required|"
 								vid="scenarioName"
+								:validation="validation"
 								:label="$t('forms.name')"
 								:readonly="true"
 							/>
 							<div style="text-align: right">
 								<v-btn
-									color="primary lighten-1"
+									color="primary"
 									@click="dialogScenariosOpen()"
 								>
 									{{ $t('buttons.select') }}
@@ -102,55 +100,41 @@
 								cellpadding="0"
 								cellspacing="0"
 								style="width: 100%;"
-							>
+							><tbody>
 								<tr>
 									<td class="text-top">
 										<div class="pr-4">
-											<VDateTimeFieldWithValidation
-												ref="timestamp"
+											<VtDateTimePickerFieldWithValidationTemp
+												ref="timestampRef"
 												v-model="innerValue.timestamp"
 												vid="timestamp"
-												rules="required|"
+												:validation="validation"
 												:output-type="outputType"
 												:date-format="dateFormat"
 												:time-format="timeFormat"
 												:label="$t('characters.scenarios.date')"
 											/>
-											<!-- <VNumberFieldWithValidation
-												ref="order"
-												v-model="innerValue.order"
-												:rules="rulesOrder|"
-												vid="order"
-												:label="$t('characters.order')"
-											/> -->
-											<VSelectWithValidation
-												ref="scenarioAdvancementSpeed"
+											<VtSelectWithValidation
+												ref="scenarioAdvancementSpeedRef"
 												v-model="innerValue.scenarioAdvancementSpeed"
-												rules="required|"
 												vid="scenarioAdvancementSpeed"
+												:validation="validation"
 												:items="lookups.scenarioAdvancementSpeeds"
 												:label="$t('characters.gameSystems.pathfinder2e.scenarios.advancementSpeed')"
 											/>
-											<!-- <VSelectWithValidation
-												ref="scenarioAdventure"
-												v-model="innerValue.scenarioAdventure"
-												rules="required|"
-												vid="scenarioAdventure"
-												:items="lookups.scenarioAdventures"
-												:label="$t('characters.gameSystems.pathfinder2e.scenarios.adventure')"
-											/> -->
-											<VTextFieldWithValidation
-												ref="scenarioAdventure"
+											<VtTextFieldWithValidation
+												ref="scenarioAdventureRef"
 												v-model="scenarioAdventureName"
 												vid="scenarioAdventure"
+												:validation="validation"
 												:label="$t('characters.gameSystems.pathfinder2e.scenarios.adventure')"
 												:readonly="true"
 											/>
-											<VSelectWithValidation
-												ref="status"
+											<VtSelectWithValidation
+												ref="statusRef"
 												v-model="innerValue.status"
-												rules="required"
 												vid="status"
+												:validation="validation"
 												:items="status"
 												:label="$t('characters.gameSystems.pathfinder2e.status.name')"
 												class="pb-2"
@@ -158,40 +142,41 @@
 										</div>
 									</td>
 									<td class="text-top">
-										<VSelectWithValidation
-											ref="scenarioLocation"
+										<VtSelectWithValidation
+											ref="scenarioLocationRef"
 											v-model="innerValue.locationId"
 											vid="scenarioLocation"
+											:validation="validation"
 											:items="locations"
 											:label="$t('locations.name')"
 										/>
-										<VSelectWithValidation
-											ref="scenarioEvent"
+										<VtSelectWithValidation
+											ref="scenarioEventRef"
 											v-model="innerValue.scenarioEvent"
-											rules="required|"
 											vid="scenarioEvent"
+											:validation="validation"
 											:items="lookups.scenarioEvents"
 											:label="$t('characters.gameSystems.pathfinder2e.event')"
 										/>
-										<VSelectWithValidation
-											ref="scenarioStatus"
+										<VtSelectWithValidation
+											ref="scenarioStatusRef"
 											v-model="innerValue.scenarioStatus"
-											rules="required|"
 											vid="scenarioStatus"
+											:validation="validation"
 											:items="lookups.scenarioStatus"
 											:label="$t('characters.status.name')"
 										/>
-										<VSelectWithValidation
-											ref="scenarioParticipant"
+										<VtSelectWithValidation
+											ref="scenarioParticipantRef"
 											v-model="innerValue.scenarioParticipant"
-											rules="required|"
 											vid="scenarioParticipant"
+											:validation="validation"
 											:items="lookups.scenarioParticipants"
 											:label="$t('characters.gameSystems.pathfinder2e.scenarios.participant')"
 										/>
 									</td>
 								</tr>
-							</table>
+							</tbody></table>
 							<span
 								v-if="hasResults"
 								class="title"
@@ -204,102 +189,107 @@
 								cellpadding="0"
 								cellspacing="0"
 								style="width: 100%;"
-							>
+							><tbody>
 								<tr>
 									<td class="text-top">
 										<div class="pr-4">
-											<VCheckboxWithValidation
+											<VtCheckboxWithValidation
 												v-if="results1Description"
-												ref="results1Checked"
+												ref="results1CheckedRef"
 												v-model="results1Checked"
 												vid="results1Checked"
+												:validation="validation"
 												:label="results1Description"
 											/>
-											<VCheckboxWithValidation
+											<VtCheckboxWithValidation
 												v-if="results3Description"
-												ref="results3Checked"
+												ref="results3CheckedRef"
 												v-model="results3Checked"
 												vid="results3Checked"
+												:validation="validation"
 												:label="results3Description"
 											/>
-											<VCheckboxWithValidation
+											<VtCheckboxWithValidation
 												v-if="results5Description"
-												ref="results5Checked"
+												ref="results5CheckedRef"
 												v-model="results5Checked"
 												vid="results5Checked"
+												:validation="validation"
 												:label="results5Description"
 											/>
 										</div>
 									</td>
 									<td class="text-top">
-										<VCheckboxWithValidation
+										<VtCheckboxWithValidation
 											v-if="results2Description"
-											ref="results2Checked"
+											ref="results2CheckedRef"
 											v-model="results2Checked"
 											vid="results2Checked"
+											:validation="validation"
 											:label="results2Description"
 										/>
-										<VCheckboxWithValidation
+										<VtCheckboxWithValidation
 											v-if="results4Description"
-											ref="results4Checked"
+											ref="results4CheckedRef"
 											v-model="results4Checked"
 											vid="results4Checked"
+											:validation="validation"
 											:label="results4Description"
 										/>
-										<VCheckboxWithValidation
+										<VtCheckboxWithValidation
 											v-if="results6Description"
-											ref="results6Checked"
+											ref="results6CheckedRef"
 											v-model="results6Checked"
 											vid="results6Checked"
+											:validation="validation"
 											:label="results6Description"
 										/>
 									</td>
 								</tr>
-							</table>
+							</tbody></table>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
-					step="2"
-					pa-0
+				</v-stepper-window-item>
+				<v-stepper-window-item
+					:value="2"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eExperiencePoints2"
 						>
-							<VNumberFieldWithValidation
-								ref="experiencePointsEarned"
+							<VtNumberFieldWithValidation
+								ref="experiencePointsEarnedRef"
 								v-model="innerValue.experiencePointsEarned"
-								rules="required|decimal:1|min_value:0|max_value:12|"
 								vid="experiencePointsEarned"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.experiencePoints') + ' ' + $t('characters.earned')"
 							/>
 						</v-card-text>
 					</v-card>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eAchievementPoints2"
 						>
-							<VNumberFieldWithValidation
-								ref="achievementPointsEarned"
+							<VtNumberFieldWithValidation
+								ref="achievementPointsEarnedRef"
 								v-model="achievementPointsEarned"
-								rules="required|decimal:1|min_value:0|max_value:36|"
 								vid="achievementPointsEarned"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.achievementPoints') + ' ' + $t('characters.earned')"
 								:readonly="isAchievementPointsEarnedReadOnly"
 							/>
-							<VNumberFieldWithValidation
-								ref="achievementPointsSpent"
+							<VtNumberFieldWithValidation
+								ref="achievementPointsSpentRef"
 								v-model="innerValue.achievementPointsSpent"
-								rules="decimal:1|min_value:0|max_value:99|"
 								vid="achievementPointsSpent"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.achievementPoints') + ' ' + $t('characters.spent')"
 								step=".1"
 							/>
@@ -307,102 +297,100 @@
 					</v-card>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 						class="mt-2"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eDowntime2"
 						>
-							<VNumberFieldWithValidation
-								ref="downtimePointsEarned"
+							<VtNumberFieldWithValidation
+								ref="downtimePointsEarnedRef"
 								v-model="downtimePointsEarned"
-								rules="required|decimal:1|min_value:0|max_value:24|"
 								vid="downtimePointsEarned"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.downtime') + ' ' + $t('characters.earned')"
 								:readonly="isDowntimePointsReadOnly"
 							/>
-							<VNumberFieldWithValidation
-								ref="downtimePointsSpent"
+							<VtNumberFieldWithValidation
+								ref="downtimePointsSpentRef"
 								v-model="innerValue.downtimePointsSpent"
-								rules="decimal:1|min_value:0|max_value:8|"
 								vid="downtimePointsSpent"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.downtime') + ' ' + $t('characters.spent')"
 								step=".1"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
-					step="3"
-					pa-0
+				</v-stepper-window-item>
+				<v-stepper-window-item
+					:value="3"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eCurrency2"
 						>
-							<VNumberFieldWithValidation
-								ref="currencyEarned"
+							<VtNumberFieldWithValidation
+								ref="currencyEarnedRef"
 								v-model="innerValue.currencyEarned"
-								rules="required|decimal:2|min_value:0|max_value:100000|"
 								vid="currencyEarned"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.currency') + ' ' + $t('characters.gameSystems.pathfinder2e.currencyIncome')"
 								step=".01"
 							/>
-							<VNumberFieldWithValidation
-								ref="currencyIncomeEarned"
+							<VtNumberFieldWithValidation
+								ref="currencyIncomeEarnedRef"
 								v-model="innerValue.currencyIncomeEarned"
-								rules="decimal:2|min_value:0|max_value:1000|"
 								vid="currencyIncomeEarned"
+								:validation="validation"
 								:label="$t('characters.earned') + ' ' + $t('characters.gameSystems.pathfinder2e.currencyIncome')"
 								step=".01"
 							/>
-							<VNumberFieldWithValidation
-								ref="currencySpent"
+							<VtNumberFieldWithValidation
+								ref="currencySpentRef"
 								v-model="innerValue.currencySpent"
-								rules="decimal:2|min_value:0|max_value:100000|"
 								vid="currencySpent"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.currency') + ' ' + $t('characters.spent')"
 								step=".01"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
-					step="4"
-					pa-0
+				</v-stepper-window-item>
+				<v-stepper-window-item
+					:value="4"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eFame2"
 						>
-							<VSelectWithValidation
-								ref="fameFaction"
+							<VtSelectWithValidation
+								ref="fameFactionRef"
 								v-model="innerValue.fameFactionId"
-								rules="required|"
 								vid="fameFaction"
+								:validation="validation"
 								:items="factions"
 								:label="$t('characters.gameSystems.pathfinder2e.fame.name') + ' ' + $t('characters.gameSystems.pathfinder2e.faction')"
 							/>
-							<VNumberFieldWithValidation
-								ref="fameEarned"
+							<VtNumberFieldWithValidation
+								ref="fameEarnedRef"
 								v-model="fameEarned"
-								rules="required|decimal:1|min_value:0|max_value:12|"
 								vid="fameEarned"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.fame.name')"
 							/>
-							<VNumberFieldWithValidation
-								ref="fameSpent"
+							<VtNumberFieldWithValidation
+								ref="fameSpentRef"
 								v-model="innerValue.fameSpent"
-								rules="decimal:1|min_value:0|max_value:99|"
 								vid="fameSpent"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.fame.name') + ' ' + $t('characters.spent')"
 								step=".1"
 							/>
@@ -410,297 +398,295 @@
 					</v-card>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 						class="mt-2"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eReputation2"
 						>
-							<VSelectWithValidation
-								ref="reputationFaction"
+							<VtSelectWithValidation
+								ref="reputationFactionRef"
 								v-model="innerValue.reputationFactionId"
 								vid="reputationFaction"
+								:validation="validation"
 								:items="factions"
 								:label="$t('characters.gameSystems.pathfinder2e.reputation') + ' ' + $t('characters.gameSystems.pathfinder2e.faction')"
 							/>
-							<!-- <VNumberFieldWithValidation
-								ref="reputationEarned"
-								v-model="innerValue.reputationEarned"
-								rules="decimal:1|min_value:0|max_value:12|"
-								vid="reputationEarned"
-								:label="$t('characters.gameSystems.pathfinder2e.reputation') + ' ' + $t('characters.earned')"
-								step=".1"
-							/> -->
-							<VSelectWithValidation
+							<VtSelectWithValidation
 								v-if="isAdventureScenario"
-								ref="reputationAdditionalFaction"
+								ref="reputationAdditionalFactionRef"
 								v-model="innerValue.reputationAdditionalFactionId"
 								vid="reputationAdditionalFaction"
+								:validation="validation"
 								:items="factions"
 								:label="$t('characters.gameSystems.pathfinder2e.reputation') + ' ' + $t('characters.gameSystems.pathfinder2e.additional') + ' ' + $t('characters.gameSystems.pathfinder2e.faction')"
 							/>
-							<VNumberFieldWithValidation
+							<VtNumberFieldWithValidation
 								v-if="isAdventureScenario"
-								ref="reputationAdditionalEarned"
+								ref="reputationAdditionalEarnedRef"
 								v-model="innerValue.reputationAdditionalEarned"
-								rules="decimal:1|min_value:0|max_value:12|"
 								vid="reputationAdditionalEarned"
+								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.reputation') + ' ' + $t('characters.gameSystems.pathfinder2e.additional') + ' ' + $t('characters.earned')"
 								step=".1"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-				<v-stepper-content
-					step="5"
-					pa-0
+				</v-stepper-window-item>
+				<v-stepper-window-item
+					:value="5"
 					class="pa-0"
 				>
 					<v-card
 						tile
-						outlined
+						variant="flat"
 						class="mt-2"
 					>
 						<v-card-text
 							class="gameSystemScenarioCard pathfinder2eReputation2"
 						>
-							<VSelectWithValidation
-								ref="boon1"
+							<VtSelectWithValidation
+								ref="boon1Ref"
 								v-model="innerValue.boon1Id"
 								vid="boon1"
+								:validation="validation"
 								:items="boons"
 								:label="$t('characters.gameSystems.pathfinder2e.boons.name')"
 							/>
-							<VSelectWithValidation
-								ref="boon2"
+							<VtSelectWithValidation
+								ref="boon2Ref"
 								v-model="innerValue.boon2Id"
 								vid="boon2"
+								:validation="validation"
 								:items="boons"
 								:label="$t('characters.gameSystems.pathfinder2e.boons.name')"
 							/>
 						</v-card-text>
 					</v-card>
-				</v-stepper-content>
-			</v-stepper-items>
+				</v-stepper-window-item>
+			</v-stepper-window>
 		</v-stepper>
 		<ScenarioLookupDialog
-			ref="scenarioLookup"
+			ref="scenarioLookupRef"
 			:label="$t('characters.name')"
 			:signal="dialogScenarios.signal"
-			:fullscreen="fullscreenInternal"
 			:character-id="character ? character.id : null"
 			@cancel="dialogScenarios.cancel()"
 			@ok="dialogScenariosOk"
 		/>
-	</VFormDialog>
+	</VtFormDialog>
 </template>
 
 <script>
+import { computed, ref } from 'vue';
+
+import useVuelidate from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
+
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
-
-import baseScenarioDialog from '@/components/gameSystems/baseScenarioDialog';
-
-import ScenarioLookupDialog from '@/components/gameSystems/pathfinder2e/ScenarioLookupDialog';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
 import CharacterScenario from '@/common/gameSystems/pathfinder2e/data/characterScenario';
 
-import VCheckboxWithValidation from '@/library_vue_vuetify/components/form/VCheckboxWithValidation';
+import { useBaseScenarioDialogComponent } from '@/components/gameSystems/baseScenarioDialog';
+
+import ScenarioLookupDialog from '@/components/gameSystems/pathfinder2e/ScenarioLookupDialog';
+import VtCheckboxWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtCheckboxWithValidation';
+import VtDateTimePickerFieldWithValidationTemp from '@thzero/library_client_vue3_vuetify3/components/form/VtDateTimePickerFieldWithValidationTemp';
+import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
+import VtNumberFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberFieldWithValidation';
+import VtSelectWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtSelectWithValidation';
+import VtTextFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtTextFieldWithValidation';
 
 export default {
 	name: 'Pathfinder2eScenarioDialog',
 	components: {
 		ScenarioLookupDialog,
-		VCheckboxWithValidation
+		VtCheckboxWithValidation,
+		VtDateTimePickerFieldWithValidationTemp,
+		VtFormDialog,
+		VtNumberFieldWithValidation,
+		VtSelectWithValidation,
+		VtTextFieldWithValidation
 	},
-	extends: baseScenarioDialog,
-	data: () => ({
-		achievementPointsEarned: 0,
-		downtimePointsEarned: 0,
-		// experiencePointsEarned: 0,
-		fameEarned: 0,
- 		// scenarioResults
-		results1Checked: false,
-		results2Checked: false,
-		results3Checked: false,
-		results4Checked: false,
-		results6Checked: false,
-		results7Checked: false,
-		results1Description: null,
-		results2Description: null,
-		results3Description: null,
-		results4Description: null,
-		results5Description: null,
-		results6Description: null,
-		scenarioAdventureName: null
-	}),
-	computed: {
-		hasResults() { // scenarioResults
-			return this.results1Description || this.results2Description || this.results3Description || this.results4Description || this.results5Description || this.results6Description;
+	props: {
+		signal: {
+			type: Boolean,
+			default: false
 		},
-		isAchievementPointsEarnedReadOnly() {
-			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.correlationId(), this.innerValue);
-		},
-		isAdventureScenario() {
-			return this.rulesGameSystem.isAdventureScenario(this.correlationId(), this.innerValue);
-		},
-		isDowntimePointsReadOnly() {
-			return this.rulesGameSystem.isAchievementPointsEarnedReadOnly(this.correlationId(), this.innerValue);
+		character: {
+			type: Object,
+			default: null
 		}
 	},
-	methods: {
-		dialogScenariosOkI(correlationId, id) {
-			this.$set(this.innerValue, 'scenario', GlobalUtility.$store.getters.getScenario(this.innerValue.scenarioId));
-			this.achievementPointsEarned = this.rulesGameSystem.calculateScenarioAchievementPointsEarned(correlationId, this.innerValue);
-			this.downtimePointsEarned = this.rulesGameSystem.calculateScenarioDowntimePointsEarned(correlationId, this.innerValue);
-			this.fameEarned = this.rulesGameSystem.calculateScenarioFameEarned(correlationId, this.innerValue);
+	emits: ['cancel', 'ok'],
+	setup(props, context) {
+		const rulesGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
+		const serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
 
-			if (this.innerValue.status != SharedConstants.CharactersStatus.ACTIVE) {
-				this.achievementPointsEarned = 0;
-				this.downtimePointsEarned = 0;
-				this.fameEarned = 0;
-				this.innerValue.currencyIncomeEarned = 0;
-				this.innerValue.currencyEarned = 0;
-			}
-		},
-		gameSystemId() {
-			return SharedConstants.GameSystems.Pathfinder2e.id;
-		},
-		initResponseDetails(correlationId, details) {
-			// details.achievementPointsEarned = this.rulesGameSystem.clean(this.achievementPointsEarned);
-			details.achievementPointsEarned = this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.achievementPointsEarned));
+		// Leaf-local reactive state (was Vue2 data()).
+		const achievementPointsEarned = ref(0);
+		const downtimePointsEarned = ref(0);
+		const fameEarned = ref(0);
+		const results1Checked = ref(false);
+		const results2Checked = ref(false);
+		const results3Checked = ref(false);
+		const results4Checked = ref(false);
+		const results5Checked = ref(false);
+		const results6Checked = ref(false);
+		const results1Description = ref(null);
+		const results2Description = ref(null);
+		const results3Description = ref(null);
+		const results4Description = ref(null);
+		const results5Description = ref(null);
+		const results6Description = ref(null);
+		const scenarioAdventureName = ref(null);
 
-			// details.achievementPointsSpent = this.rulesGameSystem.clean(this.innerValue.achievementPointsSpent);
-			details.achievementPointsSpent = this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.innerValue.achievementPointsSpent));
+		const successResult = (correlationId, value, i, checked) => {
+			if (!value.scenarioSuccessResults)
+				value.scenarioSuccessResults = [];
+			LibraryCommonUtility.deleteArrayById(value.scenarioSuccessResults, i);
+			value.scenarioSuccessResults.push({ id: i, checked: checked });
+		};
+		const successResultChecked = (correlationId, value, id) => {
+			if (!value || !value.scenarioSuccessResults || String.isNullOrEmpty(id))
+				return false;
+			const item = value.scenarioSuccessResults.find(l => l.id === id);
+			if (!item)
+				return false;
+			return item.checked;
+		};
 
-			details.boon1Id = this.innerValue.boon1Id;
-			details.boon2Id = this.innerValue.boon2Id;
-			details.downtimePointsEarned = this.rulesGameSystem.clean(this.downtimePointsEarned);
-			details.downtimePointsSpent = this.rulesGameSystem.clean(this.innerValue.downtimePointsSpent);
-			details.fameFactionId = this.innerValue.fameFactionId;
+		const base = useBaseScenarioDialogComponent(props, context, {
+			serviceGameSystem,
+			rulesGameSystem,
+			gameSystemId: () => SharedConstants.GameSystems.Pathfinder2e.id,
+			initScenario: () => new CharacterScenario(),
+			dialogScenariosOkI: (correlationId, id) => {
+				base.innerValue.value.scenario = LibraryClientUtility.$store.getters.getScenario(correlationId, base.innerValue.value.scenarioId);
+				achievementPointsEarned.value = rulesGameSystem.calculateScenarioAchievementPointsEarned(correlationId, base.innerValue.value);
+				downtimePointsEarned.value = rulesGameSystem.calculateScenarioDowntimePointsEarned(correlationId, base.innerValue.value);
+				fameEarned.value = rulesGameSystem.calculateScenarioFameEarned(correlationId, base.innerValue.value);
 
-			// details.fameEarned = this.rulesGameSystem.clean(this.fameEarned);
-			details.fameEarned = this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.fameEarned));
+				if (base.innerValue.value.status != SharedConstants.CharactersStatus.ACTIVE) {
+					achievementPointsEarned.value = 0;
+					downtimePointsEarned.value = 0;
+					fameEarned.value = 0;
+					base.innerValue.value.currencyIncomeEarned = 0;
+					base.innerValue.value.currencyEarned = 0;
+				}
+			},
+			onChangeI: (correlationId, newValue, recalculateScenario) => {
+				if (base.previousValue.value) {
+					recalculateScenario |= (base.previousValue.value.scenarioEvent != newValue.scenarioEvent);
+					recalculateScenario |= (base.previousValue.value.scenarioStatus != newValue.scenarioStatus);
+					recalculateScenario |= (base.previousValue.value.scenarioParticipant != newValue.scenarioParticipant);
+				}
+				achievementPointsEarned.value = newValue && newValue.achievementPointsEarned ? newValue.achievementPointsEarned : 0;
+				downtimePointsEarned.value = newValue && newValue.downtimePointsEarned ? newValue.downtimePointsEarned : 0;
+				fameEarned.value = newValue && newValue.fameEarned ? newValue.fameEarned : 0;
+				scenarioAdventureName.value = serviceGameSystem.scenarioLookupAdventureName(correlationId, newValue.scenario ? newValue.scenario.type : null, base.lookups.value);
+				return recalculateScenario;
+			},
+			initResponseDetails: (correlationId, details) => {
+				details.achievementPointsEarned = rulesGameSystem.cleanDecimal(rulesGameSystem.clean(achievementPointsEarned.value));
+				details.achievementPointsSpent = rulesGameSystem.cleanDecimal(rulesGameSystem.clean(base.innerValue.value.achievementPointsSpent));
+				details.boon1Id = base.innerValue.value.boon1Id;
+				details.boon2Id = base.innerValue.value.boon2Id;
+				details.downtimePointsEarned = rulesGameSystem.clean(downtimePointsEarned.value);
+				details.downtimePointsSpent = rulesGameSystem.clean(base.innerValue.value.downtimePointsSpent);
+				details.fameFactionId = base.innerValue.value.fameFactionId;
+				details.fameEarned = rulesGameSystem.cleanDecimal(rulesGameSystem.clean(fameEarned.value));
+				details.fameSpent = rulesGameSystem.cleanDecimal(rulesGameSystem.clean(base.innerValue.value.fameSpent));
+				details.reputationFactionId = base.innerValue.value.fameFactionId;
+				details.reputationEarned = details.fameEarned;
+				details.reputationAdditionalFactionId = base.innerValue.value.reputationAdditionalFactionId;
+				details.reputationAdditionalEarned = rulesGameSystem.cleanDecimal(rulesGameSystem.clean(base.innerValue.value.reputationAdditionalEarned));
+				details.scenarioAdvancementSpeed = base.innerValue.value.scenarioAdvancementSpeed;
+				details.scenarioEvent = base.innerValue.value.scenarioEvent;
 
-			// details.fameSpent = this.rulesGameSystem.clean(this.innerValue.fameSpent);
-			details.fameSpent = this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.innerValue.fameSpent));
+				successResult(correlationId, details, 1, results1Checked.value);
+				successResult(correlationId, details, 2, results2Checked.value);
+				successResult(correlationId, details, 3, results3Checked.value);
+				successResult(correlationId, details, 4, results4Checked.value);
+				successResult(correlationId, details, 5, results5Checked.value);
+				successResult(correlationId, details, 6, results6Checked.value);
 
-			details.reputationFactionId = this.innerValue.fameFactionId;
+				return details;
+			},
+			resetDialogI: async (correlationId, value) => {
+				await LibraryClientUtility.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, props.character ? props.character.id : null);
+				achievementPointsEarned.value = value && value.achievementPointsEarned ? value.achievementPointsEarned : 0;
+				downtimePointsEarned.value = value && value.downtimePointsEarned ? value.downtimePointsEarned : 0;
+				fameEarned.value = value && value.fameEarned ? value.fameEarned : 0;
+				value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : props.character.factionId;
+				value.reputationFactionId = value && value.reputationFactionId ? value.reputationFactionId : props.character.factionId;
 
-			// details.reputationEarned = this.rulesGameSystem.calculateScenarioReputationEarned(correlationId, this.innerValue);
-			details.reputationEarned = details.fameEarned;
-
-			details.reputationAdditionalFactionId = this.innerValue.reputationAdditionalFactionId;
-			// details.reputationAdditionalEarned = this.rulesGameSystem.clean(this.innerValue.reputationAdditionalEarned);
-			details.reputationAdditionalEarned = this.rulesGameSystem.cleanDecimal(this.rulesGameSystem.clean(this.innerValue.reputationAdditionalEarned));
-
-			details.scenarioAdvancementSpeed = this.innerValue.scenarioAdvancementSpeed;
-			details.scenarioEvent = this.innerValue.scenarioEvent;
-
- 			// scenarioResults
-			this.successResult(correlationId, details, 1, this.results1Checked);
-			this.successResult(correlationId, details, 2, this.results2Checked);
-			this.successResult(correlationId, details, 3, this.results3Checked);
-			this.successResult(correlationId, details, 4, this.results4Checked);
-			this.successResult(correlationId, details, 5, this.results5Checked);
-			this.successResult(correlationId, details, 6, this.results6Checked);
-
-			return details;
-		},
-		initScenario() {
-			return new CharacterScenario();
-		},
-		initializeServices() {
-			this.rulesGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_PATHFINDER_2E);
-			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_PATHFINDER_2E);
-		},
-		// eslint-disable-next-line
-		onChangeI(correlationId, newValue, recalculateScenario) {
-			if (this.previousValue) {
-				recalculateScenario |= (this.previousValue.scenarioEvent != newValue.scenarioEvent);
-				recalculateScenario |= (this.previousValue.scenarioStatus != newValue.scenarioStatus);
-				recalculateScenario |= (this.previousValue.scenarioParticipant != newValue.scenarioParticipant);
-			}
-			this.achievementPointsEarned = newValue && newValue.achievementPointsEarned ? newValue.achievementPointsEarned : 0;
-			this.downtimePointsEarned = newValue && newValue.downtimePointsEarned ? newValue.downtimePointsEarned : 0;
-			this.fameEarned = newValue && newValue.fameEarned ? newValue.fameEarned : 0;
-			// value.fameFactionId = newValue && newValue.fameFactionId ? newValue.fameFactionId : this.character.factionId;
-			// value.reputationFactionId = newValue && newValue.reputationFactionId ? newValue.reputationFactionId : this.character.factionId;
-			this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, newValue.scenario ? newValue.scenario.type : null, this.lookups);
-
-			return recalculateScenario;
-		},
-		async resetDialogI(correlationId, value) {
-			await GlobalUtility.$store.dispatcher.scenarios.getScenarioListingPlayed(correlationId, this.character ? this.character.id : null);
-			// GlobalUtility.$set(value, 'scenario', GlobalUtility.$store.getters.getScenario(value.scenarioId));
-			this.achievementPointsEarned = value && value.achievementPointsEarned ? value.achievementPointsEarned : 0;
-			this.downtimePointsEarned = value && value.downtimePointsEarned ? value.downtimePointsEarned : 0;
-			this.fameEarned = value && value.fameEarned ? value.fameEarned : 0;
-			value.fameFactionId = value && value.fameFactionId ? value.fameFactionId : this.character.factionId;
-			value.reputationFactionId = value && value.reputationFactionId ? value.reputationFactionId	: this.character.factionId;
-			// this.scenarioAdventureName = this.serviceGameSystem.scenarioLookupAdventureName(correlationId, value.scenario ? value.scenario.type : null, this.lookups);
-
- 			// scenarioResults
-			if (value.scenario && value.scenario.successResults) {
-				let item;
-				for (let i = 1; i < 7; i++) {
-					item = value.scenario.successResults.find(l => l.id === i);
-					if (!item)
-						continue;
-
-					if (i === 1) {
-						this.results1Description = item.description;
-						this.results1Checked = this.successResultChecked(correlationId, value, item.id);
-					}
-					else if (i === 2) {
-						this.results2Description = item.description;
-						this.results2Checked = this.successResultChecked(correlationId, value, item.id);
-					}
-					else if (i === 3) {
-						this.results3Description = item.description;
-						this.results3Checked = this.successResultChecked(correlationId, value, item.id);
-					}
-					else if (i === 4) {
-						this.results4Description = item.description;
-						this.results4Checked = this.successResultChecked(correlationId, value, item.id);
-					}
-					else if (i === 5) {
-						this.results5Description = item.description;
-						this.results5Checked = this.successResultChecked(correlationId, value, item.id);
-					}
-					else if (i === 6) {
-						this.results6Description = item.description;
-						this.results6Checked = this.successResultChecked(correlationId, value, item.id);
+				if (value.scenario && value.scenario.successResults) {
+					const descriptions = [results1Description, results2Description, results3Description, results4Description, results5Description, results6Description];
+					const checkeds = [results1Checked, results2Checked, results3Checked, results4Checked, results5Checked, results6Checked];
+					for (let i = 1; i < 7; i++) {
+						const item = value.scenario.successResults.find(l => l.id === i);
+						if (!item)
+							continue;
+						descriptions[i - 1].value = item.description;
+						checkeds[i - 1].value = successResultChecked(correlationId, value, item.id);
 					}
 				}
 			}
-		},
-		successResult(correlationId, value, i, checked) {
-			if (!value.scenarioSuccessResults)
-				value.scenarioSuccessResults = [];
+		});
 
-			LibraryUtility.deleteArrayById(value.scenarioSuccessResults, i);
-			value.scenarioSuccessResults.push({ id: i, checked: checked });
-		},
-		successResultChecked(correlationId, value, id) {
-			if (!value || !value.scenarioSuccessResults || String.isNullOrEmpty(id))
-				return false;
+		const hasResults = computed(() => {
+			return results1Description.value || results2Description.value || results3Description.value || results4Description.value || results5Description.value || results6Description.value;
+		});
+		const isAchievementPointsEarnedReadOnly = computed(() => {
+			return rulesGameSystem.isAchievementPointsEarnedReadOnly(base.correlationId(), base.innerValue.value);
+		});
+		const isAdventureScenario = computed(() => {
+			return rulesGameSystem.isAdventureScenario(base.correlationId(), base.innerValue.value);
+		});
+		const isDowntimePointsReadOnly = computed(() => {
+			return rulesGameSystem.isAchievementPointsEarnedReadOnly(base.correlationId(), base.innerValue.value);
+		});
 
-			let item = value.scenarioSuccessResults.find(l => l.id === id);
-			if (!item)
-				return false;
-
-			return item.checked;
-		}
+		return {
+			...base,
+			achievementPointsEarned,
+			downtimePointsEarned,
+			fameEarned,
+			results1Checked,
+			results2Checked,
+			results3Checked,
+			results4Checked,
+			results5Checked,
+			results6Checked,
+			results1Description,
+			results2Description,
+			results3Description,
+			results4Description,
+			results5Description,
+			results6Description,
+			scenarioAdventureName,
+			hasResults,
+			isAchievementPointsEarnedReadOnly,
+			isAdventureScenario,
+			isDowntimePointsReadOnly,
+			validation: useVuelidate({ $scope: 'Pathfinder2eScenarioDialog' })
+		};
+	},
+	validations() {
+		return {
+			scenarioName: {
+				required,
+				$autoDirty: true
+			}
+		};
 	}
 };
 </script>
 
 <style scoped>
-.gameSystemScenarioCard {
-	padding-top: 2px;
-}
 </style>

@@ -1,70 +1,76 @@
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import { computed, ref } from 'vue';
 
-import baseDashboard from '@/components/baseDashboard';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import { useBaseDashboardComponent } from '@/components/baseDashboard';
 
-export default {
-	name: 'BaseBoonDashboard',
-	extends: baseDashboard,
-	data: () => ({
-		dialogBoon: new DialogSupport(),
-		dialogBoonItem: null
-	}),
-	computed: {
-		boons() {
-			const correlationId = this.correlationId();
-			const results = this.value && this.value.boons ? this.value.boons : [];
-			const scenarios = this.value && this.value.scenarios ? this.value.scenarios : [];
-			for (const scenario of scenarios)
-				this.boonsScenario(correlationId, results, scenario);
-			for (const result of results)
-				result.name = this.boonName(correlationId, result.boonId);
-			return LibraryUtility.sortByName(results, true);
-		}
-	},
-	methods: {
-		boonName(id) {
-			return this.serviceGameSystem.boonNameById(this.correlationId(), id, GlobalUtility.$store);
-		},
-		async dialogBoonEdit(value) {
-			if (!value)
-				return;
-			await this.$refs.boonDialog.reset(this.correlationId(), this.clone(value));
-			this.dialogBoon.open();
-		},
-		async dialogBoonNew() {
-			let item = this.initializeCharacterBoon(this.correlationId());
-			delete item.id;
-			await this.$refs.boonDialog.reset(this.correlationId(), item);
-			this.dialogBoon.open();
-		},
-		initializeCharacterBoon(correlationId) {
-			return this.serviceGameSystem.initializeCharacterBoon(correlationId, this.value);
-		},
-		initializeCharacterBoon2(correlationId, boonId, scenario) {
-			const results = this.initializeCharacterBoon(correlationId);
-			results.boonId = boonId;
-			results.locationId = scenario.locationId;
-			results.scenario = scenario;
-			results.timestamp = scenario.timestamp;
-			return results;
-		},
-		sortByName(values, ascending) {
-			if (!values || !Array.isArray(values))
-				return values;
+import DialogSupport from '@thzero/library_client_vue3/components/support/dialog';
 
-			if (ascending)
-				return values.sort((a, b) => LibraryUtility.sortByString(a, b, (v) => { return v && v.scenario ? v.scenario.name : null; }));
+// Base boon-dashboard composable. Leaf owns the template + registers its Boon/BoonDialog/CharacterDetails
+// children and passes options { serviceGameSystem, boonsScenario(correlationId, results, scenario) }.
+export function useBaseBoonDashboardComponent(props, context, options) {
+	const base = useBaseDashboardComponent(props, context, options);
 
-			return values.sort((a, b) => LibraryUtility.sortByString(b, a, (v) => { return v && v.scenario ? v.scenario.name : null; }));
-		}
-	}
+	const boonDialogRef = ref(null);
+	const dialogBoon = ref(new DialogSupport());
+	const dialogBoonItem = ref(null);
+
+	const boonName = (id) => {
+		return base.serviceGameSystem.boonNameById(base.correlationId(), id, LibraryClientUtility.$store);
+	};
+	const initializeCharacterBoon = (correlationId) => {
+		return base.serviceGameSystem.initializeCharacterBoon(correlationId, props.value);
+	};
+	const initializeCharacterBoon2 = (correlationId, boonId, scenario) => {
+		const results = initializeCharacterBoon(correlationId);
+		results.boonId = boonId;
+		results.locationId = scenario.locationId;
+		results.scenario = scenario;
+		results.timestamp = scenario.timestamp;
+		return results;
+	};
+	const boonsScenario = (correlationId, results, scenario) => {
+		if (options.boonsScenario)
+			options.boonsScenario(correlationId, results, scenario, initializeCharacterBoon2);
+	};
+
+	const boons = computed(() => {
+		const correlationId = base.correlationId();
+		const results = props.value && props.value.boons ? props.value.boons : [];
+		const scenarios = props.value && props.value.scenarios ? props.value.scenarios : [];
+		for (const scenario of scenarios)
+			boonsScenario(correlationId, results, scenario);
+		for (const result of results)
+			result.name = boonName(result.boonId);
+		return LibraryCommonUtility.sortByName(results, true);
+	});
+
+	const dialogBoonEdit = async (value) => {
+		if (!value)
+			return;
+		await boonDialogRef.value.reset(base.correlationId(), LibraryCommonUtility.cloneDeep(value));
+		dialogBoon.value.open();
+	};
+	const dialogBoonNew = async () => {
+		let item = initializeCharacterBoon(base.correlationId());
+		delete item.id;
+		await boonDialogRef.value.reset(base.correlationId(), item);
+		dialogBoon.value.open();
+	};
+
+	return {
+		...base,
+		boonDialogRef,
+		dialogBoon,
+		dialogBoonItem,
+		boons,
+		boonName,
+		initializeCharacterBoon,
+		initializeCharacterBoon2,
+		dialogBoonEdit,
+		dialogBoonNew
+	};
 };
 </script>
-
-<style scoped>
-</style>
-

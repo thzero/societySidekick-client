@@ -1,42 +1,52 @@
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { ref } from 'vue';
 
-import baseDashboard from '@/components/baseDashboard';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import { useBaseDashboardComponent } from '@/components/baseDashboard';
 
-export default {
-	name: 'BaseScenarioDashboard',
-	extends: baseDashboard,
-	data: () => ({
-		dialogScenario: new DialogSupport(),
-		dialogScenarioItem: null
-	}),
-	methods: {
-		boonName(id) {
-			return this.serviceGameSystem.boonNameById(this.correlationId(), id, GlobalUtility.$store);
-		},
-		async dialogScenarioEdit(value) {
-			if (!value)
-				return;
-			await this.$refs.scenarioDialog.reset(this.correlationId(), this.clone(value));
-			this.dialogScenario.open();
-		},
-		async dialogScenarioNew() {
-			const correlationId = this.correlationId();
-			let item = this.initializeCharacterScenario(correlationId);
-			delete item.id;
-			item.fameFactionId = this.value.factionId;
-			await this.$refs.scenarioDialog.reset(correlationId, item);
-			this.dialogScenario.open();
-		},
-		initializeCharacterScenario(correlationId) {
-			return this.serviceGameSystem.initializeCharacterScenario(correlationId, this.value);
-		}
-	}
+import DialogSupport from '@thzero/library_client_vue3/components/support/dialog';
+
+// Base scenario-dashboard composable. Leaf owns the template + registers its Scenario/ScenarioDialog/
+// CharacterDetails children and passes options { serviceGameSystem }.
+export function useBaseScenarioDashboardComponent(props, context, options) {
+	const base = useBaseDashboardComponent(props, context, options);
+
+	const scenarioDialogRef = ref(null);
+	const dialogScenario = ref(new DialogSupport());
+	const dialogScenarioItem = ref(null);
+
+	const boonName = (id) => {
+		return base.serviceGameSystem.boonNameById(base.correlationId(), id, LibraryClientUtility.$store);
+	};
+	const initializeCharacterScenario = (correlationId) => {
+		return base.serviceGameSystem.initializeCharacterScenario(correlationId, props.value);
+	};
+	const dialogScenarioEdit = async (value) => {
+		if (!value)
+			return;
+		await scenarioDialogRef.value.reset(base.correlationId(), LibraryCommonUtility.cloneDeep(value));
+		dialogScenario.value.open();
+	};
+	const dialogScenarioNew = async () => {
+		const correlationId = base.correlationId();
+		const item = initializeCharacterScenario(correlationId);
+		delete item.id;
+		item.fameFactionId = props.value.factionId;
+		await scenarioDialogRef.value.reset(correlationId, item);
+		dialogScenario.value.open();
+	};
+
+	return {
+		...base,
+		scenarioDialogRef,
+		dialogScenario,
+		dialogScenarioItem,
+		boonName,
+		initializeCharacterScenario,
+		dialogScenarioEdit,
+		dialogScenarioNew
+	};
 };
 </script>
-
-<style scoped>
-</style>
-

@@ -1,94 +1,69 @@
 <script>
+import { computed, onMounted, ref, watch } from 'vue';
+
 import Constants from '@/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
-import baseEdit from '@/library_vue/components/baseEdit';
+import { useBaseEditComponent } from '@/components/baseEdit';
 
-export default {
-	name: 'BaseDashboard',
-	extends: baseEdit,
-	props: {
-		value: {
-			type: Object,
-			default: null
-		}
-	},
-	data: () => ({
-		collapseInner: false,
-		editable : false,
-		serviceCharacter: null,
-		serviceGameSystem: null
-	}),
-	computed: {
-		collapse: {
-			get: function () {
-				return this.collapseInner;
-			},
-			set: function (newVal) {
-				this.collapseInner = newVal;
-			}
-		}
-	},
-	created() {
-		this.serviceCharacter = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-		this.initializeServices();
-	},
-	async mounted() {
-		this.editable = false;
+// Base dashboard composable. The leaf provides its game-system service via options.serviceGameSystem.
+export function useBaseDashboardComponent(props, context, options) {
+	const base = useBaseEditComponent(props, context, options);
 
-		await this.changeValue(this.value);
+	const serviceGameSystem = (options && options.serviceGameSystem) ? options.serviceGameSystem : null;
+	const serviceCharacter = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
 
-		// TODO: This is dumb...	we are waiting so that we don't reload a couple of times
-		const self = this;
-		const timer = setInterval(async () => {
-			clearInterval(timer);
-			self.$watch('value', async (newVal) => {
-				await self.changeValue(newVal);
-			});
-		}, 150);
-	},
-	methods: {
-		async changeValue(value) {
-			if (this.observerIsNull(value))
-				return;
+	const collapseInner = ref(false);
+	const editable = ref(false);
 
-			this.editable = await this.serviceCharacter.validateEdit(this.value, GlobalUtility.$store.state.user.user, 'edit');
-			this.editable = true; // TOOD: Uh why is this still editable?
+	const collapse = computed({
+		get() {
+			return collapseInner.value;
 		},
-		getGameSystemName(id) {
-			const results = GlobalUtility.$store.getters.getGameSystem(id);
-			return results ? results.name : '';
-		},
-		initializeServices() {
-			this.notImplementedError();
+		set(newVal) {
+			collapseInner.value = newVal;
 		}
-	}
+	});
+
+	const changeValue = async (value) => {
+		if (!value)
+			return;
+
+		// 0.18 signature: validateEdit(correlationId, character, user, act). This path isn't verified
+		// yet and can throw, which previously left editable=false and hid every edit control (the
+		// details speed-dial, the scenario/boon "+" FABs). Guard it so the forced value below always
+		// applies. TODO(migration): restore the real ownership check once validateEdit is confirmed.
+		try {
+			editable.value = await serviceCharacter.validateEdit(base.correlationId(), props.value, LibraryClientUtility.$store.user.user, 'edit');
+		}
+		catch {
+			// fall through to the forced value below
+		}
+		editable.value = true; // TODO(migration): original forced editable = true here.
+	};
+	const getGameSystemName = (id) => {
+		const results = LibraryClientUtility.$store.getters.getGameSystem(base.correlationId(), id);
+		return results ? results.name : '';
+	};
+
+	onMounted(async () => {
+		editable.value = false;
+		await changeValue(props.value);
+	});
+	watch(() => props.value, async (newVal) => {
+		await changeValue(newVal);
+	});
+
+	return {
+		...base,
+		serviceGameSystem,
+		serviceCharacter,
+		collapseInner,
+		editable,
+		collapse,
+		changeValue,
+		getGameSystemName
+	};
 };
 </script>
-
-<style scoped>
-	td {
-		padding-left: 4px;
-		padding-bottom: 1px;
-		padding-right: 4px;
-		padding-top: 4px;
-		text-align: middle;
-		border-spacing: 4px 0px 0px 0px;
-		border-top-right-radius: 4px;
-		border-bottom-right-radius: 4px;
-		border-top-left-radius: 4px;
-		border-bottom-left-radius: 4px;
-	}
-	th {
-		padding-left: 4px;
-		padding-bottom: 1px;
-		padding-top: 4px;
-		text-align: middle;
-		border-top-right-radius: 4px;
-		border-bottom-right-radius: 4px;
-		border-top-left-radius: 4px;
-		border-bottom-left-radius: 4px;
-	}
-</style>
-

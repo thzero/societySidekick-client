@@ -1,10 +1,8 @@
 <template>
-	<v-layout
-		wrap
-	>
-		<v-flex
-			xs12
-			pb-2
+	<v-row>
+		<v-col
+			cols="12"
+			class="pb-2"
 		>
 			<v-card>
 				<v-card-text>
@@ -15,16 +13,42 @@
 					</div>
 				</v-card-text>
 			</v-card>
-		</v-flex>
-	</v-layout>
+		</v-col>
+	</v-row>
 </template>
 
 <script>
-import baseSupport from '@/library_vue/components/baseSupport';
+import { useBaseSupportComponent } from '@thzero/library_client_vue3/components/baseSupport';
 
 export default {
 	name: 'Support',
-	extends: baseSupport
+	setup(props, context) {
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse
+		} = useBaseSupportComponent(props, context);
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse
+		};
+	}
 };
 </script>
 

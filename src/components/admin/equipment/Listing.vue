@@ -1,13 +1,12 @@
 <template>
-	<v-container pa-0>
+	<v-container class="pa-0">
 		<v-row>
 			<v-col>
 				<v-data-table
 					:headers="headers"
 					:items="equipment"
 					multi-sort
-					:sort-by="[ 'gameSystemId', 'name' ]"
-					:sort-desc="[ true, false, false, false ]"
+					:sort-by="[ { key: 'gameSystemId', order: 'desc' }, { key: 'name', order: 'asc' } ]"
 					class="elevation-1"
 				>
 					<template #top>
@@ -24,7 +23,6 @@
 							<v-spacer />
 							<v-btn
 								color="primary"
-								dark
 								class="mb-2"
 								@click="dialogEditOpen(null, true)"
 							>
@@ -40,32 +38,31 @@
 					</template>
 					<template #[`item.action`]="{ item }">
 						<v-icon
-							small
+							size="small"
 							class="mr-2"
 							@click="dialogEditOpen(item, false)"
 						>
-							edit
+							mdi-pencil
 						</v-icon>
 						<v-icon
-							small
+							size="small"
 							@click="dialogDeleteOpen(item)"
 						>
-							delete
+							mdi-delete
 						</v-icon>
 					</template>
 					<template #no-data>
 						{{ $t('equipment.noData') }}
 					</template>
 				</v-data-table>
-
 				<EditDialog
-					ref="editDialog"
+					ref="editDialogRef"
 					:label="dialogEditItemTitle"
 					:signal="dialogEditSignal.signal"
 					@cancel="dialogEditCancel"
 					@ok="dialogEditOk"
 				/>
-				<VConfirmationDialog
+				<VtConfirmationDialog
 					:non-recoverable="true"
 					:signal="dialogDeleteSignal.signal"
 					:pre-complete-ok="dialogDeletePreCompleteOk"
@@ -78,47 +75,60 @@
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import { computed, onMounted, ref } from 'vue';
 
-import baseListing from '@/components/admin/baseListing';
-import EditDialog from '@/components/admin/equipment/EditDialog';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import EquipmentData from '@/common/data/equipment';
+
+import { useAdminBaseListingComponent } from '@/components/admin/baseListing';
+
+import EditDialog from '@/components/admin/equipment/EditDialog';
+import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
 
 export default {
 	name: 'BaseAdminEquipmentListing',
 	components: {
-		EditDialog
+		EditDialog,
+		VtConfirmationDialog
 	},
-	extends: baseListing,
-	computed: {
-		equipment() {
-			const equipment = GlobalUtility.$store.state.adminEquipment.equipment;
+	setup(props, context) {
+		const editDialogRef = ref(null);
+
+		const base = useAdminBaseListingComponent(props, context, {
+			editDialogRef,
+			defaultItem: () => new EquipmentData(),
+			initializeHeaders: () => [
+				{ title: LibraryClientUtility.$trans.t('equipment.name'), align: 'start', key: 'name' },
+				{ title: LibraryClientUtility.$trans.t('equipment.category'), align: 'start', key: 'category' },
+				{ title: LibraryClientUtility.$trans.t('equipment.gameSystem'), align: 'start', key: 'gameSystemId' },
+				{ title: LibraryClientUtility.$trans.t('equipment.actions'), align: 'end', key: 'action', sortable: false }
+			],
+			async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+				return await dispatcher.adminEquipment.deleteAdminEquipment(correlationId, id);
+			}
+		});
+
+		const getCategoryName = (gameSystemId, category) => {
+			const lookups = base.getLookupsByGameSystemId(gameSystemId);
+			return lookups ? base.getLookupName(lookups.equipmentCategories, category) : '';
+		};
+
+		const equipment = computed(() => {
+			const equipment = LibraryClientUtility.$store.adminEquipment.equipment;
 			return equipment ? equipment.slice(0) : [];
-		}
-	},
-	async mounted() {
-		await GlobalUtility.$store.dispatcher.adminEquipment.searchEquipment(this.correlationId(), {});
-	},
-	methods: {
-		defaultItem() {
-			return new EquipmentData();
-		},
-		async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
-			return await dispatcher.adminEquipment.deleteAdminEquipment(correlationId, id);
-		},
-		getCategoryName(gameSystemId, category) {
-			const lookups = this.getLookupsByGameSystemId(gameSystemId);
-			return lookups ? this.getLookupName(lookups.equipmentCategories, category) : '';
-		},
-		initializeHeaders() {
-			return [
-				{ text: GlobalUtility.$trans.t('equipment.name'), align: 'left', value: 'name', },
-				{ text: GlobalUtility.$trans.t('equipment.category'), align: 'left', value: 'category' },
-				{ text: GlobalUtility.$trans.t('equipment.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: GlobalUtility.$trans.t('equipment.actions'), align: 'right', value: 'action', sortable: false }
-			];
-		}
+		});
+
+		onMounted(async () => {
+			await LibraryClientUtility.$store.dispatcher.adminEquipment.searchEquipment(base.correlationId(), {});
+		});
+
+		return {
+			...base,
+			editDialogRef,
+			getCategoryName,
+			equipment
+		};
 	}
 };
 </script>

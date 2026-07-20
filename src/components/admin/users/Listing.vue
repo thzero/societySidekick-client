@@ -1,56 +1,30 @@
 <template>
-	<v-container pa-0>
+	<v-container class="pa-0">
 		<v-row>
 			<v-col>
 				<v-data-table
 					:headers="headers"
 					:items="users"
 					multi-sort
-					:sort-by="[ 'gameSystemId', 'season', 'scenario', 'name' ]"
-					:sort-desc="[ true, false, false, false ]"
+					:sort-by="[ { key: 'external.name', order: 'asc' } ]"
 					class="elevation-1"
 				>
-					<template #top>
-						<v-toolbar
-							flat
-							color="white"
-						>
-							<v-toolbar-title>{{ $t('titles.users') }}</v-toolbar-title>
-							<v-divider
-								class="mx-4"
-								inset
-								vertical
-							/>
-							<v-spacer />
-							<v-btn
-								color="primary"
-								dark
-								class="mb-2"
-								@click="dialogEditOpen(null, true)"
-							>
-								{{ $t('titles.new') }}
-							</v-btn>
-						</v-toolbar>
-					</template>
-					<template #[`item.gameSystemId`]="{ item }">
-						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
-					</template>
 					<template #[`item.roles`]="{ item }">
 						<span>{{ item && item.roles ? item.roles.join(', ') : '' }}</span>
 					</template>
 					<template #[`item.action`]="{ item }">
 						<v-icon
-							small
+							size="small"
 							class="mr-2"
 							@click="dialogEditOpen(item, false)"
 						>
-							edit
+							mdi-pencil
 						</v-icon>
 						<v-icon
-							small
+							size="small"
 							@click="dialogDeleteOpen(item)"
 						>
-							delete
+							mdi-delete
 						</v-icon>
 					</template>
 					<template #no-data>
@@ -58,13 +32,13 @@
 					</template>
 				</v-data-table>
 				<EditDialog
-					ref="editDialog"
+					ref="editDialogRef"
 					:label="dialogEditItemTitle"
 					:signal="dialogEditSignal.signal"
 					@cancel="dialogEditCancel"
 					@ok="dialogEditOk"
 				/>
-				<VConfirmationDialog
+				<VtConfirmationDialog
 					:non-recoverable="true"
 					:signal="dialogDeleteSignal.signal"
 					:pre-complete-ok="dialogDeletePreCompleteOk"
@@ -77,21 +51,55 @@
 </template>
 
 <script>
-import baseListing from '@/library_vue_vuetify/components/admin/users/baseListing';
-import EditDialog from '@/components/admin/users/EditDialog';
+import { computed, onMounted, ref } from 'vue';
+
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import UserData from '@/common/data/user';
+
+import { useAdminBaseListingComponent } from '@/components/admin/baseListing';
+
+import EditDialog from '@/components/admin/users/EditDialog';
+import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
 
 export default {
 	name: 'AdminUsersListing',
 	components: {
-		EditDialog
+		EditDialog,
+		VtConfirmationDialog
 	},
-	extends: baseListing,
-	methods: {
-		defaultItem() {
-			return new UserData();
-		}
+	setup(props, context) {
+		const editDialogRef = ref(null);
+
+		const base = useAdminBaseListingComponent(props, context, {
+			editDialogRef,
+			defaultItem: () => new UserData(),
+			initializeHeaders: () => [
+				{ title: LibraryClientUtility.$trans.t('users.name'), align: 'start', key: 'external.name' },
+				{ title: LibraryClientUtility.$trans.t('users.id'), align: 'start', key: 'external.id' },
+				{ title: LibraryClientUtility.$trans.t('users.externalId'), align: 'start', key: 'external.externalId' },
+				{ title: LibraryClientUtility.$trans.t('users.roles'), align: 'start', key: 'roles' },
+				{ title: LibraryClientUtility.$trans.t('users.actions'), align: 'end', key: 'action', sortable: false }
+			],
+			async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+				return await dispatcher.adminUsers.deleteAdminUser(correlationId, id);
+			}
+		});
+
+		const users = computed(() => {
+			const mod = LibraryClientUtility.$store.adminUsers;
+			return mod && mod.users ? mod.users.slice(0) : [];
+		});
+
+		onMounted(async () => {
+			await LibraryClientUtility.$store.dispatcher.adminUsers.searchAdminUsers(base.correlationId(), {});
+		});
+
+		return {
+			...base,
+			editDialogRef,
+			users
+		};
 	}
 };
 </script>

@@ -5,11 +5,54 @@
 </template>
 
 <script>
-import baseAbout from '@/library_vue/components/baseAbout';
+import { useBaseAboutComponent } from '@thzero/library_client_vue3/components/baseAbout';
 
 export default {
 	name: 'About',
-	extends: baseAbout
+	setup(props, context) {
+		// TODO(migration): baseAbout requires options.emails.{contributing,inquiry}. skick has no
+		// Site/emails constant (see src/constants.js), so empty placeholders are passed to keep the
+		// composable from throwing. Populate these once an email config is added (the current
+		// template renders no email bindings, so nothing is displayed yet).
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse,
+			emailsContributing,
+			emailsContributingTitle,
+			emailsInquiry,
+			emailsInquiryTitle
+		} = useBaseAboutComponent(props, context, {
+			emails: {
+				contributing: '',
+				inquiry: ''
+			}
+		});
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse,
+			emailsContributing,
+			emailsContributingTitle,
+			emailsInquiry,
+			emailsInquiryTitle
+		};
+	}
 };
 </script>
 

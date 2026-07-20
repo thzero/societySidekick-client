@@ -3,17 +3,18 @@
 		<v-expansion-panel
 			class="mb-2"
 		>
-			<v-expansion-panel-header>
-				<v-layout
-					wrap
+			<v-expansion-panel-title>
+				<v-row
+					no-gutters
 				>
-					<v-flex
-						xs12
+					<v-col
+						cols="12"
 					>
 						<span class="title">{{ value.order }}) {{ scenarioName(value) }}</span><br>
-					</v-flex>
-					<v-flex
-						sm6
+					</v-col>
+					<v-col
+						cols="12"
+						sm="6"
 					>
 						<span
 							class="subtitle-2"
@@ -21,10 +22,11 @@
 						>
 							{{ factionName(value.factionId) }}
 						</span>
-					</v-flex>
-					<v-flex
+					</v-col>
+					<v-col
 						v-if="!isInitial"
-						sm6
+						cols="12"
+						sm="6"
 						style="text-align: right"
 					>
 						<span
@@ -39,46 +41,36 @@
 							{{ getDateHuman(value.timestamp) }}
 							{{ locationName(value.locationId) }}
 						</span>
-					</v-flex>
-				</v-layout>
-			</v-expansion-panel-header>
-			<v-expansion-panel-content>
+					</v-col>
+				</v-row>
+			</v-expansion-panel-title>
+			<v-expansion-panel-text>
 				<v-card
 					tile
-					outlined
+					variant="outlined"
 					class="pl-2 pr-2"
 					style="border: none"
 				>
-					<!-- <v-card-title
-						class="pt-0"
-					>
-						{{ scenarioName }}
-					</v-card-title>
-					<v-card-subtitle
-						class="pb-2"
-					>
-						{{ $t('characters.playedOn') }} {{ getDateHuman(value.timestamp) }}
-					</v-card-subtitle> -->
 					<v-card-text
 						pa-0
 						ma-0
 						style="padding-left: 0px; padding-right: 0px;"
 					>
-						<v-layout
-							wrap
+						<v-row
+							no-gutters
 						>
-							<v-flex
+							<v-col
 								v-if="!isInitial"
-								xs12
-								md6
-								lg6
-								xl6
+								cols="12"
+								md="6"
+								lg="6"
+								xl="6"
 							>
 								<table class="scenario">
 									<thead>
 										<tr>
 											<th class="scenario text-left subtitle-2 starfinder1eScenario gameSystemHeaderSpacer">
-												{{ $vuetify.breakpoint.mdAndUp ? $t('characters.gameSystems.starfinder1e.scenarios.advancementSpeed') : $t('characters.gameSystems.starfinder1e.scenarios.advancementSpeedAbbr') }}
+												{{ $vuetify.display.mdAndUp ? $t('characters.gameSystems.starfinder1e.scenarios.advancementSpeed') : $t('characters.gameSystems.starfinder1e.scenarios.advancementSpeedAbbr') }}
 											</th>
 											<th class="scenario text-left subtitle-2 starfinder1eScenario gameSystemHeaderSpacer">
 												{{ $t('characters.gameSystems.starfinder1e.scenarios.adventure') }}
@@ -111,11 +103,11 @@
 										</tr>
 									</tbody>
 								</table>
-							</v-flex>
-							<v-flex
+							</v-col>
+							<v-col
 								v-if="!isInitial"
-								xs12
-								md6
+								cols="12"
+								md="6"
 							>
 								<table class="scenario">
 									<thead>
@@ -168,10 +160,10 @@
 										</tr>
 									</tbody>
 								</table>
-							</v-flex>
-							<v-flex
+							</v-col>
+							<v-col
 								v-if="!isInitial"
-								xs12
+								cols="12"
 							>
 								<table class="scenario">
 									<thead>
@@ -242,9 +234,9 @@
 										</tr>
 									</tbody>
 								</table>
-							</v-flex>
-							<v-flex
-								xs12
+							</v-col>
+							<v-col
+								cols="12"
 							>
 								<div
 									class="subtitle-2 starfinder1eCurrency gameSystemHeaderSpacer"
@@ -252,10 +244,10 @@
 								>
 									{{ $t('characters.gameSystems.starfinder1e.currency') }}
 								</div>
-							</v-flex>
-							<v-flex
-								xs12
-								md6
+							</v-col>
+							<v-col
+								cols="12"
+								md="6"
 							>
 								<table class="scenario">
 									<thead>
@@ -294,10 +286,10 @@
 										</tr>
 									</tbody>
 								</table>
-							</v-flex>
-							<v-flex
-								xs12
-								md6
+							</v-col>
+							<v-col
+								cols="12"
+								md="6"
 							>
 								<table class="scenario">
 									<thead>
@@ -336,10 +328,10 @@
 										</tr>
 									</tbody>
 								</table>
-							</v-flex>
-							<v-flex
+							</v-col>
+							<v-col
 								v-if="hasBoons"
-								xs12
+								cols="12"
 							>
 								<v-banner>
 									{{ $t('characters.gameSystems.starfinder1e.boons.name') }}
@@ -408,23 +400,23 @@
 										</tr>
 									</tbody>
 								</table>
-							</v-flex>
-						</v-layout>
+							</v-col>
+						</v-row>
 					</v-card-text>
 					<v-card-actions
 						v-if="!isInitial"
 					>
 						<v-spacer />
 						<v-btn
-							color="primary lighten-1"
-							text
+							color="primary"
+							variant="text"
 							@click="dialogScenarioOpen()"
 						>
 							{{ $t('buttons.edit') }}
 						</v-btn>
 					</v-card-actions>
 				</v-card>
-			</v-expansion-panel-content>
+			</v-expansion-panel-text>
 		</v-expansion-panel>
 	</v-expansion-panels>
 </template>
@@ -432,9 +424,9 @@
 <script>
 import Constants from '@/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
-import baseScenario from '@/components/gameSystems/baseScenario';
+import { useGameSystemBaseScenarioComponent } from '@/components/gameSystems/baseScenario';
 
 import StatusColorizeValue from '@/components/gameSystems/StatusColorizeValue';
 
@@ -442,10 +434,12 @@ export default {
 	name: 'Starfinder1eCharacterScenario',
 	components: {
 		StatusColorizeValue
-		// ScenarioDialog
 	},
-	extends: baseScenario,
 	props: {
+		value: {
+			type: Object,
+			default: () => {}
+		},
 		character: {
 			type: Object,
 			default: null
@@ -455,20 +449,28 @@ export default {
 			default: false
 		}
 	},
-	methods: {
-		className(id) {
-			return this.serviceGameSystem.classNameById(this.correlationId(), id, GlobalUtility.$store);
-		},
-		initializeServices() {
-			this.rulesGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
-			this.serviceGameSystem = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
-		},
-		scenarioAdvancementSpeedName(id) {
-			return this.serviceGameSystem.scenarioLookupAdvancementSpeedName(this.correlationId(), id, this.lookups);
-		},
-		scenarioAdventureName(id) {
-			return this.serviceGameSystem.scenarioLookupAdventureName(this.correlationId(), id, this.lookups);
-		}
+	setup(props, context) {
+		const rulesGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_RULES_STARFINDER_1E);
+		const serviceGameSystem = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_GAMESYSTEMS_STARFINDER_1E);
+
+		const base = useGameSystemBaseScenarioComponent(props, context, { serviceGameSystem, rulesGameSystem });
+
+		const className = (id) => {
+			return serviceGameSystem.classNameById(base.correlationId(), id, LibraryClientUtility.$store);
+		};
+		const scenarioAdvancementSpeedName = (id) => {
+			return serviceGameSystem.scenarioLookupAdvancementSpeedName(base.correlationId(), id, base.lookups.value);
+		};
+		const scenarioAdventureName = (id) => {
+			return serviceGameSystem.scenarioLookupAdventureName(base.correlationId(), id, base.lookups.value);
+		};
+
+		return {
+			...base,
+			className,
+			scenarioAdvancementSpeedName,
+			scenarioAdventureName
+		};
 	}
 };
 </script>

@@ -1,77 +1,72 @@
 import Constants from '@/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryUtility from '@thzero/library_common/utility';
 
 import Response from '@thzero/library_common/response';
 
 const store = {
-	state: {
+	state: () => ({
 		equipment: null
-	},
+	}),
 	actions: {
-		async createAdminEquipment({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
-			const response = await service.create(params.correlationId, params.item);
-			this.$logger.debug('store.admin.equipment', 'createAdminEquipment', 'response', response, params.correlationId);
+		async createAdminEquipment(correlationId, item) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
+			const response = await service.create(correlationId, item);
+			this.$logger.debug('store.admin.equipment', 'createAdminEquipment', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setAdminEquipment', { correlationId: params.correlationId, item: response.results ? response.results : null });
+				await this.setAdminEquipment(correlationId, response.results ? response.results : null);
 			return response;
 		},
-		async deleteAdminEquipment({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
-			const response = await service.delete(params.correlationId, params.id);
-			this.$logger.debug('store.admin.equipment', 'deleteAdminEquipment', 'response', response, params.correlationId);
+		async deleteAdminEquipment(correlationId, id) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
+			const response = await service.delete(correlationId, id);
+			this.$logger.debug('store.admin.equipment', 'deleteAdminEquipment', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('deleteAdminEquipment', { correlationId: params.correlationId, id: params.id });
+				LibraryUtility.deleteArrayById(this.equipment, id);
 			return response;
 		},
-		async searchAdminEquipment({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
-			const response = await service.search(params.correlationId, params.params);
-			this.$logger.debug('store.admin.equipment', 'searchAdminEquipment', 'response', response, params.correlationId);
+		async searchAdminEquipment(correlationId, params) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
+			const response = await service.search(correlationId, params);
+			this.$logger.debug('store.admin.equipment', 'searchAdminEquipment', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setAdminEquipmentListing', { correlationId: params.correlationId, list: response.results ? response.results.data : null });
+				await this.setAdminEquipmentListing(correlationId, response.results ? response.results.data : null);
 			return response;
 		},
-		async updateAdminEquipment({ commit }, params) {
-			const service = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
-			const response = await service.update(params.correlationId, params.item);
-			this.$logger.debug('store.admin.equipment', 'updateAdminEquipment', 'response', response, params.correlationId);
+		async updateAdminEquipment(correlationId, item) {
+			const service = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_ADMIN_EQUIPMENT);
+			const response = await service.update(correlationId, item);
+			this.$logger.debug('store.admin.equipment', 'updateAdminEquipment', 'response', response, correlationId);
 			if (Response.hasSucceeded(response))
-				commit('setAdminEquipment', { correlationId: params.correlationId, item: response.results ? response.results : null });
+				await this.setAdminEquipment(correlationId, response.results ? response.results : null);
 			return response;
-		}
-	},
-	mutations: {
-		deleteAdminEquipment(state, params) {
-			return LibraryUtility.deleteArrayById(state.equipment, params.id);
 		},
-		setAdminEquipment(state, params) {
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.a', params.item, params.correlationId);
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.b', state.equipment, params.correlationId);
-			state.equipment = LibraryUtility.updateArrayByObject(state.equipment, params.item, true);
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.c', state.equipment, params.correlationId);
+		async setAdminEquipment(correlationId, item) {
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.a', item, correlationId);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.b', this.equipment, correlationId);
+			this.equipment = LibraryUtility.updateArrayByObject(this.equipment, item, true);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipment', 'item.c', this.equipment, correlationId);
 		},
-		setAdminEquipmentListing(state, params) {
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.a', params.list, params.correlationId);
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.b', state.equipment, params.correlationId);
-			state.equipment = params.list;
-			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.c', state.equipment, params.correlationId);
+		async setAdminEquipmentListing(correlationId, list) {
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.a', list, correlationId);
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.b', this.equipment, correlationId);
+			this.equipment = list;
+			this.$logger.debug('store.admin.equipment', 'setAdminEquipmentListing', 'list.c', this.equipment, correlationId);
 		}
 	},
 	dispatcher: {
 		async createAdminEquipment(correlationId, item) {
-			return await GlobalUtility.$store.dispatch('createAdminEquipment', { correlationId: correlationId, item: item });
+			return await LibraryClientUtility.$store.adminEquipment.createAdminEquipment(correlationId, item);
 		},
 		async deleteAdminEquipment(correlationId, id) {
-			return await GlobalUtility.$store.dispatch('deleteAdminEquipment', { correlationId: correlationId, id: id });
+			return await LibraryClientUtility.$store.adminEquipment.deleteAdminEquipment(correlationId, id);
 		},
 		async searchEquipment(correlationId, params) {
-			await GlobalUtility.$store.dispatch('searchAdminEquipment', { correlationId: correlationId, params: params });
+			await LibraryClientUtility.$store.adminEquipment.searchAdminEquipment(correlationId, params);
 		},
 		async updateAdminEquipment(correlationId, item) {
-			return await GlobalUtility.$store.dispatch('updateAdminEquipment', { correlationId: correlationId, item: item });
+			return await LibraryClientUtility.$store.adminEquipment.updateAdminEquipment(correlationId, item);
 		}
 	}
 };

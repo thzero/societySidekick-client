@@ -1,118 +1,164 @@
 <template>
-	<VFormDialog
+	<VtFormDialog
 		:label="$t('titles.new') + ' ' + $t('characters.name')"
 		:signal="signal"
+		:validation="validation"
 		:pre-complete-ok="preComplete"
-		@close="close"
-		@cancel="cancel"
+		@close="cancel"
 		@ok="ok"
 		@open="open"
 	>
-		<VTextFieldWithValidation
-			ref="name"
+		<VtTextFieldWithValidation
+			ref="nameRef"
 			v-model="name"
-			rules="required|min:3|max:30|"
 			vid="name"
+			:validation="validation"
 			:label="$t('forms.name')"
 			:counter="30"
 		/>
-		<VSelectWithValidation
-			ref="gameSystem"
+		<VtSelectWithValidation
+			ref="gameSystemRef"
 			v-model="gameSystemId"
-			rules="required"
 			vid="gameSystem"
+			:validation="validation"
 			:items="gameSystems"
 			:label="$t('forms.gameSystem')"
 		/>
-		<VNumberFieldWithValidation
-			ref="number"
+		<VtNumberFieldWithValidation
+			ref="numberRef"
 			v-model="number"
-			rules="required|numeric|min_value:1|max_value:99|"
 			vid="number"
+			:validation="validation"
 			:label="$t('forms.number')"
 			step="1"
+			:min="1"
+			:max="99"
 			:counter="2"
 		/>
-	</VFormDialog>
+	</VtFormDialog>
 </template>
 
 <script>
+import { computed, ref, watch } from 'vue';
+
+import useVuelidate from '@vuelidate/core';
+import { maxLength, maxValue, minLength, minValue, numeric, required } from '@vuelidate/validators';
+
 import Constants from '@/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
 
-import VFormDialog from '@/library_vue_vuetify/components/form/VFormDialog';
-import VNumberFieldWithValidation from '@/library_vue_vuetify/components/form/VNumberFieldWithValidation';
-import VSelectWithValidation from '@/library_vue_vuetify/components/form/VSelectWithValidation';
-import VTextFieldWithValidation from '@/library_vue_vuetify/components/form/VTextFieldWithValidation';
+import { useBaseComponent } from '@/components/base';
+
+import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
+import VtNumberFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberFieldWithValidation';
+import VtSelectWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtSelectWithValidation';
+import VtTextFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtTextFieldWithValidation';
 
 export default {
 	name: 'CharacterNewDialog',
 	components: {
-		VFormDialog,
-		VNumberFieldWithValidation,
-		VSelectWithValidation,
-		VTextFieldWithValidation
+		VtFormDialog,
+		VtNumberFieldWithValidation,
+		VtSelectWithValidation,
+		VtTextFieldWithValidation
 	},
-	extends: VFormDialog,
-	data: () => ({
-		gameSystemId: null,
-		name: '',
-		number: null,
-		serviceCharacters: null
-	}),
-	computed: {
-		gameSystems() {
-			const results = GlobalUtility.$store.state.gameSystems;
-			return results ? results.filter(l => l.active) : [];
+	props: {
+		signal: {
+			type: Boolean,
+			default: false
 		}
 	},
-	watch: {
-		async gameSystemId(newValue) {
+	emits: ['cancel', 'ok'],
+	setup(props, context) {
+		const base = useBaseComponent(props, context);
+
+		const serviceCharacters = LibraryClientUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
+
+		const gameSystemId = ref(null);
+		const name = ref('');
+		const number = ref(null);
+
+		const gameSystems = computed(() => {
+			const results = LibraryClientUtility.$store.gameSystems;
+			return results ? results.filter(l => l.active) : [];
+		});
+
+		watch(gameSystemId, async (newValue) => {
 			if (newValue) {
-				const response = await this.serviceCharacters.fetchNumber(this.correlationId(), this.gameSystemId);
-				this.number = response && response.success ? response.results : null;
+				const response = await serviceCharacters.fetchNumber(base.correlationId(), gameSystemId.value);
+				number.value = response && response.success ? response.results : null;
 				return;
 			}
+			number.value = null;
+		});
 
-			this.number = null;
-		}
-	},
-	created() {
-		this.serviceCharacters = GlobalUtility.$injector.getService(Constants.InjectorKeys.SERVICE_CHARACTERS);
-	},
-	methods: {
-		async close() {
-		},
-		async cancel() {
-			this.$emit('cancel');
-		},
-		async ok() {
-			this.$emit('ok');
+		const close = async () => {
+		};
+		const cancel = async () => {
+			context.emit('cancel');
+		};
+		const ok = async () => {
+			context.emit('ok');
 			return true;
-		},
-		async open() {
-			this.fieldType = null;
-			this.name = '';
-		},
-		async preComplete(correlationId) {
-			const name = String.trim(this.name);
-			const number = String.trim(this.number + '');
-			const response = await GlobalUtility.$store.dispatcher.characters.createCharacter(correlationId, { gameSystemId: this.gameSystemId, name: name, number: number });
-			this.logger.debug('CharacterNewDialog', 'preComplete', 'response', response, correlationId);
-			if (this.hasSucceeded(response)) {
-				GlobalUtility.$navRouter.push(LibraryUtility.formatUrl({ url: '/character', params: [ response.results.id ]}));
+		};
+		const open = async () => {
+			name.value = '';
+		};
+		const preComplete = async (correlationId) => {
+			const nameV = String.trim(name.value);
+			const numberV = String.trim(number.value + '');
+			const response = await LibraryClientUtility.$store.dispatcher.characters.createCharacter(correlationId, { gameSystemId: gameSystemId.value, name: nameV, number: numberV });
+			base.logger.debug('CharacterNewDialog', 'preComplete', 'response', response, correlationId);
+			if (base.hasSucceeded(response)) {
+				LibraryClientUtility.$router.push(LibraryCommonUtility.formatUrl({ url: '/character', params: [ response.results.id ]}));
 				return response;
 			}
-
 			return response;
-		},
-		async resetDialog() {
-			this.gameSystemId = null;
-			this.name = '';
-			this.number = null;
-		}
+		};
+		const reset = async () => {
+			gameSystemId.value = null;
+			name.value = '';
+			number.value = null;
+		};
+
+		return {
+			...base,
+			gameSystemId,
+			name,
+			number,
+			gameSystems,
+			close,
+			cancel,
+			ok,
+			open,
+			preComplete,
+			reset,
+			resetDialog: reset,
+			validation: useVuelidate({ $scope: 'CharacterNewDialog' })
+		};
+	},
+	validations() {
+		return {
+			name: {
+				required,
+				minLength: minLength(3),
+				maxLength: maxLength(30),
+				$autoDirty: true
+			},
+			gameSystemId: {
+				required,
+				$autoDirty: true
+			},
+			number: {
+				required,
+				numeric,
+				minValue: minValue(1),
+				maxValue: maxValue(99),
+				$autoDirty: true
+			}
+		};
 	}
 };
 </script>

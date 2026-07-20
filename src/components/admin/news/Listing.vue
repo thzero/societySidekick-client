@@ -1,12 +1,11 @@
 <template>
-	<v-container pa-0>
+	<v-container class="pa-0">
 		<v-row>
 			<v-col>
 				<v-data-table
 					:headers="headers"
 					:items="news"
-					sort-by="timestamp"
-					:sort-desc="false"
+					:sort-by="[ { key: 'timestamp', order: 'asc' } ]"
 					class="elevation-1"
 				>
 					<template #top>
@@ -23,7 +22,6 @@
 							<v-spacer />
 							<v-btn
 								color="primary"
-								dark
 								class="mb-2"
 								@click="dialogEditOpen(null, true)"
 							>
@@ -35,7 +33,7 @@
 						<span>{{ getGameSystemName(item.gameSystemId) }}</span>
 					</template>
 					<template #[`item.article`]="{ item }">
-						<VMarkdown v-model="item.article" />
+						<VtMarkdown :model-value="item.article" />
 					</template>
 					<template #[`item.sticky`]="{ item }">
 						<span>{{ item.sticky ? $t('strings.yes') : $t('strings.no') }}</span>
@@ -51,17 +49,17 @@
 					</template>
 					<template #[`item.action`]="{ item }">
 						<v-icon
-							small
+							size="small"
 							class="mr-2"
 							@click="dialogEditOpen(item, false)"
 						>
-							edit
+							mdi-pencil
 						</v-icon>
 						<v-icon
-							small
+							size="small"
 							@click="dialogDeleteOpen(item)"
 						>
-							delete
+							mdi-delete
 						</v-icon>
 					</template>
 					<template #no-data>
@@ -69,13 +67,13 @@
 					</template>
 				</v-data-table>
 				<EditDialog
-					ref="editDialog"
+					ref="editDialogRef"
 					:label="dialogEditItemTitle"
 					:signal="dialogEditSignal.signal"
 					@cancel="dialogEditCancel"
 					@ok="dialogEditOk"
 				/>
-				<VConfirmationDialog
+				<VtConfirmationDialog
 					:non-recoverable="true"
 					:signal="dialogDeleteSignal.signal"
 					:pre-complete-ok="dialogDeletePreCompleteOk"
@@ -88,42 +86,67 @@
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
-import LibraryUtility from '@thzero/library_common/utility';
+import { computed, onMounted, ref } from 'vue';
 
-import baseListing from '@/library_vue_vuetify/components/admin/news/baseListing';
-import EditDialog from '@/components/admin/news/EditDialog';
-import VMarkdown from '@/library_vue_vuetify/components/markup/VMarkdown';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import LibraryCommonUtility from '@thzero/library_common/utility';
+import LibraryMomentUtility from '@thzero/library_common/utility/moment';
 
 import NewsData from '@/common/data/news';
+
+import { useAdminBaseListingComponent } from '@/components/admin/baseListing';
+
+import EditDialog from '@/components/admin/news/EditDialog';
+import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
+import VtMarkdown from '@thzero/library_client_vue3_vuetify3/components/markup/VtMarkdown';
 
 export default {
 	name: 'AdminNewsListing',
 	components: {
 		EditDialog,
-		VMarkdown
+		VtConfirmationDialog,
+		VtMarkdown
 	},
-	extends: baseListing,
-	methods: {
-		defaultItem() {
-			return LibraryUtility.instantiate(new NewsData());
-		},
-		getGameSystemName(id) {
-			const results = GlobalUtility.$store.getters.getGameSystem(id);
-			return results ? results.name : '';
-		},
-		initializeHeaders() {
-			return [
-				{ text: GlobalUtility.$trans.t('news.name'), align: 'left', value: 'title', },
-				{ text: GlobalUtility.$trans.t('news.gameSystem'), align: 'left', value: 'gameSystemId' },
-				{ text: GlobalUtility.$trans.t('news.article'), align: 'left', sortable: false, value: 'article' },
-				{ text: GlobalUtility.$trans.t('news.sticky'), align: 'left', value: 'sticky' },
-				{ text: GlobalUtility.$trans.t('news.requiresAuth'), align: 'left', value: 'requiresAuth' },
-				{ text: GlobalUtility.$trans.t('news.publishDate'), align: 'left', value: 'timestamp' },
-				{ text: GlobalUtility.$trans.t('news.statusName'), align: 'left', value: 'status' },
-				{ text: GlobalUtility.$trans.t('news.actions'), align: 'right', value: 'action', sortable: false }
-			];
-		}
+	setup(props, context) {
+		const editDialogRef = ref(null);
+
+		const base = useAdminBaseListingComponent(props, context, {
+			editDialogRef,
+			defaultItem: () => LibraryCommonUtility.instantiate(new NewsData()),
+			initializeHeaders: () => [
+				{ title: LibraryClientUtility.$trans.t('news.name'), align: 'start', key: 'title' },
+				{ title: LibraryClientUtility.$trans.t('news.gameSystem'), align: 'start', key: 'gameSystemId' },
+				{ title: LibraryClientUtility.$trans.t('news.article'), align: 'start', sortable: false, key: 'article' },
+				{ title: LibraryClientUtility.$trans.t('news.sticky'), align: 'start', key: 'sticky' },
+				{ title: LibraryClientUtility.$trans.t('news.requiresAuth'), align: 'start', key: 'requiresAuth' },
+				{ title: LibraryClientUtility.$trans.t('news.publishDate'), align: 'start', key: 'timestamp' },
+				{ title: LibraryClientUtility.$trans.t('news.statusName'), align: 'start', key: 'status' },
+				{ title: LibraryClientUtility.$trans.t('news.actions'), align: 'end', key: 'action', sortable: false }
+			],
+			async dialogDeletePreCompleteOkDelete(correlationId, dispatcher, id) {
+				return await dispatcher.adminNews.deleteAdminNews(correlationId, id);
+			}
+		});
+
+		const news = computed(() => {
+			const mod = LibraryClientUtility.$store.adminNews;
+			return mod && mod.news ? mod.news.slice(0) : [];
+		});
+
+		const getDateHuman = (timestamp) => {
+			return LibraryMomentUtility.getDateHuman(timestamp);
+		};
+
+		onMounted(async () => {
+			await LibraryClientUtility.$store.dispatcher.adminNews.searchNews(base.correlationId(), {});
+		});
+
+		return {
+			...base,
+			editDialogRef,
+			news,
+			getDateHuman
+		};
 	}
 };
 </script>

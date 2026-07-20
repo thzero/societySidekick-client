@@ -1,6 +1,6 @@
 import LibraryConstants from '@thzero/library_client/constants';
 
-import VueBaseUserService from '@thzero/library_client_vue/service/baseUser';
+import VueBaseUserService from '@thzero/library_client_vue3/service/baseUser';
 
 class UserService extends VueBaseUserService {
 	constructor() {
@@ -15,6 +15,19 @@ class UserService extends VueBaseUserService {
 
 		this._serviceCommunicationRest = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_COMMUNICATION_REST);
 		this._serviceStore = this._injector.getService(LibraryConstants.InjectorKeys.SERVICE_STORE);
+	}
+
+	// The lib's BaseUserService.refreshSettings() calls this._refreshSettingsUpdate() (a naming
+	// mismatch — the base only defines _refreshSettingsCommunication), so the app must supply it.
+	//
+	// IMPORTANT: return success with NO results. The lib pinia store's refreshUserSettings() does
+	// `this.setUser(response.results)` (one arg) — but setUser(correlationId, user) takes two, so a
+	// non-empty results lands in the correlationId slot, leaves user undefined, and NULLS the logged-in
+	// user (signs you out). Returning no results makes refreshUserSettings skip that buggy call.
+	// (The real fix is upstream: refreshUserSettings should call setUser(correlationId, response.results).)
+	// eslint-disable-next-line no-unused-vars
+	async _refreshSettingsUpdate(correlationId, user) {
+		return this._success(correlationId);
 	}
 
 	async fetchFavoritesByGamerId(correlationId, user) {

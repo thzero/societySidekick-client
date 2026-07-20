@@ -2,24 +2,25 @@
 	<v-container fluid>
 		<v-navigation-drawer
 			v-model="drawer"
-			absolute
 			temporary
 			style="z-index: 2"
 		>
 			<v-list
-				dense
+				density="compact"
 				class="pt-0"
 			>
-				<v-list-item @click="clickTab(0)">
-					<v-list-item-action>
-						<v-icon>new_releases</v-icon>
-					</v-list-item-action>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('admin.news') }}</v-list-item-title>
-					</v-list-item-content>
-					<v-list-item-content>
-						<v-list-item-title>{{ $t('admin.scenarios') }}</v-list-item-title>
-					</v-list-item-content>
+				<v-list-item
+					v-for="tab of tabSupport.tabs"
+					:key="tab.index"
+					@click="clickTab(tab.index)"
+				>
+					<template
+						v-if="tab.icon"
+						#prepend
+					>
+						<v-icon>{{ tab.icon }}</v-icon>
+					</template>
+					<v-list-item-title>{{ tab.label }}</v-list-item-title>
 				</v-list-item>
 			</v-list>
 		</v-navigation-drawer>
@@ -31,18 +32,18 @@
 			>
 				<v-tabs
 					v-model="tabSupport.currentTab"
-					vertical
-					@change="clickTab"
+					direction="vertical"
 				>
 					<v-tab
 						v-for="tab of tabSupport.tabs"
 						:key="tab.index"
+						:value="tab.index"
 						style="justify-content: start; margin-left: 0px"
 						@click="clickTab(tab.index)"
 					>
 						<v-icon
 							v-if="tab.icon"
-							left
+							start
 						>
 							{{ tab.icon }}
 						</v-icon>
@@ -65,9 +66,9 @@
 </template>
 
 <script>
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
-import baseAdmin from '@/library_vue/components/baseAdmin';
+import { useBaseAdminComponent } from '@thzero/library_client_vue3/components/baseAdmin';
 
 // Admin Update
 import BoonsListing from '@/components/admin/boons/Listing';
@@ -90,29 +91,40 @@ export default {
 		ScenariosListing,
 		UsersListing
 	},
-	extends: baseAdmin,
-	data: () => ({
+	setup(props, context) {
 		// Admin Update
-		tabNews: 0,
-		tabBoons: 1,
-		tabClasses: 2,
-		tabEquipment: 3,
-		tabFactions: 4,
-		tabScenarios: 5,
-		tabUsers: 6
-	}),
-	methods: {
-		initializeTabs() {
-			// TODO: Depending on security results, only some of these should be displayed...
-			// Admin Update
-			this.tabSupport.add(this.tabNews, 'new_releases', GlobalUtility.$trans.t('admin.news'));
-			this.tabSupport.add(this.tabBoons, 'new_releases', GlobalUtility.$trans.t('admin.boons'));
-			this.tabSupport.add(this.tabClasses, 'new_releases', GlobalUtility.$trans.t('admin.classes'));
-			this.tabSupport.add(this.tabEquipment, 'new_releases', GlobalUtility.$trans.t('admin.equipment'));
-			this.tabSupport.add(this.tabFactions, 'new_releases', GlobalUtility.$trans.t('admin.factions'));
-			this.tabSupport.add(this.tabScenarios, 'new_releases', GlobalUtility.$trans.t('admin.scenarios'));
-			this.tabSupport.add(this.tabUsers, 'new_releases', GlobalUtility.$trans.t('admin.users'));
-		}
+		const tabNews = 0;
+		const tabBoons = 1;
+		const tabClasses = 2;
+		const tabEquipment = 3;
+		const tabFactions = 4;
+		const tabScenarios = 5;
+		const tabUsers = 6;
+
+		const base = useBaseAdminComponent(props, context, {
+			initializeTabs: (tabSupport) => {
+				// TODO: Depending on security results, only some of these should be displayed...
+				// Admin Update
+				tabSupport.add(tabNews, 'mdi-newspaper-variant-outline', LibraryClientUtility.$trans.t('admin.news'));
+				tabSupport.add(tabBoons, 'mdi-star-outline', LibraryClientUtility.$trans.t('admin.boons'));
+				tabSupport.add(tabClasses, 'mdi-account-group-outline', LibraryClientUtility.$trans.t('admin.classes'));
+				tabSupport.add(tabEquipment, 'mdi-sword', LibraryClientUtility.$trans.t('admin.equipment'));
+				tabSupport.add(tabFactions, 'mdi-flag-outline', LibraryClientUtility.$trans.t('admin.factions'));
+				tabSupport.add(tabScenarios, 'mdi-script-text-outline', LibraryClientUtility.$trans.t('admin.scenarios'));
+				tabSupport.add(tabUsers, 'mdi-account-multiple-outline', LibraryClientUtility.$trans.t('admin.users'));
+			}
+		});
+
+		return {
+			...base,
+			tabNews,
+			tabBoons,
+			tabClasses,
+			tabEquipment,
+			tabFactions,
+			tabScenarios,
+			tabUsers
+		};
 	}
 };
 </script>

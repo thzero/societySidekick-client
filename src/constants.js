@@ -12,7 +12,9 @@ const Constants = {
 		SERVICE_ADMIN_CLASSES: 'serviceAdminClasses',
 		SERVICE_ADMIN_EQUIPMENT: 'serviceAdminEquipment',
 		SERVICE_ADMIN_FACTIONS: 'serviceAdminFactions',
+		SERVICE_ADMIN_NEWS: 'serviceAdminNews',
 		SERVICE_ADMIN_SCENARIOS: 'serviceAdminScenarios',
+		SERVICE_ADMIN_USERS: 'serviceAdminUsers',
 
 		SERVICE_API: 'serviceApi',
 		SERVICE_BOONS: 'serviceBoons',

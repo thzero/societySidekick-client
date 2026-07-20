@@ -1,7 +1,7 @@
 import LibraryConstants from '@thzero/library_client/constants';
 import SharedConstants from '@/common/constants';
 
-import GlobalUtility from '@thzero/library_client/utility/global';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import SettingsUser from '@/common/data/settingsUser';
 
@@ -24,10 +24,12 @@ class AppUtility {
 	}
 
 	static generateShareKeyForUserByGamerTag(user, id) {
-		if (!user || !user.settings.gamerTagSearch || !id)
+		// 0.18 lib deletes user.settings on load; canonical settings live at $store.user.settings.
+		const settings = (user && user.settings) ? user.settings : LibraryClientUtility.$store.user.settings;
+		if (!user || !settings || !settings.gamerTagSearch || !id)
 			return null;
 
-		const gamerTagSearch = user.settings.gamerTagSearch;
+		const gamerTagSearch = settings.gamerTagSearch;
 		return `${gamerTagSearch}/${id}`;
 	}
 
@@ -36,7 +38,7 @@ class AppUtility {
 	}
 
 	static settings() {
-		return GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_SETTINGS);
+		return LibraryClientUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_SETTINGS);
 	}
 
 	static validateSettingsUserGameSystems(settings) {
@@ -54,10 +56,10 @@ class AppUtility {
 	}
 
 	static userDisplayName(user) {
-		if (!user || !user.settings)
+		if (!user)
 			return '';
 
-		const settings = user.settings ? user.settings : AppUtility.initializeSettingsUser();
+		const settings = (user && user.settings) ? user.settings : LibraryClientUtility.$store.user.settings;
 		const userName = settings && settings.gamerTag ? settings.gamerTag : user.external && user.external.name ? user.external.name : '******';
 		return userName;
 	}

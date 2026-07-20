@@ -1,21 +1,16 @@
 <template>
 	<div>
-		<v-layout
-			wrap
-			pt-2
-		>
-			<v-flex
-				xs9
-				sm9
-				md5
-				mb-4
-				class="notPrintable"
+		<v-row class="pt-2">
+			<v-col
+				cols="9"
+				sm="9"
+				md="5"
+				class="mb-4 notPrintable"
 			>
 				<v-card>
 					<v-card-text>
-						<VSelect2
+						<VtSelect
 							v-if="!external"
-							ref="gameSystems"
 							v-model="gameSystemFilter"
 							:items="gameSystems"
 							:flat="true"
@@ -24,9 +19,8 @@
 							:label="$t('forms.gameSystem')"
 							class="pb-1"
 						/>
-						<VText2
+						<VtTextField
 							v-if="external"
-							ref="gameSystem"
 							v-model="gameSystemName"
 							:flat="true"
 							:hide-details="true"
@@ -35,8 +29,7 @@
 							:readonly="true"
 							class="pb-1"
 						/>
-						<VSelect2
-							ref="sizes"
+						<VtSelect
 							v-model="printSizeId"
 							:items="printSizes"
 							:flat="true"
@@ -47,28 +40,27 @@
 						/>
 					</v-card-text>
 				</v-card>
-			</v-flex>
-			<v-flex
-				xs3
-				sm3
-				md7
-				mb-1
-				class="notPrintable"
+			</v-col>
+			<v-col
+				cols="3"
+				sm="3"
+				md="7"
+				class="mb-1 notPrintable"
 			>
 				<table
 					border="0"
 					cellspacing="0"
 					cellpadding="0"
 					style="margin-right: 0px; margin-left: auto;"
-				>
+				><tbody>
 					<tr>
 						<td
 							style="padding-right: 4px;"
 						>
 							<v-btn
 								v-if="gameSystemFilter"
-								depressed
-								large
+								variant="flat"
+								size="large"
 								class="mb-2"
 								style="min-width: 0px"
 								@click="clickPrint()"
@@ -81,8 +73,8 @@
 						<td>
 							<v-btn
 								v-if="isAuthenticated && gameSystemFilter"
-								depressed
-								large
+								variant="flat"
+								size="large"
 								style="min-width: 0px"
 								@click="dialogShareOpen()"
 							>
@@ -90,14 +82,12 @@
 							</v-btn>
 						</td>
 					</tr>
-				</table>
-			</v-flex>
-			<v-flex
+				</tbody></table>
+			</v-col>
+			<v-col
 				v-if="gameSystemFilter"
-				xs12
-				pl-2
-				pr-2
-				pb-4
+				cols="12"
+				class="pl-2 pr-2 pb-4"
 				style="text-align: center"
 			>
 				<v-card
@@ -107,7 +97,7 @@
 				>
 					<v-img
 						v-if="imagePath"
-						class="white--text align-end"
+						class="text-white align-end"
 						:width="printSize.width"
 						:src="imagePath"
 					/>
@@ -115,7 +105,7 @@
 						<div>
 							<v-chip
 								color="success"
-								outlined
+								variant="outlined"
 								label
 							>
 								{{ userDisplayName }}
@@ -126,7 +116,7 @@
 						>
 							<v-chip
 								color="success"
-								outlined
+								variant="outlined"
 								label
 							>
 								#{{ gameSystemNumber }}
@@ -134,10 +124,10 @@
 						</div>
 					</v-card-subtitle>
 				</v-card>
-			</v-flex>
-		</v-layout>
+			</v-col>
+		</v-row>
 		<ShareDialog
-			ref="shareDialog"
+			ref="shareDialogRef"
 			:label="$t('characters.share') + ' ' +$t('cards.namePlural')"
 			:signal="dialogShare.signal"
 			url="cards"
@@ -148,99 +138,121 @@
 </template>
 
 <script>
+import { computed, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
 import LibraryConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
 import GameSystemsUtility from '@/utility/gameSystems';
-import GlobalUtility from '@thzero/library_client/utility/global';
-import VueUtility from '@thzero/library_client_vue/utility/index';
+import LibraryClientUtility from '@thzero/library_client/utility/index';
+import VueUtility from '@thzero/library_client_vue3/utility/index';
 
-import base from '@/library_vue/components/base';
+import { useBaseComponent } from '@/components/base';
+
 import ShareDialog from '@/components/ShareDialog';
-import VSelect2 from '@/library_vue_vuetify/components/form/VSelect';
-import VText2 from '@/library_vue_vuetify/components/form/VTextField';
+import VtSelect from '@thzero/library_client_vue3_vuetify3/components/form/VtSelect';
+import VtTextField from '@thzero/library_client_vue3_vuetify3/components/form/VtTextField';
 
-import DialogSupport from '@/library_vue/components/support/dialog';
+import DialogSupport from '@thzero/library_client_vue3/components/support/dialog';
 
 const check = (to) => {
 	return VueUtility.checkHasParams(to);
 };
 
+// TODO(migration): human review:
+//  1. Route guards beforeRouteEnter/beforeRouteUpdate kept as component options alongside setup()
+//     (Vue Router 4 still supports in-component guards this way); params read via useRoute().
+//  2. :solo-inverted / :flat on VtSelect/VtTextField are Vuetify2-era; Vuetify3 uses `variant`.
+//  3. isLoggedIn was referenced in the original without parens (always truthy); behavior preserved.
 export default {
 	name: 'Cards',
 	components: {
 		ShareDialog,
-		VSelect2,
-		VText2
+		VtSelect,
+		VtTextField
 	},
-	extends: base,
-	data: () => ({
-		dialogShare: new DialogSupport(),
-		external: false,
-		gameSystemFilter: null,
-		printSizeId: null,
-		printSizes: [
+	setup(props, context) {
+		const shareDialogRef = ref(null);
+
+		const {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse
+		} = useBaseComponent(props, context);
+
+		const route = useRoute();
+
+		const serviceUsers = LibraryClientUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
+
+		const dialogShare = ref(new DialogSupport());
+		const external = ref(false);
+		const gameSystemFilter = ref(null);
+		const printSizeId = ref('bc');
+		const printSizes = ref([
 			{ id: 'bc', name: 'Business Card', width: '3.5in', height: '2in' },
 			{ id: 'a2', name: 'A2', width: '5.5in', height: '4.25in' },
 			{ id: 'a6', name: 'A6', width: '6.25in', height: '4.5in' }
-		],
-		user: null
-	}),
-	computed: {
-		gameSystemName: {
+		]);
+		const user = ref(null);
+
+		const gameSystemName = computed({
 			get() {
-				const results = GlobalUtility.$store.getters.getGameSystem(this.gameSystemFilter);
+				const results = LibraryClientUtility.$store.getters.getGameSystem(correlationId(), gameSystemFilter.value);
 				return results ? results.name : '';
 			},
 			set() {}
-		},
-		gameSystemNumber() {
-			return GameSystemsUtility.gameSystemNumber(this.correlationId(), this.user, this.gameSystemFilter);
-		},
-		gameSystems() {
-			let results = GlobalUtility.$store.state.gameSystems.slice(0);
+		});
+		const gameSystemNumber = computed(() => {
+			return GameSystemsUtility.gameSystemNumber(correlationId(), user.value, gameSystemFilter.value);
+		});
+		const gameSystems = computed(() => {
+			let results = LibraryClientUtility.$store.gameSystems.slice(0);
 			results = results.filter(l => {
-				return GameSystemsUtility.gameSystemNumber(this.correlationId(), this.user, l.id);
+				return GameSystemsUtility.gameSystemNumber(correlationId(), user.value, l.id);
 			});
 			return results;
-		},
-		imagePath() {
-			if (this.gameSystemFilter)
-				return `/images/gameSystems/${this.gameSystemFilter}.png`;
+		});
+		const imagePath = computed(() => {
+			if (gameSystemFilter.value)
+				return `/images/gameSystems/${gameSystemFilter.value}.png`;
 			return null;
-		},
-		isAuthenticated() {
-			return GlobalUtility.$store.state.user.user != null;
-		},
-		printSize() {
-			return this.printSizes.find(l => l.id == this.printSizeId);
-		},
-		userDisplayName() {
-			return AppUtility.userDisplayName(this.user);
-		}
-	},
-	created() {
-		this.printSizeId = 'bc';
-		this.serviceUsers = GlobalUtility.$injector.getService(LibraryConstants.InjectorKeys.SERVICE_USER);
-	},
-	async mounted() {
-		check(this.$route);
+		});
+		const isAuthenticated = computed(() => {
+			return LibraryClientUtility.$store.user.user != null;
+		});
+		const printSize = computed(() => {
+			return printSizes.value.find(l => l.id == printSizeId.value);
+		});
+		const userDisplayName = computed(() => {
+			return AppUtility.userDisplayName(user.value);
+		});
 
-		await this.fetch(this.correlationId());
-	},
-	methods: {
-		clickPrint() {
+		const clickPrint = () => {
 			window.print();
-		},
-		dialogShareOpen() {
-			this.$refs.shareDialog.openDialog(this.gameSystemFilter);
-			this.dialogShare.open();
-		},
-		async fetch(correlationId) {
-			if (!this.serviceUsers)
+		};
+		const dialogShareOpen = () => {
+			shareDialogRef.value.openDialog(gameSystemFilter.value);
+			dialogShare.value.open();
+		};
+		const gamerTag = () => {
+			return route.params.gamerTag;
+		};
+		const isLoggedIn = () => {
+			return LibraryClientUtility.$store.user && LibraryClientUtility.$store.user.isLoggedIn;
+		};
+		const fetch = async (correlationIdI) => {
+			if (!serviceUsers)
 				return;
 
-			const key = this.$route.params.key ? this.$route.params.key.trim() : null;
+			const key = route.params.key ? route.params.key.trim() : null;
 			if (key) {
 				const gameSystem = AppUtility.findSharedConstantsGameSystemByFriendlyId(key);
 				if (!gameSystem) {
@@ -248,61 +260,82 @@ export default {
 					return;
 				}
 
-				this.gameSystemFilter = gameSystem.id;
+				gameSystemFilter.value = gameSystem.id;
 			}
-			else if (!GlobalUtility.$store.state.user.user) {
+			else if (!LibraryClientUtility.$store.user.user) {
 				VueUtility.invalid();
 				return;
 			}
 
-			const gamerTag = this.gamerTag();
-			if (!gamerTag) {
-				if (!this.isLoggedIn)
+			const gamerTagValue = gamerTag();
+			if (!gamerTagValue) {
+				if (!isLoggedIn)
 					VueUtility.invalid();
-				this.user = GlobalUtility.$store.state.user.user;
-				this.logger.debug('Cards', 'fetch', 'user', this.user, correlationId);
+				user.value = LibraryClientUtility.$store.user.user;
+				logger.debug('Cards', 'fetch', 'user', user.value, correlationIdI);
 				return;
 			}
 
-			const responseUser = await this.serviceUsers.fetchByGamerId(correlationId, gamerTag);
-			this.logger.debug('Cards', 'fetch', 'response', responseUser, correlationId);
-			if (this._hasSucceeded(responseUser)) {
-				this.user = responseUser.results;
-				this.external = true;
-				this.logger.debug('Cards', 'fetch', 'user', this.user, correlationId);
+			const responseUser = await serviceUsers.fetchByGamerId(correlationIdI, gamerTagValue);
+			logger.debug('Cards', 'fetch', 'response', responseUser, correlationIdI);
+			if (hasSucceeded(responseUser)) {
+				user.value = responseUser.results;
+				external.value = true;
+				logger.debug('Cards', 'fetch', 'user', user.value, correlationIdI);
 				return;
 			}
 
 			VueUtility.invalid();
-		},
-		gamerTag() {
-			return this.$route.params.gamerTag;
-		},
-		isLoggedIn() {
-			return GlobalUtility.$store.state.user && GlobalUtility.$store.state.user.isLoggedIn;
-		}
+		};
+
+		onMounted(async () => {
+			check(route);
+
+			await fetch(correlationId());
+		});
+
+		return {
+			correlationId,
+			error,
+			hasFailed,
+			hasSucceeded,
+			initialize,
+			logger,
+			noBreakingSpaces,
+			notImplementedError,
+			success,
+			successResponse,
+			shareDialogRef,
+			dialogShare,
+			external,
+			gameSystemFilter,
+			printSizeId,
+			printSizes,
+			user,
+			gameSystemName,
+			gameSystemNumber,
+			gameSystems,
+			imagePath,
+			isAuthenticated,
+			printSize,
+			userDisplayName,
+			clickPrint,
+			dialogShareOpen,
+			gamerTag,
+			isLoggedIn,
+			fetch
+		};
 	},
-	// eslint-disable-next-line
-	async beforeRouteEnter (to, from, next) {
-		// called before the route that renders this component is confirmed.
-		// does NOT have access to `this` component instance,
-		// because it has not been created yet when this guard is called!
+	async beforeRouteEnter (to, from) {
 		const results = check(to);
-		if (results)
-			next();
+		if (!results)
+			return false;
 	},
-	// eslint-disable-next-line
-	async beforeRouteUpdate (to, from, next) {
-		// called when the route that renders this component has changed,
-		// but this component is reused in the new route.
-		// For example, for a route with dynamic params `/foo/:id`, when we
-		// navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
-		// will be reused, and this hook will be called when that happens.
-		// has access to `this` component instance.
+	async beforeRouteUpdate (to, from) {
 		this.logger.debug('Cards', 'beforeRouteUpdate', null, null, this.correlationId());
 		const results = check(to);
-		if (results)
-			next();
+		if (!results)
+			return false;
 	}
 };
 </script>
@@ -314,10 +347,6 @@ export default {
 @media print {
 	.notPrintable { display: none; }
 }
-/* .rotated {
-	margin-top: 100px;
-	transform: rotate(90deg);
-} */
 .v-image__image {
 	-webkit-print-color-adjust: exact;
 }
