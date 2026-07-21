@@ -5,17 +5,16 @@ steps:
     args:
     - '-c'
     - |
-      git config -f .gitmodules submodule."src/common".url https://source.developers.google.com/p/societysidekick/r/github_thzero_societysidekick-common
-      git submodule init
-      git submodule update
-      echo "one up..."
-      ls -a ../
-      echo "current..."
-      ls -a
-      echo "src..."
-      ls -a ./src
+      set -e
+      # Fetch the societySidekick-common submodule from its public GitHub URL (in .gitmodules).
+      # `submodule sync` resets any cached/rewritten URL (e.g. an old Cloud Source mirror) back to
+      # the .gitmodules value before fetching.
+      git submodule sync --recursive
+      git submodule update --init --recursive
       echo "src/common..."
       ls -a ./src/common
+      # Fail fast with a clear message if the submodule did not populate.
+      test -f ./src/common/constants.js || { echo "ERROR: src/common submodule did not populate"; exit 1; }
   # Firebase
 #   - name: 'gcr.io/cloud-builders/git'
 #     entrypoint: 'bash'
