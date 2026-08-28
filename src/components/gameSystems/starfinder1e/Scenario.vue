@@ -32,7 +32,7 @@
 						<span
 							class="subtitle-2"
 						>
-							{{ $t('characters.playedOn') }}
+							{{ $t('characters.playedOn') }}&nbsp;
 						</span>
 						<span
 							class="body-2"
