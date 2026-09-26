@@ -125,8 +125,7 @@ export default {
 			return isLoggedIn.value && AppUtility.settings().getSettingsUserGamerTag(correlationId(), serviceStore.user);
 		});
 		const missingGamerTag = computed(() => {
-			// TODO(migration): original referenced an undefined `missingGamerTag`; using a message key.
-			return LibraryClientUtility.$trans.t('messages.share.missingGamerTag');
+			return LibraryClientUtility.$trans.t('errors.missingGamerTag');
 		});
 
 		const cancel = async () => {

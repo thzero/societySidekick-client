@@ -133,6 +133,14 @@ export default {
 	},
 	validations() {
 		return {
+			innerValue: {
+				timestamp: {
+					$autoDirty: true
+				},
+				locationId: {
+					$autoDirty: true
+				}
+			},
 			boonName: {
 				required,
 				$autoDirty: true

@@ -26,6 +26,7 @@
 	"buttons": {
 	   "cancel": "Cancel",
 	   "clear": "Clear",
+	   "close": "Close",
 	   "collapseAll": "Collapse",
 	   "delete": "Delete",
 	   "edit": "Edit",
@@ -307,7 +308,10 @@
 		  "repeatable": "Repeatable",
 		  "results": "Results",
 		  "season": "Season",
-		  "type": "Type"
+		  "type": "Type",
+		  "types": {
+			 "initial": "Initial"
+		  }
 	   },
 	   "share": "Share",
 	   "spent": "Spent",
@@ -352,10 +356,12 @@
 	   },
 	   "copyToClipboard": "Failed to copy to the clipboard.",
 	   "description": "Invalid value, must be of the following ! @ # $ % ^ & * ( ) _ - + = [ ] { } | : ; \" \\' < > , . ? a-z A-Z 0-9",
+	   "duplicateGamerTag": "That {objectType} is already in use.",
 	   "duplicateName": "There is already a {objectType} with the name of \\'{name}\\'.",
 	   "duplicateNumber": "There is already a {objectType} with the number of \\'{number}\\'.",
 	   "duplicateOrder": "There is already a {objectType} with order \\'{order}\\'.",
 	   "error": "An error occured, plesae try again.",
+	   "invalidObject": "The requested item is invalid.",
 	   "invalidPermissions": "You do not have permission to perform the requested action.",
 	   "invalidRequest": "Invalid request.",
 	   "inventories": {
@@ -370,7 +376,9 @@
 	   "params": {
 		  "character": "character",
 		  "characters": "characters",
-		  "news": "news"
+		  "gamerTag": "gamer tag",
+		  "news": "news",
+		  "scenario": "scenario"
 	   },
 	   "quotaExceeded": "You have reached your quota of {quota} \\'{quotaType}\\'.",
 	   "type": "Type is required."
@@ -510,8 +518,10 @@
 	   "clickOrHover": {
 		  "description": "Click or hover to see description..."
 	   },
+	   "error": "An error occurred, please try again.",
 	   "failed": "Action failed",
 	   "loading": "Loading...",
+	   "reset": "Changes discarded.",
 	   "saved": "Saved successfully.",
 	   "success": "Action was successful",
 	   "inventories": {
@@ -552,7 +562,12 @@
 	   "areYouSure": "Are you sure?",
 	   "areYouSureNonRecoverable": "This will permanently delete the item, are you sure?",
 	   "areYouSureNonRecoverableGearSetLoad": "This will overwrite the existing inventory for the character, are you sure?",
-	   "areYouSureNonRecoverableGearSetSave": "This will overwrite the existing inventory for the gear set, are you sure?"
+	   "areYouSureNonRecoverableGearSetSave": "This will overwrite the existing inventory for the gear set, are you sure?",
+	   "formDirty": {
+		  "cancel": "You have unsaved changes, are you sure you want to cancel?",
+		  "clear": "You have unsaved changes, are you sure you want to clear the form?",
+		  "close": "You have unsaved changes, are you sure you want to close?"
+	   }
 	},
 	"scenarios": {
 	   "actions": "Actions",
@@ -588,9 +603,13 @@
 	   "application": "Society Sidekick",
 	   "boons": "Boons",
 	   "characters": "Characters",
+	   "contact": {
+		  "contributing": "Contributing: {email}"
+	   },
 	   "edit": "Edit",
 	   "editType": "Edit {type}",
 	   "home": "Home",
+	   "inquiry": "Inquiries: {email}",
 	   "new": "New",
 	   "newType": "New {type}",
 	   "news": "News",

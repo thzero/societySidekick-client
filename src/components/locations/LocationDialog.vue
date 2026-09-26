@@ -155,7 +155,6 @@ export default {
 				$autoDirty: true
 			},
 			location: {
-				required,
 				minLength: minLength(3),
 				maxLength: maxLength(50),
 				$autoDirty: true

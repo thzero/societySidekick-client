@@ -428,8 +428,64 @@ export default {
 	},
 	validations() {
 		return {
+			innerValue: {
+				order: {
+					$autoDirty: true
+				},
+				timestamp: {
+					$autoDirty: true
+				},
+				scenarioAdvancementSpeed: {
+					$autoDirty: true
+				},
+				status: {
+					$autoDirty: true
+				},
+				locationId: {
+					$autoDirty: true
+				},
+				scenarioStatus: {
+					$autoDirty: true
+				},
+				scenarioParticipant: {
+					$autoDirty: true
+				},
+				experiencePointsEarned: {
+					$autoDirty: true
+				},
+				classId: {
+					$autoDirty: true
+				},
+				currencyEarned: {
+					$autoDirty: true
+				},
+				currencyIncomeEarned: {
+					$autoDirty: true
+				},
+				currencySpent: {
+					$autoDirty: true
+				},
+				fameFactionId: {
+					$autoDirty: true
+				},
+				fameEarned: {
+					$autoDirty: true
+				},
+				fameSpent: {
+					$autoDirty: true
+				},
+				boon1Id: {
+					$autoDirty: true
+				},
+				boon2Id: {
+					$autoDirty: true
+				}
+			},
 			scenarioName: {
 				required,
+				$autoDirty: true
+			},
+			scenarioAdventureName: {
 				$autoDirty: true
 			}
 		};
