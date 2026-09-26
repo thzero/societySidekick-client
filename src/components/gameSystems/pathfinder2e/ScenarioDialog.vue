@@ -679,8 +679,103 @@ export default {
 	},
 	validations() {
 		return {
+			innerValue: {
+				order: {
+					$autoDirty: true
+				},
+				timestamp: {
+					$autoDirty: true
+				},
+				scenarioAdvancementSpeed: {
+					$autoDirty: true
+				},
+				status: {
+					$autoDirty: true
+				},
+				locationId: {
+					$autoDirty: true
+				},
+				scenarioEvent: {
+					$autoDirty: true
+				},
+				scenarioStatus: {
+					$autoDirty: true
+				},
+				scenarioParticipant: {
+					$autoDirty: true
+				},
+				experiencePointsEarned: {
+					$autoDirty: true
+				},
+				achievementPointsSpent: {
+					$autoDirty: true
+				},
+				downtimePointsSpent: {
+					$autoDirty: true
+				},
+				currencyEarned: {
+					$autoDirty: true
+				},
+				currencyIncomeEarned: {
+					$autoDirty: true
+				},
+				currencySpent: {
+					$autoDirty: true
+				},
+				fameFactionId: {
+					$autoDirty: true
+				},
+				fameSpent: {
+					$autoDirty: true
+				},
+				reputationFactionId: {
+					$autoDirty: true
+				},
+				reputationAdditionalFactionId: {
+					$autoDirty: true
+				},
+				reputationAdditionalEarned: {
+					$autoDirty: true
+				},
+				boon1Id: {
+					$autoDirty: true
+				},
+				boon2Id: {
+					$autoDirty: true
+				}
+			},
 			scenarioName: {
 				required,
+				$autoDirty: true
+			},
+			scenarioAdventureName: {
+				$autoDirty: true
+			},
+			achievementPointsEarned: {
+				$autoDirty: true
+			},
+			downtimePointsEarned: {
+				$autoDirty: true
+			},
+			fameEarned: {
+				$autoDirty: true
+			},
+			results1Checked: {
+				$autoDirty: true
+			},
+			results2Checked: {
+				$autoDirty: true
+			},
+			results3Checked: {
+				$autoDirty: true
+			},
+			results4Checked: {
+				$autoDirty: true
+			},
+			results5Checked: {
+				$autoDirty: true
+			},
+			results6Checked: {
 				$autoDirty: true
 			}
 		};
