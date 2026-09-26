@@ -82,6 +82,7 @@ import { computed, onMounted, ref } from 'vue';
 
 import LibraryClientUtility from '@thzero/library_client/utility/index';
 
+import SharedConstants from '@/common/constants';
 import ScenarioData from '@/common/data/scenario';
 
 import { useAdminBaseListingComponent } from '@/components/admin/baseListing';
@@ -116,6 +117,10 @@ export default {
 		});
 
 		const getTypeName = (gameSystemId, type) => {
+			// The initial scenario type is filtered out of the game system lookups.
+			if (type === SharedConstants.ScenarioTypes.INITIAL)
+				return LibraryClientUtility.$trans.t('characters.scenarios.types.initial');
+
 			const lookups = base.getLookupsByGameSystemId(gameSystemId);
 			return lookups ? base.getLookupName(lookups.scenarioAdventures, type) : '';
 		};

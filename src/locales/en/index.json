@@ -308,7 +308,10 @@
 		  "repeatable": "Repeatable",
 		  "results": "Results",
 		  "season": "Season",
-		  "type": "Type"
+		  "type": "Type",
+		  "types": {
+			 "initial": "Initial"
+		  }
 	   },
 	   "share": "Share",
 	   "spent": "Spent",

@@ -71,6 +71,7 @@
 											:validation="validation"
 											:items="types"
 											:label="$t('forms.scenarios.type')"
+											:readonly="isInitial"
 										/>
 									</td>
 								</tr>
@@ -192,8 +193,11 @@ import { computed, ref } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { maxLength, maxValue, minLength, minValue, numeric, required } from '@vuelidate/validators';
 
+import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryCommonUtility from '@thzero/library_common/utility';
 import LibraryMomentUtility from '@thzero/library_common/utility/moment';
+
+import SharedConstants from '@/common/constants';
 
 import { useAdminFormDialogComponent } from '@/components/admin/VAdminFormDialog';
 
@@ -277,6 +281,11 @@ export default {
 
 				value.updatedTimestamp = value.updatedTimestamp ? value.updatedTimestamp : LibraryMomentUtility.getTimestamp();
 
+				// New scenarios default to the initial type in the data model; clear it so the type
+				// must be chosen from the normal list.
+				if (!value.id && value.type === SharedConstants.ScenarioTypes.INITIAL)
+					value.type = null;
+
 				// scenarioResults
 				results1Description.value = null;
 				results2Description.value = null;
@@ -309,9 +318,25 @@ export default {
 			}
 		});
 
+		// Only an existing (saved) scenario whose type is the initial type is treated as the
+		// special initial scenario; new scenarios default to that type in the data model.
+		const isInitial = computed(() => {
+			const value = base.innerValue.value;
+			return !!(value && value.id && value.type === SharedConstants.ScenarioTypes.INITIAL);
+		});
+
 		const types = computed(() => {
 			const lookups = base.initLookupsByGameSystemId(base.correlationId(), base.gameSystemId.value);
-			return lookups ? lookups.scenarioAdventures : [];
+			const items = lookups && lookups.scenarioAdventures ? [ ...lookups.scenarioAdventures ] : [];
+			// The initial scenario type is filtered out of the lookups so it cannot be chosen for
+			// normal scenarios; include it here so an existing initial scenario displays its label.
+			if (isInitial.value && !items.find(l => l.id === SharedConstants.ScenarioTypes.INITIAL)) {
+				items.push({
+					id: SharedConstants.ScenarioTypes.INITIAL,
+					name: LibraryClientUtility.$trans.t('characters.scenarios.types.initial')
+				});
+			}
+			return items;
 		});
 
 		return {
@@ -324,6 +349,7 @@ export default {
 			results4Description,
 			results5Description,
 			results6Description,
+			isInitial,
 			steps,
 			types
 		};
