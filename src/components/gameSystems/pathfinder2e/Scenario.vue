@@ -30,9 +30,9 @@
 						style="text-align: right"
 					>
 						<span
-							class="subtitle-2"
+							class="subtitle-2 mr-1"
 						>
-							{{ $t('characters.playedOn') }}&nbsp;
+							{{ $t('characters.playedOn') }}
 						</span>
 						<span
 							class="body-2"
