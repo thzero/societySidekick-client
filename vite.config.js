@@ -30,7 +30,7 @@ if (!configEnv)
 const config = process.env._CONFIG;
 console.log('vue.config._CONFIG', config);
 if (config) {
-	const filename = path.join(__dirname, `./src/config/${configEnv}.json`);
+	const filename = path.join(import.meta.dirname, `./src/config/${configEnv}.json`);
 	console.log('vue.config.filename', filename);
 	fs.writeFileSync(filename, config);
 	const contents = fs.readFileSync(filename, 'utf8');
@@ -38,7 +38,7 @@ if (config) {
 }
 console.log('vue.config._CONFIG_ENV', configEnv);
 
-const dir = path.join(__dirname, 'node_modules', '@thzero');
+const dir = path.join(import.meta.dirname, 'node_modules', '@thzero');
 const dirs = fs.readdirSync(dir);
 
 console.log('\tOpenSource...');
@@ -67,7 +67,7 @@ for (const item of dirs) {
 
 try {
   const openSourceJs = `/* eslint-disable */\n/* GENERATED FILE - DO NOT EDIT */\nexport function useDependenciesClientBase () { return [ ${items.join(`, `)} ]; }`;
-  fs.writeFileSync(path.join(__dirname, 'src', 'openSource.js'), openSourceJs);
+  fs.writeFileSync(path.join(import.meta.dirname, 'src', 'openSource.js'), openSourceJs);
 } catch (err) {
   console.log(err);
 }
