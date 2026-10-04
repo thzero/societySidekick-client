@@ -199,7 +199,6 @@ import LibraryClientConstants from '@thzero/library_client/constants';
 
 import AppUtility from '@/utility/app';
 import LibraryClientUtility from '@thzero/library_client/utility/index';
-import LibraryCommonUtility from '@thzero/library_common/utility';
 import GameSystemsUtility from '@/utility/gameSystems';
 
 import { useBaseComponent } from '@/components/base';
@@ -229,52 +228,8 @@ export default {
 		// GameSystems Update
 		Pathfinder2eSnippet
 	},
-	async beforeRouteEnter(to, from) {
-		(async () => {
-			try {
-				LibraryClientUtility.$EventBus.emit('initialize-completed', false);
-
-				const correlationId = LibraryCommonUtility.generateId();
-
-				await Promise.all([
-					LibraryClientUtility.$store.dispatcher.news.getLatest(correlationId),
-					LibraryClientUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
-				]);
-			}
-			finally {
-				const timeout = setTimeout(function () {
-					LibraryClientUtility.$EventBus.emit('initialize-completed', true);
-					clearTimeout(timeout);
-				}, DelayMs);
-			}
-		})().catch(err => {
-			// eslint-disable-next-line
-			console.error(err);
-		});
-	},
 	async beforeRouteUpdate(to, from) {
-		const self = this;
-		(async () => {
-			try {
-				self.initializeCompleted = false;
-
-				const correlationId = self.correlationId();
-
-				await Promise.all([
-					LibraryClientUtility.$store.dispatcher.news.getLatest(correlationId),
-					LibraryClientUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
-				]);
-			}
-			finally {
-				const timeout = setTimeout(function () {
-					self.initializeCompleted = true;
-					clearTimeout(timeout);
-				}, DelayMs);
-			}
-		})().catch(err => {
-			// eslint-disable-next-line
-			console.error(err);
-		});
+		this.fetch(this.correlationId());
 	},
 	setup(props, context) {
 		const base = useBaseComponent(props, context);
@@ -344,14 +299,37 @@ export default {
 			}
 		});
 
-		onMounted(() => {
-			LibraryClientUtility.$EventBus.on('initialize-completed', (value) => {
-				initializeCompleted.value = value;
-			});
+		// Loading is driven from onMounted (see setup) rather than beforeRouteEnter. The initial
+		// navigation starts during boot, before the app is mounted (and mounting waits on auth), so a
+		// beforeRouteEnter loader that signals completion over the event bus finishes before this
+		// component has subscribed and the loading overlay never clears.
+		const fetch = async (correlationId) => {
+			try {
+				initializeCompleted.value = false;
+
+				await Promise.all([
+					LibraryClientUtility.$store.dispatcher.news.getLatest(correlationId),
+					LibraryClientUtility.$store.dispatcher.characters.getCharacterListing(correlationId, { listing: true })
+				]);
+			}
+			catch (err) {
+				base.logger.exception('Home', 'fetch', err, correlationId);
+			}
+			finally {
+				const timeout = setTimeout(function () {
+					initializeCompleted.value = true;
+					clearTimeout(timeout);
+				}, DelayMs);
+			}
+		};
+
+		onMounted(async () => {
+			await fetch(base.correlationId());
 		});
 
 		return {
 			...base,
+			fetch,
 			initializeCompleted,
 			allowStatistics,
 			gameSystemFilter,
