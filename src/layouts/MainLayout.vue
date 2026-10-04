@@ -71,7 +71,9 @@
 							to="/settings"
 							:title="$t('titles.settings')"
 						/>
+						<!-- support requires a signed-in user (router.js) -->
 						<v-list-item
+							v-if="isLoggedIn"
 							:title="$t('titles.support')"
 							@click="clickSupport"
 						/>
