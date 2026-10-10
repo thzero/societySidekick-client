@@ -37,3 +37,7 @@ firebase-debug.log*
 
 # tests
 coverage
+dist-e2e
+test-results
+playwright-report
+blob-report

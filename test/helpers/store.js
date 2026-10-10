@@ -1,6 +1,8 @@
 import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import BaseStore from '@thzero/library_client_vue3_store_pinia/store/index';
+import news from '@thzero/library_client_vue3_store_pinia/store/news/index';
+import user from '@thzero/library_client_vue3_store_pinia/store/user/index';
 
 import characters from '@/store/characters';
 import scenarios from '@/store/scenarios';
@@ -44,6 +46,8 @@ export const resetStore = () => {
 			target[key] = value;
 	};
 	assign(LibraryClientUtility.$store, defaults());
+	assign(LibraryClientUtility.$store.news, news.state());
+	assign(LibraryClientUtility.$store.user, user.state());
 	assign(LibraryClientUtility.$store.characters, characters.state());
 	assign(LibraryClientUtility.$store.scenarios, scenarios.state());
 };

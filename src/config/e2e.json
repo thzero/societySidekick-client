@@ -1,0 +1,23 @@
+{
+	"debug": {
+	},
+	"backend": [
+		{
+			"key": "backend",
+			"apiKey": "e2e",
+			"baseUrl": "http://backend.e2e.test/api/v1/"
+		}
+	],
+	"external": {
+		"firebase": {
+			"apiKey": "e2e-api-key",
+			"authDomain": "e2e.firebaseapp.com",
+			"databaseURL": "https://e2e.firebaseio.com",
+			"projectId": "e2e",
+			"storageBucket": "e2e.appspot.com",
+			"messagingSenderId": "0",
+			"appId": "1:0:web:0",
+			"measurementId": "G-E2E"
+		}
+	}
+}

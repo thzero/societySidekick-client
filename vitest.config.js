@@ -39,9 +39,9 @@ export default defineConfig({
 			include: [ 'src/**/*.{js,vue}' ],
 			exclude: [ 'src/openSource.js', 'src/config/**' ],
 			// a ratchet, about a point under what was measured on 2026-10-10
-			// (statements 12.67, branches 3.93, functions 4.61, lines 13.02);
+			// (statements 14.54, branches 5.26, functions 5.97, lines 14.87);
 			// raise these as tests are added, never lower them
-			thresholds: { statements: 11, branches: 3, functions: 4, lines: 12 }
+			thresholds: { statements: 13, branches: 4, functions: 5, lines: 13 }
 		},
 		server: {
 			deps: {

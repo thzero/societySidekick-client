@@ -29,6 +29,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
     "deploy": "firebase deploy",
     "id": "library-cli --nano"
   },
@@ -40,7 +42,7 @@
     "@thzero/library_client_service_rest_fetch": "^0.19.3",
     "@thzero/library_client_vue3": "^0.19.5",
     "@thzero/library_client_vue3_store_pinia": "^0.19.5",
-    "@thzero/library_client_vue3_vuetify3": "^0.19.6",
+    "@thzero/library_client_vue3_vuetify3": "^0.19.7",
     "@thzero/library_common": "^0.19.5",
     "async-mutex": "^0.5.0",
     "decimal.js-light": "^2.5.1",
