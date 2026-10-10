@@ -34,3 +34,6 @@ firebase-debug.log*
 #/src/config/production.json
 /src/config/production.json.bak
 /src/config/productionManual.json
+
+# tests
+coverage
