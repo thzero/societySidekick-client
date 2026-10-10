@@ -484,13 +484,21 @@ export default {
 		// when persisted via setUserSettings (store settings replacement), so it stays cached at its
 		// initial value. Drive the list off a local ref (updated immediately on select) while still
 		// persisting the saved setting directly through the settings service.
-		const gameSystemFilterLocal = ref(AppUtility.settings().getSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store.user.user, (s) => s.gameSystemFilter));
+		// The base's filter is the saved setting for the user's own list, and the
+		// page's game system for a shared one (gameSystemFilterOverride); seeding
+		// from the setting alone left a shared list empty.
+		const gameSystemFilterLocal = ref(base.gameSystemFilter.value);
 		const gameSystemFilter = computed({
 			get: () => gameSystemFilterLocal.value,
 			set: (newVal) => {
 				gameSystemFilterLocal.value = newVal;
-				AppUtility.settings().updateSettingsUserGameSystemFilter(base.correlationId(), LibraryClientUtility.$store, LibraryClientUtility.$store.user.user, newVal, (s) => { return s.gameSystemFilter = newVal; });
+				base.gameSystemFilter.value = newVal;
 			}
+		});
+		// a shared list's page learns its game system after the list mounts
+		watch(() => props.gameSystemFilterOverride, (newVal) => {
+			if (base.isExternalListCharacters.value || base.isExternalListScenarios.value)
+				gameSystemFilterLocal.value = newVal;
 		});
 
 		const getSettingsUser = (correlationId, user, funcAttribute) => {

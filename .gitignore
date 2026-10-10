@@ -34,3 +34,10 @@ firebase-debug.log*
 #/src/config/production.json
 /src/config/production.json.bak
 /src/config/productionManual.json
+
+# tests
+coverage
+dist-e2e
+test-results
+playwright-report
+blob-report

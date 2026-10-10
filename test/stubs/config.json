@@ -1,0 +1,23 @@
+{
+	"debug": {
+	},
+	"backend": [
+		{
+			"key": "backend",
+			"apiKey": "test",
+			"baseUrl": "http://backend.test/api/v1/"
+		}
+	],
+	"external": {
+		"firebase": {
+			"apiKey": "test",
+			"authDomain": "test.firebaseapp.com",
+			"databaseURL": "https://test.firebaseio.com",
+			"projectId": "test",
+			"storageBucket": "test.appspot.com",
+			"messagingSenderId": "0",
+			"appId": "1:0:web:0",
+			"measurementId": "G-TEST"
+		}
+	}
+}

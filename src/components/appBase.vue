@@ -1,11 +1,10 @@
 <script>
-import { useTheme } from 'vuetify';
-
 import LibraryClientConstants from '@thzero/library_client/constants';
 
 import LibraryClientUtility from '@thzero/library_client/utility/index';
 
 import { useBaseAppComponent } from '@thzero/library_client_vue3/components/baseApp';
+import { useThemeComponent } from '@thzero/library_client_vue3_vuetify3/components/theme';
 
 export function useAppComponent(props, context, options) {
 	const serviceStore = LibraryClientUtility.$injector.getService(LibraryClientConstants.InjectorKeys.SERVICE_STORE);
@@ -33,18 +32,7 @@ export function useAppComponent(props, context, options) {
 		}
 	);
 
-	const theme = useTheme();
-	const userTheme = () => {
-		return !String.isNullOrEmpty(serviceStore.userTheme) ? serviceStore.userTheme : 'defaultTheme';
-	};
-
-	theme.global.name.value = userTheme();
-	if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
-		theme.global.name.value = userTheme() + 'Dark';
-
-	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-		theme.global.name.value = userTheme() + (event.matches ? 'Dark' : '');
-	});
+	useThemeComponent(props, context);
 
 	return {
 		correlationId,
