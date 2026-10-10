@@ -13,12 +13,6 @@ const modules = import.meta.glob([
 // suite green while they are broken and fails once one is fixed, so the
 // entry gets removed.
 const broken = {
-	// Vue 2 leftovers that nothing imports; the app uses the per game system
-	// BoonDialogs and store/pinia.js
-	'../src/components/gameSystems/BoonDialog.vue': 'imports @/library_vue, which no longer exists',
-	'../src/components/maps/google/VGoogleMapLoader.vue': 'imports @/library_vue, which no longer exists',
-	'../src/components/maps/google/VGoogleMapMarker.vue': 'imports @/library_vue, which no longer exists',
-	'../src/store/index.js': 'imports @thzero/library_client_vue, the Vue 2 library'
 };
 
 describe('modules', () => {

@@ -37,15 +37,7 @@ export default defineConfig({
 			reporter: [ 'text-summary', 'lcov' ],
 			// every source file, so a file no test loads counts as uncovered
 			include: [ 'src/**/*.{js,vue}' ],
-			exclude: [
-				'src/openSource.js',
-				'src/config/**',
-				// Vue 2 leftovers nothing imports (see broken in test/modules.test.js);
-				// the coverage provider cannot parse them
-				'src/components/gameSystems/BoonDialog.vue',
-				'src/components/maps/google/**',
-				'src/store/index.js'
-			],
+			exclude: [ 'src/openSource.js', 'src/config/**' ],
 			// a ratchet, about a point under what was measured on 2026-10-10
 			// (statements 12.67, branches 3.93, functions 4.61, lines 13.02);
 			// raise these as tests are added, never lower them

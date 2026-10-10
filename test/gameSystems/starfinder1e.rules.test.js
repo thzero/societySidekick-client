@@ -66,11 +66,27 @@ describe('levels', () => {
 		expect(rules().isAdventureScenario('c', { scenario: { type } })).toBe(expected);
 	});
 
-	// starfinder1e/ScenarioDialog.vue's initResponseDetails calls it when the
-	// dialog saves, but only the Pathfinder 2e rules have it, so saving a
-	// Starfinder scenario throws a TypeError
-	it.fails('can work out the reputation a scenario earns', () => {
-		expect(rules().calculateScenarioReputationEarned).toBeTypeOf('function');
+	// starfinder1e/ScenarioDialog.vue calls it when the dialog saves; only the
+	// Pathfinder 2e rules had it, so saving a Starfinder scenario threw
+	it.each([
+		[ 2, 2 ],
+		[ '1.5', 1.5 ],
+		[ '', null ],
+		[ null, null ]
+	])('a scenario with %j fame earns %j reputation', (fameEarned, reputation) => {
+		expect(rules().calculateScenarioReputationEarned('c', { fameEarned })).toBe(reputation);
+	});
+
+	it('earns no reputation without a scenario', () => {
+		expect(rules().calculateScenarioReputationEarned('c', null)).toBe(0);
+	});
+
+	it.each([
+		[ 'the starting scenario, saved', { scenarioId: Starfinder1eSharedConstants.ScenarionInitialId }, true ],
+		[ 'a starting scenario in the dialog', { scenario: { type: Adventures.INITIAL } }, true ],
+		[ 'any other scenario', { scenarioId: 'other', scenario: { type: Adventures.SCENARIO } }, false ]
+	])('%s is initial: %s', (name, item, expected) => {
+		expect(rules().calculateCharacterScenarioInitial('c', item)).toBe(expected);
 	});
 });
 
@@ -84,8 +100,9 @@ describe('calculateCharacter', () => {
 		expect(value.currencyTotal).toBe(400);
 	});
 
+	// saved scenarios keep only the scenarioId, not the scenario and its type
 	it('gives the starting scenario no level', async () => {
-		const value = await calculate(character([ played(1, { scenario: { type: Adventures.INITIAL }, experiencePointsEarned: 0 }), played(2) ]));
+		const value = await calculate(character([ played(1, { scenarioId: Starfinder1eSharedConstants.ScenarionInitialId, scenario: undefined, experiencePointsEarned: 0 }), played(2) ]));
 
 		expect(value.scenarios.find((l) => l.id === 's1').level).toBeNull();
 		expect(value.scenarios.find((l) => l.id === 's2').level).toBe(1);

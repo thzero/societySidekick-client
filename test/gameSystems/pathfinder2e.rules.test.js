@@ -183,6 +183,23 @@ describe('calculateCharacter', () => {
 		expect(byOrder.map((l) => l.currencySpendable)).toEqual([ 10, 20, 30 ]);
 	});
 
+	// it checked scenarioAdventure, which nothing sets, so the starting
+	// scenario was never seen as initial; saved scenarios keep only the scenarioId
+	it('gives the starting scenario no level', async () => {
+		const value = await calculate(character([ played(1, { scenarioId: Pathfinder2eSharedConstants.ScenarionInitialId, experiencePointsEarned: 0 }), played(2) ]));
+
+		expect(value.scenarios.find((l) => l.id === 's1').level).toBeNull();
+		expect(value.scenarios.find((l) => l.id === 's2').level).toBe(1);
+	});
+
+	it.each([
+		[ 'the starting scenario, saved', { scenarioId: Pathfinder2eSharedConstants.ScenarionInitialId }, true ],
+		[ 'a starting scenario in the dialog', { scenario: { type: Adventures.INITIAL } }, true ],
+		[ 'any other scenario', { scenarioId: 'other', scenario: { type: Adventures.SCENARIO } }, false ]
+	])('%s is initial: %s', (name, item, expected) => {
+		expect(rules().calculateCharacterScenarioInitial('c', item)).toBe(expected);
+	});
+
 	it.each([ SharedConstants.ScenarioStatus.IGNORE, SharedConstants.ScenarioStatus.REPEATED ])('leaves out a scenario marked %s', async (scenarioStatus) => {
 		const value = await calculate(character([ played(1), played(2, { scenarioStatus }) ]));
 
