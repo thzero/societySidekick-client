@@ -57,7 +57,7 @@ export function useAppMainLayout(props, context, options) {
 	});
 
 	const clickCards = () => {
-		window.open('/#/cards', '_blank');
+		window.open('/cards', '_blank');
 	};
 	const clickFavorites = () => {
 		LibraryClientUtility.$navRouter.push('/favorites');
