@@ -26,6 +26,21 @@ describe('install', () => {
 	it.each([ 'getBoon', 'getCharacter', 'getClass', 'getEquipment', 'getFaction', 'getScenario', 'getScenarioPlayed' ])('serves %s from the root getters', (name) => {
 		expect(store.getters[name]).toBeTypeOf('function');
 	});
+
+	// the library handed the root getters to pinia too, which made each a
+	// readonly computed on the store; getOrganizedPlay, also an action, was
+	// hidden by it ("Set operation on key "getOrganizedPlay" failed")
+	it.each([ 'getGameSystems', 'getOrganizedPlay', 'initialize', 'setSettings' ])('keeps the %s action callable', (name) => {
+		expect(store[name]).toBeTypeOf('function');
+	});
+
+	it('fetches the organized play through its action', async () => {
+		services[K.SERVICE_API].gameSystems.mockResolvedValueOnce(ok({ data: [ { id: 'pfs' } ] }));
+
+		await store.dispatcher.getOrganizedPlay('c');
+
+		expect(store.organizedPlay).toEqual([ { id: 'pfs' } ]);
+	});
 });
 
 describe('initialize', () => {
