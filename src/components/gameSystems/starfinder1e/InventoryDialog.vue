@@ -66,7 +66,7 @@
 				<VtSelectWithValidation
 					ref="boughtScenarioIdRef"
 					v-model="innerValue.boughtScenarioId"
-					vid="boughtScenarioId"
+					vid="innerValue.boughtScenarioId"
 					:validation="validation"
 					:items="characterScenarios"
 					:label="$t('characters.inventories.bought')"

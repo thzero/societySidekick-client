@@ -1,0 +1,60 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches: [ master, dev ]
+
+# A newer push to the same branch or pull request cancels the run it replaces.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # src/common is the public thzero/societySidekick-common repository, so
+      # the default token can check it out
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run test:coverage
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps chromium
+
+      # builds against src/config/e2e.json and answers every backend call
+      # from e2e/backend.js, so it needs no secrets
+      - run: npm run e2e
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7

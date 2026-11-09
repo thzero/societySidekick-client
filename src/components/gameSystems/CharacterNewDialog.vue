@@ -19,7 +19,7 @@
 		<VtSelectWithValidation
 			ref="gameSystemRef"
 			v-model="gameSystemId"
-			vid="gameSystem"
+			vid="gameSystemId"
 			:validation="validation"
 			:items="gameSystems"
 			:label="$t('forms.gameSystem')"
@@ -112,7 +112,7 @@ export default {
 			const response = await LibraryClientUtility.$store.dispatcher.characters.createCharacter(correlationId, { gameSystemId: gameSystemId.value, name: nameV, number: numberV });
 			base.logger.debug('CharacterNewDialog', 'preComplete', 'response', response, correlationId);
 			if (base.hasSucceeded(response)) {
-				LibraryClientUtility.$router.push(LibraryCommonUtility.formatUrl({ url: '/character', params: [ response.results.id ]}));
+				LibraryClientUtility.$navRouter.push(LibraryCommonUtility.formatUrl({ url: '/character', params: [ response.results.id ]}));
 				return response;
 			}
 			return response;

@@ -21,8 +21,8 @@ export const factions = [
 ];
 
 export const classes = [
-	{ id: 'c-fighter', gameSystemId: gameSystems.pathfinder2e, name: 'Fighter', ...stamp },
-	{ id: 'c-wizard', gameSystemId: gameSystems.pathfinder2e, name: 'Wizard', ...stamp }
+	{ id: 'c-fighter', gameSystemId: gameSystems.pathfinder2e, name: 'Fighter', type: 'class', ...stamp },
+	{ id: 'c-wizard', gameSystemId: gameSystems.pathfinder2e, name: 'Wizard', type: 'class', ...stamp }
 ];
 
 // A long description, as the real ones are: the lookup dialog has to scroll it.
@@ -121,6 +121,8 @@ export const defaultRoutes = () => ({
 	'GET characters/listing/favorites': () => listing([]),
 	'GET characters/:id': ({ params }) => params.id === 'ch-1' ? ok(character()) : failed(),
 	'POST characters': ({ body }) => ok(body),
+	// the edit dialog's save: the details it changed, answered with the character
+	'POST characters/details/:id': ({ params, body }) => params.id === 'ch-1' ? ok({ ...character(), ...body }) : failed(),
 	'GET boons/listing/:gameSystemId': () => listing([]),
 	'GET boons/played/:characterId': () => ok([]),
 	'GET classes/listing/:gameSystemId': ({ params }) => listing(classes.filter((l) => l.gameSystemId === params.gameSystemId)),

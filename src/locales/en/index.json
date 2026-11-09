@@ -298,6 +298,7 @@
 	   "level": "Level",
 	   "playedOn": "Played On",
 	   "remain": "Remain",
+	   "required": "Required",
 	   "scenarios": {
 		  "name": "Scenario",
 		  "namePlural": "Scenarios",
@@ -351,6 +352,9 @@
 			 }
 		  }
 	   },
+	   "any": {
+		  "required": "{field} is required."
+	   },
 	   "characters": {
 		  "invalidStatus": "Invalid status of \\'{status}\\'."
 	   },
@@ -360,7 +364,30 @@
 	   "duplicateName": "There is already a {objectType} with the name of \\'{name}\\'.",
 	   "duplicateNumber": "There is already a {objectType} with the number of \\'{number}\\'.",
 	   "duplicateOrder": "There is already a {objectType} with order \\'{order}\\'.",
-	   "error": "An error occured, plesae try again.",
+	   "error": "An error occurred, please try again.",
+	   "fields": {
+		  "achievementPointsEarned": "Achievement Points",
+		  "boonId": "Boon",
+		  "boughtScenarioId": "Bought In Scenario",
+		  "classId": "Class",
+		  "currencyEarned": "Currency Earned",
+		  "experiencePointsEarned": "Experience Points",
+		  "factionId": "Faction",
+		  "fameFactionId": "Fame Faction",
+		  "item": "Item",
+		  "name": "Name",
+		  "number": "Number",
+		  "order": "Order",
+		  "quantity": "Quantity",
+		  "scenarioAdvancementSpeed": "Advancement Speed",
+		  "scenarioEvent": "Event",
+		  "scenarioId": "Scenario",
+		  "scenarioParticipant": "Participant",
+		  "scenarioStatus": "Scenario Status",
+		  "status": "Status",
+		  "timestamp": "Date",
+		  "value": "Value"
+	   },
 	   "invalidObject": "The requested item is invalid.",
 	   "invalidPermissions": "You do not have permission to perform the requested action.",
 	   "invalidRequest": "Invalid request.",

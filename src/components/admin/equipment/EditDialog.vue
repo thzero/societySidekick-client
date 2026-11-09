@@ -12,7 +12,7 @@
 		<VtTextFieldWithValidation
 			ref="nameRef"
 			v-model="innerValue.name"
-			vid="name"
+			vid="innerValue.name"
 			:validation="validation"
 			:label="$t('forms.name')"
 			:counter="30"
@@ -34,7 +34,7 @@
 					<VtNumberFieldWithValidation
 						ref="costRef"
 						v-model="innerValue.cost"
-						vid="cost"
+						vid="innerValue.cost"
 						:validation="validation"
 						:label="$t('forms.equipment.cost')"
 						step="1"

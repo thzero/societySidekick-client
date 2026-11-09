@@ -17,6 +17,7 @@
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
+					:error="invalidStep('innerValue.name', 'innerValue.number', 'innerValue.status')"
 					:value="1"
 				>
 					{{ $t('characters.basic') }}
@@ -26,6 +27,7 @@
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
+					:error="invalidStep('innerValue.factionId')"
 					:value="2"
 				>
 					{{ $t('characters.details') }}
@@ -58,7 +60,7 @@
 							<VtTextFieldWithValidation
 								ref="nameRef"
 								v-model="innerValue.name"
-								vid="name"
+								vid="innerValue.name"
 								:validation="validation"
 								:label="$t('forms.name')"
 								:counter="30"
@@ -74,7 +76,7 @@
 							<VtNumberFieldWithValidation
 								ref="numberRef"
 								v-model="innerValue.number"
-								vid="number"
+								vid="innerValue.number"
 								:validation="validation"
 								:label="$t('characters.gameSystems.starfinder1e.number')"
 								step="1"
@@ -84,7 +86,7 @@
 							<VtSelectWithValidation
 								ref="statusRef"
 								v-model="innerValue.status"
-								vid="status"
+								vid="innerValue.status"
 								:validation="validation"
 								:items="status"
 								:label="$t('characters.gameSystems.pathfinder2e.status.name')"
@@ -116,7 +118,7 @@
 							<VtSelectWithValidation
 								ref="factionRef"
 								v-model="innerValue.factionId"
-								vid="faction"
+								vid="innerValue.factionId"
 								:validation="validation"
 								:items="factions"
 								:label="$t('characters.gameSystems.starfinder1e.faction')"
@@ -211,6 +213,7 @@ import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryCommonUtility from '@thzero/library_common/utility';
 
 import { useBaseCharacterDetailsDialogComponent } from '@/components/gameSystems/baseCharacterDetailsDialog';
+import { useInvalidStep } from '@/components/gameSystems/invalidStep';
 
 import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
 import VtNumberFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberFieldWithValidation';
@@ -279,6 +282,9 @@ export default {
 			return serviceGameSystem.themes(base.correlationId(), LibraryClientUtility.$store, true);
 		});
 
+		const validation = useVuelidate({ $scope: 'Starfinder1eCharacterDetailsDialog' });
+		const invalidStep = useInvalidStep(validation);
+
 		return {
 			...base,
 			boonsAlly,
@@ -289,7 +295,8 @@ export default {
 			boonsStarship,
 			classes,
 			themes,
-			validation: useVuelidate({ $scope: 'Starfinder1eCharacterDetailsDialog' })
+			invalidStep,
+			validation
 		};
 	},
 	validations() {
