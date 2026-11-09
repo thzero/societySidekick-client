@@ -93,7 +93,7 @@
 														:flat="true"
 														:hide-details="true"
 														:solo-inverted="true"
-														:label="$t('sdfsdf')"
+														:label="$t('forms.scenarios.played')"
 														class="pb-1"
 													/>
 												</td>
@@ -283,7 +283,7 @@
 														:flat="true"
 														:hide-details="true"
 														:solo-inverted="true"
-														:label="$t('sdfsdf')"
+														:label="$t('forms.scenarios.played')"
 														class="pb-1"
 													/>
 												</td>
@@ -306,29 +306,31 @@
 												</td>
 											</tr>
 											<tr>
-												<table
-													border="0"
-													cellspacing="0"
-													cellpadding="0"
-													style="width: 100%;"
-												><tbody>
-													<tr>
-														<td style="padding-right: 4px;">
-															<VtSelect
-																ref="sortByRef"
-																v-model="sortBy"
-																:items="sortKeys"
-																:flat="true"
-																:hide-details="true"
-																:solo-inverted="true"
-																:label="$t('forms.sorting.nameShort')"
-															/>
-														</td>
-														<td>
-															<VtDirectionButton v-model="sortDirection" />
-														</td>
-													</tr>
-												</tbody></table>
+												<td>
+													<table
+														border="0"
+														cellspacing="0"
+														cellpadding="0"
+														style="width: 100%;"
+													><tbody>
+														<tr>
+															<td style="padding-right: 4px;">
+																<VtSelect
+																	ref="sortByRef"
+																	v-model="sortBy"
+																	:items="sortKeys"
+																	:flat="true"
+																	:hide-details="true"
+																	:solo-inverted="true"
+																	:label="$t('forms.sorting.nameShort')"
+																/>
+															</td>
+															<td>
+																<VtDirectionButton v-model="sortDirection" />
+															</td>
+														</tr>
+													</tbody></table>
+												</td>
 											</tr>
 										</tbody></table>
 									</td>

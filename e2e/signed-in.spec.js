@@ -1,4 +1,5 @@
 import { users } from './auth.js';
+import { ok } from './backend.js';
 import { expect, open, settled, test } from './fixtures.js';
 
 test.describe('a signed-in player', () => {
@@ -29,6 +30,24 @@ test.describe('a signed-in player', () => {
 		await expect(page.getByText('0) Initial')).toBeVisible();
 		await expect(page.getByText('The Absalom Initiation')).toBeVisible();
 		expect(backend.unhandled, 'backend calls with no fixture').toEqual([]);
+	});
+
+	test.describe('when the backend is slow to answer for them', () => {
+		// their record, with the roles the character page requires, after Firebase
+		// has already restored them
+		test.use({ routes: { 'POST users/update': async ({ body }) => {
+			await new Promise((resolve) => setTimeout(resolve, 1500));
+			return ok({ id: body.id, external: { id: body.id, name: body.name, email: body.email }, roles: users.user.roles, settings: { gameSystems: [] } });
+		} } });
+
+		// the route guard checked the roles before the record arrived, found no
+		// user, and sent the page home; a slow CI runner did it now and then
+		test('still opens a character they went to directly', async ({ page }) => {
+			await open(page, '/character/ch-1');
+
+			await expect(page.getByText(/Khartan the Wild/i)).toBeVisible();
+			await expect(page).toHaveURL(/\/character\/ch-1$/);
+		});
 	});
 
 	test('opens their settings', async ({ page }) => {
