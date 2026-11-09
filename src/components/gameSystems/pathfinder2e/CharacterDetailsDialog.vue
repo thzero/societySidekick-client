@@ -17,6 +17,7 @@
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
+					:error="invalidStep('innerValue.name', 'innerValue.number', 'innerValue.status')"
 					:value="1"
 				>
 					{{ $t('characters.basic') }}
@@ -26,6 +27,7 @@
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
+					:error="invalidStep('innerValue.classId', 'innerValue.factionId')"
 					:value="2"
 				>
 					{{ $t('characters.details') }}
@@ -58,7 +60,7 @@
 							<VtTextFieldWithValidation
 								ref="nameRef"
 								v-model="innerValue.name"
-								vid="name"
+								vid="innerValue.name"
 								:validation="validation"
 								:label="$t('forms.name')"
 								:counter="30"
@@ -74,7 +76,7 @@
 							<VtNumberFieldWithValidation
 								ref="numberRef"
 								v-model="innerValue.number"
-								vid="number"
+								vid="innerValue.number"
 								:validation="validation"
 								:label="$t('characters.gameSystems.pathfinder2e.number')"
 								step="1"
@@ -84,7 +86,7 @@
 							<VtSelectWithValidation
 								ref="statusRef"
 								v-model="innerValue.status"
-								vid="status"
+								vid="innerValue.status"
 								:validation="validation"
 								:items="status"
 								:label="$t('characters.gameSystems.pathfinder2e.status.name')"
@@ -107,7 +109,7 @@
 							<VtSelectWithValidation
 								ref="classRef"
 								v-model="innerValue.classId"
-								vid="class"
+								vid="innerValue.classId"
 								:validation="validation"
 								:items="classes"
 								:label="$t('characters.gameSystems.pathfinder2e.classes.name')"
@@ -143,7 +145,7 @@
 							<VtSelectWithValidation
 								ref="factionRef"
 								v-model="innerValue.factionId"
-								vid="faction"
+								vid="innerValue.factionId"
 								:validation="validation"
 								:items="factions"
 								:label="$t('characters.gameSystems.pathfinder2e.faction')"
@@ -229,6 +231,7 @@ import LibraryClientUtility from '@thzero/library_client/utility/index';
 import LibraryCommonUtility from '@thzero/library_common/utility';
 
 import { useBaseCharacterDetailsDialogComponent } from '@/components/gameSystems/baseCharacterDetailsDialog';
+import { useInvalidStep } from '@/components/gameSystems/invalidStep';
 
 import VtFormDialog from '@thzero/library_client_vue3_vuetify3/components/form/VtFormDialog';
 import VtNumberFieldWithValidation from '@thzero/library_client_vue3_vuetify3/components/form/VtNumberFieldWithValidation';
@@ -309,6 +312,9 @@ export default {
 			return serviceGameSystem.classes(base.correlationId(), LibraryClientUtility.$store, true);
 		});
 
+		const validation = useVuelidate({ $scope: 'Pathfinder2eCharacterDetailsDialog' });
+		const invalidStep = useInvalidStep(validation);
+
 		return {
 			...base,
 			archetypeId1,
@@ -319,7 +325,8 @@ export default {
 			boonsFaction,
 			boonsGeneral,
 			classes,
-			validation: useVuelidate({ $scope: 'Pathfinder2eCharacterDetailsDialog' })
+			invalidStep,
+			validation
 		};
 	},
 	validations() {

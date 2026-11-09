@@ -45,7 +45,7 @@
 							<VtTextFieldWithValidation
 								ref="nameRef"
 								v-model="innerValue.name"
-								vid="name"
+								vid="innerValue.name"
 								:validation="validation"
 								:label="$t('forms.name')"
 								:counter="75"
@@ -83,7 +83,7 @@
 										<VtNumberFieldWithValidation
 											ref="seasonRef"
 											v-model="innerValue.season"
-											vid="season"
+											vid="innerValue.season"
 											:validation="validation"
 											:label="$t('forms.scenarios.season')"
 											step="1"
@@ -93,7 +93,7 @@
 										<VtTextFieldWithValidation
 											ref="scenarioRef"
 											v-model="innerValue.scenario"
-											vid="scenario"
+											vid="innerValue.scenario"
 											:validation="validation"
 											:label="$t('forms.scenarios.identifier')"
 										/>

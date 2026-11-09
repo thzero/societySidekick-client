@@ -12,7 +12,7 @@
 		<VtTextFieldWithValidation
 			ref="titleRef"
 			v-model="innerValue.title"
-			vid="title"
+			vid="innerValue.title"
 			:validation="validation"
 			:label="$t('forms.title')"
 			:counter="30"
@@ -55,7 +55,7 @@
 		<VtDateTimePickerFieldWithValidationTemp
 			ref="timestampRef"
 			v-model="innerValue.timestamp"
-			vid="timestamp"
+			vid="innerValue.timestamp"
 			:validation="validation"
 			:output-type="outputType"
 			:date-format="dateFormat"

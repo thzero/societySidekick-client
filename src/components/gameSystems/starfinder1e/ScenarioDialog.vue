@@ -18,6 +18,7 @@
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
+					:error="invalidStep('scenarioName')"
 					:value="1"
 				>
 					{{ $t('characters.scenarios.name') }}
@@ -36,6 +37,7 @@
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
+					:error="invalidStep('innerValue.currencyEarned')"
 					:value="3"
 				>
 					{{ $t('characters.gameSystems.starfinder1e.currency') }}
@@ -45,6 +47,7 @@
 					complete
 					editable
 					edit-icon="mdi-cicle-slice-8"
+					:error="invalidStep('innerValue.fameFactionId')"
 					:value="4"
 				>
 					{{ $t('characters.gameSystems.starfinder1e.fame.name') }}
@@ -218,7 +221,7 @@
 							<VtNumberFieldWithValidation
 								ref="currencyEarnedRef"
 								v-model="innerValue.currencyEarned"
-								vid="currencyEarned"
+								vid="innerValue.currencyEarned"
 								:validation="validation"
 								:label="$t('characters.gameSystems.starfinder1e.currency') + ' ' + $t('characters.gameSystems.starfinder1e.currencyGarnered')"
 								step=".01"
@@ -256,7 +259,7 @@
 							<VtSelectWithValidation
 								ref="fameFactionRef"
 								v-model="innerValue.fameFactionId"
-								vid="fameFaction"
+								vid="innerValue.fameFactionId"
 								:validation="validation"
 								:items="factions"
 								:label="$t('characters.gameSystems.starfinder1e.fame.name') + ' ' + $t('characters.gameSystems.starfinder1e.faction')"
@@ -328,7 +331,7 @@
 import { computed, ref } from 'vue';
 
 import useVuelidate from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { maxValue, minValue, required } from '@vuelidate/validators';
 
 import Constants from '@/constants';
 import SharedConstants from '@/common/constants';
@@ -338,6 +341,7 @@ import LibraryClientUtility from '@thzero/library_client/utility/index';
 import CharacterScenario from '@/common/gameSystems/starfinder1e/data/characterScenario';
 
 import { useBaseScenarioDialogComponent } from '@/components/gameSystems/baseScenarioDialog';
+import { useInvalidStep } from '@/components/gameSystems/invalidStep';
 
 import ScenarioLookupDialog from '@/components/gameSystems/starfinder1e/ScenarioLookupDialog';
 import VtDateTimePickerFieldWithValidationTemp from '@thzero/library_client_vue3_vuetify3/components/form/VtDateTimePickerFieldWithValidationTemp';
@@ -419,11 +423,15 @@ export default {
 			return serviceGameSystem.classes(LibraryClientUtility.$store, true);
 		});
 
+		const validation = useVuelidate({ $scope: 'Starfinder1eScenarioDialog' });
+		const invalidStep = useInvalidStep(validation);
+
 		return {
 			...base,
 			canSelectClass,
 			classes,
-			validation: useVuelidate({ $scope: 'Starfinder1eScenarioDialog' })
+			invalidStep,
+			validation
 		};
 	},
 	validations() {
@@ -457,6 +465,9 @@ export default {
 					$autoDirty: true
 				},
 				currencyEarned: {
+					required,
+					minValue: minValue(0),
+					maxValue: maxValue(100000),
 					$autoDirty: true
 				},
 				currencyIncomeEarned: {
@@ -466,6 +477,7 @@ export default {
 					$autoDirty: true
 				},
 				fameFactionId: {
+					required,
 					$autoDirty: true
 				},
 				fameEarned: {

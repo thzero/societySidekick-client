@@ -375,12 +375,18 @@
 									class="pb-1 starfinder1eExperiencePoints2"
 								>
 									<span
+										v-if="value.factionId"
 										class="body-2 displayLink"
 										style="vertical-align: top;"
 										@click="handleDisplay(factionDescription(value.factionId))"
 										@mouseenter="handleDisplayHover(factionDescription(value.factionId))"
 										@mouseout="handleDisplayHoverClear()"
 									>{{ factionName(value.factionId) }}</span>
+									<RequiredValue
+										v-else
+										:editable="editable"
+										@edit="dialogDetailsOpen()"
+									/>
 								</td>
 							</tr>
 							<tr>
@@ -648,12 +654,18 @@
 									class="pb-1 starfinder1eExperiencePoints2"
 								>
 									<span
+										v-if="value.factionId"
 										class="body-2 displayLink"
 										style="vertical-align: top;"
 										@click="handleDisplay(factionDescription(value.factionId))"
 										@mouseenter="handleDisplayHover(factionDescription(value.factionId))"
 										@mouseout="handleDisplayHoverClear()"
 									>{{ factionName(value.factionId) }}</span>
+									<RequiredValue
+										v-else
+										:editable="editable"
+										@edit="dialogDetailsOpen()"
+									/>
 								</td>
 							</tr>
 							<tr>
@@ -925,6 +937,7 @@ import { useGameSystemBaseCharacterDetailsComponent } from '@/components/gameSys
 
 import CharacterDetailsDialog from '@/components/gameSystems/starfinder1e/CharacterDetailsDialog';
 import ExperienceColorizeValue from '@/components/gameSystems/ExperienceColorizeValue';
+import RequiredValue from '@/components/gameSystems/RequiredValue';
 import VtConfirmationDialog from '@thzero/library_client_vue3_vuetify3/components/VtConfirmationDialog';
 
 export default {
@@ -932,6 +945,7 @@ export default {
 	components: {
 		CharacterDetailsDialog,
 		ExperienceColorizeValue,
+		RequiredValue,
 		VtConfirmationDialog
 	},
 	props: {
